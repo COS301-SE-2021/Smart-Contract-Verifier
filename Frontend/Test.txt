@@ -1,0 +1,1 @@
+This is the first entry in the frontend folder before branching
