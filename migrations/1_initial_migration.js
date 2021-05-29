@@ -1,5 +1,5 @@
-const Hello = artifacts.require("Hello");
+const Verifier = artifacts.require("Verifier");
 
 module.exports = function (deployer) {
-  deployer.deploy(Hello);
+  deployer.deploy(Verifier);
 };
