@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/widget/navigation_drawer_widget.dart';
+import 'package:frontend/widget/dashboard_widget.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +44,7 @@ class _MainPageState extends State<MainPage> {
           builder: (context) => Container(
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: 32),
-            child: Text('Dashboard'),
+            child: Dashboard(),
             // Scaffold.of(context).openEndDrawer();
           ),
         ),
