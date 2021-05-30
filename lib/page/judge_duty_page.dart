@@ -11,8 +11,7 @@ class JudgeDutyPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            ComingSoon()
-
+            ComingSoon(),
           ],
         ),
       );

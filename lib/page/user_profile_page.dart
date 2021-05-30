@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class UserProfilePage extends StatelessWidget {
@@ -13,13 +12,11 @@ class UserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      backgroundColor: Colors.teal,
-      title: Text(name),
-      centerTitle: true,
-    ),
-    body: Text(
-      'Profile Page'
-    ),
-  );
+        appBar: AppBar(
+          backgroundColor: Colors.teal,
+          title: Text(name),
+          centerTitle: true,
+        ),
+        body: Text('Profile Page'),
+      );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/widget/coming_soon_widget.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
@@ -8,11 +9,10 @@ class SettingsPage extends StatelessWidget {
       centerTitle: true,
       backgroundColor: Colors.teal,
     ),
-    body: Text(
-      'Settings Page',
-      style: TextStyle(
-        color: Colors.cyanAccent,
-      ),
+    body: Column(
+      children: [
+        ComingSoon(),
+      ],
     ),
   );
 }
