@@ -5,6 +5,7 @@ import 'package:frontend/page/judge_duty_page.dart';
 import 'package:frontend/page/settings_page.dart';
 import 'package:frontend/page/support_page.dart';
 import 'package:frontend/page/user_profile_page.dart';
+import 'package:frontend/page/contract_test.dart';
 
 import '../page/action_required_page.dart';
 import '../page/user_profile_page.dart';
@@ -59,6 +60,13 @@ class NavigationDrawerWidget extends StatelessWidget {
                     icon: Icons.gavel_outlined,
                     onClicked: () => selectedItem(context, 3),
                   ),
+                  const SizedBox(height: 16),
+                  buildMenuItem(
+                    text: 'Contract Tests',
+                    icon: Icons.construction,
+                    onClicked: () => selectedItem(context, 6),
+                  ),
+
                   // const SizedBox(height: 24),
                   const SizedBox(height: 48),
                   const SizedBox(height: 48),
@@ -75,6 +83,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                     icon: Icons.settings,
                     onClicked: () => selectedItem(context, 5),
                   ),
+
                 ],
               ),
             ),
@@ -199,6 +208,11 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 5:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => SettingsPage(),
+        ));
+        break;
+      case 6:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ContractDemo(),
         ));
         break;
     }
