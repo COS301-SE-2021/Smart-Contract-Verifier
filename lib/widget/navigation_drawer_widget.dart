@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/page/action_required_page.dart';
 import 'package:frontend/page/activity_page.dart';
 import 'package:frontend/page/judge_duty_page.dart';
+import 'package:frontend/page/settings_page.dart';
+import 'package:frontend/page/support_page.dart';
 import 'package:frontend/page/user_profile_page.dart';
 
 import '../page/action_required_page.dart';
@@ -63,14 +65,14 @@ class NavigationDrawerWidget extends StatelessWidget {
                   Divider(color: Colors.white70),
                   const SizedBox(height: 16),
                   buildMenuItem(
-                    text: 'Settings',
-                    icon: Icons.settings,
+                    text: 'Support',
+                    icon: Icons.support,
                     onClicked: () => selectedItem(context, 4),
                   ),
                   const SizedBox(height: 16),
                   buildMenuItem(
-                    text: 'Support',
-                    icon: Icons.support,
+                    text: 'Settings',
+                    icon: Icons.settings,
                     onClicked: () => selectedItem(context, 5),
                   ),
                 ],
@@ -187,6 +189,16 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 3:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => JudgeDutyPage(),
+        ));
+        break;
+      case 4:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SupportPage(),
+        ));
+        break;
+      case 5:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SettingsPage(),
         ));
         break;
     }
