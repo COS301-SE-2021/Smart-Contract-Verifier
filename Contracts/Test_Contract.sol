@@ -1,21 +1,22 @@
 pragma solidity 0.6.6;
 //This is simply to test access from Flutter
 //Made in IDEA, deployed with REM
+//Current version actually uses uint
 
 contract SCV {
 
-    string public testString;
+    uint public testNum;
 
     /// Create a new ballot to choose one of `proposalNames`.
     constructor() public {
-        testString = "This is from within the smart contract!";
+        testNum = 3;
     }
 
-    function getData() view public returns( string memory) {
-        return testString;
+    function getData() view public returns( uint) {
+        return testNum;
     }
-    function setData(string memory dat) public {
-        testString = dat;
+    function setData(uint dat) public {
+        testNum = dat;
     }
 
 }

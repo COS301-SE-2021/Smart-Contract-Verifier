@@ -2,9 +2,9 @@
   {
     "inputs": [
       {
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "dat",
-        "type": "string"
+        "type": "uint256"
       }
     ],
     "name": "setData",
@@ -22,9 +22,9 @@
     "name": "getData",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "",
-        "type": "string"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -32,12 +32,12 @@
   },
   {
     "inputs": [],
-    "name": "testString",
+    "name": "testNum",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "",
-        "type": "string"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

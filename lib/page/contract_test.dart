@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:math';
 import 'package:http/http.dart';// as http;
 import 'package:web3dart/web3dart.dart';
-
+import 'dart:async';
 
 
 class ContractDemo extends StatefulWidget {
@@ -15,11 +15,13 @@ class ContractDemo extends StatefulWidget {
 
 class _DemoState extends State<ContractDemo> {
 
-  String apiResult1 = "";
+  final String address = "0xE4452aB61d4F8C11870b3A996aa94885037E588F"; //In the more final version, this will be provided by the user
+  final String contractAddress = "0x4C4a0F204506dE9c9680b1b4c54F8f5f7728067c"; //Address of deployed contract
+
+  String apiResult1 = "";//These are part of testing
   String apiResult2 = "";
   String apiResult3 = "";
 
-  String address = "0xE4452aB61d4F8C11870b3A996aa94885037E588F"; //In the more final version, this will be provided by the user
 
   //Client htClient = Client();
   Web3Client bcClient = Web3Client("HTTP://127.0.0.1:7545", Client()); //BlockChainClient
@@ -69,36 +71,42 @@ class _DemoState extends State<ContractDemo> {
   });
   }
 
+  Future<List<dynamic>> makeCall(String function, List<dynamic> args) async {
+    String abi = await rootBundle.loadString("Assets/abi.json");
+    final theContract = DeployedContract(ContractAbi.fromJson(abi, "SCV"), EthereumAddress.fromHex(contractAddress)); //Contract from ID
+    final fun = theContract.function(function);
+    List<dynamic> theResult = await bcClient.call(contract: theContract,function: fun, params: args);
+    return theResult;
+  }
+
   void makeRequest2() async
   {
-  //  /Response res = await get(Uri.parse('https://reqres.in/api/products/4'));
-  //Future<void>
-  String contractAddress = "0x788608165A3c9764568F854e01958b7696784C33";
-  String abi = await rootBundle.loadString("Assets/abi.json");
+  //EthereumAddress addr = EthereumAddress.fromHex(address); //Used later for.... something
+    List<dynamic> theResult = await makeCall("getData", []);
+    final result = theResult[0];
 
-  final theContract = DeployedContract(ContractAbi.fromJson(abi, "SCV"), EthereumAddress.fromHex(contractAddress)); //Contract from ID
+    print (result);
 
-  //List<dynamic> args = null;
-  final fun = theContract.function("getData");
-  List<dynamic> theResult = await bcClient.call(contract: theContract,function: fun, params: []);
-
-  //EthereumAddress addr = EthereumAddress.fromHex(address);
-  String result = theResult[0];//"";//res.body;
-
-  setState(() {
-    apiResult2= result;//nicerJSON(result);//result.substring(0, 10);//result;
-  });
+    setState(() {
+      apiResult2= result.toString();//nicerJSON(result);//result.substring(0, 10);//result;
+    });
   }
 
   void makeRequest3() async
   {
+    BigInt par = BigInt.from(5);
+    List<dynamic> theResult = await makeCall("setData", [par]);
+    print ("Here");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    String result = "";//theResult[0];
 
-    /*Future<http.Response>*/Response res = await get(Uri.parse('https://reqres.in/api/products/4'));
-  String result = res.body;
+    for (int i =0;i<theResult.length;i++)
+    {
+      print(theResult[i]);
+    }
 
-  setState(() {
-    apiResult3 = nicerJSON(result);//result.substring(0, 10);//result;
-  });
+    setState(() {
+      apiResult3= result;//nicerJSON(result);//result.substring(0, 10);//result;
+    });
   }
 
 /*
@@ -112,8 +120,6 @@ class _DemoState extends State<ContractDemo> {
   @override
   Widget build(BuildContext context) {
 
-   // TextStyle? contentTheme = Theme.of(context).textTheme.headline3;//.copyWith(color: : Colors.white, displayColor: Colors.white);
-    //contentTheme.apply();
     return Scaffold(
 
       appBar: AppBar(
