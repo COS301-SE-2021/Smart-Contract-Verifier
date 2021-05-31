@@ -16,15 +16,16 @@ class ContractDemo extends StatefulWidget {
 class _DemoState extends State<ContractDemo> {
 
   final String address = "0xE4452aB61d4F8C11870b3A996aa94885037E588F"; //In the more final version, this will be provided by the user
-  final String contractAddress = "0x4C4a0F204506dE9c9680b1b4c54F8f5f7728067c"; //Address of deployed contract
+  final String contractAddress = "0x8C701E4df53Fd13b431fD5f1c7C7216b81535669"; //Address of deployed contract
+  final String pk = "b591be22f682174d2ae1717da50f383a54b9bcebee972ec67f40a6ff4b1cb9af";//Private key of test account
 
   String apiResult1 = "";//These are part of testing
   String apiResult2 = "";
   String apiResult3 = "";
 
-
-  //Client htClient = Client();
   Web3Client bcClient = Web3Client("HTTP://127.0.0.1:7545", Client()); //BlockChainClient
+
+  final conValInputController = TextEditingController(); //Contract value input controller
 
   String nicerJSON(String j) //Just formats a JSON object using very crude methods for improved readability
   {
@@ -71,18 +72,31 @@ class _DemoState extends State<ContractDemo> {
   });
   }
 
-  Future<List<dynamic>> makeCall(String function, List<dynamic> args) async {
+  Future<DeployedContract> getContract() async {
     String abi = await rootBundle.loadString("Assets/abi.json");
     final theContract = DeployedContract(ContractAbi.fromJson(abi, "SCV"), EthereumAddress.fromHex(contractAddress)); //Contract from ID
+    return theContract;
+  }
+
+  Future<List<dynamic>> makeReadCall(String function, List<dynamic> args) async {
+    final theContract = await getContract();
     final fun = theContract.function(function);
     List<dynamic> theResult = await bcClient.call(contract: theContract,function: fun, params: args);
     return theResult;
   }
 
-  void makeRequest2() async
+  Future<String> makeWriteCall(String funct, List<dynamic> args) async {
+    EthPrivateKey cred = EthPrivateKey.fromHex(pk); //Credentials from private key
+    final theContract = await getContract();
+    final fun = theContract.function(funct);
+    final theResult = await bcClient.sendTransaction(cred, Transaction.callContract(contract: theContract, function: fun, parameters: args));
+    return theResult;
+  }
+
+  void makeRequest2() async //Testing reading a value
   {
   //EthereumAddress addr = EthereumAddress.fromHex(address); //Used later for.... something
-    List<dynamic> theResult = await makeCall("getData", []);
+    List<dynamic> theResult = await makeReadCall("getData", []);
     final result = theResult[0];
 
     print (result);
@@ -92,36 +106,33 @@ class _DemoState extends State<ContractDemo> {
     });
   }
 
-  void makeRequest3() async
+  void makeRequest3() async //Testing transactions
   {
-    BigInt par = BigInt.from(5);
-    List<dynamic> theResult = await makeCall("setData", [par]);
-    print ("Here");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-    String result = "";//theResult[0];
 
-    for (int i =0;i<theResult.length;i++)
-    {
-      print(theResult[i]);
+    try {
+      BigInt par = BigInt.parse(conValInputController.text); //BigInt.from(5);
+      //print ('None: ' + par.toString());
+
+      String theResult = await makeWriteCall("setData", [par]);
+      print("Here");
+      setState(() {
+        apiResult3 = "Contract returned: " +
+            theResult;
+      });
     }
-
-    setState(() {
-      apiResult3= result;//nicerJSON(result);//result.substring(0, 10);//result;
-    });
+    on Exception catch (_) {
+      showDialog(context: context, builder: (context) {
+         return AlertDialog(
+         content: Text('Please use a valid number'),
+          );
+      });
+    }
   }
-
-/*
-  @override
-  void initState()
-  {
-    super.initState();
-    httpClient = Client();
-  }*/
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-
       appBar: AppBar(
         title: Text('Contract Tests'),
         centerTitle: true,
@@ -138,7 +149,7 @@ class _DemoState extends State<ContractDemo> {
                   ),
                   OutlinedButton(
                       onPressed: makeRequest1,
-                      child: Text("Make Call", style: TextStyle(color: Colors.white, fontSize: 20)),
+                      child: Text("Make API Call", style: TextStyle(color: Colors.white, fontSize: 20)),
                       style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.white)),
                   ),
                   Container(
@@ -160,7 +171,7 @@ class _DemoState extends State<ContractDemo> {
                   ),
                   OutlinedButton(
                     onPressed: makeRequest2,
-                    child: Text("Make Call", style: TextStyle(color: Colors.white, fontSize: 20)),
+                    child: Text("Get value in contract", style: TextStyle(color: Colors.white, fontSize: 20)),
                     style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.white)),
                   ),
                   Container(
@@ -179,16 +190,30 @@ class _DemoState extends State<ContractDemo> {
                     'API Demo 3:',
                     style: TextStyle(color: Colors.white, fontSize: 60),
                   ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child:Container(
+                    width: 100,
+                    child:TextField(
+                       controller: conValInputController,keyboardType: TextInputType.number,
+                       inputFormatters: <TextInputFormatter>[
+                         FilteringTextInputFormatter.digitsOnly,
+                       ],
+                    ),
+                  ),
+                ),
                   OutlinedButton(
                     onPressed: makeRequest3,
-                    child: Text("Make Call", style: TextStyle(color: Colors.white, fontSize: 20)),
+                    child: Text("Set value in contract", style: TextStyle(color: Colors.white, fontSize: 20)),
                     style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.white)),
                   ),
-                  Container(
-                    child:SelectableText(apiResult3,
+                  SingleChildScrollView(
+                  child: Container(
+                    child: SelectableText(apiResult3,
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
-                  )
+                   )
+                  ),
                 ],
               ),
             ),
