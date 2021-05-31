@@ -10,13 +10,14 @@ contract Verifier{
         address party1;
         address party2;
         bool accepted;
+        uint resolutionTime;
     }
 
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => Agreement) agreements;
 
-    function createAgreement(address party2) public returns(uint agreementID){
-        agreements[nextAgreeID] = Agreement(msg.sender, party2, false);
+    function createAgreement(address party2, uint resolutionTime) public returns(uint agreementID){
+        agreements[nextAgreeID] = Agreement(msg.sender, party2, false, resolutionTime);
         nextAgreeID++;
         return nextAgreeID - 1;
     }
@@ -34,5 +35,12 @@ contract Verifier{
         return agreements[agreeID];
     }
 
+    function closeAgreement(uint agreeID) public{
+        if(msg.sender == agreements[agreeID].party1
+                || msg.sender == agreements[agreeID].party2){
+            if(block.timestamp > agreements[agreeID].resolutionTime)
+                delete agreements[agreeID];
+        }
+    }
 
 }
