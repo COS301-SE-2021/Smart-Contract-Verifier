@@ -17,6 +17,9 @@ contract Verifier{
     mapping(uint => Agreement) agreements;
 
     function createAgreement(address party2, uint resolutionTime) public returns(uint agreementID){
+        if(resolutionTime < block.timestamp)
+            return 2**256 - 1;
+
         agreements[nextAgreeID] = Agreement(msg.sender, party2, false, resolutionTime);
         nextAgreeID++;
         return nextAgreeID - 1;
