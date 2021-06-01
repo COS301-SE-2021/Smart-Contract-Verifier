@@ -13,10 +13,13 @@ class ContractDemo extends StatefulWidget {
 class _DemoState extends State<ContractDemo> {
   final String address =
       "0x99D00540396bb0cB815dF0702d0Ec4Ab507f6891"; //In the more final version, this will be provided by the user
+  final String address2 =
+      "0xc1022300D87929b99A801f75FF194de5D38DDcCb"; //In the more final version, this will be provided by the user
   final String contractAddress =
       "0x096Dc0abbBb79F7669B8bFa6f7dd01EaEeDD0519"; //Address of deployed contract
+// This private key is for a test account, it is not of any value
   final String pk =
-      "b591be22f682174d2ae1717da50f383a54b9bcebee972ec67f40a6ff4b1cb9af"; //Private key of test account
+      "5fcf2d56b9173c04cf90afc671faef0f5466fe01d6ddd61c158a3961d45ad10a"; //Private key of test account
 
   String apiResult1 = ""; //These are part of testing
   String apiResult2 = "";
@@ -115,17 +118,18 @@ class _DemoState extends State<ContractDemo> {
       BigInt par = BigInt.parse(conValInputController.text); //BigInt.from(5);
       //print ('None: ' + par.toString());
 
-      String theResult = await makeWriteCall("setData", [par]);
+      String theResult = await makeWriteCall(
+          "createAgreement", [EthereumAddress.fromHex(address2), par]);
       print("Here");
       setState(() {
         apiResult3 = "Contract returned: " + theResult;
       });
-    } on Exception catch (_) {
+    } on Exception catch (exception) {
       showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              content: Text('Please use a valid number'),
+              content: Text(exception.toString()),
             );
           });
     }
