@@ -1,46 +1,93 @@
 [
   {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "agreeID",
+              "type": "uint256"
+          }
+      ],
+      "name": "acceptAgreement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "agreeID",
+              "type": "uint256"
+          }
+      ],
+      "name": "closeAgreement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "party2",
+              "type": "address"
+          },
+          {
+              "internalType": "uint256",
+              "name": "resolutionTime",
+              "type": "uint256"
+          }
+      ],
+      "name": "createAgreement",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "agreementID",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+  },
+  {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "dat",
-        "type": "uint256"
-      }
+        {
+            "internalType": "uint256",
+            "name": "agreeID",
+            "type": "uint256"
+        }
     ],
-    "name": "setData",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "getData",
+    "name": "getAgreement",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        {
+            "components": [
+                {
+                    "internalType": "address",
+                    "name": "party1",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "party2",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "accepted",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "resolutionTime",
+                    "type": "uint256"
+                }
+            ],
+            "internalType": "struct Verifier.Agreement",
+            "name": "",
+            "type": "tuple"
+        }
     ],
     "stateMutability": "view",
     "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "testNum",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+}
 ]
