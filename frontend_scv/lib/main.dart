@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend_scv/page/Contract_demo.dart';
 //import 'dart:math';
 import 'package:http/http.dart'; // as http;
 import 'package:web3dart/web3dart.dart';
@@ -19,17 +20,20 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static final String title = 'Dashboard SCV';
+  static final String title = 'Demo 1 SCV';
   @override
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: title,
         theme: ThemeData(
-          primarySwatch: Colors.teal,
-          scaffoldBackgroundColor: const Color.fromRGBO(37, 37, 37, 1),
-          accentColor: Colors.tealAccent,
-          cardColor: const Color.fromRGBO(75, 75, 75, 1),
-        ),
+            primarySwatch: Colors.teal,
+            scaffoldBackgroundColor: const Color.fromRGBO(37, 37, 37, 1),
+            accentColor: Colors.tealAccent,
+            // cardColor: const Color.fromRGBO(75, 75, 75, 1),
+            inputDecorationTheme: InputDecorationTheme(
+              labelStyle: TextStyle(color: Colors.tealAccent),
+            ),
+            textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white))),
         home: MainPage(),
       );
 }
@@ -168,7 +172,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        drawer: NavigationDrawerWidget(),
+        // drawer: NavigationDrawerWidget(),
         // endDrawer: NavigationDrawerWidget(),
         appBar: AppBar(
           title: Text(MyApp.title),
@@ -177,163 +181,8 @@ class _MainPageState extends State<MainPage> {
           builder: (context) => Container(
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: 18),
-            child: Dashboard(),
+            child: ContractDemo(),
           ),
         ),
       );
 }
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Contract Tests'),
-//       ),
-//       body: Column(
-//         children: <Widget>[
-//           Row(
-//             children: <Widget>[
-//               Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-//                 child: Container(
-//                   width: 300,
-//                   child: TextField(
-//                     controller: pkInputController,
-//                     decoration: InputDecoration(
-//                         border: OutlineInputBorder(
-
-//                             borderSide: BorderSide(color: Colors.white)),
-//                         hintText: 'Enter your private key pls'),
-//                   ),
-//                 ),
-//               ),
-//               Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-//                 child: Container(
-//                   width: 300,
-//                   child: TextField(
-//                     controller: address2InputController,
-//                     decoration: InputDecoration(
-//                         border: OutlineInputBorder(),
-//                         hintText: 'Enter the second address'),
-//                   ),
-//                 ),
-//               ),
-//               Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-//                 child: Container(
-//                   width: 300,
-//                   child: TextField(
-//                     controller: contractAddressInputController,
-//                     decoration: InputDecoration(
-//                         border: OutlineInputBorder(),
-//                         hintText: 'Enter the Contract address'),
-//                   ),
-//                 ),
-//               ),
-//               Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-//                 child: Container(
-//                   width: 300,
-//                   child: TextField(
-//                     controller: conValInputController,
-//                     keyboardType: TextInputType.number,
-//                     inputFormatters: <TextInputFormatter>[
-//                       FilteringTextInputFormatter.digitsOnly,
-//                     ],
-//                     decoration: new InputDecoration(
-//                       hintText: "Enter value for processing",
-//                       border: new OutlineInputBorder(
-//                           borderSide: new BorderSide(color: Colors.white)),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <
-//               Widget>[
-//             Center(
-//               child: Container(
-//                 /* width: 50,
-//                     height: 50,*/
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   children: <Widget>[
-//                     Text(
-//                       'Open:',
-//                       style: TextStyle(color: Colors.white, fontSize: 60),
-//                     ),
-//                     OutlinedButton(
-//                       onPressed: openAgreement,
-//                       child: Text("Open",
-//                           style: TextStyle(color: Colors.white, fontSize: 20)),
-//                       style: OutlinedButton.styleFrom(
-//                           side: BorderSide(color: Colors.white)),
-//                     ),
-//                     Container(
-//                       // width: 125,
-//                       child: SelectableText(
-//                         apiResult1,
-//                         style: TextStyle(color: Colors.white, fontSize: 20),
-//                       ),
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 children: <Widget>[
-//                   Text(
-//                     'Accept:',
-//                     style: TextStyle(color: Colors.white, fontSize: 60),
-//                   ),
-//                   OutlinedButton(
-//                     onPressed: acceptAgreement,
-//                     child: Text("Get value in contract",
-//                         style: TextStyle(color: Colors.white, fontSize: 20)),
-//                     style: OutlinedButton.styleFrom(
-//                         side: BorderSide(color: Colors.white)),
-//                   ),
-//                   Container(
-//                     child: SelectableText(
-//                       apiResult2,
-//                       style: TextStyle(color: Colors.white, fontSize: 20),
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ),
-//             Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 children: <Widget>[
-//                   Text(
-//                     'Close:',
-//                     style: TextStyle(color: Colors.white, fontSize: 60),
-//                   ),
-//                   OutlinedButton(
-//                     onPressed: closeAgreement,
-//                     child: Text("Set value in contract",
-//                         style: TextStyle(color: Colors.white, fontSize: 20)),
-//                     style: OutlinedButton.styleFrom(
-//                         side: BorderSide(color: Colors.white)),
-//                   ),
-//                   SingleChildScrollView(
-//                       child: Container(
-//                     child: SelectableText(
-//                       apiResult3,
-//                       style: TextStyle(color: Colors.white, fontSize: 20),
-//                     ),
-//                   )),
-//                 ],
-//               ),
-//             ),
-//           ]),
-//         ],
-//       ), NavigationDrawerWidget drawer,
-//     );
-//   }
-// }
-
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$
