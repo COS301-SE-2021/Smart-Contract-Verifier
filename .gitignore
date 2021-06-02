@@ -3,3 +3,6 @@
 /src/abis/
 /bin/src/contracts/
 /node_modules/
+/.dart_tool/
+
+/build/
