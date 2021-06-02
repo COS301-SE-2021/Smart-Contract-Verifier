@@ -4,13 +4,12 @@ const Verifier = artifacts.require("Verifier")
 
 require('chai').use(require('chai-as-promised')).should()
 
-
 contract('Verifier', (accounts) =>{
     // Unit tests for smart contract go here
 
 
 
-    describe("Verifier positive tests", async () =>{
+    describe("Verifier unit tests", async () =>{
 
         let verifier
 
@@ -20,12 +19,20 @@ contract('Verifier', (accounts) =>{
 
         it("Can create agreement", async () =>{
             const timestamp = Math.round(Date.now() / 1000)
-            verifier.createAgreement(accounts[1], timestamp + 10)
+            verifier.createAgreement(accounts[1], timestamp - 1)
 
             var agree = await verifier.getAgreement(0)
 
             assert.equal(agree.party1, accounts[0])
             assert.equal(agree.party2, accounts[1])
+            assert.equal(agree.accepted, false)
+
+        })
+
+        it("Can't accept someone else's agreement", async () =>{
+            verifier.acceptAgreement(0, {from: accounts[2]})
+
+            var agree = await verifier.getAgreement(0)
             assert.equal(agree.accepted, false)
 
         })
@@ -37,27 +44,15 @@ contract('Verifier', (accounts) =>{
             assert.equal(agree.accepted, true)
 
         })
-    })
 
+        it("Vote on agreement", async()=>{
+            verifier.voteResolution(0, true, {from: accounts[0]});
+            verifier.voteResolution(0, true, {from: accounts[1]});
 
-    describe("Verifier negative tests", async () =>{
-        // Runs on a new Verifier unaffected by data from previous tests
-        
-        let verifier
-
-        before(async () =>{
-            verifier = await Verifier.new()
- 
-            const timestamp = Math.round(Date.now() / 1000)
-            verifier.createAgreement(accounts[1], timestamp + 10)
-        })
-
-        it("Can't accept someone else's agreement", async () =>{
-            verifier.acceptAgreement(0, {from: accounts[2]})
 
             var agree = await verifier.getAgreement(0)
-            assert.equal(agree.accepted, false)
-
+            assert.equal(agree.party1Vote, true)
+            assert.equal(agree.party2Vote, true)
         })
     })
 

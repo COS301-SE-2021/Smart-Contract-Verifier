@@ -9,20 +9,19 @@ contract Verifier{
     struct Agreement{
         address party1;
         address party2;
-        bool accepted;
         uint resolutionTime;
+        bool accepted;
+        bool party1Vote;
+        bool party2Vote;
     }
 
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => Agreement) agreements;
 
-    function createAgreement(address party2, uint resolutionTime) public returns(uint agreementID){
-        if(resolutionTime < block.timestamp)
-            return 2**256 - 1;
-
-        agreements[nextAgreeID] = Agreement(msg.sender, party2, false, resolutionTime);
+    function createAgreement(address party2, uint resolutionTime) public{
+        // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
+        agreements[nextAgreeID] = Agreement(msg.sender, party2, resolutionTime, false, false, false);
         nextAgreeID++;
-        return nextAgreeID - 1;
     }
 
     function acceptAgreement(uint agreeID) public{
@@ -38,10 +37,22 @@ contract Verifier{
         return agreements[agreeID];
     }
 
+    function voteResolution(uint agreeID, bool vote) public{
+        require(agreements[agreeID].resolutionTime < block.timestamp);
+        require(agreements[agreeID].accepted);
+
+        if(msg.sender == agreements[agreeID].party1){
+            agreements[agreeID].party1Vote = vote;
+        }
+        else if(msg.sender == agreements[agreeID].party2){
+            agreements[agreeID].party2Vote = vote;
+        }
+    }
+
     function closeAgreement(uint agreeID) public{
         if(msg.sender == agreements[agreeID].party1
                 || msg.sender == agreements[agreeID].party2){
-            if(block.timestamp > agreements[agreeID].resolutionTime)
+            if(agreements[agreeID].party1Vote == true && agreements[agreeID].party2Vote == true)
                 delete agreements[agreeID];
         }
     }
