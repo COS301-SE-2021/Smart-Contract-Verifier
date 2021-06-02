@@ -5,7 +5,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // DEV BRANCH
+  // FRONTEND_DEV BRANCH
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
