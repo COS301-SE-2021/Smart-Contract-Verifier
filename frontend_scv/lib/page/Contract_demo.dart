@@ -40,6 +40,7 @@ class _DemoState extends State<ContractDemo> {
   String apiResult1 = ""; //These are part of the demo
   String apiResult2 = "";
   String apiResult3 = "";
+  String apiResult4 = "";
 
   int tryVal = -1;
   BigInt sendVal = BigInt.from(0);
@@ -141,6 +142,38 @@ class _DemoState extends State<ContractDemo> {
     });
   }
 
+  void getContractRes() async {
+    try {
+      loadValues();
+    } on Exception catch (exception) {
+      //Failure to parse
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(exception.toString()),
+            );
+          });
+
+      return;
+    }
+    List<dynamic> theResult = await makeReadCall("getAgreement", [sendVal]);
+
+    print ("Start");
+    for (int i =0;i<theResult.length;i++)
+      {
+        print (theResult[i]);
+      }
+    print ("End");
+
+    //String ret = '';
+   // for (int i)
+
+    setState(() {
+      apiResult4 = theResult[0].toString();
+    });
+  }
+
   void acceptAgreement() async {
     try {
       loadValues();
@@ -192,18 +225,28 @@ class _DemoState extends State<ContractDemo> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           TextField(
+            style: TextStyle(color: Colors.white70),
             controller: pkInputController,
-            decoration: InputDecoration(labelText: 'Private Key'),
+            decoration: InputDecoration(
+              labelText: 'Private Key',
+            ),
           ),
           TextField(
+            style: TextStyle(color: Colors.white70),
             controller: address2InputController,
             decoration: InputDecoration(labelText: "Second Address"),
           ),
           TextField(
+            style: TextStyle(
+              color: Colors.white70,
+            ),
             controller: contractAddressInputController,
-            decoration: InputDecoration(labelText: "Contract Address"),
+            decoration: InputDecoration(
+              labelText: "Contract Address",
+            ),
           ),
           TextField(
+              style: TextStyle(color: Colors.white70),
               controller: conValInputController,
               keyboardType: TextInputType.number,
               inputFormatters: <TextInputFormatter>[
@@ -215,41 +258,33 @@ class _DemoState extends State<ContractDemo> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(
-                  children: [
-                    OutlinedButton(
-                      onPressed: openAgreement,
-                      child: Text(
-                        "Open\nContract",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    // SelectableText(apiResult1),
-                  ],
+                OutlinedButton(
+                  onPressed: getContractRes,
+                  child: Text(
+                    "Get\nContract",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                Column(
-                  children: [
-                    OutlinedButton(
-                      onPressed: acceptAgreement,
-                      child: Text(
-                        "Accept\nContract",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    // SelectableText(apiResult2),
-                  ],
+                OutlinedButton(
+                  onPressed: openAgreement,
+                  child: Text(
+                    "Open\nContract",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                Column(
-                  children: [
-                    OutlinedButton(
-                      onPressed: closeAgreement,
-                      child: Text(
-                        "Close\nContract",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    // SelectableText(apiResult3),
-                  ],
+                OutlinedButton(
+                  onPressed: acceptAgreement,
+                  child: Text(
+                    "Accept\nContract",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: closeAgreement,
+                  child: Text(
+                    "Close\nContract",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
@@ -273,6 +308,12 @@ class _DemoState extends State<ContractDemo> {
                     Text(
                       "Close Contract Return Value:\n$apiResult2\n",
                       style: TextStyle(color: Colors.orange),
+                    ),
+                    Text(
+                      "Get Contract Return Value:\n$apiResult4\n",
+                      style: TextStyle(
+                        color: Colors.amber,
+                      ),
                     ),
                   ],
                 ),
