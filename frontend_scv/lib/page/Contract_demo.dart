@@ -142,6 +142,38 @@ class _DemoState extends State<ContractDemo> {
     });
   }
 
+  void getContractRes() async {
+    try {
+      loadValues();
+    } on Exception catch (exception) {
+      //Failure to parse
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(exception.toString()),
+            );
+          });
+
+      return;
+    }
+    List<dynamic> theResult = await makeReadCall("getAgreement", [sendVal]);
+
+    print ("Start");
+    for (int i =0;i<theResult.length;i++)
+      {
+        print (theResult[i]);
+      }
+    print ("End");
+
+    //String ret = '';
+   // for (int i)
+
+    setState(() {
+      apiResult4 = theResult[0].toString();
+    });
+  }
+
   void acceptAgreement() async {
     try {
       loadValues();
@@ -227,7 +259,7 @@ class _DemoState extends State<ContractDemo> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 OutlinedButton(
-                  onPressed: getContract,
+                  onPressed: getContractRes,
                   child: Text(
                     "Get\nContract",
                     textAlign: TextAlign.center,
@@ -278,7 +310,7 @@ class _DemoState extends State<ContractDemo> {
                       style: TextStyle(color: Colors.orange),
                     ),
                     Text(
-                      "Get Contract Return Value:\n\n", //TODO
+                      "Get Contract Return Value:\n$apiResult4\n",
                       style: TextStyle(
                         color: Colors.amber,
                       ),
