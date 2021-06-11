@@ -1,113 +1,188 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:frontend_scv/page/Contract_demo.dart';
+//import 'dart:math';
+import 'package:http/http.dart'; // as http;
+import 'package:web3dart/web3dart.dart';
+import 'dart:async';
 
-void main() {
+import 'package:frontend_scv/widget/navigation_drawer_widget.dart';
+import 'package:frontend_scv/widget/dashboard_widget.dart';
+
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // DEV BRANCH
+  static final String title = 'Demo 1 SCV';
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Smart Contract Verifier',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.cyan,
-      ),
-      home: MyHomePage(title: 'Dashboard'),
-    );
+  Widget build(BuildContext context) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: title,
+        theme: ThemeData(
+            primarySwatch: Colors.teal,
+            scaffoldBackgroundColor: const Color.fromRGBO(37, 37, 37, 1),
+            accentColor: Colors.tealAccent,
+            // cardColor: const Color.fromRGBO(75, 75, 75, 1),
+            inputDecorationTheme: InputDecorationTheme(
+              labelStyle: TextStyle(color: Colors.tealAccent),
+            ),
+            textTheme: TextTheme(bodyText1: TextStyle(color: Colors.white))),
+        home: MainPage(),
+      );
+}
+
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  String address = '';
+  // "0x99D00540396bb0cB815dF0702d0Ec4Ab507f6891"; //In the more final version, this will be provided by the user
+  String address2 = '';
+  //"0xc1022300D87929b99A801f75FF194de5D38DDcCb"; //In the more final version, this will be provided by the user
+  String contractAddress = '';
+  //"0x096Dc0abbBb79F7669B8bFa6f7dd01EaEeDD0519"; //Address of deployed contract
+// This private key is for a test account, it is not of any value
+  String pk = '';
+  //"5fcf2d56b9173c04cf90afc671faef0f5466fe01d6ddd61c158a3961d45ad10a"; //Private key of test account
+
+  String apiResult1 = ""; //These are part of the demo
+  String apiResult2 = "";
+  String apiResult3 = "";
+
+  int tryVal = -1;
+  BigInt sendVal = BigInt.from(0);
+
+  Web3Client bcClient =
+      Web3Client("HTTP://127.0.0.1:8545", Client()); //BlockChainClient
+
+  final conValInputController =
+      TextEditingController(); //Contract value input controller
+  final pkInputController =
+      TextEditingController(); //Private key value input controller
+  final address2InputController =
+      TextEditingController(); //Second address value input controller
+  final contractAddressInputController =
+      TextEditingController(); //Input the contract address
+
+  void loadValues() {
+    pk = pkInputController.text;
+    contractAddress = contractAddressInputController.text;
+    address2 = address2InputController.text;
+    sendVal = BigInt.parse(conValInputController.text);
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  Future<DeployedContract> getContract() async {
+    String abi = await rootBundle.loadString("Assets/abi.json");
+    final theContract = DeployedContract(ContractAbi.fromJson(abi, "SCV"),
+        EthereumAddress.fromHex(contractAddress)); //Contract from ID
+    return theContract;
+  }
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  Future<List<dynamic>> makeReadCall(
+      String function, List<dynamic> args) async {
+    final theContract = await getContract();
+    final fun = theContract.function(function);
+    List<dynamic> theResult =
+        await bcClient.call(contract: theContract, function: fun, params: args);
+    return theResult;
+  }
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  Future<String> makeWriteCall(String funct, List<dynamic> args) async {
+    EthPrivateKey cred =
+        EthPrivateKey.fromHex(pk); //Credentials from private key
+    final theContract = await getContract();
+    final fun = theContract.function(funct);
+    final theResult = await bcClient.sendTransaction(
+        cred,
+        Transaction.callContract(
+            contract: theContract, function: fun, parameters: args));
+    return theResult;
+  }
 
-  final String title;
+  void openAgreement() async {
+    try {
+      loadValues();
+    } on Exception catch (exception) {
+      //Failure to parse
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(exception.toString()),
+            );
+          });
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+      return;
+    }
+    String theResult = await makeWriteCall(
+        "createAgreement", [EthereumAddress.fromHex(address2), sendVal]);
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      apiResult1 = "Contract returned: " + theResult;
+    });
+  }
+
+  void acceptAgreement() async {
+    try {
+      loadValues();
+    } on Exception catch (exception) {
+      //Failure to parse
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(exception.toString()),
+            );
+          });
+      return;
+    }
+    String theResult = await makeWriteCall("acceptAgreement", [sendVal]);
+    setState(() {
+      apiResult2 = "Contract returned: " + theResult;
+    });
+  }
+
+  void closeAgreement() async {
+    try {
+      loadValues();
+    } on Exception catch (exception) {
+      //Failure to parse
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(exception.toString()),
+            );
+          });
+      return;
+    }
+    String theResult = await makeWriteCall("closeAgreement", [sendVal]);
+    setState(() {
+      apiResult3 = "Contract returned: " + theResult;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+  Widget build(BuildContext context) => Scaffold(
+        // drawer: NavigationDrawerWidget(),
+        // endDrawer: NavigationDrawerWidget(),
+        appBar: AppBar(
+          title: Text(MyApp.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+        body: Builder(
+          builder: (context) => Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 18),
+            child: ContractDemo(),
+          ),
+        ),
+      );
 }
