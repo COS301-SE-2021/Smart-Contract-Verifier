@@ -1,5 +1,5 @@
-const Verifier = artifacts.require("Verifier");
+const Migrations = artifacts.require("Migrations");
 
 module.exports = function (deployer) {
-  deployer.deploy(Verifier);
+  deployer.deploy(Migrations);
 };
