@@ -1,6 +1,6 @@
 /.idea/vcs.xml
 /.idea/workspace.xml
-/src/abis/
+/SmartContract/abis/
 /bin/src/contracts/
 /node_modules/
 /.dart_tool/
