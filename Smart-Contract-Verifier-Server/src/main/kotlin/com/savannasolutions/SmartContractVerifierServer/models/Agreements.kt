@@ -1,3 +1,12 @@
 package com.savannasolutions.SmartContractVerifierServer.models
 
-data class Agreements()
+import java.util.*
+import javax.persistence.Entity;
+import javax.persistence.Id
+import javax.persistence.OneToOne
+
+@Entity
+data class Agreements(@Id val ContractID:Int, @OneToOne val PartyA:User, @OneToOne val PartyB:User, val CreatedDate:Date, var SealedDate:Date, var MovedToBlockChain:Boolean)
+{
+
+}
