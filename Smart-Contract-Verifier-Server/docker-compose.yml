@@ -1,3 +1,4 @@
+#will later add rules to package server in container for easier testing and deployment
 services:
   postgres:
     image: postgres:latest
