@@ -10,7 +10,7 @@ enum class ConditionStatus{ACCEPTED, REJECTED, PENDING}
 
 @Entity
 @Table(name = "Conditions")
-data class Conditions(@Id val conditionID: Int,
+data class Conditions(@Id val conditionID: UUID,
                         var conditionDescription: String,
                         var conditionStatus: Enum<ConditionStatus>,
                         val proposingUser: String,
