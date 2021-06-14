@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "Messages")
-data class Messages(@Id val messageID: String,
+data class Messages(@Id val messageID: UUID,
                     @OneToOne val sender: User,
                     val message: String,
                     val sendDate: Date,
