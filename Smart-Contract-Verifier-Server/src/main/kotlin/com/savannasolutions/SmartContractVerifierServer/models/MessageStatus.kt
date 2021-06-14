@@ -4,7 +4,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-data class MessageStatus(@Id val MessageStatusID:Int,
+data class MessageStatus(@Id @GeneratedValue val MessageStatusID:Int,
                          @OneToOne val MessagesID:Messages,
                          @OneToOne val RecipientID:User,
                          val ReadDate:Date,)
