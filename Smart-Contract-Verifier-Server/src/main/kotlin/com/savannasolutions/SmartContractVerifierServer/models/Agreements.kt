@@ -4,6 +4,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
+@Table(name = "Agreements")
 data class Agreements(@Id @GeneratedValue val ContractID:Int,
                       var blockchainID: String,
                       @OneToOne val PartyA:User,
