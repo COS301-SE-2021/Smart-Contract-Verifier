@@ -4,10 +4,12 @@ import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.OneToOne
+import javax.persistence.Table
 
 enum class ConditionStatus{ACCEPTED, REJECTED, PENDING}
 
 @Entity
+@Table(name = "Conditions")
 data class Conditions(@Id val conditionID: Int,
                         var conditionDescription: String,
                         var conditionStatus: Enum<ConditionStatus>,
