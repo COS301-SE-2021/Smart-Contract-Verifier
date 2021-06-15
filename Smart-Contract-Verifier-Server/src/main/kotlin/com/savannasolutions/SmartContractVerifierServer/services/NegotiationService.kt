@@ -20,5 +20,5 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse? = null
 
-    fun rejectCondition(rejectConditionRequest: RejectConditionRequest): RejectConditionRequest{}
+    fun rejectCondition(rejectConditionRequest: RejectConditionRequest): RejectConditionRequest? = null
 }
