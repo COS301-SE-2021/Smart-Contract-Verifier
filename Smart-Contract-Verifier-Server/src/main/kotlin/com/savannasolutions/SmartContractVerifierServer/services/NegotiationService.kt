@@ -4,6 +4,7 @@ import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsR
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.GetAgreementDetailsResponse
+import com.savannasolutions.SmartContractVerifierServer.responses.GetAllConditionsResponse
 import org.springframework.stereotype.Service
 
 
@@ -21,4 +22,6 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse? = null
 
     fun rejectCondition(rejectConditionRequest: RejectConditionRequest): RejectConditionRequest? = null
+
+    fun getAllConditionsRequest(getAllConditionsRequest: GetAllConditionsRequest):GetAllConditionsResponse? = null
 }
