@@ -31,4 +31,8 @@ class NegotiationController constructor(private val negotiationService: Negotiat
     @PostMapping("/create-condition")
     fun createCondition(@RequestBody createConditionRequest: CreateConditionRequest) =
             negotiationService.createCondition(createConditionRequest)
+
+    @PostMapping("/create-agreement")
+    fun createAgreement(@RequestBody createAgreementRequest: CreateAgreementRequest) =
+            negotiationService.createAgreement(createAgreementRequest)
 }
