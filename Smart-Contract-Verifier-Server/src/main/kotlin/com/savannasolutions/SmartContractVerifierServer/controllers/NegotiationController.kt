@@ -1,9 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.controllers
 
-import com.savannasolutions.SmartContractVerifierServer.requests.AcceptConditionRequest
-import com.savannasolutions.SmartContractVerifierServer.requests.GetAgreementDetailsRequest
-import com.savannasolutions.SmartContractVerifierServer.requests.GetAllConditionsRequest
-import com.savannasolutions.SmartContractVerifierServer.requests.RejectConditionRequest
+import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.services.NegotiationService
 import org.springframework.web.bind.annotation.*
 
@@ -30,4 +27,8 @@ class NegotiationController constructor(private val negotiationService: Negotiat
 
     @GetMapping("/hello")
     fun hello() = "HELLO!"
+
+    @PostMapping("/create-condition")
+    fun createCondition(@RequestBody createConditionRequest: CreateConditionRequest) =
+            negotiationService.createCondition(createConditionRequest)
 }
