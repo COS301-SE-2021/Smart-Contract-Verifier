@@ -15,12 +15,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                      val conditionsRepository: ConditionsRepository,
                                      ){
 
-    fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionRequest{}
+    fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionRequest? = null
 
-    fun createAgreement(createAgreementRequest: CreateAgreementRequest): CreateAgreementRequest {}
+    fun createAgreement(createAgreementRequest: CreateAgreementRequest): CreateAgreementRequest? = null
 
-    fun createCondition(createConditionRequest: CreateConditionRequest): CreateConditionRequest{}
+    fun createCondition(createConditionRequest: CreateConditionRequest): CreateConditionRequest? = null
 
-    fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse{}
+    fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse? = null
 
 }
