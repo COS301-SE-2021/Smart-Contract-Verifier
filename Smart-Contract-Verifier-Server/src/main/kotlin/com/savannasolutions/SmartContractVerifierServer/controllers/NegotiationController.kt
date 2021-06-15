@@ -35,4 +35,8 @@ class NegotiationController constructor(private val negotiationService: Negotiat
     @PostMapping("/create-agreement")
     fun createAgreement(@RequestBody createAgreementRequest: CreateAgreementRequest) =
             negotiationService.createAgreement(createAgreementRequest)
+
+    @PostMapping("/seal-agreement")
+    fun sealAgreement(@RequestBody sealAgreementRequest: SealAgreementRequest) =
+            negotiationService.sealAgreement(sealAgreementRequest)
 }
