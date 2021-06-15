@@ -1,3 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.requests
 
-data class CreateConditionRequest(val PreposedUser: String, val AgreementID: String, val ConditionDescription: String)
+import java.util.*
+
+data class CreateConditionRequest(val PreposedUser: String, val AgreementID: UUID, val ConditionDescription: String)
