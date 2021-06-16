@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.services
 
+import com.savannasolutions.SmartContractVerifierServer.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
