@@ -1,15 +1,12 @@
 package com.savannasolutions.SmartContractVerifierServer.models
 
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.OneToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "Messages")
 data class Messages(@Id val messageID: UUID,
-                    @OneToOne val sender: User,
+                    @OneToOne(fetch = FetchType.LAZY) val sender: User,
                     val message: String,
                     val sendDate: Date,
-                    @OneToOne val contract: Agreements,)
+                    @OneToOne(fetch = FetchType.LAZY) val contract: Agreements,)
