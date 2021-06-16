@@ -12,4 +12,4 @@ data class Conditions(@Id @GeneratedValue val conditionID: UUID,
                       var conditionStatus: Enum<ConditionStatus>,
                       val proposingUser: String,
                       val proposalDate: Date,
-                      @OneToOne val contract: Agreements,)
+                      @OneToOne(fetch = FetchType.LAZY) val contract: Agreements,)
