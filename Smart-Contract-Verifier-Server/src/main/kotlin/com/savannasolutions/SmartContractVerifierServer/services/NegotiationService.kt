@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.services
 
-import com.savannasolutions.SmartContractVerifierServer.models.*
+import com.savannasolutions.SmartContractVerifierServer.models.Agreements
+import com.savannasolutions.SmartContractVerifierServer.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.UserRepository
@@ -59,8 +60,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun getAllConditions(getAllConditionsRequest: GetAllConditionsRequest):GetAllConditionsResponse{
         if(agreementsRepository.existsById(getAllConditionsRequest.AgreementID))
-            return GetAllConditionsResponse(agreementsRepository.getById(getAllConditionsRequest.AgreementID).conditions)
-        return GetAllConditionsResponse(emptyList())
+            return GetAllConditionsResponse(agreementsRepository.getById(getAllConditionsRequest.AgreementID).conditions, ResponseStatus.SUCCESSFUL)
+        return GetAllConditionsResponse(emptyList(), ResponseStatus.FAILED)
     }
 
     fun sealAgreement(sealAgreementRequest: SealAgreementRequest): SealAgreementResponse? = null
