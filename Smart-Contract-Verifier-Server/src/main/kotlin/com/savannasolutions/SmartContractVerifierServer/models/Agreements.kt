@@ -12,5 +12,5 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       val CreatedDate:Date,
                       var SealedDate:Date,
                       var MovedToBlockChain:Boolean,
-                      @OneToMany var conditions: List<Conditions>,
-                      @OneToMany var messages: List<Messages>,)
+                      @OneToMany(fetch = FetchType.LAZY) var conditions: List<Conditions>,
+                      @OneToMany(fetch = FetchType.LAZY) var messages: List<Messages>,)
