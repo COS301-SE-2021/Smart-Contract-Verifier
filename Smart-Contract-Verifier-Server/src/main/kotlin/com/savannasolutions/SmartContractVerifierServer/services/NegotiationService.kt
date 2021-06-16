@@ -2,6 +2,7 @@ package com.savannasolutions.SmartContractVerifierServer.services
 
 import com.savannasolutions.SmartContractVerifierServer.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.models.ConditionStatus
+import com.savannasolutions.SmartContractVerifierServer.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.UserRepository
@@ -46,7 +47,32 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return CreateAgreementResponse(nAgreement.ContractID,ResponseStatus.SUCCESSFUL);
     }
 
-    fun createCondition(createConditionRequest: CreateConditionRequest): CreateConditionRequest? = null
+    fun createCondition(createConditionRequest: CreateConditionRequest): CreateConditionResponse{
+        if(!agreementsRepository.existsById(createConditionRequest.AgreementID))
+        {
+            return CreateConditionResponse(null, ResponseStatus.FAILED);
+        }
+        if(createConditionRequest.ConditionDescription.isEmpty())
+        {
+            return CreateConditionResponse(null, ResponseStatus.FAILED);
+        }
+        if(createConditionRequest.PreposedUser.isEmpty())
+        {
+            return CreateConditionResponse(null, ResponseStatus.FAILED);
+        }
+        val agreement = agreementsRepository.getById(createConditionRequest.AgreementID);
+
+        val nCondition = Conditions(UUID.randomUUID(),
+                                    createConditionRequest.ConditionDescription,
+                                    ConditionStatus.PENDING,
+                                    createConditionRequest.PreposedUser,
+                                    Date(),
+                                    agreement);
+
+        conditionsRepository.save(nCondition);
+
+        return CreateConditionResponse(nCondition.conditionID, ResponseStatus.SUCCESSFUL);
+    }
 
     fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse? = null
 
