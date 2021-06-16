@@ -1,18 +1,19 @@
 package com.savannasolutions.SmartContractVerifierServer.services
 
-import com.savannasolutions.SmartContractVerifierServer.models.ConditionStatus
-import com.savannasolutions.SmartContractVerifierServer.models.Conditions
+import com.savannasolutions.SmartContractVerifierServer.models.*
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
+import com.savannasolutions.SmartContractVerifierServer.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.*
 import org.springframework.stereotype.Service
+import java.util.*
 
 
 @Service
 class NegotiationService constructor(val agreementsRepository: AgreementsRepository,
                                      val conditionsRepository: ConditionsRepository,
-                                     ){
+                                     val userRepository: UserRepository,){
 
     fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionResponse{
         if(conditionsRepository.existsById(acceptConditionRequest.conditionID)){
@@ -22,7 +23,27 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return AcceptConditionResponse(ResponseStatus.FAILED)
     }
 
-    fun createAgreement(createAgreementRequest: CreateAgreementRequest): CreateAgreementRequest? = null
+    fun createAgreement(createAgreementRequest: CreateAgreementRequest): CreateAgreementResponse{
+        if(createAgreementRequest.PartyA.isEmpty())
+            return CreateAgreementResponse(null,ResponseStatus.FAILED);
+
+        if(createAgreementRequest.PartyB.isEmpty())
+            return CreateAgreementResponse(null,ResponseStatus.FAILED);
+
+        val nAgreement = Agreements(UUID.randomUUID(),
+                                    UUID.randomUUID().toString(),
+                                    createAgreementRequest.PartyA,
+                                    createAgreementRequest.PartyB,
+                                    Date(),
+                                    null,
+                                    false,
+                                    null,
+                                    null,);
+
+        agreementsRepository.save(nAgreement);
+
+        return CreateAgreementResponse(nAgreement.ContractID,ResponseStatus.SUCCESSFUL);
+    }
 
     fun createCondition(createConditionRequest: CreateConditionRequest): CreateConditionRequest? = null
 
