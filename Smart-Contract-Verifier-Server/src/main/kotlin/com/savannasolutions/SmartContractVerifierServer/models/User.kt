@@ -6,7 +6,7 @@ import javax.persistence.*
 data class User(@Id val publicWalletID: String,
                 val email: String,
                 val alias: String,
-                @OneToMany var agreements: List<Agreements> )
+                @OneToMany(fetch = FetchType.LAZY) var agreements: List<Agreements> )
 
 class MockUser{
     private val emptyAgreements = ArrayList<Agreements>();
