@@ -7,8 +7,8 @@ import javax.persistence.*
 @Table(name = "Agreements")
 data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       var blockchainID: String,
-                      @OneToOne val PartyA:User,
-                      @OneToOne val PartyB:User,
+                      val PartyA: String,
+                      val PartyB: String,
                       val CreatedDate:Date,
                       var SealedDate:Date,
                       var MovedToBlockChain:Boolean,
