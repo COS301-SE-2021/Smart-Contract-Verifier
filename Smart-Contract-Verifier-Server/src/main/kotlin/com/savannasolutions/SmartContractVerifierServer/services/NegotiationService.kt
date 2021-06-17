@@ -38,6 +38,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                     createAgreementRequest.PartyB,
                                     Date(),
                                     null,
+                                    null,
                                     false,
                                     null,
                                     null,);
@@ -74,7 +75,30 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return CreateConditionResponse(nCondition.conditionID, ResponseStatus.SUCCESSFUL);
     }
 
-    fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse? = null
+    fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse{
+        if(!agreementsRepository.existsById(getAgreementDetailsRequest.AgreementID))
+        {
+            return GetAgreementDetailsResponse(getAgreementDetailsRequest.AgreementID,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            ResponseStatus.FAILED);
+        }
+        val agreement = agreementsRepository.getById(getAgreementDetailsRequest.AgreementID);
+        return GetAgreementDetailsResponse(agreement.ContractID,
+                                            agreement.Duration,
+                                            agreement.PartyA,
+                                            agreement.PartyB,
+                                            agreement.CreatedDate,
+                                            agreement.SealedDate,
+                                            agreement.MovedToBlockChain,
+                                            agreement.conditions,
+                                            ResponseStatus.SUCCESSFUL);
+    }
 
     fun rejectCondition(rejectConditionRequest: RejectConditionRequest): RejectConditionResponse {
         if(conditionsRepository.existsById(rejectConditionRequest.conditionID)){
