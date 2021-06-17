@@ -90,5 +90,14 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return GetAllConditionsResponse(emptyList(), ResponseStatus.FAILED)
     }
 
-    fun sealAgreement(sealAgreementRequest: SealAgreementRequest): SealAgreementResponse? = null
+    fun sealAgreement(sealAgreementRequest: SealAgreementRequest): SealAgreementResponse{
+        if(!agreementsRepository.existsById(sealAgreementRequest.AgreementID))
+        {
+            return SealAgreementResponse(ResponseStatus.FAILED);
+        }
+        val agreement = agreementsRepository.getById(sealAgreementRequest.AgreementID);
+        agreement.SealedDate = Date();
+        agreementsRepository.save(agreement);
+        return SealAgreementResponse(ResponseStatus.SUCCESSFUL);
+    }
 }
