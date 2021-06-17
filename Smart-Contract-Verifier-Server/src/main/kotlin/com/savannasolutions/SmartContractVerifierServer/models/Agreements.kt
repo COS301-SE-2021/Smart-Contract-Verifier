@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.models
 
+import java.time.Duration
 import java.util.*
 import javax.persistence.*
 
@@ -11,7 +12,7 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       val PartyB: String,
                       val CreatedDate:Date,
                       var SealedDate:Date?,
-                      var Duration:Date?,
+                      var Duration:Duration?,
                       var MovedToBlockChain:Boolean,
                       @OneToMany(fetch = FetchType.LAZY) var conditions: List<Conditions>?,
                       @OneToMany(fetch = FetchType.LAZY) var messages: List<Messages>?,)
