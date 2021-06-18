@@ -1,5 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.models
 
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import java.time.Duration
 import java.util.*
 import javax.persistence.*
@@ -14,5 +16,5 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       var SealedDate:Date?,
                       var Duration:Duration?,
                       var MovedToBlockChain:Boolean,
-                      @OneToMany(fetch = FetchType.LAZY) var conditions: List<Conditions>?,
-                      @OneToMany(fetch = FetchType.LAZY) var messages: List<Messages>?,)
+                      @OneToMany(fetch = FetchType.LAZY) @Cascade(CascadeType.REMOVE) var conditions: List<Conditions>?,
+                      @OneToMany(fetch = FetchType.LAZY) @Cascade(CascadeType.REMOVE) var messages: List<Messages>?,)
