@@ -34,6 +34,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         if(createAgreementRequest.PartyB.isEmpty())
             return CreateAgreementResponse(null,ResponseStatus.FAILED)
 
+        if(createAgreementRequest.PartyB == createAgreementRequest.PartyA)
+            return CreateAgreementResponse(null, ResponseStatus.FAILED)
+
         var nAgreement = Agreements(UUID.randomUUID(),
                                     null,
                                     createAgreementRequest.PartyA,
