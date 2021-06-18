@@ -7,6 +7,7 @@ import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsR
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.requests.AcceptConditionRequest
 import com.savannasolutions.SmartContractVerifierServer.requests.CreateAgreementRequest
+import com.savannasolutions.SmartContractVerifierServer.requests.CreateConditionRequest
 import com.savannasolutions.SmartContractVerifierServer.requests.RejectConditionRequest
 import com.savannasolutions.SmartContractVerifierServer.responses.ResponseStatus
 import org.junit.jupiter.api.Assertions.*
@@ -192,16 +193,34 @@ internal class NegotiationServiceTest
         assertEquals(negotiationService.createAgreement(CreateAgreementRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", "0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6")).status, ResponseStatus.FAILED)
 
         //Successful Response
-        val response = negotiationService.createAgreement(CreateAgreementRequest("0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF","0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6"));
+        val response = negotiationService.createAgreement(CreateAgreementRequest("0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF","0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6"))
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotEquals(response.agreementID, null)
-        val responseUUID = response.agreementID;
+        val responseUUID = response.agreementID
         assertNotEquals(responseUUID?.let { agreementsRepository.getById(it) }, null)
 
     }
 
     @Test
     fun createCondition() {
+        //Failed responses
+        assertEquals(negotiationService.createCondition(CreateConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6",UUID.randomUUID(),"This test should fail")).status,ResponseStatus.FAILED)
+        assertEquals(negotiationService.createCondition(CreateConditionRequest("",agreementAUUID,"This test should fail")).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.createCondition(CreateConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6",agreementAUUID,"")).status,ResponseStatus.FAILED)
+        assertEquals(negotiationService.createCondition(CreateConditionRequest("0x743Fb032c0bE976e1178d8157f911a9e825d9E23",agreementAUUID,"")).status,ResponseStatus.FAILED)
+
+        //Successful response
+        val response = negotiationService.createCondition(CreateConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", agreementAUUID, "This test should succeed"));
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertNotEquals(response.conditionID?.let { conditionsRepository.getById(it) }, null)
+
+        assertNotNull(agreementsRepository.getById(agreementAUUID).conditions);
+        var responseList = ArrayList<Conditions>()
+        responseList = agreementsRepository.getById(agreementAUUID).conditions as ArrayList<Conditions>
+        val condition = response.conditionID?.let { conditionsRepository.findById(it) }
+        assertNotEquals(responseList, null)
+        assertTrue(responseList.contains(condition as Conditions))
+
     }
 
     @Test
