@@ -104,7 +104,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun rejectCondition(rejectConditionRequest: RejectConditionRequest): RejectConditionResponse {
         if(conditionsRepository.existsById(rejectConditionRequest.conditionID)){
-            conditionsRepository.getById(rejectConditionRequest.conditionID).conditionStatus = ConditionStatus.REJECTED
+            var condition = conditionsRepository.getById(rejectConditionRequest.conditionID)
+            condition.conditionStatus = ConditionStatus.REJECTED
+            conditionsRepository.save(condition)
             return RejectConditionResponse(ResponseStatus.SUCCESSFUL)
         }
         return RejectConditionResponse(ResponseStatus.FAILED)
