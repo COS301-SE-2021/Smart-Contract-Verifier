@@ -16,7 +16,10 @@ job("Build and run tests") {
     
     docker {
     	beforeBuildScript {
-    		content = "cp -r  $mountDir/share docker"
+    		content = """
+                 cp -r $mountDir/share docker
+                 docker login savannasolutions.registry.jetbrains.space -u u19053292
+            """
     	}
     	build {
     		context = "docker"

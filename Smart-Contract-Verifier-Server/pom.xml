@@ -11,6 +11,7 @@
 	<groupId>com.savannasolutions</groupId>
 	<artifactId>Smart-Contract-Verifier-Server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>Smart-Contract-Verifier-Server</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -115,4 +116,10 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<repository>
+			<id>space-unison-server-test</id>
+			<url>https://maven.pkg.jetbrains.space/savannasolutions/p/scv/unison-server-test</url>
+		</repository>
+	</distributionManagement>
 </project>
