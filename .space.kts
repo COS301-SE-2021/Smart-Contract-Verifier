@@ -13,4 +13,21 @@ job("Build and run tests") {
                     """
         }
     }
+    
+    docker {
+    	beforeBuildScript {
+    		content = "cp -r  $mountDir/share docker"
+    	}
+    	build {
+    		context = "docker"
+    	}
+    	push("unison-container.registry.jetbrains.space/p/scv/containers/\$JB_SPACE_GIT_REPOSITORY_NAME") {
+    		tag = "\$JB_SPACE_GIT_REVISION"
+    	}
+        failOn {
+    		timeOut {
+    			timeOutInMinutes = 30
+    		}
+  		}
+  }
 }
