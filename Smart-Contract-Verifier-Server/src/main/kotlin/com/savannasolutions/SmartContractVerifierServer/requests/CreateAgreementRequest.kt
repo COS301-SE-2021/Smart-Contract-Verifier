@@ -1,3 +1,4 @@
 package com.savannasolutions.SmartContractVerifierServer.requests
 
-data class CreateAgreementRequest(val PartyA:String, val PartyB:String,)
+data class CreateAgreementRequest(val PartyA:String,
+                                  val PartyB:String,)
