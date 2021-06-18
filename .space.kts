@@ -18,6 +18,8 @@ job("Build and run tests") {
     	beforeBuildScript {
     		content = """
                  cp -r $mountDir/share docker
+				 cd docker
+				 mvn package
             """
     	}
     	build {
