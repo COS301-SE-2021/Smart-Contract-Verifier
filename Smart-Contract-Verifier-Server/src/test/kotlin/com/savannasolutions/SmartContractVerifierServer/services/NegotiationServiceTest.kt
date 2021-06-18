@@ -6,6 +6,7 @@ import com.savannasolutions.SmartContractVerifierServer.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.requests.AcceptConditionRequest
+import com.savannasolutions.SmartContractVerifierServer.responses.ResponseStatus
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -173,6 +174,12 @@ internal class NegotiationServiceTest
 
     @Test
     fun acceptCondition() {
+        //Failed response
+        assertEquals(negotiationService.acceptCondition(AcceptConditionRequest(UUID.randomUUID())).status, ResponseStatus.FAILED)
+
+        //Successful response
+        assertEquals(negotiationService.acceptCondition(AcceptConditionRequest(conditionDUUID)).status, ResponseStatus.SUCCESSFUL)
+        assertEquals(conditionsRepository.getById(conditionDUUID).conditionStatus, ConditionStatus.ACCEPTED)
     }
 
     @Test
