@@ -212,16 +212,4 @@ internal class NegotiationServiceTest
     @Test
     fun sealAgreement() {
     }
-
-    @Test
-    fun getAgreementsRepository() {
-    }
-
-    @Test
-    fun getConditionsRepository() {
-    }
-
-    @Test
-    fun getUserRepository() {
-    }
 }
