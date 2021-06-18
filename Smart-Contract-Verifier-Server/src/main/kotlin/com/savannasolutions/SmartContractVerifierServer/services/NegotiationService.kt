@@ -19,7 +19,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionResponse{
         if(conditionsRepository.existsById(acceptConditionRequest.conditionID)){
-            conditionsRepository.getById(acceptConditionRequest.conditionID).conditionStatus = ConditionStatus.ACCEPTED
+            var condition = conditionsRepository.getById(acceptConditionRequest.conditionID)
+            condition.conditionStatus = ConditionStatus.ACCEPTED
+            conditionsRepository.save(condition)
             return AcceptConditionResponse(ResponseStatus.SUCCESSFUL)
         }
         return AcceptConditionResponse(ResponseStatus.FAILED)
