@@ -5,23 +5,46 @@ import com.savannasolutions.SmartContractVerifierServer.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
+import com.savannasolutions.SmartContractVerifierServer.requests.AcceptConditionRequest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import java.time.Duration
-import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-internal class NegotiationServiceTest constructor(private val agreementsRepository: AgreementsRepository,
-                                                    private val conditionsRepository: ConditionsRepository,
+@SpringBootTest
+internal class NegotiationServiceTest
+    @Autowired
+    constructor(private val negotiationService: NegotiationService,
+                                                  private val agreementsRepository: AgreementsRepository,
+                                                  private val conditionsRepository: ConditionsRepository,
                                                     ){
+
+    private var agreementAUUID = UUID.randomUUID()
+    private var agreementBUUID = UUID.randomUUID()
+    private var agreementCUUID = UUID.randomUUID()
+    private var conditionAUUID = UUID.randomUUID()
+    private var conditionBUUID = UUID.randomUUID()
+    private var conditionCUUID = UUID.randomUUID()
+    private var conditionDUUID = UUID.randomUUID()
+    private var conditionEUUID = UUID.randomUUID()
+    private var conditionFUUID = UUID.randomUUID()
+    private var conditionGUUID = UUID.randomUUID()
 
     @BeforeEach
     fun setUp() {
-        agreementsRepository.save(Agreements(UUID.fromString("2e19610c-a2ce-4444-824a-238028e7d18d"),
+        val dateA = Date.from(LocalDate.of(2021,6,1).atStartOfDay(ZoneId.of( "Africa/Tunis" )).toInstant())
+        val dateB = Date.from(LocalDate.of(2021,6,2).atStartOfDay(ZoneId.of( "Africa/Tunis" )).toInstant())
+        val dateC = Date.from(LocalDate.of(2021,6,3).atStartOfDay(ZoneId.of( "Africa/Tunis" )).toInstant())
+        val dateD = Date.from(LocalDate.of(2021,6,4).atStartOfDay(ZoneId.of( "Africa/Tunis" )).toInstant())
+
+        val agreementA = agreementsRepository.save(Agreements(UUID.fromString("2e19610c-a2ce-4444-824a-238028e7d18d"),
                                             UUID.randomUUID().toString(),
                                             "0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6",
                                             "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
@@ -32,76 +55,96 @@ internal class NegotiationServiceTest constructor(private val agreementsReposito
                                             null,
                                             null,))
 
+        agreementAUUID = agreementA.ContractID
+
         val agreementB = agreementsRepository.save(Agreements(UUID.fromString("93f3e25c-6f78-4943-8b8c-48b43e83697d"),
                                             UUID.randomUUID().toString(),
                                     "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
                                     "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                                            Date.from(Instant.parse("2021-06-01")),
+                                            dateA,
                                             Date(),
-                                            Duration.between(Instant.parse("2021-06-01"),Instant.parse((Date().toString()))),
+                                            Duration.between(dateA.toInstant(),Date().toInstant()),
                             true,
                                     null,
                                     null,))
+
+        agreementBUUID = agreementB.ContractID
 
         val agreementC = agreementsRepository.save(Agreements(UUID.fromString("8b8c6b25-7db8-4f87-b869-90e4cd8a246b"),
                 UUID.randomUUID().toString(),
                 "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                Date.from(Instant.parse("2021-06-01")),
+                dateD,
                 Date(),
-                Duration.between(Instant.parse("2021-06-01"),Instant.parse((Date().toString()))),
+                Duration.between(dateD.toInstant(),Date().toInstant()),
                 true,
                 null,
                 null,))
+
+        agreementCUUID = agreementC.ContractID
 
         val conditionA = conditionsRepository.save(Conditions(UUID.fromString("6154f307-3c79-4e34-a18b-1d77bb397d98"),
                             "Condition A",
                                             ConditionStatus.ACCEPTED,
                                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                                Date.from(Instant.parse("2021-06-01")),
-                                    agreementB))
+                                            dateA,
+                                            agreementB))
+
+        conditionAUUID = conditionA.conditionID
 
         val conditionB = conditionsRepository.save(Conditions(UUID.fromString("8c339f1c-32f5-4075-ad7a-88ba11bceccb"),
                 "Condition B",
                 ConditionStatus.REJECTED,
                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                Date.from(Instant.parse("2021-06-02")),
+                dateB,
                 agreementB))
+
+        conditionBUUID = conditionB.conditionID
 
         val conditionC = conditionsRepository.save(Conditions(UUID.fromString("eb890273-e35c-4d60-a30a-e900c20d908c"),
                 "Condition C",
                 ConditionStatus.REJECTED,
                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                Date.from(Instant.parse("2021-06-03")),
+                dateC,
                 agreementB))
+
+        conditionCUUID = conditionC.conditionID
 
         val conditionD = conditionsRepository.save(Conditions(UUID.fromString("ee14b856-009a-404b-8fdb-db27c85e0a5b"),
                 "Condition D",
                 ConditionStatus.PENDING,
                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                Date.from(Instant.parse("2021-06-04")),
+                dateD,
                 agreementC))
+
+        conditionDUUID = conditionD.conditionID
 
         val conditionE = conditionsRepository.save(Conditions(UUID.fromString("2eb42bdc-c110-4e08-9f83-d3a73c821425"),
                 "Condition E",
                 ConditionStatus.ACCEPTED,
                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                Date.from(Instant.parse("2021-06-01")),
+                dateA,
                 agreementC))
+
+        conditionEUUID = conditionE.conditionID
 
         val conditionF = conditionsRepository.save(Conditions(UUID.fromString("881f264c-9d8c-4aac-99df-efbba76077c4"),
                 "Condition F",
                 ConditionStatus.REJECTED,
                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                Date.from(Instant.parse("2021-06-02")),
+                dateB,
                 agreementC))
+
+        conditionFUUID = conditionF.conditionID
 
         val conditionG = conditionsRepository.save(Conditions(UUID.fromString("9d0e4444-f24e-449e-8233-66330b2ef8a1"),
                 "Condition G",
                 ConditionStatus.REJECTED,
                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
-                Date.from(Instant.parse("2021-06-03")),
+                dateC,
                 agreementC))
+
+        conditionGUUID = conditionG.conditionID
 
         val conditionListA = ArrayList<Conditions>()
         conditionListA.add(conditionA)
@@ -123,8 +166,9 @@ internal class NegotiationServiceTest constructor(private val agreementsReposito
 
     @AfterEach
     fun tearDown() {
-        agreementsRepository.deleteById(UUID.fromString("2e19610c-a2ce-4444-824a-238028e7d18d"))
-        agreementsRepository.deleteById(UUID.fromString("8b8c6b25-7db8-4f87-b869-90e4cd8a246b"))
+        agreementsRepository.deleteById(agreementAUUID)
+        agreementsRepository.deleteById(agreementBUUID)
+        agreementsRepository.deleteById(agreementCUUID)
     }
 
     @Test
