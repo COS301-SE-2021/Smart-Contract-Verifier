@@ -123,6 +123,8 @@ internal class NegotiationServiceTest constructor(private val agreementsReposito
 
     @AfterEach
     fun tearDown() {
+        agreementsRepository.deleteById(UUID.fromString("2e19610c-a2ce-4444-824a-238028e7d18d"))
+        agreementsRepository.deleteById(UUID.fromString("8b8c6b25-7db8-4f87-b869-90e4cd8a246b"))
     }
 
     @Test
