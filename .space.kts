@@ -18,7 +18,7 @@ job("Build and run tests") {
     	beforeBuildScript {
     		content = """
                  cp -r $mountDir/share docker
-				 cd docker
+				 cd ./Smart-Contract-Verifier-Server
 				 mvn package
             """
     	}

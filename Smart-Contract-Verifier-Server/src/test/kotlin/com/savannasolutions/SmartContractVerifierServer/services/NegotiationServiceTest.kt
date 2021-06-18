@@ -19,7 +19,7 @@ internal class NegotiationServiceTest constructor(private val agreementsReposito
                                                     private val conditionsRepository: ConditionsRepository,
                                                     ){
 
-    @BeforeEach
+   /* @BeforeEach
     fun setUp() {
         agreementsRepository.save(Agreements(UUID.fromString("2e19610c-a2ce-4444-824a-238028e7d18d"),
                                             UUID.randomUUID().toString(),
@@ -165,5 +165,5 @@ internal class NegotiationServiceTest constructor(private val agreementsReposito
 
     @Test
     fun getUserRepository() {
-    }
+    }*/
 }
