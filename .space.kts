@@ -17,7 +17,7 @@ job("Build and run tests") {
     docker {
     	beforeBuildScript {
     		content = """
-                 cp -r $mountDir/ docker
+                 cp -r $mountDir/Smart-Contract-Verifier-Server docker
             """
     	}
     	build {
