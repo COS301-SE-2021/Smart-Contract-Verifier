@@ -6,6 +6,7 @@ import com.savannasolutions.SmartContractVerifierServer.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.requests.AcceptConditionRequest
+import com.savannasolutions.SmartContractVerifierServer.requests.CreateAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.requests.RejectConditionRequest
 import com.savannasolutions.SmartContractVerifierServer.responses.ResponseStatus
 import org.junit.jupiter.api.Assertions.*
@@ -185,6 +186,18 @@ internal class NegotiationServiceTest
 
     @Test
     fun createAgreement() {
+        //Failed Response
+        assertEquals(negotiationService.createAgreement(CreateAgreementRequest("","0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6")).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.createAgreement(CreateAgreementRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", "")).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.createAgreement(CreateAgreementRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", "0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6")).status, ResponseStatus.FAILED)
+
+        //Successful Response
+        val response = negotiationService.createAgreement(CreateAgreementRequest("0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF","0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6"));
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertNotEquals(response.agreementID, null)
+        val responseUUID = response.agreementID;
+        assertNotEquals(responseUUID?.let { agreementsRepository.getById(it) }, null)
+
     }
 
     @Test
