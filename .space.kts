@@ -19,6 +19,7 @@ job("Build and run tests") {
     		content = """
                  cp -r $mountDir/share docker
 				 cd ./Smart-Contract-Verifier-Server
+				 apk upgrade && apk get maven
 				 mvn package
             """
     	}
