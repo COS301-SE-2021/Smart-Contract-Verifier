@@ -18,13 +18,12 @@ job("Build and run tests") {
     	beforeBuildScript {
     		content = """
                  cp -r $mountDir/share docker
-                 docker login savannasolutions.registry.jetbrains.space -u u19053292
             """
     	}
     	build {
     		context = "docker"
     	}
-    	push("savannasolutions.registry.jetbrains.space/p/scv/unison-container") {
+    	push("savannasolutions.registry.jetbrains.space/p/scv/packages/container/unison-container") {
     		tag = "\$JB_SPACE_GIT_REVISION"
     	}
         failOn {
