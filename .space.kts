@@ -5,19 +5,19 @@
 */
 
 job("Build and run tests") {
-    container("maven:3.6.3-openjdk-15-slim"){
+    /*container("maven:3.6.3-openjdk-15-slim"){
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
 						mvn clean install
                     """
         }
-    }
+    }*/
     
     docker {
     	beforeBuildScript {
     		content = """
-                 cp -r $mountDir/Smart-Contract-Verifier-Server docker
+                 cp -r $mountDir/Smart-Contract-Verifier/Smart-Contract-Verifier-Server docker
             """
     	}
     	build {
