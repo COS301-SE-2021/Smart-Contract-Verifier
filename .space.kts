@@ -18,9 +18,6 @@ job("Build and run tests") {
     	beforeBuildScript {
     		content = """
                  cp -r $mountDir/share docker
-				 cd ./Smart-Contract-Verifier-Server
-				 apk upgrade && apk get maven
-				 mvn package
             """
     	}
     	build {
