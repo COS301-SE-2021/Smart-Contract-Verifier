@@ -23,7 +23,7 @@ job("Build and run tests") {
     	build {
     		context = "docker"
     	}
-    	push("savannasolutions.registry.jetbrains.space/p/scv/packages/container/unison-container") {
+    	push("savannasolutions.registry.jetbrains.space/p/scv/unison-container/myimage:latest") {
     		tag = "\$JB_SPACE_GIT_REVISION"
     	}
         failOn {
