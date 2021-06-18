@@ -17,7 +17,7 @@ job("Build and run tests") {
     docker {
     	beforeBuildScript {
     		content = """
-                 cp -r $mountDir/share docker
+                 cp -r $mountDir/ docker
             """
     	}
     	build {
