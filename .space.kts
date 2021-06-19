@@ -16,6 +16,7 @@ job("Build and run tests") {
         	content = """
             			cd ./Smart-Contract-Verifier-Server
 						echo "pinging DB"
+						apt install inetutils-ping
 						ping -c 10 postgresql://db-postgresql-nyc3-98163-do-user-8880908-0.b.db.ondigitalocean.com
 						echo "ending ping"
 						mvn clean install
