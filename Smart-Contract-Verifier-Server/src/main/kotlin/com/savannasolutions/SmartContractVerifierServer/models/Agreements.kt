@@ -16,5 +16,5 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       var SealedDate:Date?,
                       var Duration:Duration?,
                       var MovedToBlockChain:Boolean,
-                      @OneToMany(fetch = FetchType.LAZY) @Cascade(CascadeType.REMOVE) var conditions: List<Conditions>?,
+                      @OneToMany(fetch = FetchType.EAGER, mappedBy = "contract") @Cascade(CascadeType.REMOVE) var conditions: List<Conditions>?,
                       @OneToMany(fetch = FetchType.LAZY) @Cascade(CascadeType.REMOVE) var messages: List<Messages>?,)
