@@ -290,4 +290,32 @@ internal class NegotiationServiceTest
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertEquals(response.conditionID, conditionDUUID)
     }
+
+    @Test
+    fun setPaymentCondition(){
+        //failed response
+        assertEquals(negotiationService.setPaymentCondition(SetPaymentConditionRequest("0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",UUID.randomUUID(), 3.0)).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.setPaymentCondition(SetPaymentConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", agreementBUUID, 3.0)).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.setPaymentCondition(SetPaymentConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", agreementAUUID, -1.0)).status, ResponseStatus.FAILED)
+
+        //successful response
+        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", agreementAUUID, 5.0))
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        if(response.conditionID != null)
+        {
+            val agreement = agreementsRepository.getById(agreementAUUID)
+            assertEquals(agreement.PaymentConditionUUID, response.conditionID)
+            var found = false;
+            if(agreement.conditions != null)
+            {
+                for(Cond in agreement.conditions!!)
+                {
+                    if(Cond.conditionID == response.conditionID)
+                        found = true;
+                }
+            }
+            assertTrue(found)
+        }
+
+    }
 }
