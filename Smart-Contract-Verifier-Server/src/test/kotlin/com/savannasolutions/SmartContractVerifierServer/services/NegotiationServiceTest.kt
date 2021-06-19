@@ -207,21 +207,34 @@ internal class NegotiationServiceTest
         assertEquals(negotiationService.createCondition(CreateConditionRequest("0x743Fb032c0bE976e1178d8157f911a9e825d9E23",agreementAUUID,"")).status,ResponseStatus.FAILED)
 
         //Successful response
-        val response = negotiationService.createCondition(CreateConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", agreementAUUID, "This test should succeed"));
+        val response = negotiationService.createCondition(CreateConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", agreementAUUID, "This test should succeed"))
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotEquals(response.conditionID?.let { conditionsRepository.getById(it) }, null)
-
-        assertNotNull(agreementsRepository.getById(agreementAUUID).conditions);
-        var responseList = ArrayList<Conditions>()
-        responseList = agreementsRepository.getById(agreementAUUID).conditions as ArrayList<Conditions>
-        val condition = response.conditionID?.let { conditionsRepository.findById(it) }
+        assertNotNull(agreementsRepository.getById(agreementAUUID).conditions)
+        val responseList = agreementsRepository.getById(agreementAUUID).conditions as List<Conditions>
+        val condition = response.conditionID?.let { conditionsRepository.getById(it) }
         assertNotEquals(responseList, null)
-        assertTrue(responseList.contains(condition as Conditions))
+        var found = false
+        for(cond in responseList)
+        {
+            if(cond.conditionID == condition?.conditionID)
+            {
+                found = true
+                break
+            }
+        }
+        assertTrue(found)
 
     }
 
     @Test
     fun getAgreementDetails() {
+        //failed response
+        assertEquals(negotiationService.getAgreementDetails(GetAgreementDetailsRequest(UUID.randomUUID())).status, ResponseStatus.FAILED)
+
+        //successful response
+        val response = negotiationService.getAgreementDetails(GetAgreementDetailsRequest(agreementBUUID))
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertEquals(response.agreementID, agreementBUUID)
     }
 
     @Test
