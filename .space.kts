@@ -9,7 +9,7 @@ job("Build and run tests") {
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
-						docker-compose run --service-ports postgres
+						sudo docker-compose run --service-ports postgres
 						mvn clean install
                     """
         }
@@ -19,7 +19,7 @@ job("Build and run tests") {
 		shellScript{
 			content = """
             			cd ./Smart-Contract-Verifier-Server
-						docker-compose run --service-ports postgres
+						sudo docker-compose run --service-ports postgres
 						mvn clean package
 						cp -r target $mountDir/share
                     """
