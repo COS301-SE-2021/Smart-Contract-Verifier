@@ -2,4 +2,5 @@ language: java
 jdk:
   - oraclejdk13
 script:
+  - cd Smart-Contract-Verifier-Server
   - mvn clean install
