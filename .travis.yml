@@ -7,8 +7,6 @@ dist: xenial
 addons:
   sonarcloud:
     organization: "cos301-se-2021"
-    token:
-      secure: SONAR_TOKEN
 script:
   # other script steps might be done before running the actual analysis
     - cd Smart-Contract-Verifier-Server
