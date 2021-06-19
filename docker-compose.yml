@@ -3,8 +3,7 @@ services:
   postgres:
     image: postgres:latest
     volumes:
-      - ./database:/var/lib/postgresql/data
-      - ./dockerScripts/:/etc/dockerScripts
+      - ./Smart-Contract-Verifier-Server/database:/var/lib/postgresql/data
     environment:
     - POSTGRES_PASSWORD=smartcontractserverdev
     - POSTGRES_HOST_AUTH_METHOD=trust
