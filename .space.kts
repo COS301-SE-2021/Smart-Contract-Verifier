@@ -10,6 +10,8 @@ job("Build and run tests") {
 
 
     container("maven:3.6.3-openjdk-15"){
+		env["dbuser"] = Params("dbuser")
+		env["dbpassword"] = Secrets("dbpassword")
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
@@ -21,6 +23,8 @@ job("Build and run tests") {
 
 
 	container("maven:3.6.3-openjdk-15"){
+		env["dbuser"] = Params("dbuser")
+		env["dbpassword"] = Secrets("dbpassword")
 		shellScript{
 			content = """
             			cd ./Smart-Contract-Verifier-Server
