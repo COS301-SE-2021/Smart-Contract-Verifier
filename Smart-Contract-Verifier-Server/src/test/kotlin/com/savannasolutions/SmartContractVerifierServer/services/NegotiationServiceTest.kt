@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.time.Duration
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -305,17 +306,46 @@ internal class NegotiationServiceTest
         {
             val agreement = agreementsRepository.getById(agreementAUUID)
             assertEquals(agreement.PaymentConditionUUID, response.conditionID)
-            var found = false;
+            var found = false
             if(agreement.conditions != null)
             {
                 for(Cond in agreement.conditions!!)
                 {
                     if(Cond.conditionID == response.conditionID)
-                        found = true;
+                        found = true
                 }
             }
             assertTrue(found)
         }
 
+    }
+
+    @Test
+    fun setDurationCondition()
+    {
+        //failed response
+        assertEquals(negotiationService.setDurationCondition(SetDurationConditionRequest("0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",UUID.randomUUID(), Duration.of(500L, ChronoUnit.DAYS))).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.setDurationCondition(SetDurationConditionRequest("0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",agreementBUUID, Duration.of(-500L, ChronoUnit.DAYS))).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.setDurationCondition(SetDurationConditionRequest("0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",agreementBUUID, Duration.of(0L, ChronoUnit.DAYS))).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.setDurationCondition(SetDurationConditionRequest("0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6", agreementBUUID, Duration.of(500L, ChronoUnit.DAYS))).status, ResponseStatus.FAILED)
+
+        //successful response
+        val response = negotiationService.setDurationCondition(SetDurationConditionRequest("0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",agreementBUUID, Duration.of(100L, ChronoUnit.DAYS)))
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        if(response.conditionID != null)
+        {
+            val agreement = agreementsRepository.getById(agreementBUUID)
+            assertEquals(agreement.Duration, Duration.of(100L, ChronoUnit.DAYS))
+            var found = false
+            if(agreement.conditions != null)
+            {
+                for(Cond in agreement.conditions!!)
+                {
+                    if(Cond.conditionID == response.conditionID)
+                        found = true
+                }
+            }
+            assertTrue(found)
+        }
     }
 }
