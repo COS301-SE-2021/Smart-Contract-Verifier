@@ -11,7 +11,9 @@ job("Build and run tests") {
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
-						psql -u postgres -c 'CREATE DATABASE verifier;' 
+						echo "Database creation"
+						psql -u postgres -c 'CREATE DATABASE verifier;'
+						 echo "Database creation completed"
 						mvn clean install
                     """
         }
