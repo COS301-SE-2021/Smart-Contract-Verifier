@@ -1,0 +1,53 @@
+import 'package:flutter/material.dart';
+import '../widgets/main_drawer.dart';
+import '../models/contract.dart';
+
+class DashboardScreen extends StatefulWidget {
+  final List<Contract> userContracts;
+
+  DashboardScreen(this.userContracts);
+
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+void _addNewContract(String title, double amount, DateTime date) {
+  List<Term> dummyTerms = [
+    Term.name(
+        '1',
+        'term text',
+        'term description - '
+            'normally a bit longer than your average sentence to demonstrate what '
+            'this will be used for.',
+        TermStatus.Pending,
+        'partyA_ID')
+  ];
+  final newContract = Contract.name(
+    'id',
+    dummyTerms,
+    'Contract Title',
+    ContractStatus.Negotiation,
+  );
+}
+
+void _startAddNewContract(context) {}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Dashboard'),
+      ),
+      drawer: MainDrawer(),
+      body: Center(
+        child: Text('Dashboard'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewContract(context),
+      ),
+    );
+  }
+}
