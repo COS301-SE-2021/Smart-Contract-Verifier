@@ -167,6 +167,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         }
 
         agreement.Duration?: return SealAgreementResponse(ResponseStatus.FAILED)
+        agreement.PaymentConditionUUID?: return SealAgreementResponse(ResponseStatus.FAILED)
+        if(conditionsRepository.getById(agreement.PaymentConditionUUID!!).conditionStatus != ConditionStatus.PENDING ||
+                conditionsRepository.getById(agreement.PaymentConditionUUID!!).conditionStatus != ConditionStatus.REJECTED)
+                    return SealAgreementResponse(ResponseStatus.FAILED)
 
         agreement.SealedDate = Date()
         agreementsRepository.save(agreement)
