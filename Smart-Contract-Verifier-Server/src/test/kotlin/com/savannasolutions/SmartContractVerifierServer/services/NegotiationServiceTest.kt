@@ -54,6 +54,7 @@ internal class NegotiationServiceTest
                                             null,
                                             false,
                                             null,
+                                            null,
                                             null,))
 
         agreementAUUID = agreementA.ContractID
@@ -67,7 +68,8 @@ internal class NegotiationServiceTest
                                             Duration.between(dateA.toInstant(),Date().toInstant()),
                             true,
                                     null,
-                                    null,))
+                                    null,
+                           null,))
 
         agreementBUUID = agreementB.ContractID
 
@@ -79,6 +81,7 @@ internal class NegotiationServiceTest
                 Date(),
                 Duration.between(dateD.toInstant(),Date().toInstant()),
                 true,
+                null,
                 null,
                 null,))
 
