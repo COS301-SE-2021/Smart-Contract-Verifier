@@ -192,4 +192,33 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             ResponseStatus.SUCCESSFUL)
     }
 
+    fun setPaymentCondition(setPaymentConditionRequest: SetPaymentConditionRequest): SetPaymentConditionResponse
+    {
+        if(!agreementsRepository.existsById(setPaymentConditionRequest.AgreementID))
+            return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
+
+        if(setPaymentConditionRequest.Payment < 0)
+            return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
+
+        var agreement = agreementsRepository.getById(setPaymentConditionRequest.AgreementID)
+
+        if(setPaymentConditionRequest.PreposedUser != agreement.PartyA && setPaymentConditionRequest.PreposedUser != agreement.PartyB)
+            return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
+
+        var condition = Conditions(UUID.randomUUID(),
+                "Payment of " + setPaymentConditionRequest.Payment.toString(),
+                                ConditionStatus.PENDING,
+                                setPaymentConditionRequest.PreposedUser,
+                                Date(),
+                                agreement,)
+
+        condition = conditionsRepository.save(condition)
+
+        agreement.PaymentConditionUUID = condition.conditionID
+
+        agreement = agreementsRepository.save(agreement)
+
+        return SetPaymentConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
+    }
+
 }
