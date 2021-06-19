@@ -9,6 +9,7 @@ job("Build and run tests") {
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
+						docker-compose run --service-ports postgres
 						mvn clean install
                     """
         }
@@ -18,6 +19,7 @@ job("Build and run tests") {
 		shellScript{
 			content = """
             			cd ./Smart-Contract-Verifier-Server
+						docker-compose run --service-ports postgres
 						mvn clean package
 						cp -r target $mountDir/share
                     """
@@ -31,7 +33,7 @@ job("Build and run tests") {
             """
     	}
     	build {
-    		context = "docker"
+    		context = "docker-compose"
     	}
     	push("savannasolutions.registry.jetbrains.space/p/scv/unison-container/myimage") {
     		tag = "\$JB_SPACE_GIT_REVISION"

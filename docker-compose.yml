@@ -4,6 +4,7 @@ services:
     image: postgres:latest
     volumes:
       - ./database:/var/lib/postgresql/data
+      - ./dockerScripts/:/etc/dockerScripts
     environment:
     - POSTGRES_PASSWORD=smartcontractserverdev
     - POSTGRES_HOST_AUTH_METHOD=trust
