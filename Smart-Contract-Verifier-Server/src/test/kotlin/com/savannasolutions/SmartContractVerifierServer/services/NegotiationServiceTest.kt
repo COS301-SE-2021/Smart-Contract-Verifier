@@ -5,10 +5,7 @@ import com.savannasolutions.SmartContractVerifierServer.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.requests.AcceptConditionRequest
-import com.savannasolutions.SmartContractVerifierServer.requests.CreateAgreementRequest
-import com.savannasolutions.SmartContractVerifierServer.requests.CreateConditionRequest
-import com.savannasolutions.SmartContractVerifierServer.requests.RejectConditionRequest
+import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.ResponseStatus
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.AfterEach
@@ -243,5 +240,16 @@ internal class NegotiationServiceTest
 
     @Test
     fun sealAgreement() {
+    }
+
+    @Test
+    fun getConditionDetails(){
+        //failed response
+        assertEquals(negotiationService.getConditionDetails(GetConditionDetailsRequest(UUID.randomUUID())).status,ResponseStatus.FAILED)
+
+        //successful response
+        val response = negotiationService.getConditionDetails(GetConditionDetailsRequest(conditionDUUID))
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertEquals(response.conditionID, conditionDUUID)
     }
 }
