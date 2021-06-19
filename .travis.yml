@@ -9,4 +9,5 @@ script:
   # other script steps might be done before running the actual analysis
     - cd Smart-Contract-Verifier-Server
     - mvn clean install
+    - cd ..
     - sonar-scanner
