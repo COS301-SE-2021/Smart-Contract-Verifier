@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:frontend_scv/widgets/contract_list.dart';
+import 'package:frontend_scv/widgets/new_contract.dart';
 
 import '../widgets/main_drawer.dart';
 import '../models/contract.dart';
@@ -13,39 +15,31 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-void _addNewContract(String title, double amount, DateTime date) {
-  List<Term> dummyTerms = [
-    Term.name(
-        '1',
-        'term text',
-        'term description - '
-            'normally a bit longer than your average sentence to demonstrate what '
-            'this will be used for.',
-        TermStatus.Pending,
-        'partyA_ID')
-  ];
-  final newContract = Contract.name(
-    'id',
-    dummyTerms,
-    'Contract Title',
-    ContractStatus.Negotiation,
-  );
-}
+void _addNewContract(String title, double amount, DateTime date) {}
 
-void _startAddNewContract(context) {
+void _startAddNewContract(BuildContext ctx) {
   print('Start new agreement');
+  showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return NewContract(_addNewContract);
+      });
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  // final List<Contract> contracts = [];
+
   @override
   Widget build(BuildContext context) {
+    print('Hello from build');
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
       ),
       drawer: MainDrawer(),
       body: Center(
-        child: Text('Dashboard'),
+        child: ContractList(widget.userContracts),
       ),
       floatingActionButtonLocation: kIsWeb
           ? FloatingActionButtonLocation.centerFloat //if is web

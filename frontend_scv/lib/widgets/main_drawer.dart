@@ -33,14 +33,25 @@ class MainDrawer extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(20),
             alignment: Alignment.centerLeft,
-            color: Theme.of(context).accentColor,
-            child: Text(
-              'SCV',
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 30,
-                color: Theme.of(context).primaryColor,
-              ),
+            // color: Theme.of(context).accentColor,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Unison.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                Divider(
+                  height: 20,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ],
             ),
           ),
           SizedBox(
