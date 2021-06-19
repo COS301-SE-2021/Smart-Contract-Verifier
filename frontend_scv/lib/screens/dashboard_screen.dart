@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import '../widgets/main_drawer.dart';
 import '../models/contract.dart';
 
@@ -30,7 +32,9 @@ void _addNewContract(String title, double amount, DateTime date) {
   );
 }
 
-void _startAddNewContract(context) {}
+void _startAddNewContract(context) {
+  print('Start new agreement');
+}
 
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
@@ -43,11 +47,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: Center(
         child: Text('Dashboard'),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _startAddNewContract(context),
-      ),
+      floatingActionButtonLocation: kIsWeb
+          ? FloatingActionButtonLocation.centerFloat //if is web
+          : FloatingActionButtonLocation.endFloat,
+      floatingActionButton: kIsWeb
+          ? Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 120),
+              child: FloatingActionButton.extended(
+                icon: Icon(Icons.add), // Web
+                onPressed: () => _startAddNewContract(context),
+                label: const Text('Create New Agreement'),
+              ),
+            )
+          : FloatingActionButton(
+              //Mobile
+              child: Icon(Icons.add),
+              onPressed: () => _startAddNewContract(context),
+            ),
     );
   }
 }
