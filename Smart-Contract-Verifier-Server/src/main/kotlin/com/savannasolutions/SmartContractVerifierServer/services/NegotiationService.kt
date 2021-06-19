@@ -144,7 +144,6 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         val conditions = agreementsRepository.getById(getAllConditionsRequest.AgreementID).conditions
         val conditionList = ArrayList<UUID>()
-        print("Updated")
         if (conditions != null) {
             for(cond in conditions)
                 conditionList.add(cond.conditionID)
@@ -165,6 +164,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                     return SealAgreementResponse(ResponseStatus.FAILED)
             }
         }
+
+        agreement.Duration?: return SealAgreementResponse(ResponseStatus.FAILED)
+
         agreement.SealedDate = Date()
         agreementsRepository.save(agreement)
         return SealAgreementResponse(ResponseStatus.SUCCESSFUL)
