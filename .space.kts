@@ -7,13 +7,13 @@
 job("Build and run tests") {
 
 
-    container("maven:3.6.3-openjdk-15-slim"){
+    container("maven:3.6.3-openjdk-15"){
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
 						echo "Database creation"
-						sudo apt-get upgrade
-						sudo apt-get install postgresql postgresql-contrib
+						apt-get upgrade
+						apt-get install postgresql postgresql-contrib
 						psql -u postgres -c 'CREATE DATABASE verifier;'
 						echo "Database creation completed"
 						mvn clean install
@@ -28,7 +28,7 @@ job("Build and run tests") {
 
 
 
-	container("maven:3.6.3-openjdk-15-slim"){
+	container("maven:3.6.3-openjdk-15"){
 		shellScript{
 			content = """
             			cd ./Smart-Contract-Verifier-Server
