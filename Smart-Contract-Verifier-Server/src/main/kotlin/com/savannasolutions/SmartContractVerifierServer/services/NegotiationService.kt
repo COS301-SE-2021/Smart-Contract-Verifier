@@ -103,7 +103,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             ResponseStatus.FAILED)
         }
         val agreement = agreementsRepository.getById(getAgreementDetailsRequest.AgreementID)
-        val conditions = agreement.conditions;
+        val conditions = agreement.conditions
         val conditionsID = ArrayList<UUID>()
         if (conditions != null) {
             if(conditions.isNotEmpty())
@@ -200,7 +200,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         if(setPaymentConditionRequest.Payment < 0)
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
-        var agreement = agreementsRepository.getById(setPaymentConditionRequest.AgreementID)
+        val agreement = agreementsRepository.getById(setPaymentConditionRequest.AgreementID)
 
         if(setPaymentConditionRequest.PreposedUser != agreement.PartyA && setPaymentConditionRequest.PreposedUser != agreement.PartyB)
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
@@ -216,9 +216,37 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         agreement.PaymentConditionUUID = condition.conditionID
 
-        agreement = agreementsRepository.save(agreement)
+        agreementsRepository.save(agreement)
 
         return SetPaymentConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
+    }
+
+    fun setDurationCondition(setDurationConditionRequest: SetDurationConditionRequest): SetDurationConditionResponse
+    {
+        if(!agreementsRepository.existsById(setDurationConditionRequest.AgreementID))
+            return SetDurationConditionResponse(null, ResponseStatus.FAILED)
+
+        if(setDurationConditionRequest.Duration.isNegative || setDurationConditionRequest.Duration.isZero)
+            return SetDurationConditionResponse(null, ResponseStatus.FAILED)
+
+        val agreement = agreementsRepository.getById(setDurationConditionRequest.AgreementID)
+        if(agreement.PartyA != setDurationConditionRequest.PreposedUser && agreement.PartyB != setDurationConditionRequest.PreposedUser)
+            return SetDurationConditionResponse(null, ResponseStatus.FAILED)
+
+        var condition = Conditions(UUID.randomUUID(),
+                "Duration of " + setDurationConditionRequest.Duration.toString(),
+                ConditionStatus.PENDING,
+                setDurationConditionRequest.PreposedUser,
+                Date(),
+                agreement,)
+
+        condition = conditionsRepository.save(condition)
+
+        agreement.Duration = setDurationConditionRequest.Duration
+
+        agreementsRepository.save(agreement)
+
+        return SetDurationConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
     }
 
 }
