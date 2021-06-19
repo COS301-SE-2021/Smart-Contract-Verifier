@@ -1,0 +1,11 @@
+#will later add rules to package server in container for easier testing and deployment
+services:
+  postgres:
+    image: postgres:latest
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    environment:
+    - POSTGRES_PASSWORD=smartcontractserverdev
+    - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5432:5432
