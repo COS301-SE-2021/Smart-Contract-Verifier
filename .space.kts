@@ -12,6 +12,7 @@ job("Build and run tests") {
         	content = """
             			cd ./Smart-Contract-Verifier-Server
 						echo "Database creation"
+						apt-get update
 						apt-get install postgresql postgresql-contrib
 						psql -u postgres -c 'CREATE DATABASE verifier;'
 						echo "Database creation completed"
