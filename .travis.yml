@@ -1,6 +1,12 @@
 language: java
 jdk:
   - oraclejdk13
+dist: xenial
+addons:
+  sonarcloud:
+    organization: "cos301-se-2021"
 script:
-  - cd Smart-Contract-Verifier-Server
-  - mvn clean install
+  # other script steps might be done before running the actual analysis
+    - cd Smart-Contract-Verifier-Server
+    - mvn clean install
+    - sonar-scanner
