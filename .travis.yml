@@ -10,5 +10,5 @@ addons:
 script:
   # other script steps might be done before running the actual analysis
     - cd Smart-Contract-Verifier-Server
-    - mvn clean verify sonar:sonar -Dsonar.projectkey=cos301-se-2021_Smart-Contract-Verifier
+    - mvn clean verify sonar:sonar -Dsonar.projectkey=COS301-SE-2021_Smart-Contract-Verifier
 
