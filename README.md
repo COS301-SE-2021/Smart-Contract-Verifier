@@ -16,3 +16,14 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 | Jason Maritz       | 3rd Year Computer Science| [LinkedIn](https://www.linkedin.com/in/jason-maritz-b2170b15a  "Jason's LinkedIn Profile") \| [Github](https://github.com/JasonMaritz  "Jason's Github Profile") |
 | Cobus Redelinghuys | 3rd Year Computer Science| [LinkedIn](https://www.linkedin.com/in/cobus-redelinghuys-5a752516b  "Cobus's LinkedIn Profile") \| [Github](https://github.com/DarkMerlin1  "Cobus's Github Profile") |
 | Ronan van de Vyver | 3rd Year Computer Science| [LinkedIn](https://linkedin.com/in/ronan-van-de-vyver-98bb7820b  "Ronan's LinkedIn Profile") \| [Github](https://github.com/Ronan-UP  "Ronan's Github Profile") |
+
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=bugs)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=code_smells)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=ncloc)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=alert_status)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=security_rating)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=sqale_index)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
