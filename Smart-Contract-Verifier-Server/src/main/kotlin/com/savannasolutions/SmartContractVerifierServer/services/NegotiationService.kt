@@ -49,6 +49,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                     null,
                                     false,
                                     null,
+                                    null,
                                     null,)
 
         nAgreement = agreementsRepository.save(nAgreement)
