@@ -9,16 +9,22 @@ import space.jetbrains.api.runtime.types.structure.HostingAppSettingsStructure.e
 job("Build and run tests") {
 
 
+	container("ubuntu:latest"){
+		shellScript{
+			content = """
+            			echo "pinging DB"
+						ping -c 10 postgresql://db-postgresql-nyc3-98163-do-user-8880908-0.b.db.ondigitalocean.com
+						echo "ending ping"
+                    """
+		}
+	}
+
     container("maven:3.6.3-openjdk-15"){
 		env["dbuser"] = Params("dbuser")
 		env["dbpassword"] = Secrets("dbpassword")
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
-						echo "pinging DB"
-						apt install inetutils-ping
-						ping -c 10 postgresql://db-postgresql-nyc3-98163-do-user-8880908-0.b.db.ondigitalocean.com
-						echo "ending ping"
 						mvn clean install
                     """
         }
