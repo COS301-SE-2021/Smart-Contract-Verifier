@@ -1,6 +1,8 @@
 language: java
 jdk:
   - oraclejdk13
+node_js:
+  - "10"
 dist: xenial
 addons:
   sonarcloud:
