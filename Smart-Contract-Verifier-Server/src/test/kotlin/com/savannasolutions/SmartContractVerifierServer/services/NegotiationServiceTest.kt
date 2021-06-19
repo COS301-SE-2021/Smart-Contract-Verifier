@@ -265,6 +265,16 @@ internal class NegotiationServiceTest
 
     @Test
     fun sealAgreement() {
+        //Failed responses
+        assertEquals(negotiationService.sealAgreement(SealAgreementRequest(UUID.randomUUID())).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.sealAgreement(SealAgreementRequest(agreementAUUID)).status, ResponseStatus.FAILED)
+        assertEquals(negotiationService.sealAgreement(SealAgreementRequest(agreementCUUID)).status, ResponseStatus.FAILED)
+
+        //Successful response
+        val response = negotiationService.sealAgreement(SealAgreementRequest(agreementBUUID))
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        val agreement = agreementsRepository.getById(agreementBUUID)
+        assertNotNull(agreement.SealedDate)
     }
 
     @Test
