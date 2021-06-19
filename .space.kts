@@ -1,3 +1,5 @@
+import space.jetbrains.api.runtime.types.structure.HostingAppSettingsStructure.environment
+
 /**
 * JetBrains Space Automation
 * This Kotlin-script file lets you automate build activities
@@ -11,19 +13,9 @@ job("Build and run tests") {
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
-						echo "Database creation"
-						apt-get upgrade
-						apt-get install postgresql postgresql-contrib
-						psql -u postgres -c 'CREATE DATABASE verifier;'
-						echo "Database creation completed"
 						mvn clean install
                     """
         }
-		service("postgres:latest"){
-			alias("localhost")
-			env["POSTGRES_PASSWORD"] = "smartcontractserverdev"
-			env["POSTGRES_HOST_AUTH_METHOD"] = "trust"
-		}
     }
 
 
@@ -32,15 +24,9 @@ job("Build and run tests") {
 		shellScript{
 			content = """
             			cd ./Smart-Contract-Verifier-Server
-						psql -u postgres -c 'CREATE DATABASE verifier;' 
 						mvn clean package
 						cp -r target $mountDir/share
                     """
-		}
-		service("postgres:latest"){
-			alias("localhost")
-			env["POSTGRES_PASSWORD"] = "smartcontractserverdev"
-			env["POSTGRES_HOST_AUTH_METHOD"] = "trust"
 		}
 	}
     
