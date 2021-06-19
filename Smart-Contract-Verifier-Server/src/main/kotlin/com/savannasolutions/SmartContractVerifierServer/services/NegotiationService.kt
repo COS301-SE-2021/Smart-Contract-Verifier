@@ -76,14 +76,14 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return CreateConditionResponse(null, ResponseStatus.FAILED)
         }
 
-        val nCondition = Conditions(UUID.randomUUID(),
+        var nCondition = Conditions(UUID.randomUUID(),
                                     createConditionRequest.ConditionDescription,
                                     ConditionStatus.PENDING,
                                     createConditionRequest.PreposedUser,
                                     Date(),
                                     agreement)
 
-        conditionsRepository.save(nCondition)
+        nCondition = conditionsRepository.save(nCondition)
 
         return CreateConditionResponse(nCondition.conditionID, ResponseStatus.SUCCESSFUL)
     }
@@ -102,10 +102,16 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             ResponseStatus.FAILED)
         }
         val agreement = agreementsRepository.getById(getAgreementDetailsRequest.AgreementID)
+        val conditions = agreement.conditions;
         val conditionsID = ArrayList<UUID>()
-        for(cond in agreement.conditions!!)
-        {
-            conditionsID.add(cond.conditionID)
+        if (conditions != null) {
+            if(conditions.isNotEmpty())
+            {
+                for(cond in conditions) {
+                    conditionsID.add(cond.conditionID)
+                }
+            }
+
         }
 
         return GetAgreementDetailsResponse(agreement.ContractID,
