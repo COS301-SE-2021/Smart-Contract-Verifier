@@ -249,6 +249,18 @@ internal class NegotiationServiceTest
 
     @Test
     fun getAllConditions() {
+        //Failed Response
+        assertEquals(negotiationService.getAllConditions(GetAllConditionsRequest(UUID.randomUUID())).status, ResponseStatus.FAILED)
+
+        //Successful response
+        val response = negotiationService.getAllConditions(GetAllConditionsRequest(agreementCUUID))
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        if(response.conditions != null) {
+            for (CondUUID in response.conditions!!) {
+                val condition = conditionsRepository.getById(CondUUID)
+                assertEquals(agreementCUUID, condition.contract.ContractID)
+            }
+        }
     }
 
     @Test
