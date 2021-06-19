@@ -128,9 +128,17 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     }
 
     fun getAllConditions(getAllConditionsRequest: GetAllConditionsRequest):GetAllConditionsResponse{
-        if(agreementsRepository.existsById(getAllConditionsRequest.AgreementID))
-            return GetAllConditionsResponse(agreementsRepository.getById(getAllConditionsRequest.AgreementID).conditions, ResponseStatus.SUCCESSFUL)
-        return GetAllConditionsResponse(emptyList(), ResponseStatus.FAILED)
+        if(!agreementsRepository.existsById(getAllConditionsRequest.AgreementID))
+            return GetAllConditionsResponse(null, ResponseStatus.FAILED)
+
+        val conditions = agreementsRepository.getById(getAllConditionsRequest.AgreementID).conditions
+        var conditionList = ArrayList<UUID>()
+        print("Updated")
+        if (conditions != null) {
+            for(cond in conditions)
+                conditionList.add(cond.conditionID)
+        }
+        return GetAllConditionsResponse(conditionList, ResponseStatus.SUCCESSFUL)
     }
 
     fun sealAgreement(sealAgreementRequest: SealAgreementRequest): SealAgreementResponse{
