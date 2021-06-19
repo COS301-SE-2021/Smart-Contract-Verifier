@@ -1,10 +1,10 @@
-alter table messages drop constraint FKtawvl3ujy864wa8yvej43o68b;
-alter table messages drop constraint FKpogdllq7macivuimwivkatgaq;
-alter table message_status drop constraint FK6stq2rkbviclmrtnucd2djw3n;
-alter table message_status drop constraint FKtc0v0t1qwbjtgohqvoeacsm0y;
-alter table uploaded_evidence drop constraint FKi1tejij1ntihpua2py82nddoh;
-alter table user_agreements drop constraint FKcai91i3f62212ubvr2ovtee3s;
-alter table user_agreements drop constraint FKd54k8p4t3ln8cl0of3vay2naj;
+alter table if exists messages drop constraint FKtawvl3ujy864wa8yvej43o68b;
+alter table if exists messages drop constraint FKpogdllq7macivuimwivkatgaq;
+alter table if exists message_status drop constraint FK6stq2rkbviclmrtnucd2djw3n;
+alter table if exists message_status drop constraint FKtc0v0t1qwbjtgohqvoeacsm0y;
+alter table if exists uploaded_evidence drop constraint FKi1tejij1ntihpua2py82nddoh;
+alter table if exists user_agreements drop constraint FKcai91i3f62212ubvr2ovtee3s;
+alter table if exists user_agreements drop constraint FKd54k8p4t3ln8cl0of3vay2naj;
 drop table if exists agreements cascade;
 drop table if exists agreements_conditions cascade;
 drop table if exists agreements_messages cascade;
