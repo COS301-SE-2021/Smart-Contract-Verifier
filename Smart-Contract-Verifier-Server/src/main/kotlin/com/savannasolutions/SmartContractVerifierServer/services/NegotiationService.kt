@@ -5,7 +5,6 @@ import com.savannasolutions.SmartContractVerifierServer.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.*
 import org.springframework.stereotype.Service
@@ -16,11 +15,11 @@ import kotlin.collections.ArrayList
 @Service
 class NegotiationService constructor(val agreementsRepository: AgreementsRepository,
                                      val conditionsRepository: ConditionsRepository,
-                                     val userRepository: UserRepository,){
+                                     ){
 
     fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionResponse{
         if(conditionsRepository.existsById(acceptConditionRequest.conditionID)){
-            var condition = conditionsRepository.getById(acceptConditionRequest.conditionID)
+            val condition = conditionsRepository.getById(acceptConditionRequest.conditionID)
             if(condition.conditionStatus == ConditionStatus.PENDING) {
                 condition.conditionStatus = ConditionStatus.ACCEPTED
                 conditionsRepository.save(condition)
@@ -122,7 +121,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun rejectCondition(rejectConditionRequest: RejectConditionRequest): RejectConditionResponse {
         if(conditionsRepository.existsById(rejectConditionRequest.conditionID)){
-            var condition = conditionsRepository.getById(rejectConditionRequest.conditionID)
+            val condition = conditionsRepository.getById(rejectConditionRequest.conditionID)
             if(condition.conditionStatus == ConditionStatus.PENDING) {
                 condition.conditionStatus = ConditionStatus.REJECTED
                 conditionsRepository.save(condition)
@@ -138,7 +137,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return GetAllConditionsResponse(null, ResponseStatus.FAILED)
 
         val conditions = agreementsRepository.getById(getAllConditionsRequest.AgreementID).conditions
-        var conditionList = ArrayList<UUID>()
+        val conditionList = ArrayList<UUID>()
         print("Updated")
         if (conditions != null) {
             for(cond in conditions)
@@ -164,4 +163,24 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         agreementsRepository.save(agreement)
         return SealAgreementResponse(ResponseStatus.SUCCESSFUL)
     }
+
+    fun getConditionDetails(getConditionDetailsRequest: GetConditionDetailsRequest): GetConditionDetailsResponse
+    {
+        if(!conditionsRepository.existsById(getConditionDetailsRequest.conditionID))
+            return GetConditionDetailsResponse(getConditionDetailsRequest.conditionID,
+                                null,
+                                    null,
+                                     null,
+                                      null,
+                                                ResponseStatus.FAILED)
+
+        val condition = conditionsRepository.getById(getConditionDetailsRequest.conditionID)
+        return GetConditionDetailsResponse(condition.conditionID,
+                                            condition.conditionDescription,
+                                            condition.proposingUser,
+                                            condition.proposalDate,
+                                            condition.contract.ContractID,
+                                            ResponseStatus.SUCCESSFUL)
+    }
+
 }
