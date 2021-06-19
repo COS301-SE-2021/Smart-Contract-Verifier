@@ -12,8 +12,8 @@ job("Build and run tests") {
         	content = """
             			cd ./Smart-Contract-Verifier-Server
 						echo "Database creation"
-						apt-get upgrade
-						apt-get install postgresql postgresql-contrib
+						sudo apt-get upgrade
+						sudo apt-get install postgresql postgresql-contrib
 						psql -u postgres -c 'CREATE DATABASE verifier;'
 						echo "Database creation completed"
 						mvn clean install
