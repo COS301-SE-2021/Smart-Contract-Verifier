@@ -46,7 +46,7 @@ internal class NegotiationServiceTest
         val dateC = Date.from(LocalDate.of(2021,6,3).atStartOfDay(ZoneId.of( "Africa/Tunis" )).toInstant())
         val dateD = Date.from(LocalDate.of(2021,6,4).atStartOfDay(ZoneId.of( "Africa/Tunis" )).toInstant())
 
-        val agreementA = agreementsRepository.save(Agreements(UUID.fromString("2e19610c-a2ce-4444-824a-238028e7d18d"),
+        var agreementA = agreementsRepository.save(Agreements(UUID.fromString("2e19610c-a2ce-4444-824a-238028e7d18d"),
                                             UUID.randomUUID().toString(),
                                             "0x684CA5613fE09C0DBb754D929E7a1788464Cd0A6",
                                             "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
@@ -60,7 +60,7 @@ internal class NegotiationServiceTest
 
         agreementAUUID = agreementA.ContractID
 
-        val agreementB = agreementsRepository.save(Agreements(UUID.fromString("93f3e25c-6f78-4943-8b8c-48b43e83697d"),
+        var agreementB = agreementsRepository.save(Agreements(UUID.fromString("93f3e25c-6f78-4943-8b8c-48b43e83697d"),
                                             UUID.randomUUID().toString(),
                                     "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
                                     "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
@@ -74,7 +74,7 @@ internal class NegotiationServiceTest
 
         agreementBUUID = agreementB.ContractID
 
-        val agreementC = agreementsRepository.save(Agreements(UUID.fromString("8b8c6b25-7db8-4f87-b869-90e4cd8a246b"),
+        var agreementC = agreementsRepository.save(Agreements(UUID.fromString("8b8c6b25-7db8-4f87-b869-90e4cd8a246b"),
                 UUID.randomUUID().toString(),
                 "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
                 "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
@@ -151,10 +151,18 @@ internal class NegotiationServiceTest
 
         conditionGUUID = conditionG.conditionID
 
+        val conditionH = conditionsRepository.save(Conditions(UUID.fromString("9d0e4444-f24e-449e-8233-66330b2ef8a1"),
+                "Payment of " + 500L,
+                ConditionStatus.ACCEPTED,
+                "0x7766758C097cb4FB68d0DBEBc1C49AF03d883eBF",
+                dateC,
+                agreementC))
+
         val conditionListA = ArrayList<Conditions>()
         conditionListA.add(conditionA)
         conditionListA.add(conditionB)
         conditionListA.add(conditionC)
+        conditionListA.add(conditionH)
 
         val conditionListB = ArrayList<Conditions>()
         conditionListB.add(conditionD)
@@ -163,10 +171,17 @@ internal class NegotiationServiceTest
         conditionListB.add(conditionG)
 
         agreementB.conditions = conditionListA
-        agreementsRepository.save(agreementB)
+        agreementB = agreementsRepository.save(agreementB)
 
         agreementC.conditions = conditionListB
-        agreementsRepository.save(agreementC)
+        agreementC = agreementsRepository.save(agreementC)
+
+        agreementB.PaymentConditionUUID = conditionH.conditionID
+        agreementB = agreementsRepository.save(agreementB)
+
+        //agreementAUUID = agreementA.ContractID
+        //agreementBUUID = agreementB.ContractID
+        //agreementCUUID = agreementC.ContractID
     }
 
     @AfterEach
