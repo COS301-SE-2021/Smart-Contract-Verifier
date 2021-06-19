@@ -5,24 +5,36 @@
 */
 
 job("Build and run tests") {
+
+
     container("maven:3.6.3-openjdk-15-slim"){
     	shellScript{
         	content = """
             			cd ./Smart-Contract-Verifier-Server
-						sudo docker-compose run --service-ports postgres
 						mvn clean install
                     """
         }
+		service("postgres:latest"){
+			alias("localhost")
+			env["POSTGRES_PASSWORD"] = "smartcontractserverdev"
+			env["POSTGRES_HOST_AUTH_METHOD"] = "trust"
+		}
     }
+
+
 
 	container("maven:3.6.3-openjdk-15-slim"){
 		shellScript{
 			content = """
             			cd ./Smart-Contract-Verifier-Server
-						sudo docker-compose run --service-ports postgres
 						mvn clean package
 						cp -r target $mountDir/share
                     """
+		}
+		service("postgres:latest"){
+			alias("localhost")
+			env["POSTGRES_PASSWORD"] = "smartcontractserverdev"
+			env["POSTGRES_HOST_AUTH_METHOD"] = "trust"
 		}
 	}
     
@@ -33,7 +45,7 @@ job("Build and run tests") {
             """
     	}
     	build {
-    		context = "docker-compose"
+    		context = "docker"
     	}
     	push("savannasolutions.registry.jetbrains.space/p/scv/unison-container/myimage") {
     		tag = "\$JB_SPACE_GIT_REVISION"
