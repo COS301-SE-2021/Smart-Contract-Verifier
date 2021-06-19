@@ -20,3 +20,6 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 ### Project Management Tool Link
 [Space](https://savannasolutions.jetbrains.space/p/scv  "JetBrains Space SCV") 
+
+### Demo Videos
+[Demo 1](https://youtu.be/Cp3SrhVhpx8 "Demo 1 SCV")
