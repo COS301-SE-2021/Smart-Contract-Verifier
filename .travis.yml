@@ -1,14 +1,8 @@
 language: node_js
 jdk:
   - oraclejdk13
-node_js:
-  - "10"
-dist: xenial
-addons:
-  sonarcloud:
-    organization: "cos301-se-2021"
 script:
   # other script steps might be done before running the actual analysis
     - cd Smart-Contract-Verifier-Server
-    - mvn clean verify sonar:sonar -Dsonar.projectkey=COS301-SE-2021_Smart-Contract-Verifier
+    - mvn clean install
 
