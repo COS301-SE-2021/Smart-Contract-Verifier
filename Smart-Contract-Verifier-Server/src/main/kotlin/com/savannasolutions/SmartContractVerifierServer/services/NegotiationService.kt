@@ -10,6 +10,7 @@ import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.*
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Service
@@ -99,6 +100,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             ResponseStatus.FAILED)
         }
         val agreement = agreementsRepository.getById(getAgreementDetailsRequest.AgreementID)
+        val conditionsID = ArrayList<UUID>()
+        for(cond in agreement.conditions!!)
+        {
+            conditionsID.add(cond.conditionID)
+        }
+
         return GetAgreementDetailsResponse(agreement.ContractID,
                                             agreement.Duration,
                                             agreement.PartyA,
@@ -106,7 +113,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             agreement.CreatedDate,
                                             agreement.SealedDate,
                                             agreement.MovedToBlockChain,
-                                            agreement.conditions,
+                                            conditionsID,
                                             ResponseStatus.SUCCESSFUL)
     }
 
