@@ -4,6 +4,7 @@ import 'package:frontend_scv/models/functions.dart';
 
 class NewContract extends StatefulWidget {
   final List<Contract> _userContracts;
+
   NewContract(this._userContracts);
 
   @override
@@ -14,25 +15,57 @@ class _NewContractState extends State<NewContract> {
   final _partyAController = TextEditingController();
   final _partyBController = TextEditingController();
 
-  void submitData() {
+  void submitData() async {
     final enteredPartyA = _partyAController.text;
     final enteredPartyB = _partyBController.text;
 
-    if (_partyAController.text.isEmpty || _partyBController.text.isEmpty) return;
+    if (_partyAController.text.isEmpty || _partyBController.text.isEmpty)
+      return;
 
     //Add agreement to list
 
-    createInitialAgreement(enteredPartyA, enteredPartyB);
+    String id;
+    try {
+      id = await createInitialAgreement(enteredPartyA, enteredPartyB);
+    } on Exception catch (_) {
+      print("Agreement could not be created");
+      return;
+    }
 
-   // Contract newCon = Contract(id: id, terms: terms, status: status, partyA: partyA, partyB: partyB, createdDate: createdDate, movedToBlockchain: false, sealedDate: sealedDate, duration: duration)
-    //widget._userContracts.add();
+    print("Contract id: " + id);
 
+    var now = DateTime.now();
+
+    Contract newCon = Contract(
+      id: id,
+      terms: [],
+      status: ContractStatus.Negotiation,
+      partyA: enteredPartyA,
+      partyB: enteredPartyB,
+      createdDate: now.toString(),
+      movedToBlockchain: false,
+      sealedDate: "",
+      duration: "",
+    );
+    widget._userContracts.add(newCon);
     Navigator.of(context).pop();
   }
 
-
   @override
   Widget build(BuildContext context) {
+    void showNotify(
+        String
+            line) //Function to show alertDialogue to avoid some code duplication. To be used soon.
+    {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(line),
+            );
+          });
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 500),
       child: SingleChildScrollView(
@@ -58,7 +91,7 @@ class _NewContractState extends State<NewContract> {
                   decoration: InputDecoration(labelText: 'Party B ID'),
                   controller: _partyBController,
                   keyboardType: TextInputType.number,
-                 // onSubmitted:  submitData,
+                  // onSubmitted:  submitData,
                 ),
                 Container(
                   height: 70,

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:js';
 import 'package:http/http.dart';
+import 'package:flutter/material.dart';
 
 String address = "address1";
 String address2 = "address2";
@@ -33,7 +35,7 @@ class Agreement { //Most of these are String for now
 
 
 //API requests here. CTRL F to find this line
-void createInitialAgreement(String addressO, String addressT) async { //Create agreement on the backend.
+Future<String> createInitialAgreement(String addressO, String addressT) async { //Create agreement on the backend.
   final result = await post(
     Uri.parse(deployedURL + '/negotiation/create-agreement'), //And create agreement path
     headers: <String, String>{
@@ -49,6 +51,10 @@ void createInitialAgreement(String addressO, String addressT) async { //Create a
   String status = agrMap['status'];
   String agrID = agrMap['agreementID'];
 
+  if (status != 'SUCCESSFUL')
+    throw "Agreement could not be created";
+
+  return agrID;
 }
 
 Future<Agreement> getAgreement(String contractID) async { //Get agreement from the backend. #Note: Use Flutter class, generate instance from JSON
@@ -201,6 +207,8 @@ void getCondDetails(String condID) async { //Set duration  condition of agreemen
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
 }
+
+
 
 
 //End of backend API requests
