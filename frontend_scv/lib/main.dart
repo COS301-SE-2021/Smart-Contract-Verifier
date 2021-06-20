@@ -66,6 +66,7 @@ class _MyAppState extends State<MyApp> {
     List<Contract> _contracts = [agreementA, agreementB];
 
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Unison',
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
