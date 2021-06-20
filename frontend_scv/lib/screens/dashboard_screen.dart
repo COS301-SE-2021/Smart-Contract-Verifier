@@ -25,7 +25,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     showModalBottomSheet(
         context: ctx,
         builder: (_) {
-          return NewContract(widget._userContracts);
+          print ("Len B: " + widget._userContracts.length.toString());
+          Widget ret = NewContract(widget._userContracts);
+          print ("Len B: " + widget._userContracts.length.toString());
+          return ret;
+
         });
   }
 

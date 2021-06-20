@@ -3,12 +3,21 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_scv/models/contract.dart';
+import 'package:frontend_scv/models/functions.dart';
 
-class ContractDetailScreen extends StatelessWidget {
+class ContractDetailScreen extends StatefulWidget {
+
   static const routeName = '/contract-detail';
   final Contract contract;
 
   ContractDetailScreen(this.contract);
+
+  @override
+  _ContractDetailScreenState createState() => _ContractDetailScreenState();
+}
+
+class _ContractDetailScreenState extends State<ContractDetailScreen> {
+  final condTextController = TextEditingController();
 
   Widget buildSectionTitle(BuildContext context, String text) {
     return Container(
@@ -55,9 +64,32 @@ class ContractDetailScreen extends StatelessWidget {
     );
   }
 
+  void addCond(String id) async {
+
+    String des = condTextController.text;
+    String res;
+
+    try
+    {
+          res = await proposeCondition(id, des);
+          //Res is the conditionId
+    }
+    on Exception catch (e)
+    {
+      print ("Error: "+e.toString()); //Should throw
+      showNotify(this.context, "Error: "+e.toString());
+      return;
+    }
+
+    //Term t = Term(res, res, des, TermStatus.Pending, address);
+
+    showNotify(this.context, "Condition ID: " + res);
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    final selectedContract = contract;
+    final selectedContract = widget.contract;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -69,7 +101,7 @@ class ContractDetailScreen extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(750, 0, 0, 100),
         child: FloatingActionButton.extended(
           icon: Icon(Icons.add), // Web
-          onPressed: () => {print('Add term')},
+          onPressed: () => addCond(selectedContract.id),
           label: const Text('Add New Term'),
         ),
       ),
@@ -233,9 +265,19 @@ class ContractDetailScreen extends StatelessWidget {
                 itemCount: selectedContract.terms.length,
               ),
             ),
+            Column(
+            children: [TextField(
+              decoration: InputDecoration(labelText: 'Condition Text'),
+              controller: condTextController,
+              keyboardType: TextInputType.text,
+
+             ),
+            ],
+           ),
           ],
         ),
       ),
+
       // floatingActionButton: FloatingActionButton(
       //   child: Icon(
       //     isFavorite(mealId) ? Icons.favorite : Icons.favorite_border,

@@ -34,15 +34,16 @@ class _NewContractState extends State<NewContract> with WidgetsBindingObserver{
 
     String id;
     try {
-     // id = await createInitialAgreement(enteredPartyA, enteredPartyB);
-        id = "The first one";
+      id = await createInitialAgreement(enteredPartyA, enteredPartyB);
+       // id = "The first one";
     } on Exception catch (e) {
       print("Agreement could not be created");
       print (e.toString());
+      showNotify(this.context, "Agreement could not be created \n" + e.toString());
       return;
     }
 
-    print("Contract id: " + id);
+    showNotify(this.context, "Contract id: " + id);
 
     var now = DateTime.now();
 

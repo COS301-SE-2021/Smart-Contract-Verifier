@@ -89,7 +89,7 @@ void sealAgreement(String contractID) async { //Make an agreement final on backe
 
 }
 
-void proposeCondition(String contract, String condition) async { //Create condition/term for a contract.
+Future<String> proposeCondition(String contract, String condition) async { //Create condition/term for a contract.
   final result = await post(
     Uri.parse(deployedURL + 'negotiation/create-condition'), //And create condition path
     headers: <String, String>{
@@ -105,6 +105,11 @@ void proposeCondition(String contract, String condition) async { //Create condit
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
   String condID = agrMap['conditionID'];
+
+  if (status != 'SUCCESSFUL')
+    throw "Condition could not be created";
+
+  return condID;
 
 }
 
@@ -208,7 +213,16 @@ void getCondDetails(String condID) async { //Set duration  condition of agreemen
   String status = agrMap['status'];
 }
 
-
+void showNotify(BuildContext context, String line) //Function to show alertDialogue to avoid some code duplication. To be used soon.
+{
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(line),
+        );
+      });
+}
 
 
 //End of backend API requests

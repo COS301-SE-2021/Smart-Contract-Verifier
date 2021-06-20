@@ -61,8 +61,16 @@ class _MyAppState extends State<MyApp> {
     sealedDate: '',
   );
 
+
+  @override
+  _MyAppState createState() {
+
+    return _MyAppState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     List<Contract> _contracts = [agreementA, agreementB];
 
     return MaterialApp(
