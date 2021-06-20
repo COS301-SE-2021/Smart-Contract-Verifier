@@ -11,9 +11,17 @@ class NewContract extends StatefulWidget {
   _NewContractState createState() => _NewContractState();
 }
 
-class _NewContractState extends State<NewContract> {
+class _NewContractState extends State<NewContract> with WidgetsBindingObserver{
   final _partyAController = TextEditingController();
   final _partyBController = TextEditingController();
+
+ // final List<Contract> _userContracts = [];
+
+  @override
+  void initState() {
+    WidgetsBinding.instance!.addObserver(this);
+    super.initState();
+  }
 
   void submitData() async {
     final enteredPartyA = _partyAController.text;
@@ -26,15 +34,29 @@ class _NewContractState extends State<NewContract> {
 
     String id;
     try {
-      id = await createInitialAgreement(enteredPartyA, enteredPartyB);
-    } on Exception catch (_) {
+     // id = await createInitialAgreement(enteredPartyA, enteredPartyB);
+        id = "The first one";
+    } on Exception catch (e) {
       print("Agreement could not be created");
+      print (e.toString());
       return;
     }
 
     print("Contract id: " + id);
 
     var now = DateTime.now();
+
+    /*Contract newCon = Contract(
+      id: id,
+      terms: [],
+      status: ContractStatus.Negotiation,
+      partyA: enteredPartyA,
+      partyB: enteredPartyB,
+      createdDate: now.toString(),
+      movedToBlockchain: false,
+      sealedDate: "",
+      duration: "",
+    );*/
 
     Contract newCon = Contract(
       id: id,
@@ -47,7 +69,14 @@ class _NewContractState extends State<NewContract> {
       sealedDate: "",
       duration: "",
     );
-    widget._userContracts.add(newCon);
+
+    // print ("B:" + widget._userContracts.length.toString());
+    //
+    // print ("A: " + widget._userContracts.length.toString());
+    setState(() {
+      widget._userContracts.add(newCon);
+    });
+
     Navigator.of(context).pop();
   }
 

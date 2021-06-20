@@ -3,14 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:frontend_scv/models/contract.dart';
 import 'package:frontend_scv/widgets/contract_list_item.dart';
 
-class ContractList extends StatelessWidget {
+class ContractList extends StatefulWidget {
   final List<Contract> contracts;
 
   ContractList(this.contracts);
 
+
+
+  @override
+  _ContractListState createState() => _ContractListState();
+}
+
+class _ContractListState extends State<ContractList> {
+
+  @override
+  void initState() {
+    //WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return contracts.isEmpty
+    return widget.contracts.isEmpty
         ? LayoutBuilder(builder: (ctx, constraints) {
             return Column(
               children: <Widget>[
@@ -48,7 +62,7 @@ class ContractList extends StatelessWidget {
 
   ListView buildContractItemsList() {
     return ListView(
-      children: contracts
+      children: widget.contracts
           .map((cont) => ContractListItem(
                 key: ValueKey(cont.id), //You pass your own identifier
                 // key: UniqueKey(),

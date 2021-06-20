@@ -11,6 +11,8 @@ class DashboardScreen extends StatefulWidget {
 
   DashboardScreen(this._userContracts);
 
+
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -18,6 +20,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   void _startAddNewContract(BuildContext ctx) {
     print('Start new agreement');
+
+
     showModalBottomSheet(
         context: ctx,
         builder: (_) {
