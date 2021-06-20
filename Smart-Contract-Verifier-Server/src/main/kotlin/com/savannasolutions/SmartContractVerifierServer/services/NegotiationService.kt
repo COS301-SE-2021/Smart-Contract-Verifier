@@ -116,7 +116,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         }
 
         return GetAgreementDetailsResponse(agreement.ContractID,
-                                            agreement.Duration,
+                                            agreement.Duration?.toSeconds(),
                                             agreement.PartyA,
                                             agreement.PartyB,
                                             agreement.CreatedDate,
@@ -185,6 +185,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                     null,
                                      null,
                                       null,
+                                    null,
                                                 ResponseStatus.FAILED)
 
         val condition = conditionsRepository.getById(getConditionDetailsRequest.conditionID)
@@ -193,6 +194,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             condition.proposingUser,
                                             condition.proposalDate,
                                             condition.contract.ContractID,
+                                            condition.conditionStatus,
                                             ResponseStatus.SUCCESSFUL)
     }
 
