@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_scv/models/contract.dart';
+import 'package:frontend_scv/models/functions.dart';
 
 class NewContract extends StatefulWidget {
   final List<Contract> _userContracts;
@@ -12,6 +13,23 @@ class NewContract extends StatefulWidget {
 class _NewContractState extends State<NewContract> {
   final _partyAController = TextEditingController();
   final _partyBController = TextEditingController();
+
+  void submitData() {
+    final enteredPartyA = _partyAController.text;
+    final enteredPartyB = _partyBController.text;
+
+    if (_partyAController.text.isEmpty || _partyBController.text.isEmpty) return;
+
+    //Add agreement to list
+
+    createInitialAgreement(enteredPartyA, enteredPartyB);
+
+   // Contract newCon = Contract(id: id, terms: terms, status: status, partyA: partyA, partyB: partyB, createdDate: createdDate, movedToBlockchain: false, sealedDate: sealedDate, duration: duration)
+    //widget._userContracts.add();
+
+    Navigator.of(context).pop();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +52,13 @@ class _NewContractState extends State<NewContract> {
                 TextField(
                   decoration: InputDecoration(labelText: 'Party A ID'),
                   controller: _partyAController,
-                  onSubmitted: (_) => {print('Submit Data')},
+                  //onSubmitted: submitData,
                 ),
                 TextField(
                   decoration: InputDecoration(labelText: 'Party B ID'),
                   controller: _partyBController,
                   keyboardType: TextInputType.number,
-                  onSubmitted: (_) => {print('Submit Data')},
+                 // onSubmitted:  submitData,
                 ),
                 Container(
                   height: 70,
@@ -52,7 +70,7 @@ class _NewContractState extends State<NewContract> {
                   child: Text('Create Agreement'),
                   textColor: Theme.of(context).buttonColor,
                   color: Theme.of(context).primaryColor,
-                  onPressed: () => {print('Submit Data')},
+                  onPressed: submitData,
                 ),
               ],
             ),

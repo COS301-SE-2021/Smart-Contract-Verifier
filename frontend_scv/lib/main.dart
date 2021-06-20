@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
     partyA: '0x743Fb032c0bE976e1178d8157f911a9e825d9E23',
     partyB: '0x37Ec9a8aBFa094b24054422564e68B08aF3114B4',
     createdDate: "2021-06-19T23:47:05.454+00:00",
-    movedToBlockchain: false,
+    movedToBlockchain: true,
     duration: '',
     sealedDate: '',
   );
