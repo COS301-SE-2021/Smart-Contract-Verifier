@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:frontend_scv/models/contract.dart';
 
@@ -12,61 +14,43 @@ class ContractDetailScreen extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.title,
+        style: TextStyle(
+          color: Theme.of(context).accentColor,
+          fontSize: 40,
+        ),
       ),
     );
   }
 
   Widget buildContainer(Widget child) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 500),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.teal,
         border: Border.all(
-          color: Colors.grey,
+          color: Colors.cyan,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
-      height: 150,
-      width: 300,
+      height: 400,
       child: child,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // final mealId = ModalRoute.of(context)!.settings.arguments as String;
-
     final selectedContract = contract;
-    //firstWhere returns 1 element
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'test',
+          'Agreement: ${selectedContract.id}',
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            buildSectionTitle(context, 'Terms'),
-            buildContainer(
-              ListView.builder(
-                itemBuilder: (ctx, index) => Card(
-                  color: Theme.of(context).accentColor,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 10,
-                    ),
-                    child: Text("selectedContract.terms[index].description"),
-                  ),
-                ),
-                itemCount: selectedContract.terms.length,
-              ),
-            ),
-            buildSectionTitle(context, 'Steps'),
+            // buildSectionTitle(context, 'Steps'),
             // buildContainer(
             //   ListView.builder(
             //     itemBuilder: (ctx, index) => Column(
@@ -83,6 +67,85 @@ class ContractDetailScreen extends StatelessWidget {
             //     itemCount: selectedMeal.steps.length,
             //   ),
             // ),
+
+            buildSectionTitle(context, 'Terms'),
+            buildContainer(
+              ListView.builder(
+                itemBuilder: (ctx, index) => Card(
+                  color: Colors.black38,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        // leading: Icon(
+                        //   Icons.work,
+                        //   color: Theme.of(context).accentColor,
+                        // ),
+                        title: Text(
+                          selectedContract.terms[index].text,
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 20,
+                          ),
+                        ),
+                        subtitle: Text(
+                          selectedContract.terms[index].description,
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            // fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          TextButton.icon(
+                            icon: Icon(
+                              Icons.thumb_up_alt,
+                              color: Colors.green,
+                            ),
+                            onPressed: () => {print('accept term ${index}')},
+                            // selectContract(context, widget.contract),
+                            // onTap: () => selectMeal(context)
+                            label: Text(
+                              'Accept',
+                              style: TextStyle(
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          TextButton.icon(
+                            icon: Icon(
+                              Icons.thumb_down_alt,
+                              color: Colors.red,
+                            ),
+                            onPressed: () => {print('reject term ${index}')},
+                            // selectContract(context, widget.contract),
+                            // onTap: () => selectMeal(context)
+                            label: Text(
+                              'Reject',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                itemCount: selectedContract.terms.length,
+              ),
+            ),
           ],
         ),
       ),
