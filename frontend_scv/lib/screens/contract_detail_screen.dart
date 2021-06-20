@@ -64,6 +64,15 @@ class ContractDetailScreen extends StatelessWidget {
           'Agreement: ${selectedContract.id}',
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Container(
+        margin: EdgeInsets.fromLTRB(750, 0, 0, 100),
+        child: FloatingActionButton.extended(
+          icon: Icon(Icons.add), // Web
+          onPressed: () => {print('Add term')},
+          label: const Text('Add New Term'),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -72,13 +81,6 @@ class ContractDetailScreen extends StatelessWidget {
             ),
             buildSectionTitle(context, 'Overview'),
             buildOverviewContainer(
-              //    "agreementID": "1b932958-7ce1-4816-ab34-db27f970e7c7",
-              // 		"duration": null,
-              // 		"partyA": "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-              // 		"partyB": "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-              // 		"createdDate": "2021-06-19T23:47:05.454+00:00",
-              // 		"sealedDate": null,
-              // 		"movedToBlockchain": false,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [

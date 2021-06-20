@@ -24,13 +24,18 @@ class _MyAppState extends State<MyApp> {
   ];
   static List<Term> dummyTermsB = [
     Term(
-        '1',
-        'term text',
-        'term description - '
-            'normally a bit longer than your average sentence to demonstrate what '
-            'this will be used for.',
+        '0',
+        'The car must be blue',
+        'Currently the car is red and I want that red paint please - it is '
+            'crucial that the paint is red',
         TermStatus.Pending,
-        'partyA_ID')
+        '0x743Fb032c0bE976e1178d8157f911a9e825d9E23'),
+    Term(
+        '1',
+        'The car must be given a service',
+        'Proof of a service from a qualified technician is required',
+        TermStatus.Pending,
+        '0x743Fb032c0bE976e1178d8157f911a9e825d9E23'),
   ];
   final agreementA = Contract(
     id: 'a967075d-d406-4cd6-b57f-8deb18940bf7',
@@ -39,20 +44,26 @@ class _MyAppState extends State<MyApp> {
     partyA: '0x743Fb032c0bE976e1178d8157f911a9e825d9E23',
     partyB: '0x37Ec9a8aBFa094b24054422564e68B08aF3114B4',
     createdDate: "2021-06-19T23:47:05.454+00:00",
-    movedToBlockchain: true,
+    movedToBlockchain: false,
+    duration: '',
+    sealedDate: '',
   );
 
-  // final agreementB = Contract(
-  //   'a9987079d-d416-d406-d509-8ubn18670b69',
-  //   dummyTermsB,
-  //   ContractStatus.Sealed,
-  //   'par-tyA-IDAgreent02',
-  //   'par-tyB-IDAgreent02',
-  // );
+  final agreementB = Contract(
+    id: '8deb18940bf7-4cd6-d406-b57f-a967075d',
+    terms: dummyTermsB,
+    status: ContractStatus.Negotiation,
+    partyA: '0x743Fb032c0bE976e1178d8157f911a9e825d9E23',
+    partyB: '0x37Ec9a8aBFa094b24054422564e68B08aF3114B4',
+    createdDate: "2021-06-20T23:47:05.454+00:00",
+    movedToBlockchain: false,
+    duration: '',
+    sealedDate: '',
+  );
 
   @override
   Widget build(BuildContext context) {
-    List<Contract> _contracts = [agreementA];
+    List<Contract> _contracts = [agreementA, agreementB];
 
     return MaterialApp(
         title: 'Unison',

@@ -25,6 +25,8 @@ class Contract {
   final String partyB;
   final String createdDate;
   final bool movedToBlockchain;
+  final String sealedDate;
+  final String duration;
 
   Contract({
     required this.id,
@@ -34,5 +36,7 @@ class Contract {
     required this.partyB,
     required this.createdDate,
     required this.movedToBlockchain,
+    required this.sealedDate,
+    required this.duration,
   });
 }
