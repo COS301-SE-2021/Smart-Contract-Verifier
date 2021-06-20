@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 enum TermStatus { Accepted, Rejected, Pending }
 enum ContractStatus {
@@ -13,13 +14,21 @@ class Term {
   final TermStatus status;
   final String partyId;
 
-  Term.name(this.id, this.text, this.description, this.status, this.partyId);
+  Term(this.id, this.text, this.description, this.status, this.partyId);
 }
 
 class Contract {
   final String id;
-  final List<Term> Terms;
+  final List<Term> terms;
   final ContractStatus status;
+  final String partyA;
+  final String partyB;
 
-  Contract.name(this.id, this.Terms, this.status);
+  Contract({
+    required this.id,
+    required this.terms,
+    required this.status,
+    required this.partyA,
+    required this.partyB,
+  });
 }

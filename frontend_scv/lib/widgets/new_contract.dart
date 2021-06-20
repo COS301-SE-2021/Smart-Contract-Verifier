@@ -1,59 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_scv/models/contract.dart';
 
 class NewContract extends StatefulWidget {
-  final Function addCont;
-
-  NewContract(this.addCont);
+  final List<Contract> _userContracts;
+  NewContract(this._userContracts);
 
   @override
   _NewContractState createState() => _NewContractState();
 }
 
 class _NewContractState extends State<NewContract> {
-  final _titleController = TextEditingController();
   final _partyAController = TextEditingController();
   final _partyBController = TextEditingController();
-
-  _NewContractState() {
-    print('constructor');
-  }
-
-  @override
-  void initState() {
-    print('initState');
-    //Make http request here (fetching initial data)
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(NewContract oldWidget) {
-    //re-fetch data
-    print('didUpdate widget');
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    //cleaning up data/connection
-    print('dispose');
-    super.dispose();
-  }
-
-  void _submitData() {
-    final enteredTitle = _titleController.text;
-    // final enteredAmount = double.parse(_amountController.text);
-    //TODO
-    // if (_amountController.text.isEmpty) return;
-
-    // if (enteredTitle.isEmpty || enteredAmount <= 0 || _selectedDate == null)
-    //   return;
-    // widget.addTx(
-    //   enteredTitle,
-    //   enteredAmount,
-    //   _selectedDate,
-    // );
-    Navigator.of(context).pop();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +34,13 @@ class _NewContractState extends State<NewContract> {
                 TextField(
                   decoration: InputDecoration(labelText: 'Party A ID'),
                   controller: _partyAController,
-                  onSubmitted: (_) => _submitData(),
+                  onSubmitted: (_) => {print('Submit Data')},
                 ),
                 TextField(
                   decoration: InputDecoration(labelText: 'Party B ID'),
                   controller: _partyBController,
                   keyboardType: TextInputType.number,
-                  onSubmitted: (_) => _submitData(),
+                  onSubmitted: (_) => {print('Submit Data')},
                 ),
                 Container(
                   height: 70,
@@ -94,7 +52,7 @@ class _NewContractState extends State<NewContract> {
                   child: Text('Create Agreement'),
                   textColor: Theme.of(context).buttonColor,
                   color: Theme.of(context).primaryColor,
-                  onPressed: _submitData,
+                  onPressed: () => {print('Submit Data')},
                 ),
               ],
             ),

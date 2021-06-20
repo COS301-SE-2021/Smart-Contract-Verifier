@@ -7,27 +7,23 @@ import '../widgets/main_drawer.dart';
 import '../models/contract.dart';
 
 class DashboardScreen extends StatefulWidget {
-  final List<Contract> userContracts;
+  final List<Contract> _userContracts;
 
-  DashboardScreen(this.userContracts);
+  DashboardScreen(this._userContracts);
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-void _addNewContract(String title, double amount, DateTime date) {}
-
-void _startAddNewContract(BuildContext ctx) {
-  print('Start new agreement');
-  showModalBottomSheet(
-      context: ctx,
-      builder: (_) {
-        return NewContract(_addNewContract);
-      });
-}
-
 class _DashboardScreenState extends State<DashboardScreen> {
-  // final List<Contract> contracts = [];
+  void _startAddNewContract(BuildContext ctx) {
+    print('Start new agreement');
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return NewContract(widget._userContracts);
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +35,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       drawer: MainDrawer(),
       body: Center(
-        child: ContractList(widget.userContracts),
+        child: ContractList(widget._userContracts),
       ),
       floatingActionButtonLocation: kIsWeb
           ? FloatingActionButtonLocation.centerFloat //if is web

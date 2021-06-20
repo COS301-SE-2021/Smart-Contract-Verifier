@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_scv/models/contract.dart';
+import 'package:frontend_scv/screens/contract_detail_screen.dart';
 
 class ContractListItem extends StatefulWidget {
   const ContractListItem({
@@ -16,6 +17,19 @@ class ContractListItem extends StatefulWidget {
 }
 
 class _ContractListItemState extends State<ContractListItem> {
+  void selectContract(BuildContext ctx, Contract selected) {
+    Navigator.of(ctx)
+        .pushNamed(
+      ContractDetailScreen.routeName,
+      arguments: selected,
+    )
+        .then(
+      (result) {
+        print(result);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget getContractStatus(Contract cont) {
@@ -93,7 +107,8 @@ class _ContractListItemState extends State<ContractListItem> {
                   Icons.visibility,
                   // color: Theme.of(context).accentColor,
                 ),
-                onPressed: () {/* ... */},
+                onPressed: () => selectContract(context, widget.contract),
+                // onTap: () => selectMeal(context)
                 label: Text('View Agreement'),
               ),
               const SizedBox(
