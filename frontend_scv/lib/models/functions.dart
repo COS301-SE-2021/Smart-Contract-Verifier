@@ -113,30 +113,31 @@ Future<String> proposeCondition(String contract, String condition) async { //Cre
 
 }
 
-void acceptCondition(int condition) async { //Accept proposed condition. Each condition has a unique ID
+Future<String> acceptCondition(String condition) async { //Accept proposed condition. Each condition has a unique ID
   final result = await post(
     Uri.parse(deployedURL +'negotiation/accept-condition'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, String>{
-      'ConditionID' : condition.toString()
+      'ConditionID' : condition
     }),
   );
 
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
 
+  return status;
 }
 
-void rejectCondition(int condition) async {
+void rejectCondition(String condition) async {
   final result = await post(
     Uri.parse(deployedURL + 'negotiation/reject-condition'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, String>{
-      'ConditionID' : condition.toString()
+      'ConditionID' : condition
     }),
   );
 
@@ -145,7 +146,7 @@ void rejectCondition(int condition) async {
 
 }
 
-void getConditions(String agreement) async { //Get the conditions associated with an agreement
+Future<List<dynamic>> getConditions(String agreement) async { //Get the conditions associated with an agreement
   final result = await post(
     Uri.parse(deployedURL + 'negotiation/get-all-conditions'), //And accept condition path
     headers: <String, String>{
@@ -156,10 +157,14 @@ void getConditions(String agreement) async { //Get the conditions associated wit
     }),
   );
 
-  Map<String, dynamic> agrMap = jsonDecode(result.body);
-  String status = agrMap['Status'];
+  //Demo JSON
+  //String result = '{  "conditions": [  "1c6fff1d-6575-4fd2-a336-f0758a7cc482",  "5e90c471-0ce1-4b55-a43e-3408dc7803d5",  "8cfc9ed2-f32b-492b-b93a-07544d5406ff",  "cfb9f179-54f9-4710-8841-c3ae89c414bf",  "ab7af3d6-1c43-45d5-98ba-b558f5c62502"  ],  "status": "SUCCESSFUL"  }';
+  print ("Here");
+  Map<String, dynamic> agrMap = jsonDecode(result);
+  print ("There");
+  String status = agrMap['status'];
   List<dynamic> conds = agrMap['conditions'];
-  // May want to return conditions as list<dynamic>
+  return conds;
 }
 
 void setPayment(String agreement, double amount) async { //Set payment condition of agreement

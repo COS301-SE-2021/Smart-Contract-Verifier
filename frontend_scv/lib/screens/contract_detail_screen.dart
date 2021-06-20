@@ -18,6 +18,7 @@ class ContractDetailScreen extends StatefulWidget {
 
 class _ContractDetailScreenState extends State<ContractDetailScreen> {
   final condTextController = TextEditingController();
+  final agrIDController = TextEditingController();
 
   Widget buildSectionTitle(BuildContext context, String text) {
     return Container(
@@ -65,7 +66,6 @@ class _ContractDetailScreenState extends State<ContractDetailScreen> {
   }
 
   void addCond(String id) async {
-
     String des = condTextController.text;
     String res;
 
@@ -80,10 +80,65 @@ class _ContractDetailScreenState extends State<ContractDetailScreen> {
       showNotify(this.context, "Error: "+e.toString());
       return;
     }
-
     //Term t = Term(res, res, des, TermStatus.Pending, address);
-
     showNotify(this.context, "Condition ID: " + res);
+
+  }
+
+  void acceptCond() async {
+    String id = condTextController.text;
+    String res;
+
+    try
+    {
+      res = await acceptCondition(id);
+      //Res is the status
+    } on Exception catch (e)
+    {
+      print ("Error: "+e.toString());
+      showNotify(this.context, "Error: "+e.toString());
+      return;
+    }
+    showNotify(this.context, "Status: " + res);
+  }
+
+  void rejectCond() async {
+    String id = condTextController.text;
+    String res;
+
+    try
+    {
+      res = await acceptCondition(id);
+      //Res is the status
+    } on Exception catch (e)
+    {
+      print ("Error: "+e.toString());
+      showNotify(this.context, "Error: "+e.toString());
+      return;
+    }
+    showNotify(this.context, "Status: " + res);
+  }
+
+  void getConditionsForAgr() async {
+    final conAdd = agrIDController.text;
+
+    List<dynamic> res;
+    try
+    {
+      res = await getConditions(conAdd);
+      //Res is the status
+    } on Exception catch (e)
+    {
+      print ("Error: "+e.toString());
+      showNotify(this.context, "Error: "+e.toString());
+      return;
+    }
+
+    String resList = "";
+    for (int i =0;i<res.length;i++)
+      resList += res[i] + '\n';
+
+    showNotify(this.context, "Condition IDs:\n " + resList);
 
   }
 
@@ -223,7 +278,7 @@ class _ContractDetailScreenState extends State<ContractDetailScreen> {
                               Icons.thumb_up_alt,
                               color: Colors.green,
                             ),
-                            onPressed: () => {print('accept term ${index}')},
+                            onPressed: acceptCond,//() => {print('accept term ${index}')},
                             // selectContract(context, widget.contract),
                             // onTap: () => selectMeal(context)
                             label: Text(
@@ -241,7 +296,7 @@ class _ContractDetailScreenState extends State<ContractDetailScreen> {
                               Icons.thumb_down_alt,
                               color: Colors.red,
                             ),
-                            onPressed: () => {print('reject term ${index}')},
+                            onPressed: rejectCond,// () => {print('reject term ${index}')},
                             // selectContract(context, widget.contract),
                             // onTap: () => selectMeal(context)
                             label: Text(
@@ -266,12 +321,19 @@ class _ContractDetailScreenState extends State<ContractDetailScreen> {
               ),
             ),
             Column(
-            children: [TextField(
+            children: [
+              TextField(
               decoration: InputDecoration(labelText: 'Condition Text'),
               controller: condTextController,
               keyboardType: TextInputType.text,
 
              ),
+             TextField(
+             decoration: InputDecoration(labelText: 'Agreement ID'),
+             controller: agrIDController,
+             keyboardType: TextInputType.text,
+              ),
+              OutlinedButton(onPressed: getConditionsForAgr, child: Text("Get all conditions for a contract")),
             ],
            ),
           ],
