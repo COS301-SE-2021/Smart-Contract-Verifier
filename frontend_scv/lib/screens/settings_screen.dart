@@ -22,9 +22,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   initState() {
     // _glutenFree = widget.currentFilters['gluten'];
-    // _lactoseFree = widget.currentFilters['lactose'];
-    // _vegetarian = widget.currentFilters['vegetarian'];
-    // _vegan = widget.currentFilters['vegan'];
     super.initState();
   }
 
@@ -47,23 +44,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Filters'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // final selectedFilters = {
-              //   'gluten': _glutenFree,
-              //   'lactose': _lactoseFree,
-              //   'vegan': _vegan,
-              //   'vegetarian': _vegetarian,
-              // };
-              // widget.saveFilters(selectedFilters);
-            },
-            icon: Icon(
-              Icons.save,
-            ),
-          )
-        ],
+        title: Text('User Settings'),
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       // final selectedFilters = {
+        //       //   'gluten': _glutenFree,
+        //       //   'lactose': _lactoseFree,
+        //       //   'vegan': _vegan,
+        //       //   'vegetarian': _vegetarian,
+        //       // };
+        //       // widget.saveFilters(selectedFilters);
+        //     },
+        //     icon: Icon(
+        //       Icons.save,
+        //     ),
+        //   )
+        // ],
       ),
       drawer: MainDrawer(),
       body: Column(
@@ -71,7 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             padding: EdgeInsets.all(20),
             child: Text(
-              'Adjust your meal selection',
+              'Coming Soon',
               style: Theme.of(context).textTheme.title,
             ),
           ),

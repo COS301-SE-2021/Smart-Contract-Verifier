@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
             'normally a bit longer than your average sentence to demonstrate what '
             'this will be used for.',
         TermStatus.Pending,
-        'partyA_ID')
+        '0x743Fb032c0bE976e1178d8157f911a9e825d9E23')
   ];
   static List<Term> dummyTermsB = [
     Term(
@@ -36,8 +36,10 @@ class _MyAppState extends State<MyApp> {
     id: 'a967075d-d406-4cd6-b57f-8deb18940bf7',
     terms: dummyTermsA,
     status: ContractStatus.Negotiation,
-    partyA: 'par-tyA-IDAgreent01',
-    partyB: 'par-tyB-IDAgreent01',
+    partyA: '0x743Fb032c0bE976e1178d8157f911a9e825d9E23',
+    partyB: '0x37Ec9a8aBFa094b24054422564e68B08aF3114B4',
+    createdDate: "2021-06-19T23:47:05.454+00:00",
+    movedToBlockchain: true,
   );
 
   // final agreementB = Contract(
