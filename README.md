@@ -29,6 +29,7 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 ### Demo Videos
 [Demo 1](https://youtu.be/Cp3SrhVhpx8 "Demo 1 Pre-Recorded")
+
 [Demo 2](https://drive.google.com/file/d/1cDZbwf62NDgF4b06BWYo1-K27CnWazlp/view "Demo 2 Pre-Recorded")
 
 ### Coding Standards
