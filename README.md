@@ -18,8 +18,11 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 | Ronan van de Vyver | 3rd Year Computer Science| [LinkedIn](https://linkedin.com/in/ronan-van-de-vyver-98bb7820b  "Ronan's LinkedIn Profile") \| [Github](https://github.com/Ronan-UP  "Ronan's Github Profile") |
 
 
+### SRS Document
+[SRS Document](https://drive.google.com/file/d/1IvI10wJO8FSv1APeL5g9D8WualTDp7nY/view?usp=sharing "SRS Document - Demo 2 Update")
+
 ### Project Management Tool Link
 [Space](https://savannasolutions.jetbrains.space/p/scv  "JetBrains Space SCV") 
 
 ### Demo Videos
-[Demo 1](https://youtu.be/Cp3SrhVhpx8 "Demo 1 SCV")
+[Demo 1](https://youtu.be/Cp3SrhVhpx8 "Demo 1 Pre-Recorded")
