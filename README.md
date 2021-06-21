@@ -21,6 +21,9 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 ### SRS Document
 [SRS Document](https://drive.google.com/file/d/1IvI10wJO8FSv1APeL5g9D8WualTDp7nY/view?usp=sharing "SRS Document - Demo 2 Update")
 
+### Architectural Design Specification 
+[Architectural Design Specification](https://drive.google.com/file/d/1ApvMXOMRkjy6tudNY2TkfpmoYoe4coBI/view?usp=sharing "Architectural Design Specification Document")
+
 ### Project Management Tool Link
 [Space](https://savannasolutions.jetbrains.space/p/scv  "JetBrains Space SCV") 
 
@@ -29,3 +32,6 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 ### Coding Standards
 [Coding Standards](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
+
+
+
