@@ -1,5 +1,5 @@
 # Savanna Solutions
-## Smart-Contract-Verifier
+## Unison - Smart-Contract-Verifier
 
 
 ### Project Description
@@ -26,3 +26,6 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 ### Demo Videos
 [Demo 1](https://youtu.be/Cp3SrhVhpx8 "Demo 1 Pre-Recorded")
+
+### Coding Standards
+[Coding Standards](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
