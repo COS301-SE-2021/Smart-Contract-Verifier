@@ -34,7 +34,9 @@ class _NewContractState extends State<NewContract> with WidgetsBindingObserver{
 
     String id;
     try {
+      print("Calling");
       id = await createInitialAgreement(enteredPartyA, enteredPartyB);
+      print("ID: " +id);
        // id = "The first one";
     } on Exception catch (e) {
       print("Agreement could not be created");

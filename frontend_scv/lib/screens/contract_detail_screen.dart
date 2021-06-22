@@ -68,15 +68,17 @@ class _ContractDetailScreenState extends State<ContractDetailScreen> {
   void addCond(String id) async {
     String des = condTextController.text;
     String res;
+    String rid = agrIDController.text;
+    print("Rid: " + rid);
 
     try
     {
-          res = await proposeCondition(id, des);
+          res = await proposeCondition(rid, des);
           //Res is the conditionId
     }
     on Exception catch (e)
     {
-      print ("Error: "+e.toString()); //Should throw
+      print ("Errord: "+e.toString()); //Should throw
       showNotify(this.context, "Error: "+e.toString());
       return;
     }

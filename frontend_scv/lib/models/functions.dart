@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'dart:html';
 import 'dart:js';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 
 String address = "address1";
 String address2 = "address2";
-final String deployedURL = "https://localhost:8080/";
+final String deployedURL = "http://localhost:8080/";
 
 class Agreement { //Most of these are String for now
 
@@ -49,11 +50,11 @@ Future<String> createInitialAgreement(String addressO, String addressT) async { 
 
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
-  String agrID = agrMap['agreementID'];
 
   if (status != 'SUCCESSFUL')
-    throw "Agreement could not be created";
+    throw Exception("Agreement could not be created");
 
+  String agrID = agrMap['agreementID']; //AgreementID is not of type string if status != success, so must be gotten after check
   return agrID;
 }
 
@@ -85,30 +86,41 @@ void sealAgreement(String contractID) async { //Make an agreement final on backe
   );
 
   Map<String, dynamic> agrMap = jsonDecode(result.body);
-  String status = agrMap['status'];
+  String status = agrMap['status']; //Handle from here
 
 }
 
 Future<String> proposeCondition(String contract, String condition) async { //Create condition/term for a contract.
+
   final result = await post(
     Uri.parse(deployedURL + 'negotiation/create-condition'), //And create condition path
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, String>{
-      'ProposedUser' : address,
-      'AgreementID' : contract.toString(),
+      'ProposedUser' : 'Thing1',
+      'AgreementID' : contract,
       'ConditionDescription' : condition
     }),
   );
 
+  print (result.body);
   Map<String, dynamic> agrMap = jsonDecode(result.body);
-  String status = agrMap['status'];
-  String condID = agrMap['conditionID'];
 
+  String status;
+  try { //If status is not a string, then the kotlin server ran into an error and generates an integer status
+    status = agrMap['status'];
+  }  on Exception catch(_)
+  {
+    int st = agrMap['status'];
+    throw Exception("Condition not created.\n The server responded with a numerical error code: " + st.toString());
+  }
+
+  print (result.body);
   if (status != 'SUCCESSFUL')
-    throw "Condition could not be created";
+    throw Exception("Condition could not be created");
 
+  String condID = agrMap['conditionID']; //Successful request, get condID
   return condID;
 
 }
@@ -127,6 +139,9 @@ Future<String> acceptCondition(String condition) async { //Accept proposed condi
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
 
+  // if (status != "SUCCESSFUL") //May be unnecessary check
+  //   throw Exception('Payment could not be set');
+
   return status;
 }
 
@@ -144,6 +159,9 @@ void rejectCondition(String condition) async {
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
 
+  if (status != "SUCCESSFUL")
+    throw Exception('Condition could not be rejected');
+
 }
 
 Future<List<dynamic>> getConditions(String agreement) async { //Get the conditions associated with an agreement
@@ -157,12 +175,11 @@ Future<List<dynamic>> getConditions(String agreement) async { //Get the conditio
     }),
   );
 
-  //Demo JSON
-  //String result = '{  "conditions": [  "1c6fff1d-6575-4fd2-a336-f0758a7cc482",  "5e90c471-0ce1-4b55-a43e-3408dc7803d5",  "8cfc9ed2-f32b-492b-b93a-07544d5406ff",  "cfb9f179-54f9-4710-8841-c3ae89c414bf",  "ab7af3d6-1c43-45d5-98ba-b558f5c62502"  ],  "status": "SUCCESSFUL"  }';
-  print ("Here");
   Map<String, dynamic> agrMap = jsonDecode(result.body);
-  print ("There");
   String status = agrMap['status'];
+  if (status != "SUCCESSFUL")
+    throw Exception('Conditions could not be retrieved');
+
   List<dynamic> conds = agrMap['conditions'];
   return conds;
 }
@@ -182,6 +199,10 @@ void setPayment(String agreement, double amount) async { //Set payment condition
 
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
+
+  if (status != "SUCCESSFUL")
+    throw Exception('Payment could not be set');
+
   String condID = agrMap['conditionID'];
 }
 
@@ -200,6 +221,9 @@ void setDuration(String agreement, int time) async { //Set duration  condition o
 
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
+  if (status != "SUCCESSFUL")
+    throw Exception('Duration could not be set');
+
   String condID = agrMap['conditionID'];
 }
 
@@ -216,6 +240,10 @@ void getCondDetails(String condID) async { //Set duration  condition of agreemen
 
   Map<String, dynamic> agrMap = jsonDecode(result.body);
   String status = agrMap['status'];
+
+  if (status != "SUCCESSFUL")
+    throw Exception('Details could not be retrieved');
+
 }
 
 void showNotify(BuildContext context, String line) //Function to show alertDialogue to avoid some code duplication. To be used soon.
