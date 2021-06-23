@@ -195,6 +195,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             condition.proposalDate,
                                             condition.contract.ContractID,
                                             condition.conditionStatus,
+
                                             ResponseStatus.SUCCESSFUL)
     }
 
