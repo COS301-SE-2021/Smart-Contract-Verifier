@@ -29,14 +29,14 @@ class Contract {
   final String duration;
 
   Contract({
-    required this.id,
-    required this.terms,
-    required this.status,
-    required this.partyA,
-    required this.partyB,
-    required this.createdDate,
-    required this.movedToBlockchain,
-    required this.sealedDate,
-    required this.duration,
+    @required this.id,
+    @required this.terms,
+    @required this.status,
+    @required this.partyA,
+    @required this.partyB,
+    @required this.createdDate,
+    @required this.movedToBlockchain,
+    @required this.sealedDate,
+    @required this.duration,
   });
 }
