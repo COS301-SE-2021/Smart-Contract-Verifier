@@ -12,23 +12,19 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import java.time.Duration
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import java.util.*
 
 //@SpringBootTest
 internal class NegotiationServiceTest//@Autowired
 () {
-    private lateinit var conditionsRepository: ConditionsRepository
-    private lateinit var agreementsRepository: AgreementsRepository
-    private lateinit var negotiationService : NegotiationService
+    private val conditionsRepository : ConditionsRepository = mock()
+    private val agreementsRepository : AgreementsRepository = mock()
+    private val negotiationService = NegotiationService(agreementsRepository, conditionsRepository)
 
     @BeforeEach
     fun setUp() {
-        conditionsRepository = Mockito.mock(ConditionsRepository::class.java)
-        agreementsRepository = Mockito.mock(AgreementsRepository::class.java)
-        negotiationService = NegotiationService(agreementsRepository, conditionsRepository)
     }
 
     @AfterEach
@@ -44,20 +40,86 @@ internal class NegotiationServiceTest//@Autowired
                                         "User A", "User B",
                                         Date(), null, null,
                                         false, null,
-                                        null, null);
+                                        null, null)
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
-        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
+        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
                                         "UserA",Date(), mockAgreementA)
 
-        Mockito.`when`(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
-        Mockito.`when`(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
+        whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
 
         //When
         val response = negotiationService.acceptCondition(conditionARequest)
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `acceptCondition test condition does not exist`()
+    {
+        //Given
+        val conditionAUUID = UUID.randomUUID()
+
+        val conditionARequest = AcceptConditionRequest(conditionAUUID)
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(false)
+
+        //When
+        val response = negotiationService.acceptCondition(conditionARequest)
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `acceptCondition test condition is already rejected`(){
+        //Given
+        val conditionAUUID = UUID.randomUUID()
+        val mockAgreementA = Agreements(UUID.randomUUID(),null,
+                "User A", "User B",
+                Date(), null, null,
+                false, null,
+                null, null)
+
+        val conditionARequest = AcceptConditionRequest(conditionAUUID)
+        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
+                "UserA",Date(), mockAgreementA)
+
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
+        whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+
+        //when
+        val response = negotiationService.acceptCondition(conditionARequest)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+
+    }
+
+    @Test
+    fun `acceptCondition test condition is already accepted`()
+    {
+        //Given
+        val conditionAUUID = UUID.randomUUID()
+        val mockAgreementA = Agreements(UUID.randomUUID(),null,
+                "User A", "User B",
+                Date(), null, null,
+                false, null,
+                null, null)
+
+        val conditionARequest = AcceptConditionRequest(conditionAUUID)
+        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+                "UserA",Date(), mockAgreementA)
+
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
+        whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+
+        //when
+        val response = negotiationService.acceptCondition(conditionARequest)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
