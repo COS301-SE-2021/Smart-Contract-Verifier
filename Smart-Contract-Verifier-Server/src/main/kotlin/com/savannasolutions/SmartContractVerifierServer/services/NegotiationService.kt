@@ -58,18 +58,22 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     }
 
     fun createCondition(createConditionRequest: CreateConditionRequest): CreateConditionResponse{
+
         if(!agreementsRepository.existsById(createConditionRequest.AgreementID))
         {
             return CreateConditionResponse(null, ResponseStatus.FAILED)
         }
+
         if(createConditionRequest.ConditionDescription.isEmpty())
         {
             return CreateConditionResponse(null, ResponseStatus.FAILED)
         }
+
         if(createConditionRequest.PreposedUser.isEmpty())
         {
             return CreateConditionResponse(null, ResponseStatus.FAILED)
         }
+
         val agreement = agreementsRepository.getById(createConditionRequest.AgreementID)
 
         if(agreement.PartyA != createConditionRequest.PreposedUser && agreement.PartyB != createConditionRequest.PreposedUser)

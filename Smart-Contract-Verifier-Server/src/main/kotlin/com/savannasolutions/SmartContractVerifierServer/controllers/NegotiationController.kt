@@ -4,11 +4,12 @@ import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.services.NegotiationService
 import org.springframework.web.bind.annotation.*
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/negotiation")
 class NegotiationController constructor(private val negotiationService: NegotiationService) {
 
+    //@CrossOrigin(origins = ["http://127.0.0.1:36105"], maxAge = 3600)
     @PostMapping("/get-agreement-details")
     fun getAgreementDetails(@RequestBody getAgreementDetailsRequest: GetAgreementDetailsRequest) =
         negotiationService.getAgreementDetails(getAgreementDetailsRequest)
