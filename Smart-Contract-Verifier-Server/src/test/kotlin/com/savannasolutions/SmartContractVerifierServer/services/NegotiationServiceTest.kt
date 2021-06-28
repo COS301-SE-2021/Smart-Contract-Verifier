@@ -913,8 +913,38 @@ internal class NegotiationServiceTest
     }
 
     @Test
-    fun getConditionDetails(){
+    fun `getConditionDetails successful`(){
+        //given
+        val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),PartyA = "User A",
+                PartyB = "User B",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+                "UserA",Date(), mockAgreementA)
 
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
+        whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+
+        //when
+        val response = negotiationService.getConditionDetails(GetConditionDetailsRequest(conditionAUUID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `getConditionDetails condition does not exist`(){
+        //given
+        val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
+
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(false)
+
+        //when
+        val response = negotiationService.getConditionDetails(GetConditionDetailsRequest(conditionAUUID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
