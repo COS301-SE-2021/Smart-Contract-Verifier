@@ -13,7 +13,9 @@ import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import java.time.Duration
 import java.util.*
+import kotlin.collections.ArrayList
 
 internal class NegotiationServiceTest
 {
@@ -498,8 +500,416 @@ internal class NegotiationServiceTest
     }
 
     @Test
-    fun sealAgreement() {
+    fun `sealAgreement successful`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
+                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
 
+        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+                                                "Payment of 500",
+                                                ConditionStatus.ACCEPTED,
+                                                "b6060b01-1505-4d8d-8294-0c5495e26441",
+                                                Date(),
+                                                mockAgreementA)
+
+        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+                                                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                                                ConditionStatus.ACCEPTED,
+                                                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                                                Date(),
+                                                mockAgreementA)
+
+        val mockRejectedCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+                                                    "Reject this condition",
+                                                    ConditionStatus.REJECTED,
+                                                    "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                                                    Date(),
+                                                    mockAgreementA)
+
+        val conditionsList = ArrayList<Conditions>()
+        conditionsList.add(mockDurationCondition)
+        conditionsList.add(mockPaymentCondition)
+        conditionsList.add(mockRejectedCondition)
+
+        mockAgreementA.conditions = conditionsList
+
+        mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
+        mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
+
+        whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
+        whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
+        whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `sealAgreement failed agreement does not exist`() {
+        //given
+
+        whenever(agreementsRepository.existsById(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"))).thenReturn(false)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce")))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `sealAgreement a condition is pending not duration or payment`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
+                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+                "Payment of 500",
+                ConditionStatus.ACCEPTED,
+                "b6060b01-1505-4d8d-8294-0c5495e26441",
+                Date(),
+                mockAgreementA)
+
+        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                ConditionStatus.ACCEPTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+                "Reject this condition",
+                ConditionStatus.PENDING,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val conditionsList = ArrayList<Conditions>()
+        conditionsList.add(mockDurationCondition)
+        conditionsList.add(mockPaymentCondition)
+        conditionsList.add(mockPendingCondition)
+
+        mockAgreementA.conditions = conditionsList
+
+        mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
+        mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
+
+        whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
+        whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `sealAgreement duration is not set`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
+                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+                "Payment of 500",
+                ConditionStatus.ACCEPTED,
+                "b6060b01-1505-4d8d-8294-0c5495e26441",
+                Date(),
+                mockAgreementA)
+
+        val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+                "Reject this condition",
+                ConditionStatus.PENDING,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val conditionsList = ArrayList<Conditions>()
+        conditionsList.add(mockPaymentCondition)
+        conditionsList.add(mockPendingCondition)
+
+        mockAgreementA.conditions = conditionsList
+
+        mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
+
+        whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
+        whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `sealAgreement payment not set`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
+                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                ConditionStatus.ACCEPTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+                "Reject this condition",
+                ConditionStatus.PENDING,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val conditionsList = ArrayList<Conditions>()
+        conditionsList.add(mockDurationCondition)
+        conditionsList.add(mockPendingCondition)
+
+        mockAgreementA.conditions = conditionsList
+
+        mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
+
+        whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `sealAgreement a payment condition is pending`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
+                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+                "Payment of 500",
+                ConditionStatus.PENDING,
+                "b6060b01-1505-4d8d-8294-0c5495e26441",
+                Date(),
+                mockAgreementA)
+
+        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                ConditionStatus.ACCEPTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+                "Reject this condition",
+                ConditionStatus.REJECTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val conditionsList = ArrayList<Conditions>()
+        conditionsList.add(mockDurationCondition)
+        conditionsList.add(mockPaymentCondition)
+        conditionsList.add(mockOtherCondition)
+
+        mockAgreementA.conditions = conditionsList
+
+        mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
+        mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
+
+        whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
+        whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `sealAgreement a duration condition is pending`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
+                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+                "Payment of 500",
+                ConditionStatus.ACCEPTED,
+                "b6060b01-1505-4d8d-8294-0c5495e26441",
+                Date(),
+                mockAgreementA)
+
+        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                ConditionStatus.PENDING,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+                "Reject this condition",
+                ConditionStatus.ACCEPTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val conditionsList = ArrayList<Conditions>()
+        conditionsList.add(mockDurationCondition)
+        conditionsList.add(mockPaymentCondition)
+        conditionsList.add(mockOtherCondition)
+
+        mockAgreementA.conditions = conditionsList
+
+        mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
+        mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
+
+        whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
+        whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `sealAgreement a payment condition is rejected`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
+                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+                "Payment of 500",
+                ConditionStatus.REJECTED,
+                "b6060b01-1505-4d8d-8294-0c5495e26441",
+                Date(),
+                mockAgreementA)
+
+        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                ConditionStatus.ACCEPTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+                "Reject this condition",
+                ConditionStatus.ACCEPTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val conditionsList = ArrayList<Conditions>()
+        conditionsList.add(mockDurationCondition)
+        conditionsList.add(mockPaymentCondition)
+        conditionsList.add(mockOtherCondition)
+
+        mockAgreementA.conditions = conditionsList
+
+        mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
+        mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
+
+        whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
+        whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
+        whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `sealAgreement a duration condition is rejected`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
+                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+                "Payment of 500",
+                ConditionStatus.ACCEPTED,
+                "b6060b01-1505-4d8d-8294-0c5495e26441",
+                Date(),
+                mockAgreementA)
+
+        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                ConditionStatus.REJECTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+                "Reject this condition",
+                ConditionStatus.ACCEPTED,
+                "df8dc898-bd7a-4bdb-9e36-781b70784528",
+                Date(),
+                mockAgreementA)
+
+        val conditionsList = ArrayList<Conditions>()
+        conditionsList.add(mockDurationCondition)
+        conditionsList.add(mockPaymentCondition)
+        conditionsList.add(mockOtherCondition)
+
+        mockAgreementA.conditions = conditionsList
+
+        mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
+        mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
+
+        whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
+        whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
+        whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
