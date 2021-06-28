@@ -178,7 +178,7 @@ internal class NegotiationServiceTest
         val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                         "Unit test",
                                         ConditionStatus.PENDING,
-                                        "USER A",
+                                        "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
                                             Date(),
                                         mockAgreement)
 
