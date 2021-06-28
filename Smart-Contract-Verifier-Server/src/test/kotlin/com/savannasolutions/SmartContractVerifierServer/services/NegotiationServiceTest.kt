@@ -8,32 +8,21 @@ import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsR
 import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.ResponseStatus
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.*
 
-//@SpringBootTest
-internal class NegotiationServiceTest//@Autowired
-() {
+internal class NegotiationServiceTest
+{
     private val conditionsRepository : ConditionsRepository = mock()
     private val agreementsRepository : AgreementsRepository = mock()
     private val negotiationService = NegotiationService(agreementsRepository, conditionsRepository)
 
-    @BeforeEach
-    fun setUp() {
-    }
-
-    @AfterEach
-    fun tearDown() {
-
-    }
-
     @Test
-    fun `acceptCondition tests successful accept`() {
+    fun `acceptCondition successful accept`() {
         //Given
         val conditionAUUID = UUID.randomUUID()
         val mockAgreementA = Agreements(UUID.randomUUID(),null,
@@ -57,7 +46,7 @@ internal class NegotiationServiceTest//@Autowired
     }
 
     @Test
-    fun `acceptCondition test condition does not exist`()
+    fun `acceptCondition condition does not exist`()
     {
         //Given
         val conditionAUUID = UUID.randomUUID()
@@ -73,7 +62,7 @@ internal class NegotiationServiceTest//@Autowired
     }
 
     @Test
-    fun `acceptCondition test condition is already rejected`(){
+    fun `acceptCondition condition is already rejected`(){
         //Given
         val conditionAUUID = UUID.randomUUID()
         val mockAgreementA = Agreements(UUID.randomUUID(),null,
@@ -98,7 +87,7 @@ internal class NegotiationServiceTest//@Autowired
     }
 
     @Test
-    fun `acceptCondition test condition is already accepted`()
+    fun `acceptCondition condition is already accepted`()
     {
         //Given
         val conditionAUUID = UUID.randomUUID()
@@ -123,8 +112,58 @@ internal class NegotiationServiceTest//@Autowired
     }
 
     @Test
-    fun createAgreement() {
+    fun `createAgreement successful`() {
+        //given
+        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
+                                        PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                                        PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                                        CreatedDate = Date(),
+                                        MovedToBlockChain = false)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreement)
 
+        //when
+        val response = negotiationService.createAgreement(CreateAgreementRequest("0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                                                                                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `createAgreement Party A is empty`(){
+        //given
+
+        //when
+        val response = negotiationService.createAgreement(CreateAgreementRequest("",
+                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"))
+
+        //then
+        assertEquals(ResponseStatus.FAILED, response.status)
+    }
+
+    @Test
+    fun `createAgreement Party B is empty`(){
+        //given
+
+        //when
+        val response = negotiationService.createAgreement(CreateAgreementRequest(
+                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", ""))
+
+        //then
+        assertEquals(ResponseStatus.FAILED, response.status)
+    }
+
+    @Test
+    fun `createAgreement Party A and B are the same`(){
+        //given
+
+        //when
+        val response = negotiationService.createAgreement(CreateAgreementRequest(
+                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"))
+
+        //then
+        assertEquals(ResponseStatus.FAILED, response.status)
     }
 
     @Test
