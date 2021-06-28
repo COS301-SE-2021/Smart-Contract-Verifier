@@ -307,8 +307,60 @@ internal class NegotiationServiceTest
     }
 
     @Test
-    fun getAgreementDetails() {
+    fun `getAgreementDetails successful with condition`() {
+        //given
+        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
+                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
 
+        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                "Unit test",
+                ConditionStatus.PENDING,
+                "Not valid user",
+                Date(),
+                mockAgreement)
+        whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
+
+        //when
+        val response = negotiationService.getAgreementDetails(GetAgreementDetailsRequest(mockAgreement.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `getAgreementDetails successful without condition`() {
+        //given
+        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
+                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
+
+        //when
+        val response = negotiationService.getAgreementDetails(GetAgreementDetailsRequest(mockAgreement.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `getAgreementDetails agreement does not exist`() {
+        //given
+        val posUUID = "7fa870d3-2119-4b41-8062-46e2d5136937"
+        whenever(agreementsRepository.existsById(UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"))).thenReturn(false)
+
+        //when
+        val response = negotiationService.getAgreementDetails(GetAgreementDetailsRequest(UUID.fromString(posUUID)))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
