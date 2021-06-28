@@ -364,8 +364,86 @@ internal class NegotiationServiceTest
     }
 
     @Test
-    fun rejectCondition() {
+    fun `rejectCondition successful reject`() {
+        //Given
+        val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
+        val mockAgreementA = Agreements(UUID.randomUUID(),PartyA = "User A",
+                                        PartyB = "User B",
+                                        CreatedDate = Date(),
+                                        MovedToBlockChain = false)
 
+        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
+                "UserA",Date(), mockAgreementA)
+
+        whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
+
+        //When
+        val response = negotiationService.rejectCondition(RejectConditionRequest(conditionAUUID))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `rejectCondition condition does not exist`()
+    {
+        //Given
+        val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(false)
+
+        //When
+        val response = negotiationService.rejectCondition(RejectConditionRequest(conditionAUUID))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `rejectCondition condition is already rejected`(){
+        //Given
+        val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
+        val mockAgreementA = Agreements(UUID.randomUUID(),PartyA = "User A",
+                PartyB = "User B",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
+                "UserA",Date(), mockAgreementA)
+
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
+        whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+
+        //when
+        val response = negotiationService.rejectCondition(RejectConditionRequest(conditionAUUID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+
+    }
+
+    @Test
+    fun `rejectCondition condition is already accepted`()
+    {
+        //Given
+        val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
+        val mockAgreementA = Agreements(UUID.randomUUID(),PartyA = "User A",
+                PartyB = "User B",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val conditionARequest = RejectConditionRequest(conditionAUUID)
+        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+                "UserA",Date(), mockAgreementA)
+
+        whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
+        whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+
+        //when
+        val response = negotiationService.rejectCondition(conditionARequest)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
