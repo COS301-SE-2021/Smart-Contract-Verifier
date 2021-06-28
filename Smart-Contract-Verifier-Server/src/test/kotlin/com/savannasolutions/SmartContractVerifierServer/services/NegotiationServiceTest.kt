@@ -447,8 +447,54 @@ internal class NegotiationServiceTest
     }
 
     @Test
-    fun getAllConditions() {
+    fun `getAllConditions successful with conditions`() {
+        //given
+        val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),PartyA = "User A",
+                PartyB = "User B",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+                "UserA",Date(), mockAgreementA)
 
+        whenever(agreementsRepository.existsById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(true)
+        whenever(agreementsRepository.getById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.getAllConditions(GetAllConditionsRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `getAllConditions successful without conditions`() {
+        //given
+        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),PartyA = "User A",
+                PartyB = "User B",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        whenever(agreementsRepository.existsById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(true)
+        whenever(agreementsRepository.getById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(mockAgreementA)
+
+        //when
+        val response = negotiationService.getAllConditions(GetAllConditionsRequest(mockAgreementA.ContractID))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `getAllConditions agreement does not exists`() {
+        //given
+        whenever(agreementsRepository.existsById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(false)
+
+        //when
+        val response = negotiationService.getAllConditions(GetAllConditionsRequest(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8")))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
