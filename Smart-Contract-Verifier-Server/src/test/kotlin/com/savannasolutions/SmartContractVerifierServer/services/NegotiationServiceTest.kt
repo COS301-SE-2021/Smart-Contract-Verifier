@@ -167,8 +167,143 @@ internal class NegotiationServiceTest
     }
 
     @Test
-    fun createCondition() {
+    fun `createCondition successful`() {
+        //given
+        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
+                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
 
+        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                        "Unit test",
+                                        ConditionStatus.PENDING,
+                                        "USER A",
+                                            Date(),
+                                        mockAgreement)
+
+        whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
+        whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+
+        //when
+        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+                                                            mockCondition.contract.ContractID,
+                                                            mockCondition.conditionDescription))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `createCondition Agreement does not exist`(){
+        //given
+        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
+                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                "Unit test",
+                ConditionStatus.PENDING,
+                "USER A",
+                Date(),
+                mockAgreement)
+
+        whenever(agreementsRepository.existsById(mockCondition.contract.ContractID)).thenReturn(false)
+
+        //when
+        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+                                                                                    mockCondition.contract.ContractID,
+                                                                                    mockCondition.conditionDescription))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `createCondition condition description is empty`(){
+        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
+                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                "",
+                ConditionStatus.PENDING,
+                "USER A",
+                Date(),
+                mockAgreement)
+
+        whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
+        whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+
+        //when
+        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+                mockCondition.contract.ContractID,
+                mockCondition.conditionDescription))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `createCondition condition proposed user is empty`(){
+        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
+                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                "Unit test",
+                ConditionStatus.PENDING,
+                "",
+                Date(),
+                mockAgreement)
+
+        whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
+        whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+
+        //when
+        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+                mockCondition.contract.ContractID,
+                mockCondition.conditionDescription))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `createCondition condition proposed user is not part of agreement`(){
+        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
+                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
+                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+                CreatedDate = Date(),
+                MovedToBlockChain = false)
+
+        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+                "Unit test",
+                ConditionStatus.PENDING,
+                "Not valid user",
+                Date(),
+                mockAgreement)
+
+        whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
+        whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
+        whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+
+        //when
+        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+                mockCondition.contract.ContractID,
+                mockCondition.conditionDescription))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
