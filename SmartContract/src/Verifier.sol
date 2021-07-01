@@ -23,6 +23,7 @@ contract Verifier{
     function createAgreement(address party2, uint resolutionTime) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
         agreements[nextAgreeID] = Agreement(msg.sender, party2, resolutionTime, false, false, false);
+        emit CreateAgreement(msg.sender, party2, nextAgreeID);
         nextAgreeID++;
     }
 
@@ -32,6 +33,7 @@ contract Verifier{
 
         if(msg.sender == agreements[agreeID].party2){
             agreements[agreeID].accepted = true;
+            emit AcceptAgreement(agreeID);
         }
     }
 
@@ -54,9 +56,15 @@ contract Verifier{
     function closeAgreement(uint agreeID) public{
         if(msg.sender == agreements[agreeID].party1
                 || msg.sender == agreements[agreeID].party2){
-            if(agreements[agreeID].party1Vote == true && agreements[agreeID].party2Vote == true)
+            if(agreements[agreeID].party1Vote == true && agreements[agreeID].party2Vote == true){
                 delete agreements[agreeID];
+                emit CloseAgreement(agreeID);
+            }
         }
     }
+
+    event CreateAgreement(address party1, address party2, uint agreeID);
+    event AcceptAgreement(uint agreeID);
+    event CloseAgreement(uint agreeID);
 
 }
