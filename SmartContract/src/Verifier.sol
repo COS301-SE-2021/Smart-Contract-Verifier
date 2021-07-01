@@ -15,6 +15,7 @@ contract Verifier{
         bool accepted;
         bool party1Vote;
         bool party2Vote;
+        bool closed;
     }
 
     // Non-existent entries will return a struct filled with 0's
@@ -22,7 +23,7 @@ contract Verifier{
 
     function createAgreement(address party2, uint resolutionTime) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
-        agreements[nextAgreeID] = Agreement(msg.sender, party2, resolutionTime, false, false, false);
+        agreements[nextAgreeID] = Agreement(msg.sender, party2, resolutionTime, false, false, false, false);
         emit CreateAgreement(msg.sender, party2, nextAgreeID);
         nextAgreeID++;
     }
@@ -57,7 +58,7 @@ contract Verifier{
         if(msg.sender == agreements[agreeID].party1
                 || msg.sender == agreements[agreeID].party2){
             if(agreements[agreeID].party1Vote == true && agreements[agreeID].party2Vote == true){
-                delete agreements[agreeID];
+                agreements[agreeID].closed = true;
                 emit CloseAgreement(agreeID);
             }
         }
