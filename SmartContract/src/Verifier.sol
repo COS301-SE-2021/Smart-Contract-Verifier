@@ -3,29 +3,17 @@
 pragma solidity ^0.8.0;
 
 import "./UnisonToken.sol";
+import "./AgreementLib.sol";
 
 // pragma experimental ABIEncoderV2;
 
 contract Verifier{
+    using AgreementLib for AgreementLib.Agreement;
 
     uint private nextAgreeID = 0;
 
-    struct Agreement{
-        address party1;
-        address party2;
-        uint resolutionTime;
-
-        uint256 platformFee;
-        uint256 feePaid;
-
-        bool accepted;
-        bool party1Vote;
-        bool party2Vote;
-        bool closed;
-    }
-
     // Non-existent entries will return a struct filled with 0's
-    mapping(uint => Agreement) agreements;
+    mapping(uint => AgreementLib.Agreement) agreements;
 
     UnisonToken unisonToken;
 
@@ -35,7 +23,13 @@ contract Verifier{
 
     function createAgreement(address party2, uint resolutionTime) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
-        agreements[nextAgreeID] = Agreement(msg.sender, party2, resolutionTime, 100000000, 0, false, false, false, false);
+        AgreementLib.Agreement memory newAgreement = AgreementLib.makeEmptyAgreement();
+        newAgreement.party1 = msg.sender;
+        newAgreement.party2 = party2;
+        newAgreement.resolutionTime = resolutionTime;
+        newAgreement.platformFee = 1000000000;
+
+        agreements[nextAgreeID] = newAgreement;
         emit CreateAgreement(msg.sender, party2, nextAgreeID);
         nextAgreeID++;
     }
@@ -67,7 +61,7 @@ contract Verifier{
     }
 
 
-    function getAgreement(uint agreeID) public view returns(Agreement memory){
+    function getAgreement(uint agreeID) public view returns(AgreementLib.Agreement memory){
         return agreements[agreeID];
     }
 
