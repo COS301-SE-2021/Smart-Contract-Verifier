@@ -28,6 +28,7 @@ library AgreementLib{
 
         uint256 platformFee;
         uint256 feePaid;
+        address feePayer;
 
         AgreementState state;
 
@@ -39,17 +40,17 @@ library AgreementLib{
     // Below are constructors for the Agreement struct
 
     function makeAgreement() pure internal returns(Agreement memory){
-        return Agreement(address(0),address(0),0,0,0, AgreementState.PROPOSED, false, false);
+        return Agreement(address(0),address(0),0,0,0, address(0), AgreementState.PROPOSED, false, false);
     }
 
     function makeAgreement(address party1, address party2, uint resolutionTime) pure internal
             returns(Agreement memory){
-        return Agreement(party1, party2, resolutionTime, 0, 0, AgreementState.PROPOSED, false, false);
+        return Agreement(party1, party2, resolutionTime, 0, 0, address(0), AgreementState.PROPOSED, false, false);
     }
 
     function makeAgreement(address party1, address party2, uint resolutionTime, uint256 platformFee) pure internal
             returns(Agreement memory){
-        return Agreement(party1, party2, resolutionTime, platformFee, 0, AgreementState.PROPOSED, false, false);
+        return Agreement(party1, party2, resolutionTime, platformFee, 0, address(0), AgreementState.PROPOSED, false, false);
     }
 
 }

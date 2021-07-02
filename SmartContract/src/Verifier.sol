@@ -44,6 +44,9 @@ contract Verifier{
     function payPlatformFee(uint agreeID) public{
         // Anyone can pay the platform fee, it does not even have to be one of the
         // parties involved in the agreement
+
+        // BUG: If payment is split up over multiple accounts, the last account will receive the entire refund
+
         require(agreements[agreeID].state == AgreementLib.AgreementState.ACCEPTED);
 
         uint256 payment = agreements[agreeID].platformFee - agreements[agreeID].feePaid;
@@ -56,15 +59,32 @@ contract Verifier{
 
         if(unisonToken.transferFrom(msg.sender, address(this), payment)){
             agreements[agreeID].feePaid += payment;
-            if(agreements[agreeID].feePaid == agreements[agreeID].platformFee)
+            agreements[agreeID].feePayer = msg.sender;
+            if(agreements[agreeID].feePaid == agreements[agreeID].platformFee){
                 agreements[agreeID].state = AgreementLib.AgreementState.ACTIVE;
+                emit CloseAgreement(agreeID);
+            }
         }
-
     }
 
 
     function getAgreement(uint agreeID) public view returns(AgreementLib.Agreement memory){
         return agreements[agreeID];
+    }
+
+    function checkVotes(uint agreeID) internal{
+        // Checks if both votes are in
+        AgreementLib.Agreement memory a = agreements[agreeID];
+
+        require(a.state == AgreementLib.AgreementState.ACTIVE
+            || a.state == AgreementLib.AgreementState.COMPLETED);
+
+        if(a.party1Vote == true && a.party2Vote == true){
+            unisonToken.transfer(a.feePayer, a.feePaid);
+            a.state = AgreementLib.AgreementState.CLOSED;
+            emit CloseAgreement(agreeID);
+        }
+        
     }
 
     function voteResolution(uint agreeID, bool vote) public{
@@ -92,6 +112,7 @@ contract Verifier{
 
     event CreateAgreement(address party1, address party2, uint agreeID);
     event AcceptAgreement(uint agreeID);
+    event ActiveAgreement(uint agreeID);
     event CloseAgreement(uint agreeID);
 
 }
