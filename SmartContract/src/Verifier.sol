@@ -23,13 +23,9 @@ contract Verifier{
 
     function createAgreement(address party2, uint resolutionTime) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
-        AgreementLib.Agreement memory newAgreement = AgreementLib.makeEmptyAgreement();
-        newAgreement.party1 = msg.sender;
-        newAgreement.party2 = party2;
-        newAgreement.resolutionTime = resolutionTime;
-        newAgreement.platformFee = 1000000000;
 
-        agreements[nextAgreeID] = newAgreement;
+        agreements[nextAgreeID] = AgreementLib.makeAgreement(msg.sender, party2, resolutionTime, 1000000000);
+
         emit CreateAgreement(msg.sender, party2, nextAgreeID);
         nextAgreeID++;
     }
