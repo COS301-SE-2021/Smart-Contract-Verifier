@@ -16,9 +16,9 @@ library AgreementLib{
         ACTIVE,   //4
         COMPLETED,//5
         SETTLED,  //6
-        CONTESTED,
-        DECIDED,
-        CLOSED
+        CONTESTED,//7
+        DECIDED,  //8
+        CLOSED    //9
     }
 
     struct Agreement{
