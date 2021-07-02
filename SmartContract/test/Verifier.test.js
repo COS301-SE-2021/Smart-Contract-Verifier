@@ -60,13 +60,13 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Vote on agreement", async()=>{
-            verifier.voteResolution(0, true, {from: accounts[0]});
-            verifier.voteResolution(0, true, {from: accounts[1]});
+            verifier.voteResolution(0, 2, {from: accounts[0]});
+            verifier.voteResolution(0, 2, {from: accounts[1]});
 
 
             var agree = await verifier.getAgreement(0)
-            assert.equal(agree.party1Vote, true)
-            assert.equal(agree.party2Vote, true)
+            assert.equal(agree.party1Vote, 2)
+            assert.equal(agree.party2Vote, 2)
         })
     })
 

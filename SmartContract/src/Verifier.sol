@@ -79,15 +79,15 @@ contract Verifier{
         require(a.state == AgreementLib.AgreementState.ACTIVE
             || a.state == AgreementLib.AgreementState.COMPLETED);
 
-        if(a.party1Vote == true && a.party2Vote == true){
+        if(a.party1Vote == AgreementLib.Vote.YES 
+                && a.party2Vote == AgreementLib.Vote.YES){
             unisonToken.transfer(a.feePayer, a.feePaid);
             a.state = AgreementLib.AgreementState.CLOSED;
             emit CloseAgreement(agreeID);
         }
-        
     }
 
-    function voteResolution(uint agreeID, bool vote) public{
+    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
         require(agreements[agreeID].resolutionTime < block.timestamp);
         require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
             || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED);
@@ -97,16 +97,6 @@ contract Verifier{
         }
         else if(msg.sender == agreements[agreeID].party2){
             agreements[agreeID].party2Vote = vote;
-        }
-    }
-
-    function closeAgreement(uint agreeID) public{
-        if(msg.sender == agreements[agreeID].party1
-                || msg.sender == agreements[agreeID].party2){
-            if(agreements[agreeID].party1Vote == true && agreements[agreeID].party2Vote == true){
-                agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
-                emit CloseAgreement(agreeID);
-            }
         }
     }
 
