@@ -2,6 +2,8 @@
 
 pragma solidity ^0.8.0;
 
+import "./UnisonToken.sol";
+
 // pragma experimental ABIEncoderV2;
 
 contract Verifier{
@@ -12,6 +14,7 @@ contract Verifier{
         address party1;
         address party2;
         uint resolutionTime;
+        uint256 platformFee;
         bool accepted;
         bool party1Vote;
         bool party2Vote;
@@ -21,9 +24,15 @@ contract Verifier{
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => Agreement) agreements;
 
+    UnisonToken unisonToken;
+
+    constructor(UnisonToken token){
+        unisonToken = token;
+    }
+
     function createAgreement(address party2, uint resolutionTime) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
-        agreements[nextAgreeID] = Agreement(msg.sender, party2, resolutionTime, false, false, false, false);
+        agreements[nextAgreeID] = Agreement(msg.sender, party2, resolutionTime, 100000000, false, false, false, false);
         emit CreateAgreement(msg.sender, party2, nextAgreeID);
         nextAgreeID++;
     }
@@ -37,6 +46,15 @@ contract Verifier{
             emit AcceptAgreement(agreeID);
         }
     }
+
+    // function payPlatformFee(uint agreeID) public{
+    //     // Anyone can pay the platform fee, it does not even have to be one of the
+    //     // parties involved in the agreement
+
+        
+
+    // }
+
 
     function getAgreement(uint agreeID) public view returns(Agreement memory){
         return agreements[agreeID];

@@ -1,5 +1,6 @@
 const { assert } = require('chai')
 
+const UnisonToken = artifacts.require("UnisonToken")
 const Verifier = artifacts.require("Verifier")
 
 require('chai').use(require('chai-as-promised')).should()
@@ -14,7 +15,8 @@ contract('Verifier', (accounts) =>{
         let verifier
 
         before(async () =>{
-            verifier = await Verifier.new()
+            token = await UnisonToken.new()
+            verifier = await Verifier.new(token.address)
         })
 
         it("Can create agreement", async () =>{
