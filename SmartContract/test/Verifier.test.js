@@ -27,7 +27,7 @@ contract('Verifier', (accounts) =>{
 
             assert.equal(agree.party1, accounts[0])
             assert.equal(agree.party2, accounts[1])
-            assert.equal(agree.accepted, false)
+            assert.equal(agree.state, 1)
 
         })
 
@@ -35,7 +35,7 @@ contract('Verifier', (accounts) =>{
             verifier.acceptAgreement(0, {from: accounts[2]})
 
             var agree = await verifier.getAgreement(0)
-            assert.equal(agree.accepted, false)
+            assert.equal(agree.state, 1)
 
         })
 
@@ -43,7 +43,7 @@ contract('Verifier', (accounts) =>{
             verifier.acceptAgreement(0, {from: accounts[1]})
 
             var agree = await verifier.getAgreement(0)
-            assert.equal(agree.accepted, true)
+            assert.equal(agree.state, 3)
 
         })
 

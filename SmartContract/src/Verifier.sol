@@ -33,9 +33,10 @@ contract Verifier{
     function acceptAgreement(uint agreeID) public{
         // if(agreements[agreeID].party1 == address(0))
         //     return;
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED);
 
         if(msg.sender == agreements[agreeID].party2){
-            agreements[agreeID].accepted = true;
+            agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
             emit AcceptAgreement(agreeID);
         }
     }
@@ -44,6 +45,7 @@ contract Verifier{
         // Anyone can pay the platform fee, it does not even have to be one of the
         // parties involved in the agreement
         uint256 payment = agreements[agreeID].platformFee - agreements[agreeID].feePaid;
+        require(payment > 0);
 
         uint256 allowed = unisonToken.allowance(msg.sender, address(this));
         if(allowed < payment)
@@ -63,7 +65,7 @@ contract Verifier{
 
     function voteResolution(uint agreeID, bool vote) public{
         require(agreements[agreeID].resolutionTime < block.timestamp);
-        require(agreements[agreeID].accepted);
+        require(agreements[agreeID].state == AgreementLib.AgreementState.ACCEPTED);
 
         if(msg.sender == agreements[agreeID].party1){
             agreements[agreeID].party1Vote = vote;
@@ -77,7 +79,7 @@ contract Verifier{
         if(msg.sender == agreements[agreeID].party1
                 || msg.sender == agreements[agreeID].party2){
             if(agreements[agreeID].party1Vote == true && agreements[agreeID].party2Vote == true){
-                agreements[agreeID].closed = true;
+                agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
                 emit CloseAgreement(agreeID);
             }
         }

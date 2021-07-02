@@ -6,6 +6,21 @@ import "./UnisonToken.sol";
 
 library AgreementLib{
 
+    // Not all of these states are in use yet and some are likely to change
+
+    enum AgreementState{
+        PENDING,  //0
+        PROPOSED, //1
+        REJECTED, //2
+        ACCEPTED, //3
+        ACTIVE,   //4
+        COMPLETED,//5
+        SETTLED,  //6
+        CONTESTED,
+        DECIDED,
+        CLOSED
+    }
+
     struct Agreement{
         address party1;
         address party2;
@@ -14,26 +29,27 @@ library AgreementLib{
         uint256 platformFee;
         uint256 feePaid;
 
-        bool accepted;
+        AgreementState state;
+
         bool party1Vote;
         bool party2Vote;
-        bool closed;
+
     }
 
     // Below are constructors for the Agreement struct
 
     function makeAgreement() pure internal returns(Agreement memory){
-        return Agreement(address(0),address(0),0,0,0,false, false, false, false);
+        return Agreement(address(0),address(0),0,0,0, AgreementState.PROPOSED, false, false);
     }
 
     function makeAgreement(address party1, address party2, uint resolutionTime) pure internal
             returns(Agreement memory){
-        return Agreement(party1, party2, resolutionTime, 0, 0, false, false, false, false);
+        return Agreement(party1, party2, resolutionTime, 0, 0, AgreementState.PROPOSED, false, false);
     }
 
     function makeAgreement(address party1, address party2, uint resolutionTime, uint256 platformFee) pure internal
             returns(Agreement memory){
-        return Agreement(party1, party2, resolutionTime, platformFee, 0, false, false, false, false);
+        return Agreement(party1, party2, resolutionTime, platformFee, 0, AgreementState.PROPOSED, false, false);
     }
 
 }
