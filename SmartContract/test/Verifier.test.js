@@ -47,6 +47,18 @@ contract('Verifier', (accounts) =>{
 
         })
 
+        it("Can pay platform fee", async () =>{
+            var agree = await verifier.getAgreement(0);
+            var mustPay = agree.platformFee
+
+            token.approve(verifier.address, mustPay);
+            verifier.payPlatformFee(0);
+
+            var agree = await verifier.getAgreement(0);
+            assert(agree.feePaid == agree.platformFee);
+
+        })
+
         it("Vote on agreement", async()=>{
             verifier.voteResolution(0, true, {from: accounts[0]});
             verifier.voteResolution(0, true, {from: accounts[1]});
