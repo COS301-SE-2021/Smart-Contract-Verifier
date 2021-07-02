@@ -62,7 +62,7 @@ contract Verifier{
             agreements[agreeID].feePayer = msg.sender;
             if(agreements[agreeID].feePaid == agreements[agreeID].platformFee){
                 agreements[agreeID].state = AgreementLib.AgreementState.ACTIVE;
-                emit CloseAgreement(agreeID);
+                emit ActiveAgreement(agreeID);
             }
         }
     }
