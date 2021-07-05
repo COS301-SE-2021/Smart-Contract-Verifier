@@ -1,8 +1,10 @@
 const Verifier = artifacts.require("Verifier");
-const AgreeToken = artifacts.require("AgreeToken");
+const UnisonToken = artifacts.require("UnisonToken");
 
-module.exports = function (deployer) {
-  deployer.deploy(Verifier);
-  deployer.deploy(AgreeToken);
+module.exports = async (deployer) => {
+  deployer.deploy(UnisonToken).then(function(){
+    return deployer.deploy(Verifier, UnisonToken.address);
+  })
+
 
 };

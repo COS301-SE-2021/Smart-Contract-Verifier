@@ -1,5 +1,6 @@
 const { assert } = require('chai')
 
+const UnisonToken = artifacts.require("UnisonToken")
 const Verifier = artifacts.require("Verifier")
 
 require('chai').use(require('chai-as-promised')).should()
@@ -14,7 +15,8 @@ contract('Verifier', (accounts) =>{
         let verifier
 
         before(async () =>{
-            verifier = await Verifier.new()
+            token = await UnisonToken.new()
+            verifier = await Verifier.new(token.address)
         })
 
         it("Can create agreement", async () =>{
@@ -25,7 +27,7 @@ contract('Verifier', (accounts) =>{
 
             assert.equal(agree.party1, accounts[0])
             assert.equal(agree.party2, accounts[1])
-            assert.equal(agree.accepted, false)
+            assert.equal(agree.state, 1)
 
         })
 
@@ -33,7 +35,7 @@ contract('Verifier', (accounts) =>{
             verifier.acceptAgreement(0, {from: accounts[2]})
 
             var agree = await verifier.getAgreement(0)
-            assert.equal(agree.accepted, false)
+            assert.equal(agree.state, 1)
 
         })
 
@@ -41,18 +43,30 @@ contract('Verifier', (accounts) =>{
             verifier.acceptAgreement(0, {from: accounts[1]})
 
             var agree = await verifier.getAgreement(0)
-            assert.equal(agree.accepted, true)
+            assert.equal(agree.state, 3)
+
+        })
+
+        it("Can pay platform fee", async () =>{
+            var agree = await verifier.getAgreement(0);
+            var mustPay = agree.platformFee
+
+            token.approve(verifier.address, mustPay);
+            verifier.payPlatformFee(0);
+
+            var agree = await verifier.getAgreement(0);
+            assert(agree.feePaid == agree.platformFee);
 
         })
 
         it("Vote on agreement", async()=>{
-            verifier.voteResolution(0, true, {from: accounts[0]});
-            verifier.voteResolution(0, true, {from: accounts[1]});
+            verifier.voteResolution(0, 2, {from: accounts[0]});
+            verifier.voteResolution(0, 2, {from: accounts[1]});
 
 
             var agree = await verifier.getAgreement(0)
-            assert.equal(agree.party1Vote, true)
-            assert.equal(agree.party2Vote, true)
+            assert.equal(agree.party1Vote, 2)
+            assert.equal(agree.party2Vote, 2)
         })
     })
 
