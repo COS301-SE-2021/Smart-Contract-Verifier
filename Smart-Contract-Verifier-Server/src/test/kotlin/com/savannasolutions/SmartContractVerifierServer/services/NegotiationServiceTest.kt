@@ -33,7 +33,7 @@ internal class NegotiationServiceTest
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
-                                        "UserA",Date(), mockAgreementA)
+                                        "UserA",Date()).apply { contract = mockAgreementA }
 
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
@@ -72,7 +72,7 @@ internal class NegotiationServiceTest
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
-                "UserA",Date(), mockAgreementA)
+                "UserA",Date()).apply { contract = mockAgreementA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
@@ -97,7 +97,7 @@ internal class NegotiationServiceTest
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
-                "UserA",Date(), mockAgreementA)
+                "UserA",Date()).apply { contract = mockAgreementA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
@@ -177,8 +177,7 @@ internal class NegotiationServiceTest
                         "Unit test",
                                         ConditionStatus.PENDING,
                                         "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                                            Date(),
-                                        mockAgreement)
+                                            Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -205,8 +204,7 @@ internal class NegotiationServiceTest
                 "",
                 ConditionStatus.PENDING,
                 "USER A",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract=mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -233,8 +231,7 @@ internal class NegotiationServiceTest
                 "Unit test",
                 ConditionStatus.PENDING,
                 "",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -262,8 +259,7 @@ internal class NegotiationServiceTest
                 "Unit test",
                 ConditionStatus.PENDING,
                 "USER A",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockCondition.contract.ContractID)).thenReturn(false)
 
@@ -290,8 +286,7 @@ internal class NegotiationServiceTest
                 "Unit test",
                 ConditionStatus.PENDING,
                 "Not valid user",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -319,8 +314,7 @@ internal class NegotiationServiceTest
                 "Unit test",
                 ConditionStatus.PENDING,
                 "Not valid user",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
 
@@ -373,7 +367,7 @@ internal class NegotiationServiceTest
                                         MovedToBlockChain = false)
 
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
-                "UserA",Date(), mockAgreementA)
+                "UserA",Date(),).apply { contract = mockAgreementA }
 
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
@@ -409,7 +403,7 @@ internal class NegotiationServiceTest
                 MovedToBlockChain = false)
 
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
-                "UserA",Date(), mockAgreementA)
+                "UserA",Date(),).apply { contract = mockAgreementA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
@@ -434,7 +428,7 @@ internal class NegotiationServiceTest
 
         val conditionARequest = RejectConditionRequest(conditionAUUID)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
-                "UserA",Date(), mockAgreementA)
+                "UserA",Date(),).apply { contract = mockAgreementA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
@@ -455,7 +449,7 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
-                "UserA",Date(), mockAgreementA)
+                "UserA",Date(),).apply { contract = mockAgreementA }
 
         whenever(agreementsRepository.existsById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(true)
         whenever(agreementsRepository.getById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(mockAgreementA)
@@ -510,22 +504,19 @@ internal class NegotiationServiceTest
                                                 "Payment of 500",
                                                 ConditionStatus.ACCEPTED,
                                                 "b6060b01-1505-4d8d-8294-0c5495e26441",
-                                                Date(),
-                                                mockAgreementA)
+                                                Date(),).apply { contract = mockAgreementA }
 
         val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                                                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                                                 ConditionStatus.ACCEPTED,
                                                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                                                Date(),
-                                                mockAgreementA)
+                                                Date(),).apply { contract = mockAgreementA }
 
         val mockRejectedCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                                                     "Reject this condition",
                                                     ConditionStatus.REJECTED,
                                                     "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                                                    Date(),
-                                                    mockAgreementA)
+                                                    Date(),).apply { contract = mockAgreementA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -576,22 +567,19 @@ internal class NegotiationServiceTest
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
                 "b6060b01-1505-4d8d-8294-0c5495e26441",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.PENDING,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -628,15 +616,13 @@ internal class NegotiationServiceTest
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
                 "b6060b01-1505-4d8d-8294-0c5495e26441",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.PENDING,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockPaymentCondition)
@@ -671,15 +657,13 @@ internal class NegotiationServiceTest
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.PENDING,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -713,22 +697,19 @@ internal class NegotiationServiceTest
                 "Payment of 500",
                 ConditionStatus.PENDING,
                 "b6060b01-1505-4d8d-8294-0c5495e26441",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.REJECTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -765,22 +746,19 @@ internal class NegotiationServiceTest
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
                 "b6060b01-1505-4d8d-8294-0c5495e26441",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.PENDING,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.ACCEPTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -817,22 +795,19 @@ internal class NegotiationServiceTest
                 "Payment of 500",
                 ConditionStatus.REJECTED,
                 "b6060b01-1505-4d8d-8294-0c5495e26441",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.ACCEPTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -870,22 +845,19 @@ internal class NegotiationServiceTest
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
                 "b6060b01-1505-4d8d-8294-0c5495e26441",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.REJECTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.ACCEPTED,
                 "df8dc898-bd7a-4bdb-9e36-781b70784528",
-                Date(),
-                mockAgreementA)
+                Date(),).apply { contract = mockAgreementA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -919,7 +891,7 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
-                "UserA",Date(), mockAgreementA)
+                "UserA",Date(),).apply { contract = mockAgreementA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
@@ -958,8 +930,7 @@ internal class NegotiationServiceTest
                 "Payment of 500.0",
                 ConditionStatus.PENDING,
                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -987,8 +958,7 @@ internal class NegotiationServiceTest
                 "Unit test",
                 ConditionStatus.PENDING,
                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockCondition.contract.ContractID)).thenReturn(false)
 
@@ -1013,8 +983,7 @@ internal class NegotiationServiceTest
                 "Payment of -500.0",
                 ConditionStatus.PENDING,
                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -1041,8 +1010,7 @@ internal class NegotiationServiceTest
                 "Unit test",
                 ConditionStatus.PENDING,
                 "",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -1069,8 +1037,7 @@ internal class NegotiationServiceTest
                 "Payment of 500.0",
                 ConditionStatus.PENDING,
                 "Not valid user",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -1098,8 +1065,7 @@ internal class NegotiationServiceTest
                 "Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -1127,8 +1093,7 @@ internal class NegotiationServiceTest
                 "Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockCondition.contract.ContractID)).thenReturn(false)
 
@@ -1153,8 +1118,7 @@ internal class NegotiationServiceTest
                 "Duration of " + Duration.ofSeconds(-500).seconds,
                 ConditionStatus.PENDING,
                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -1181,8 +1145,7 @@ internal class NegotiationServiceTest
                 "Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
                 "",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -1209,8 +1172,7 @@ internal class NegotiationServiceTest
                 "Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
                 "Not valid user",
-                Date(),
-                mockAgreement)
+                Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
