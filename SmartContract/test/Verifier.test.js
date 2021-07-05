@@ -121,6 +121,65 @@ contract('Verifier', (accounts) =>{
 
         })
 
+        it("Can't use transferFrom w/o allowance", async() =>{
+            // Transfers a set amount of token from account 0 to account 1 and checks
+            // that both balances are updated accurately
+
+            var acc0Before = await token.balanceOf(accounts[0]);
+            acc0Before = BigInt(acc0Before);
+
+            var acc1Before = await token.balanceOf(accounts[1]);
+            acc1Before = BigInt(acc1Before);
+
+            var transferSize = BigInt(1000)
+
+            try{
+                await token.transferFrom(accounts[0], accounts[1], transferSize, {from: accounts[2]});
+            }
+            catch(error){}
+
+
+            var acc1After = await token.balanceOf(accounts[1]);
+            acc1After = BigInt(acc1After);
+
+            var acc0After = await token.balanceOf(accounts[0]);
+            acc0After = BigInt(acc0After);
+
+            assert.equal(acc0Before, acc0After);
+            assert.equal(acc1Before, acc1After);
+
+        })
+
+        it("Can use transferFrom with allowance", async() =>{
+            // Transfers a set amount of token from account 0 to account 1 and checks
+            // that both balances are updated accurately
+
+            var acc0Before = await token.balanceOf(accounts[0]);
+            acc0Before = BigInt(acc0Before);
+
+            var acc1Before = await token.balanceOf(accounts[1]);
+            acc1Before = BigInt(acc1Before);
+
+            var transferSize = BigInt(1000)
+
+            try{
+                await token.increaseAllowance(accounts[2], transferSize, {from: accounts[0]});
+                await token.transferFrom(accounts[0], accounts[1], transferSize, {from: accounts[2]});
+            }
+            catch(error){}
+
+
+            var acc1After = await token.balanceOf(accounts[1]);
+            acc1After = BigInt(acc1After);
+
+            var acc0After = await token.balanceOf(accounts[0]);
+            acc0After = BigInt(acc0After);
+
+            assert.equal(acc0Before, acc0After + transferSize);
+            assert.equal(acc1Before + transferSize, acc1After);
+
+        })
+
     })
 
 })
