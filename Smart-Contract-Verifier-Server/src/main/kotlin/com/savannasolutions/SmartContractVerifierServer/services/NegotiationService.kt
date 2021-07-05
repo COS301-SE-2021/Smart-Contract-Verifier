@@ -42,16 +42,11 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return CreateAgreementResponse(null, ResponseStatus.FAILED)
 
         var nAgreement = Agreements(UUID.randomUUID(),
-                                    null,
-                                    createAgreementRequest.PartyA,
-                                    createAgreementRequest.PartyB,
-                                    Date(),
-                                    null,
-                                    null,
-                                    false,
-                                    null,
-                                    null,
-                                    null,)
+                                    PartyA = createAgreementRequest.PartyA,
+                                    PartyB = createAgreementRequest.PartyB,
+                                    CreatedDate = Date(),
+                                    MovedToBlockChain = false,
+                                    )
 
         nAgreement = agreementsRepository.save(nAgreement)
 
@@ -93,15 +88,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse{
         if(!agreementsRepository.existsById(getAgreementDetailsRequest.AgreementID))
         {
-            return GetAgreementDetailsResponse(getAgreementDetailsRequest.AgreementID,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            ResponseStatus.FAILED)
+            return GetAgreementDetailsResponse(agreementID = getAgreementDetailsRequest.AgreementID,
+                                            status = ResponseStatus.FAILED)
         }
         val agreement = agreementsRepository.getById(getAgreementDetailsRequest.AgreementID)
         val conditions = agreement.conditions
@@ -115,21 +103,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             }
 
         }
-        var duration : Duration
-        duration = Duration.ofSeconds(-1L);
-        if(agreement.DurationConditionUUID != null)
-        {
-            val durationCondition = conditionsRepository.getById(agreement.DurationConditionUUID!!)
-            val desc = durationCondition.conditionDescription
-            desc.replace("Duration of ", "")
-            val secsStr = desc.toLong()
-            duration = Duration.ofSeconds(secsStr)
-        }
-
-
 
         return GetAgreementDetailsResponse(agreement.ContractID,
-                                            duration?.toSeconds(),
+                                            agreement.DurationConditionUUID,
+                                            agreement.PaymentConditionUUID,
                                             agreement.PartyA,
                                             agreement.PartyB,
                                             agreement.CreatedDate,
@@ -198,12 +175,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     {
         if(!conditionsRepository.existsById(getConditionDetailsRequest.conditionID))
             return GetConditionDetailsResponse(getConditionDetailsRequest.conditionID,
-                                null,
-                                    null,
-                                     null,
-                                      null,
-                                    null,
-                                                ResponseStatus.FAILED)
+                                                status = ResponseStatus.FAILED)
 
         val condition = conditionsRepository.getById(getConditionDetailsRequest.conditionID)
         return GetConditionDetailsResponse(condition.conditionID,
