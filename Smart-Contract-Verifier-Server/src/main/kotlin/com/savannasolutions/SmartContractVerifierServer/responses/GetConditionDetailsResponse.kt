@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.responses
 
 import com.savannasolutions.SmartContractVerifierServer.models.ConditionStatus
+
 import java.util.*
 
 data class GetConditionDetailsResponse(val conditionID: UUID,
