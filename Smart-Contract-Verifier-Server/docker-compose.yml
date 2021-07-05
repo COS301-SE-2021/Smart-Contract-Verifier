@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:latest
     volumes:
-      - ./Smart-Contract-Verifier-Server/database:/var/lib/postgresql/data
+      - ./database:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=smartcontractserverdev
       - POSTGRES_HOST_AUTH_METHOD=trust

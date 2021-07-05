@@ -9,13 +9,13 @@ import javax.persistence.*
 @Entity
 @Table(name = "Agreements")
 data class Agreements(@Id @GeneratedValue val ContractID:UUID,
-                      var blockchainID: String?,
+                      var blockchainID: String? = null,
                       val PartyA: String,
                       val PartyB: String,
                       val CreatedDate:Date,
-                      var SealedDate:Date?,
-                      var Duration:Duration?,
+                      var SealedDate:Date? = null,
+                      var DurationConditionUUID: UUID? = null,
                       var MovedToBlockChain:Boolean,
-                      @OneToMany(fetch = FetchType.EAGER, mappedBy = "contract") @Cascade(CascadeType.REMOVE) var conditions: List<Conditions>?,
-                      @OneToMany(fetch = FetchType.LAZY) @Cascade(CascadeType.REMOVE) var messages: List<Messages>?,
-                      var PaymentConditionUUID: UUID?,)
+                      @OneToMany(fetch = FetchType.EAGER, mappedBy = "contract") @Cascade(CascadeType.REMOVE) var conditions: List<Conditions>? = emptyList(),
+                      @OneToMany(fetch = FetchType.LAZY) @Cascade(CascadeType.REMOVE) var messages: List<Messages>? = emptyList(),
+                      var PaymentConditionUUID: UUID? = null,)

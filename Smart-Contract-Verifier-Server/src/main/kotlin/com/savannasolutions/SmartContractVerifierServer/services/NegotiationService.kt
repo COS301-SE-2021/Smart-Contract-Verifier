@@ -8,6 +8,7 @@ import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsR
 import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.*
 import org.springframework.stereotype.Service
+import java.time.Duration
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -114,9 +115,21 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             }
 
         }
+        var duration : Duration
+        duration = Duration.ofSeconds(-1L);
+        if(agreement.DurationConditionUUID != null)
+        {
+            val durationCondition = conditionsRepository.getById(agreement.DurationConditionUUID!!)
+            val desc = durationCondition.conditionDescription
+            desc.replace("Duration of ", "")
+            val secsStr = desc.toLong()
+            duration = Duration.ofSeconds(secsStr)
+        }
+
+
 
         return GetAgreementDetailsResponse(agreement.ContractID,
-                                            agreement.Duration?.toSeconds(),
+                                            duration?.toSeconds(),
                                             agreement.PartyA,
                                             agreement.PartyB,
                                             agreement.CreatedDate,
@@ -166,7 +179,11 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             }
         }
 
-        agreement.Duration?: return SealAgreementResponse(ResponseStatus.FAILED)
+        agreement.DurationConditionUUID?: return SealAgreementResponse(ResponseStatus.FAILED)
+        if(conditionsRepository.getById(agreement.DurationConditionUUID!!).conditionStatus == ConditionStatus.PENDING ||
+                conditionsRepository.getById(agreement.DurationConditionUUID!!).conditionStatus == ConditionStatus.REJECTED)
+                    return SealAgreementResponse(ResponseStatus.FAILED)
+
         agreement.PaymentConditionUUID?: return SealAgreementResponse(ResponseStatus.FAILED)
         if(conditionsRepository.getById(agreement.PaymentConditionUUID!!).conditionStatus == ConditionStatus.PENDING ||
                 conditionsRepository.getById(agreement.PaymentConditionUUID!!).conditionStatus == ConditionStatus.REJECTED)
@@ -248,7 +265,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         condition = conditionsRepository.save(condition)
 
-        agreement.Duration = setDurationConditionRequest.Duration
+        agreement.DurationConditionUUID = condition.conditionID
 
         agreementsRepository.save(agreement)
 
