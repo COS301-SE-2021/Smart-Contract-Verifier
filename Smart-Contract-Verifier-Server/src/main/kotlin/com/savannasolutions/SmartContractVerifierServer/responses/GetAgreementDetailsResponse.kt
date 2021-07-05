@@ -5,12 +5,13 @@ import java.time.Duration
 import java.util.*
 
 data class GetAgreementDetailsResponse(val agreementID: UUID,
-                                        val duration: Long?,
-                                        val partyA: String?,
-                                        val partyB: String?,
-                                        val createdDate: Date?,
-                                        val sealedDate: Date?,
-                                        val movedToBlockchain: Boolean?,
-                                        val conditions: List<UUID>?,
+                                        val durationID: UUID? = null,
+                                        val paymentID: UUID? = null,
+                                        val partyA: String? = null,
+                                        val partyB: String? = null,
+                                        val createdDate: Date? = null,
+                                        val sealedDate: Date? = null,
+                                        val movedToBlockchain: Boolean? = null,
+                                        val conditions: List<UUID>? = null,
                                         val status: Enum<ResponseStatus>,)
 
