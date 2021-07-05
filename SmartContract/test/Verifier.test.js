@@ -105,7 +105,7 @@ contract('Verifier', (accounts) =>{
 
         it("Total supply", async() =>{
             // Transfers a set amount of token from account 0 to account 1 and checks
-            // that both balances are updated accurately
+            // that the totalSupply doesn't change
             
             var supplyBefore = await token.totalSupply();
             supplyBefore = BigInt(supplyBefore);
@@ -122,8 +122,8 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Can't use transferFrom w/o allowance", async() =>{
-            // Transfers a set amount of token from account 0 to account 1 and checks
-            // that both balances are updated accurately
+            // Attempts to transfer a set amount of token from account 0 to account 1
+            // without an allowance, neither balance should change
 
             var acc0Before = await token.balanceOf(accounts[0]);
             acc0Before = BigInt(acc0Before);
@@ -182,8 +182,7 @@ contract('Verifier', (accounts) =>{
 
 
         it("Can decrease allowance", async() =>{
-            // Transfers a set amount of token from account 0 to account 1 and checks
-            // that both balances are updated accurately
+            // decreaseAllowance should reduce allowance by a specific amount
 
             var allowBefore = await token.allowance(accounts[0], accounts[1]);
             allowBefore = BigInt(allowBefore);
@@ -205,6 +204,32 @@ contract('Verifier', (accounts) =>{
 
         })
 
+
+        it("approve sets allowance properly", async() =>{
+            // Makes changes to allowance and then sets it to a specific amount
+
+            var allowBefore = await token.allowance(accounts[0], accounts[1]);
+            allowBefore = BigInt(allowBefore);
+
+            var up = BigInt(1000)
+            var down = BigInt(400)
+            var finalAmount = BigInt(25565)
+
+            try{
+
+                await token.increaseAllowance(accounts[1], up, {from: accounts[0]});
+                await token.decreaseAllowance(accounts[1], down, {from: accounts[0]});
+                await token.approve(accounts[1], finalAmount, {from: accounts[0]});
+            }
+            catch(error){}
+
+
+            var allowAfter = await token.allowance(accounts[0], accounts[1]);
+            allowAfter = BigInt(allowAfter);
+
+            assert.equal(allowAfter, finalAmount);
+
+        })
 
     })
 
