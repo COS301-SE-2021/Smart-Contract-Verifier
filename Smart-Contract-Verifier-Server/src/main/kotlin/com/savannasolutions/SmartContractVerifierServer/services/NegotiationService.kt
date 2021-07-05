@@ -77,8 +77,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                     createConditionRequest.ConditionDescription,
                                     ConditionStatus.PENDING,
                                     createConditionRequest.PreposedUser,
-                                    Date(),
-                                    agreement)
+                                    Date(),).apply { contract = agreement }
 
         nCondition = conditionsRepository.save(nCondition)
 
@@ -205,8 +204,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 "Payment of " + setPaymentConditionRequest.Payment.toString(),
                                 ConditionStatus.PENDING,
                                 setPaymentConditionRequest.PreposedUser,
-                                Date(),
-                                agreement,)
+                                Date(),).apply { contract = agreement }
 
         condition = conditionsRepository.save(condition)
 
@@ -233,8 +231,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 "Duration of " + setDurationConditionRequest.Duration.toString(),
                 ConditionStatus.PENDING,
                 setDurationConditionRequest.PreposedUser,
-                Date(),
-                agreement,)
+                Date(),).apply { contract = agreement }
 
         condition = conditionsRepository.save(condition)
 
