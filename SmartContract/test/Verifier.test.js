@@ -163,7 +163,7 @@ contract('Verifier', (accounts) =>{
             var transferSize = BigInt(1000)
 
             try{
-                await token.increaseAllowance(accounts[2], transferSize, {from: accounts[0]});
+                await token.approve(accounts[2], transferSize, {from: accounts[0]});
                 await token.transferFrom(accounts[0], accounts[1], transferSize, {from: accounts[2]});
             }
             catch(error){}
@@ -179,6 +179,32 @@ contract('Verifier', (accounts) =>{
             assert.equal(acc1Before + transferSize, acc1After);
 
         })
+
+
+        it("Can decrease allowance", async() =>{
+            // Transfers a set amount of token from account 0 to account 1 and checks
+            // that both balances are updated accurately
+
+            var allowBefore = await token.allowance(accounts[0], accounts[1]);
+            allowBefore = BigInt(allowBefore);
+
+            var up = BigInt(1000)
+            var down = BigInt(400)
+
+            try{
+                await token.approve(accounts[1], up, {from: accounts[0]});
+                await token.decreaseAllowance(accounts[1], down, {from: accounts[0]})
+            }
+            catch(error){}
+
+
+            var allowAfter = await token.allowance(accounts[0], accounts[1]);
+            allowAfter = BigInt(allowAfter);
+
+            assert.equal(allowAfter - allowBefore, up - down);
+
+        })
+
 
     })
 
