@@ -50,8 +50,8 @@ contract AgreeToken is Context, IERC20, IERC20Metadata {
      * construction.
      */
     constructor() {
-        _name = "AgreeChain";
-        _symbol = "AGC";
+        _name = "UnisonToken";
+        _symbol = "UNT";
 
         _mint(_msgSender(), 1000000 * 10**decimals()); //1 coin
     }
