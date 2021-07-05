@@ -9,7 +9,6 @@ import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.ResponseStatus
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -27,11 +26,10 @@ internal class NegotiationServiceTest
     fun `acceptCondition successful accept`() {
         //Given
         val conditionAUUID = UUID.randomUUID()
-        val mockAgreementA = Agreements(UUID.randomUUID(),null,
-                                        "User A", "User B",
-                                        Date(), null, null,
-                                        false, null,
-                                        null, null)
+        val mockAgreementA = Agreements(UUID.randomUUID(),
+                                        PartyA = "User A", PartyB = "User B",
+                                        CreatedDate = Date(),
+                                        MovedToBlockChain = false,)
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
@@ -67,11 +65,10 @@ internal class NegotiationServiceTest
     fun `acceptCondition condition is already rejected`(){
         //Given
         val conditionAUUID = UUID.randomUUID()
-        val mockAgreementA = Agreements(UUID.randomUUID(),null,
-                "User A", "User B",
-                Date(), null, null,
-                false, null,
-                null, null)
+        val mockAgreementA = Agreements(UUID.randomUUID(),
+                PartyA = "User A", PartyB = "User B",
+                CreatedDate = Date(),
+                MovedToBlockChain = false,)
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
@@ -93,11 +90,10 @@ internal class NegotiationServiceTest
     {
         //Given
         val conditionAUUID = UUID.randomUUID()
-        val mockAgreementA = Agreements(UUID.randomUUID(),null,
-                "User A", "User B",
-                Date(), null, null,
-                false, null,
-                null, null)
+        val mockAgreementA = Agreements(UUID.randomUUID(),
+                PartyA = "User A", PartyB = "User B",
+                CreatedDate = Date(),
+                MovedToBlockChain = false,)
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
         val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
