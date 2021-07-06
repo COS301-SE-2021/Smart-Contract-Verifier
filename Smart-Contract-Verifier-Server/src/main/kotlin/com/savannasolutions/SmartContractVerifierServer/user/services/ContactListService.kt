@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
@@ -49,7 +50,26 @@ class ContactListService(   val contactListRepository: ContactListRepository,
     }
 
     fun createContactList(createContactListRequest: CreateContactListRequest): CreateContactListResponse{
-        return CreateContactListResponse(status = ResponseStatus.FAILED)
+        if(createContactListRequest.ContactListName.isEmpty())
+            return CreateContactListResponse(status = ResponseStatus.FAILED)
+
+        if(createContactListRequest.UserID.isEmpty())
+            return CreateContactListResponse(status = ResponseStatus.FAILED)
+
+        if(!userRepository.existsById(createContactListRequest.UserID))
+            return CreateContactListResponse(status = ResponseStatus.FAILED)
+
+        val user = userRepository.getById(createContactListRequest.UserID)
+
+        if(contactListRepository.existsByOwnerAndContactListName(user,createContactListRequest.ContactListName))
+            return CreateContactListResponse(status = ResponseStatus.FAILED)
+
+        var contactList = ContactList(contactListName = createContactListRequest.ContactListName)
+        contactList = contactList.apply { owner = user }
+
+        contactList = contactListRepository.save(contactList)
+
+        return CreateContactListResponse(contactList.contactListID, ResponseStatus.FAILED)
     }
 
     fun removeUserFromContactList(removeUserFromContactListRequest: RemoveUserFromContactListRequest): RemoveUserFromContactListResponse{
