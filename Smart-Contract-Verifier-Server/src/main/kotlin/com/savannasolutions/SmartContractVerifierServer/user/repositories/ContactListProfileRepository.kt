@@ -12,4 +12,8 @@ interface ContactListProfileRepository: JpaRepository<ContactListProfile, UUID> 
     fun getAllByContactListAndUser(contactList: ContactList, user: User): List<ContactListProfile>?
 
     fun existByAliasAnAndContactListAndUser(contactList: ContactList, user: User, alias: String): Boolean
+
+    fun getByContactListAndUser(contactList: ContactList, user: User): ContactListProfile?
+
+    fun exitsByContactListAndUser(contactList: ContactList, user: User): Boolean
 }
