@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
-      - run: psql -U postgres -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
+      - run: psql postgres -h localhost -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
       - run: echo "Integration tests-----------------------------------------------------------------------------------"
       - run: ls Smart-Contract-Verifier-Server/
       - name: Maven build
