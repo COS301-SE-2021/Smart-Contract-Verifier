@@ -4,13 +4,13 @@ jobs:
   Integration-and-Unit-tests:
     runs-on: ubuntu-latest
     services:
-      postgresHost:
+      postgres:
         image: postgres
         env:
           POSTGRES_PASSWORD: password
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
-      - run: psql postgres -h postgresHost -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
+      - run: psql postgres -h localhost:5432 -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
@@ -21,6 +21,6 @@ jobs:
         env:
           dbuser: ${{ secrets.DBUSER }}
           dbpassword: ${{ secrets.DBPASSWORD }}
-          dburl: postgresHost
+          dburl: localhost:5432
           dbgenschema: true
 
