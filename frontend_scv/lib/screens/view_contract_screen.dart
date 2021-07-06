@@ -16,8 +16,10 @@ class ViewContractScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(loadedContract.title),
         ),
-        body: Center(
-          child: ContractDetailInfoPanel(loadedContract),
+        body: Column(
+          children: [
+            ContractDetailInfoPanel(loadedContract),
+          ],
         ));
   }
 }
