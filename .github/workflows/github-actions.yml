@@ -3,8 +3,14 @@ on: [push]
 jobs:
   Integration-and-Unit-tests:
     runs-on: ubuntu-latest
+    services:
+      postgresHost:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_HOST_AUTH_METHOD: trust
     steps:
-      - run: pwd
+      - run: psql postgres -h postgresHost -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
@@ -17,4 +23,4 @@ jobs:
           dbpassword: ${{ secrets.DBPASSWORD }}
           dburl: localhost:5432
           dbgenschema: true
-      - run: echo "Unit tests------------------------------------------------------------------------------------------"
+
