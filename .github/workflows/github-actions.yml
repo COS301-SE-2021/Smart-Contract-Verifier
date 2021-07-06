@@ -9,7 +9,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - run: echo "Integration tests-----------------------------------------------------------------------------------"
-      - run: ls
+      - run: ls Smart-Contract-Verifier-Server/
       - name: Maven build
-        run: mvn clean install -f /Smart-Contract-Verifier-Server/pom.xml #integration tests
+        run: mvn clean install -f Smart-Contract-Verifier-Server/pom.xml #integration tests
       - run: echo "Unit tests------------------------------------------------------------------------------------------"
