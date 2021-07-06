@@ -12,7 +12,6 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - run: psql postgres:${{ secrets.DBPASSWORD }}@localhost:5432/ -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
