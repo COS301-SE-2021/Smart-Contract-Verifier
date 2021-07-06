@@ -9,6 +9,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
+      - run: ls
       - run: cd Smart-Contract-Verifier-Server
-      - run: mvn clean install #integration tests
+      - run: pwd
+      #- run: mvn clean install #integration tests
       - run: echo "Unit tests------------------------------------------------------------------------------------------"
