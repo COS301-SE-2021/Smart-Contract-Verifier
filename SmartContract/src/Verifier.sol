@@ -103,6 +103,10 @@ contract Verifier{
         }
     }
 
+    function addJuror() public{
+        jurorStore.addJuror(msg.sender);
+    }
+
     event CreateAgreement(address party1, address party2, uint agreeID);
     event AcceptAgreement(uint agreeID);
     event ActiveAgreement(uint agreeID);

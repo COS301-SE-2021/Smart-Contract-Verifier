@@ -2,6 +2,7 @@ const { assert } = require('chai')
 
 const UnisonToken = artifacts.require("UnisonToken")
 const Verifier = artifacts.require("Verifier")
+const JurorStore = artifacts.require("JurorStore")
 
 require('chai').use(require('chai-as-promised')).should()
 
@@ -68,6 +69,47 @@ contract('Verifier', (accounts) =>{
             assert.equal(agree.party1Vote, 2)
             assert.equal(agree.party2Vote, 2)
         })
+    })
+
+    describe("JurorStore unit tests", async () =>{
+        let jurorStore
+
+        before(async () =>{
+            jurorStore = await JurorStore.new(accounts[0], {from: accounts[0]});
+        })
+
+        it("Can't use JurorStore as non-owner", async()=>{
+            // This tests the onlyOwner modifier
+          
+            var val = await jurorStore.getTempVal();
+            assert(val == false, "Precondition not satisfied");
+
+            try{
+            await jurorStore.addJuror(accounts[0], {from: accounts[1]});
+            }
+            catch(error){}
+
+            val = await jurorStore.getTempVal();
+            assert(val == false, "onlyOwner modifier didn't work");
+
+        })
+
+        it("Can use JurorStore as owner", async()=>{
+            // This tests the onlyOwner modifier
+          
+            var val = await jurorStore.getTempVal();
+            assert(val == false, "Precondition not satisfied");
+
+            try{
+            await jurorStore.addJuror(accounts[0], {from: accounts[0]});
+            }
+            catch(error){}
+
+            val = await jurorStore.getTempVal();
+            assert(val == true, "onlyOwner modifier didn't work");
+
+        })
+
     })
 
     describe("Unison token unit tests", async () =>{
