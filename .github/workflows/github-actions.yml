@@ -28,5 +28,5 @@ jobs:
         env:
           dbuser: ${{ secrets.DBUSER }}
           dbpassword: ${{ secrets.DBPASSWORD }}
-          dburl: postgres
+          dburl: localhost:5432
           dbgenschema: true
