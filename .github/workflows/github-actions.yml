@@ -1,15 +1,7 @@
 name: CI tests
 on: [push]
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref }}
-
   Integration-and-Unit-tests:
-    needs: setup
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -19,12 +11,11 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
-        volumes:
-          - Smart-Contract-Verifier-Server/docker/scripts:/docker-entrypoint-initdb.d
     steps:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
+      - run: psql -U postgres postgres -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
       - run: echo "Integration tests-----------------------------------------------------------------------------------"
       - run: ls Smart-Contract-Verifier-Server/
       - name: Maven build
@@ -32,6 +23,5 @@ jobs:
         env:
           dbuser: ${{ secrets.DBUSER }}
           dbpassword: ${{ secrets.DBPASSWORD }}
-          dburl: localhost:5432
+          dburl: postgres
           dbgenschema: true
-
