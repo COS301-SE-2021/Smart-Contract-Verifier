@@ -21,10 +21,10 @@ contract Verifier{
         unisonToken = token;
     }
 
-    function createAgreement(address party2, uint resolutionTime) public{
+    function createAgreement(address party2, uint resolutionTime, string calldata text) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
 
-        agreements[nextAgreeID] = AgreementLib.makeAgreement(msg.sender, party2, resolutionTime, 1000000000);
+        agreements[nextAgreeID] = AgreementLib.makeAgreement(msg.sender, party2, resolutionTime, text, 1000000000);
 
         emit CreateAgreement(msg.sender, party2, nextAgreeID);
         nextAgreeID++;

@@ -21,7 +21,7 @@ contract('Verifier', (accounts) =>{
 
         it("Can create agreement", async () =>{
             const timestamp = Math.round(Date.now() / 1000)
-            verifier.createAgreement(accounts[1], 0)
+            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement");
 
             var agree = await verifier.getAgreement(0)
 
