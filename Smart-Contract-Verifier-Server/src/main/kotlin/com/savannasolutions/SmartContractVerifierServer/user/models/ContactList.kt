@@ -1,13 +1,16 @@
 package com.savannasolutions.SmartContractVerifierServer.user.models
 
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
-@Table(name = "ContactList")
 data class ContactList(@Id @GeneratedValue val contactListID: UUID,
-                       val ownerID: String,
-                       var contactListName: String)
+                       val contactListName: String,)
+{
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "UserID")
+    lateinit var owner: User
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contactlist", orphanRemoval = true, cascade = [CascadeType.ALL])
+    var contactListProfiles : List<ContactListProfile>?= emptyList()
+}
