@@ -2,8 +2,9 @@
 services:
   postgres:
     image: postgres:latest
+    restart: always
     volumes:
-      - ./Smart-Contract-Verifier-Server/database:/var/lib/postgresql/data
+      - ./scripts:/docker-entrypoint-initdb.d
     environment:
       - POSTGRES_PASSWORD=smartcontractserverdev
       - POSTGRES_HOST_AUTH_METHOD=trust

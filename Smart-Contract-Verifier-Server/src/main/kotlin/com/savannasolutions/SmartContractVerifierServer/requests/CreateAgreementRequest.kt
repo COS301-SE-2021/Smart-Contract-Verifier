@@ -1,4 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.requests
 
-data class CreateAgreementRequest(val PartyA:String,
-                                  val PartyB:String,)
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class CreateAgreementRequest(@JsonProperty("PartyA") val PartyA:String,
+                                  @JsonProperty("PartyB") val PartyB:String,)

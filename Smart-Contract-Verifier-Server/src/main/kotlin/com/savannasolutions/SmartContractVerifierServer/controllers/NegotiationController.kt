@@ -4,7 +4,7 @@ import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.services.NegotiationService
 import org.springframework.web.bind.annotation.*
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/negotiation")
 class NegotiationController constructor(private val negotiationService: NegotiationService) {
@@ -39,4 +39,16 @@ class NegotiationController constructor(private val negotiationService: Negotiat
     @PostMapping("/seal-agreement")
     fun sealAgreement(@RequestBody sealAgreementRequest: SealAgreementRequest) =
             negotiationService.sealAgreement(sealAgreementRequest)
+
+    @PostMapping("/get-condition-details")
+    fun getConditionDetails(@RequestBody getConditionDetailsRequest: GetConditionDetailsRequest) =
+            negotiationService.getConditionDetails(getConditionDetailsRequest)
+
+    @PostMapping("/set-payment-condition")
+    fun setPaymentCondition(@RequestBody setPaymentConditionRequest: SetPaymentConditionRequest) =
+            negotiationService.setPaymentCondition(setPaymentConditionRequest)
+
+    @PostMapping("/set-duration-condition")
+    fun setPaymentCondition(@RequestBody setDurationConditionRequest: SetDurationConditionRequest) =
+            negotiationService.setDurationCondition(setDurationConditionRequest)
 }

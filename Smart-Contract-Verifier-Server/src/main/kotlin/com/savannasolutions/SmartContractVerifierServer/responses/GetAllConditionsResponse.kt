@@ -1,6 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.responses
 
-import com.savannasolutions.SmartContractVerifierServer.models.Conditions
+import java.util.*
 
-data class GetAllConditionsResponse(val conditions: List<Conditions>?,
-                                    val responseStatus: ResponseStatus,)
+data class GetAllConditionsResponse(val conditions: List<UUID>?,
+                                    val status: ResponseStatus,)
