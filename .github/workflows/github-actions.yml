@@ -12,4 +12,9 @@ jobs:
       - run: ls Smart-Contract-Verifier-Server/
       - name: Maven build
         run: mvn clean install -f Smart-Contract-Verifier-Server/pom.xml #integration tests
+        env:
+          dbuser: ${{ secrets.DBUSER }}
+          dbpassword: ${{ secrets.DBPASSWORD }}
+          dburl: localhost:5432
+          dbgenschema: true
       - run: echo "Unit tests------------------------------------------------------------------------------------------"
