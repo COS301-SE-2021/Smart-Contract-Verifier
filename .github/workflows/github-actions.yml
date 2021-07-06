@@ -11,8 +11,9 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
+        volumes:
+          - Smart-Contract-Verifier-Server/docker/scripts:/docker-entrypoint-initdb.d
     steps:
-      - run: psql -U postgres -h postgres:5432 -tc "CREATE DATABASE verifierserver"
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
