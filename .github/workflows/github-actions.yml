@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Integration tests-----------------------------------------------------------------------------------"
-      - run: cd ${{ github.workspace }}/Smart-Contract-Verifier-Server
-      - run: mvn clean install #integration tests
+      - run: ls ${{ github.workspace }}
+      - run: pwd
+      #- run: cd ${{ github.workspace }}/Smart-Contract-Verifier-Server
+      #- run: mvn clean install #integration tests
       - run: echo "Unit tests------------------------------------------------------------------------------------------"
