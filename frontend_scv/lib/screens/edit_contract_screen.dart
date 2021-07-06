@@ -24,7 +24,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
   final _form = GlobalKey<FormState>(); //essentially 'hooks' into forms state
   //use this Product and update it when saveForm is called
   var _editedContract = Contract(
-    id: null,
+    contractId: null,
     title: '',
     description: '',
     price: 0,
@@ -92,11 +92,11 @@ class _EditContractScreenState extends State<EditContractScreen> {
       _isLoading = true;
     });
 
-    if (_editedContract.id != null) {
+    if (_editedContract.contractId != null) {
       //editing
       //can wrap in try catch here
       await Provider.of<Contracts>(context, listen: false)
-          .updateContract(_editedContract.id, _editedContract);
+          .updateContract(_editedContract.contractId, _editedContract);
     } else {
       try {
         await Provider.of<Contracts>(context, listen: false)
@@ -182,7 +182,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                           //because the values of a Product
                           // are final - we need to create a new Product (we cannot
                           // simply edit them) and then replace the existing one
-                          id: _editedContract.id,
+                          contractId: _editedContract.contractId,
                           title: value, //This is the value that needs to be
                           // updated
                           description: _editedContract.description,
@@ -219,7 +219,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                           //because the values of a Product
                           // are final - we need to create a new Product (we cannot
                           // simply edit them) and then replace the existing one
-                          id: _editedContract.id,
+                          contractId: _editedContract.contractId,
                           title: _editedContract.title, //This is the value that
                           // needs to be
                           // updated
@@ -253,7 +253,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                       },
                       onSaved: (value) {
                         _editedContract = Contract(
-                          id: _editedContract.id,
+                          contractId: _editedContract.contractId,
                           title: _editedContract.title,
                           description: _editedContract.description,
                           price: double.parse(value),
@@ -279,7 +279,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                       focusNode: _descriptionFocusNode,
                       onSaved: (value) {
                         _editedContract = Contract(
-                          id: _editedContract.id,
+                          contractId: _editedContract.contractId,
                           title: _editedContract.title,
                           description: value,
                           price: _editedContract.price,
@@ -327,7 +327,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                             },
                             onSaved: (value) {
                               _editedContract = Contract(
-                                id: _editedContract.id,
+                                contractId: _editedContract.contractId,
                                 title: _editedContract.title,
                                 description: _editedContract.description,
                                 price: _editedContract.price,

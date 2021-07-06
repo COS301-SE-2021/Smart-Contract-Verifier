@@ -17,7 +17,7 @@ class ContractItem extends StatelessWidget {
         Navigator.of(context).pushNamed(
           ViewContractScreen.routeName,
           // ContractDetailScreen.routeName,
-          arguments: contract.id,
+          arguments: contract.contractId,
         );
       },
       child: ListTile(
