@@ -13,5 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Integration tests-----------------------------------------------------------------------------------"
+      - run: ls #integration tests
       - run: mvn clean install -f /Smart-Contract-Verifier-Server/pom.xml #integration tests
       - run: echo "Unit tests------------------------------------------------------------------------------------------"
