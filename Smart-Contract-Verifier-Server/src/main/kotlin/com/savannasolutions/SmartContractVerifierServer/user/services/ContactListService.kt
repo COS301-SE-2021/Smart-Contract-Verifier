@@ -40,7 +40,7 @@ class ContactListService(   val contactListRepository: ContactListRepository,
                 return AddUserToContactListResponse(ResponseStatus.FAILED)
         }
 
-        if(contactListProfileRepository.existByAliasAnAndContactListAndUser(vcontactList,vuser,addUserToContactListRequest.UserAlias))
+        if(contactListProfileRepository.existByAliasAndContactListAndUser(vcontactList,vuser,addUserToContactListRequest.UserAlias))
             return AddUserToContactListResponse(ResponseStatus.FAILED)
 
         var contactListProfile = ContactListProfile(ContactAlias = addUserToContactListRequest.UserAlias)
