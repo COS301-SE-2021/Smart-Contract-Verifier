@@ -1,6 +1,8 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
+import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.*
@@ -9,10 +11,41 @@ import org.springframework.stereotype.Service
 
 @Service
 class ContactListService(   val contactListRepository: ContactListRepository,
-                            val userRepository: UserRepository){
+                            val userRepository: UserRepository,
+                            val contactListProfileRepository: ContactListProfileRepository,){
 
     fun addUserToContactList(addUserToContactListRequest: AddUserToContactListRequest ): AddUserToContactListResponse{
-        return AddUserToContactListResponse(ResponseStatus.FAILED)
+        if(addUserToContactListRequest.UserAlias.isEmpty())
+            return AddUserToContactListResponse(ResponseStatus.FAILED)
+
+        if(addUserToContactListRequest.UserID.isEmpty())
+            return AddUserToContactListResponse(ResponseStatus.FAILED)
+
+        if(!userRepository.existsById(addUserToContactListRequest.UserID))
+            return AddUserToContactListResponse(ResponseStatus.FAILED)
+
+        if(!contactListRepository.existsById(addUserToContactListRequest.ContactListID))
+            return AddUserToContactListResponse(ResponseStatus.FAILED)
+
+        val vcontactList = contactListRepository.getById(addUserToContactListRequest.ContactListID)
+        val vuser = userRepository.getById(addUserToContactListRequest.UserID)
+
+        if(contactListProfileRepository.getAllByContactListAndUser(vcontactList,vuser) != null)
+        {
+            if(contactListProfileRepository.getAllByContactListAndUser(vcontactList,vuser)!!.size > 1)
+                return AddUserToContactListResponse(ResponseStatus.FAILED)
+        }
+
+        if(contactListProfileRepository.existByAliasAnAndContactListAndUser(vcontactList,vuser,addUserToContactListRequest.UserAlias))
+            return AddUserToContactListResponse(ResponseStatus.FAILED)
+
+        var contactListProfile = ContactListProfile(ContactAlias = addUserToContactListRequest.UserAlias)
+        contactListProfile = contactListProfile.apply { contactList = vcontactList }
+        contactListProfile = contactListProfile.apply { user = vuser }
+
+        contactListProfileRepository.save(contactListProfile)
+
+        return AddUserToContactListResponse(ResponseStatus.SUCCESSFUL)
     }
 
     fun createContactList(createContactListRequest: CreateContactListRequest): CreateContactListResponse{
