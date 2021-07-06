@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 
 import "./UnisonToken.sol";
 import "./AgreementLib.sol";
+import "./JurorStore.sol";
 
 // pragma experimental ABIEncoderV2;
 
@@ -15,10 +16,12 @@ contract Verifier{
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => AgreementLib.Agreement) agreements;
 
+    JurorStore jurorStore;
     UnisonToken unisonToken;
 
     constructor(UnisonToken token){
         unisonToken = token;
+        jurorStore = new JurorStore(address(this));
     }
 
     function createAgreement(address party2, uint resolutionTime, string calldata text) public{
