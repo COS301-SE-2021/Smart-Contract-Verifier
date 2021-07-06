@@ -1,45 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_scv/screens/contract_detail_screen.dart';
-import './screens/dashboard_screen.dart';
-import './screens/settings_screen.dart';
-import './models/contract.dart';
-import './providers/contracts.dart';
 import 'package:provider/provider.dart';
+
+import './screens/contracts_overview_screen.dart';
+import './screens/contract_detail_screen.dart';
+import './screens/auth_screen.dart';
+import './screens/splash_screen.dart';
+import './screens/edit_contract_screen.dart';
+//
+import './providers/contracts.dart';
+import './providers/auth.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // List<Contract> _contracts = [agreementB];
-    return ChangeNotifierProvider(
-      create: (ctx) => Contracts(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Unison',
-        theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
-          accentColor: Colors.cyan,
-          canvasColor: Color.fromRGBO(37, 37, 37, 1),
-          textTheme: ThemeData.light().textTheme.copyWith(
-              body1: TextStyle(
-                color: Color.fromRGBO(200, 200, 200, 1),
-              ),
-              body2: TextStyle(
-                color: Color.fromRGBO(105, 105, 105, 1),
-              ),
-              title: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              )),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
         ),
-        initialRoute: '/',
-        routes: {
-          SettingsScreen.routeName: (ctx) => SettingsScreen(),
-          ContractDetailScreen.routeName: (ctx) => ContractDetailScreen(),
-        },
-        home: DashboardScreen(),
+        ChangeNotifierProxyProvider<Auth, Contracts>(
+          update: (ctx, auth, previousProducts) => Contracts(
+              auth.token,
+              auth.userId,
+              previousProducts == null ? [] : previousProducts.items),
+          create: null,
+        ),
+        // TODO: Notification Provider
+      ],
+      child: Consumer<Auth>(
+        builder: ((ctx, auth, _) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Dashboard',
+              theme: ThemeData(
+                canvasColor: Color.fromRGBO(37, 37, 37, 1).withOpacity(0.9),
+                brightness: Brightness.dark,
+                primarySwatch: Colors.deepOrange,
+                accentColor: Colors.cyan,
+                fontFamily: 'Lato',
+              ),
+              // themeMode: ThemeMode.dark,
+              home: auth.isAuth
+                  ? ContractsOverviewScreen()
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(),
+                      builder: (ctx, authResultSnapshot) =>
+                          authResultSnapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? SplashScreen()
+                              : AuthScreen(),
+                    ),
+              routes: {
+                ContractDetailScreen.routeName: (ctx) => ContractDetailScreen(),
+                EditContractScreen.routeName: (ctx) => EditContractScreen(),
+              },
+            )),
       ),
     );
+    //  IMPORTANT! - When using providers - always define them in the highest
+    //  point in the app
   }
 }

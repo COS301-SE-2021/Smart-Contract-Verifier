@@ -1,42 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_scv/screens/contract_detail_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth.dart';
+import '../providers/contract.dart';
+import '../screens/contract_detail_screen.dart';
 
 class ContractItem extends StatelessWidget {
-  final String id;
-  final String status;
-
-  ContractItem(this.id, this.status);
-
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: GridTile(
-        child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                ContractDetailScreen.routeName,
-                arguments: id,
-              );
-            },
-            child: Text(
-              id,
-              textAlign: TextAlign.center,
-            )),
-        footer: GridTileBar(
-          backgroundColor: Colors.black87,
-          leading: Text(status),
-          trailing: IconButton(
-            alignment: Alignment.centerRight,
-            icon: Icon(Icons.favorite),
-            onPressed: () => {},
-            color: Theme.of(context).accentColor,
-          ),
+    final contract = Provider.of<Contract>(context);
+    final authData = Provider.of<Auth>(context, listen: false);
 
-          // title: Text(),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          ContractDetailScreen.routeName,
+          arguments: contract.id,
+        );
+      },
+      child: ListTile(
+        title: Text(contract.title),
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(contract.imageUrl),
+        ),
+        trailing: Container(
+          width: 50,
+          child: Row(
+            children: <Widget>[
+              Consumer<Contract>(
+                //consumer takes a builder:
+                builder: (ctx, product, child) => IconButton(
+                  icon: Icon(
+                    product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  ),
+                  // label: child,
+                  onPressed: () => {
+                    product.toggleFavoriteStatus(
+                      authData.token,
+                      authData.userId,
+                    ),
+                  },
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-// ;

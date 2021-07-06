@@ -1,67 +1,142 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../models/contract.dart';
+import 'package:http/http.dart' as http;
+import './contract.dart';
+import '../models/http_exception.dart';
 
 class Contracts with ChangeNotifier {
-  List<Contract> _contracts = [
-    Contract(
-      id: 'a967075d-d406-4cd6-b57f-8deb18940bf7',
-      terms: [
-        Term(
-            '1',
-            'term text',
-            'term description - '
-                'normally a bit longer than your average sentence to demonstrate what '
-                'this will be used for.',
-            TermStatus.Pending,
-            '0x743Fb032c0bE976e1178d8157f911a9e825d9E23'),
-      ],
-      status: ContractStatus.Negotiation,
-      partyA: '0x743Fb032c0bE976e1178d8157f911a9e825d9E23',
-      partyB: '0x37Ec9a8aBFa094b24054422564e68B08aF3114B4',
-      createdDate: "2021-06-19T23:47:05.454+00:00",
-      movedToBlockchain: true,
-      duration: '',
-      sealedDate: '',
-    ),
-    Contract(
-      id: '8deb18940bf7-4cd6-d406-b57f-a967075d',
-      terms: [
-        Term('0', 'Vehicle color', 'The car must be resprayed blue',
-            TermStatus.Pending, '0x743Fb032c0bE976e1178d8157f911a9e825d9E23'),
-        Term(
-            '1',
-            'Vehicle service',
-            'Proof of a service from a qualified technician is required',
-            TermStatus.Pending,
-            '0x743Fb032c0bE976e1178d8157f911a9e825d9E23'),
-      ],
-      status: ContractStatus.Negotiation,
-      partyA: '0x743Fb032c0bE976e1178d8157f911a9e825d9E23',
-      partyB: '0x37Ec9a8aBFa094b24054422564e68B08aF3114B4',
-      createdDate: "2021-06-20T23:47:05.454+00:00",
-      movedToBlockchain: false,
-      duration: '',
-      sealedDate: '',
-    ),
-  ];
+  List<Contract> _items = [];
+  final String authToken;
+  final String userId;
+  Contracts(
+    this.authToken,
+    this.userId,
+    this._items,
+  );
 
-  List<Contract> get contracts {
-    return [
-      ..._contracts
-    ]; //returns a copy of items - prevents direct access to
-    // our actual list of items - if direct access was allowed, any listeners
-    // would not be able to receive updates that new data is available,
-    // because notifyListeners() would not be called...
+  List<Contract> get items {
+    return [..._items];
   }
 
   Contract findById(String id) {
-    return _contracts.firstWhere(
+    return _items.firstWhere(
       (cont) => cont.id == id,
     );
   }
 
-  addContract() {
-    // _contracts.add(value);
-    notifyListeners(); //Widgets 'listening' to this class will get rebuilt
+  //Add a getter to fetch only favourites:
+  List<Contract> get favoriteItems {
+    return _items.where((contItem) => contItem.isFavorite).toList();
+  }
+
+  Future<void> fetchAndSetContracts([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    var url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
+        '.com/contracts.json?auth=$authToken&$filterString';
+    try {
+      final response = await http.get(url);
+      // print(json.decode(response.body));
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (extractedData == null) {
+        return;
+      }
+
+      url =
+          'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
+      final List<Contract> loadedContracts = [];
+      extractedData.forEach((contId, contData) {
+        loadedContracts.add(Contract(
+          id: contId,
+          title: contData['title'],
+          description: contData['description'],
+          price: contData['price'],
+          partyBId: contData['partyBId'],
+          isFavorite:
+              favoriteData == null ? false : favoriteData[contId] ?? false,
+          imageUrl: contData['imageUrl'],
+        ));
+      });
+      _items = loadedContracts;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
+  Future<void> addContract(Contract contract) async {
+    final url =
+        'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/contracts'
+        '.json?auth=$authToken';
+    try {
+      final response = await http //wait for this to finish
+          .post(
+        url,
+        body: json.encode({
+          'title': contract.title,
+          'description': contract.description,
+          'imageUrl': contract.imageUrl,
+          'price': contract.price,
+          'partyBId': contract.partyBId,
+          'creatorId': userId,
+        }),
+      );
+      //The code below will only run after the await is complete
+      final newContract = Contract(
+        title: contract.title,
+        description: contract.description,
+        price: contract.price,
+        partyBId: contract.partyBId,
+        imageUrl: contract.imageUrl,
+        id: json.decode(response.body)['name'],
+      );
+      _items.add(newContract);
+      // _items.insert(0, newContract); // at the start of the list
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
+
+  Future<void> updateContract(String id, Contract newContract) async {
+    final contIndex = _items.indexWhere((cont) => cont.id == id);
+    if (contIndex >= 0) {
+      //Send patch request
+      final url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
+          '.com/contracts/$id.json?auth=$authToken';
+      //can do try catch here:
+      await http.patch(url,
+          body: json.encode({
+            'title': newContract.title,
+            'description': newContract.description,
+            'imageUrl': newContract.imageUrl,
+            'price': newContract.price,
+            'partyBId': newContract.partyBId,
+          }));
+      _items[contIndex] = newContract;
+      notifyListeners();
+    } else {
+      print('...');
+    }
+  }
+
+  Future<void> deleteContract(String id) async {
+    final url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
+        '.com/contracts/$id.json?auth=$authToken';
+    final existingContractIndex = _items.indexWhere((cont) => cont.id == id);
+    var existingContract = _items[existingContractIndex];
+    _items.removeAt(existingContractIndex);
+    notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingContractIndex, existingContract);
+      notifyListeners();
+      throw HttpException('Could not delete contract.');
+    }
+    existingContract = null;
   }
 }
