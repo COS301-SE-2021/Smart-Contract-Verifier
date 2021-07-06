@@ -10,7 +10,7 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
-      - run: psql postgres -h localhost:5432 -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
+      - run: psql postgres -f Smart-Contract-Verifier-Server/docker/scripts/init.sql
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
