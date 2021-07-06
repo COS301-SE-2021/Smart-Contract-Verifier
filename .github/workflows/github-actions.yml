@@ -6,5 +6,7 @@ jobs:
     steps:
       - run: echo "Integration tests-----------------------------------------------------------------------------------"
       - run: cd ${{ github.workspace }}/..
+      - run: pwd
+      - run: cd Smart-Contract-Verifier-Server
       - run: mvn clean install #integration tests
       - run: echo "Unit tests------------------------------------------------------------------------------------------"
