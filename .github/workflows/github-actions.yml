@@ -1,13 +1,17 @@
 name: CI tests
 on: [push]
 jobs:
-  Integration-and-Unit-tests:
+  setup:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Integration tests-----------------------------------------------------------------------------------"
       - run: pwd
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
+  Integration-and-Unit-tests:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Integration tests-----------------------------------------------------------------------------------"
       - run: mvn clean install -f /Smart-Contract-Verifier-Server/pom.xml #integration tests
       - run: echo "Unit tests------------------------------------------------------------------------------------------"
