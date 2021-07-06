@@ -12,7 +12,7 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - run: psql -U postgres -tc "CREATE DATABASE verifierserver"
+      - run: psql -U postgres -h localhost:5432 -tc "CREATE DATABASE verifierserver"
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
