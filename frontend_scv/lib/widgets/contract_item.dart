@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
 import '../providers/contract.dart';
-import '../screens/contract_detail_screen.dart';
+// import '../screens/contract_detail_screen.dart';
+import '../screens/view_contract_screen.dart';
 
 class ContractItem extends StatelessWidget {
   @override
@@ -14,7 +15,8 @@ class ContractItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(
-          ContractDetailScreen.routeName,
+          ViewContractScreen.routeName,
+          // ContractDetailScreen.routeName,
           arguments: contract.id,
         );
       },

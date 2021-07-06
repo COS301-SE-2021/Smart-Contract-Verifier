@@ -6,6 +6,7 @@ import './screens/contract_detail_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/splash_screen.dart';
 import './screens/edit_contract_screen.dart';
+import './screens/view_contract_screen.dart';
 //
 import './providers/contracts.dart';
 import './providers/auth.dart';
@@ -52,7 +53,8 @@ class MyApp extends StatelessWidget {
                               : AuthScreen(),
                     ),
               routes: {
-                ContractDetailScreen.routeName: (ctx) => ContractDetailScreen(),
+                // ContractDetailScreen.routeName: (ctx) => ContractDetailScreen(),
+                ViewContractScreen.routeName: (ctx) => ViewContractScreen(),
                 EditContractScreen.routeName: (ctx) => EditContractScreen(),
               },
             )),
