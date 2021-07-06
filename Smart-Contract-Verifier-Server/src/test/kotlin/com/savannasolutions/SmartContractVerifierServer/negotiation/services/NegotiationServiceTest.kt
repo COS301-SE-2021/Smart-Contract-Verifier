@@ -7,6 +7,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.*
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.user.models.User
+import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -20,23 +22,35 @@ internal class NegotiationServiceTest
 {
     private val conditionsRepository : ConditionsRepository = mock()
     private val agreementsRepository : AgreementsRepository = mock()
-    private val negotiationService = NegotiationService(agreementsRepository, conditionsRepository)
+    private val userRepository : UserRepository = mock()
+    private val negotiationService = NegotiationService(agreementsRepository, conditionsRepository, userRepository)
 
     @Test
     fun `acceptCondition successful accept`() {
         //Given
         val conditionAUUID = UUID.randomUUID()
-        val mockAgreementA = Agreements(UUID.randomUUID(),
-                                        PartyA = "User A", PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.randomUUID(),
                                         CreatedDate = Date(),
                                         MovedToBlockChain = false,)
 
+        val userA = User("UserA", "test@test.com","uA")
+        val userB = User("UserB", "test@test.com", "uB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
-        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
-                                        "UserA",Date()).apply { contract = mockAgreementA }
+        var mockConditionA = Conditions(conditionAUUID,
+                                        "",
+                                        ConditionStatus.PENDING,
+                                        Date()).apply { contract = mockAgreementA }
+
+        mockConditionA = mockConditionA.apply { proposingUser = userA }
 
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
 
         //When
         val response = negotiationService.acceptCondition(conditionARequest)
@@ -65,17 +79,26 @@ internal class NegotiationServiceTest
     fun `acceptCondition condition is already rejected`(){
         //Given
         val conditionAUUID = UUID.randomUUID()
-        val mockAgreementA = Agreements(UUID.randomUUID(),
-                PartyA = "User A", PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.randomUUID(),
                 CreatedDate = Date(),
                 MovedToBlockChain = false,)
 
+        val userA = User("UserA", "test@test.com","uA")
+        val userB = User("UserB", "test@test.com", "uB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
-        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
-                "UserA",Date()).apply { contract = mockAgreementA }
+        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
+                Date()).apply { contract = mockAgreementA }
+
+        mockConditionA = mockConditionA.apply { proposingUser = userA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
 
         //when
         val response = negotiationService.acceptCondition(conditionARequest)
@@ -90,14 +113,21 @@ internal class NegotiationServiceTest
     {
         //Given
         val conditionAUUID = UUID.randomUUID()
-        val mockAgreementA = Agreements(UUID.randomUUID(),
-                PartyA = "User A", PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.randomUUID(),
                 CreatedDate = Date(),
                 MovedToBlockChain = false,)
 
+        val userA = User("UserA", "test@test.com","uA")
+        val userB = User("UserB", "test@test.com", "uB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
-        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
-                "UserA",Date()).apply { contract = mockAgreementA }
+        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+                Date()).apply { contract = mockAgreementA }
+
+        mockConditionA = mockConditionA.apply { proposingUser = userA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
@@ -112,12 +142,21 @@ internal class NegotiationServiceTest
     @Test
     fun `createAgreement successful`() {
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                                        PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                                        PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                                         CreatedDate = Date(),
                                         MovedToBlockChain = false)
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreement)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.createAgreement(CreateAgreementRequest("0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
@@ -167,24 +206,35 @@ internal class NegotiationServiceTest
     @Test
     fun `createCondition successful`() {
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                         "Unit test",
                                         ConditionStatus.PENDING,
-                                        "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                                            Date(),).apply { contract = mockAgreement }
+                                    Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userB }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser.publicWalletID,
                                                             mockCondition.contract.ContractID,
                                                             mockCondition.conditionDescription))
 
@@ -194,24 +244,34 @@ internal class NegotiationServiceTest
 
     @Test
     fun `createCondition condition description is empty`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "",
                 ConditionStatus.PENDING,
-                "USER A",
                 Date(),).apply { contract=mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userB }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
                 mockCondition.conditionDescription))
 
@@ -221,24 +281,34 @@ internal class NegotiationServiceTest
 
     @Test
     fun `createCondition condition proposed user is empty`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Unit test",
-                ConditionStatus.PENDING,
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "",
+                ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.createCondition(CreateConditionRequest("",
                 mockCondition.contract.ContractID,
                 mockCondition.conditionDescription))
 
@@ -249,22 +319,28 @@ internal class NegotiationServiceTest
     @Test
     fun `createCondition Agreement does not exist`(){
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Unit test",
                 ConditionStatus.PENDING,
-                "USER A",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockCondition.contract.ContractID)).thenReturn(false)
 
         //when
-        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser.publicWalletID,
                                                                                     mockCondition.contract.ContractID,
                                                                                     mockCondition.conditionDescription))
 
@@ -276,24 +352,34 @@ internal class NegotiationServiceTest
 
     @Test
     fun `createCondition condition proposed user is not part of agreement`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Unit test",
                 ConditionStatus.PENDING,
-                "Not valid user",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.createCondition(CreateConditionRequest("Incorrect user",
                 mockCondition.contract.ContractID,
                 mockCondition.conditionDescription))
 
@@ -304,19 +390,29 @@ internal class NegotiationServiceTest
     @Test
     fun `getAgreementDetails successful with condition`() {
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Unit test",
                 ConditionStatus.PENDING,
-                "Not valid user",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
+
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.getAgreementDetails(GetAgreementDetailsRequest(mockAgreement.ContractID))
@@ -328,11 +424,15 @@ internal class NegotiationServiceTest
     @Test
     fun `getAgreementDetails successful without condition`() {
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
@@ -361,13 +461,20 @@ internal class NegotiationServiceTest
     fun `rejectCondition successful reject`() {
         //Given
         val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
-        val mockAgreementA = Agreements(UUID.randomUUID(),PartyA = "User A",
-                                        PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.randomUUID(),
                                         CreatedDate = Date(),
                                         MovedToBlockChain = false)
 
-        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
-                "UserA",Date(),).apply { contract = mockAgreementA }
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
+                Date(),).apply { contract = mockAgreementA }
+
+        mockConditionA = mockConditionA.apply { proposingUser = userA }
 
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
@@ -397,16 +504,27 @@ internal class NegotiationServiceTest
     fun `rejectCondition condition is already rejected`(){
         //Given
         val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
-        val mockAgreementA = Agreements(UUID.randomUUID(),PartyA = "User A",
-                PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.randomUUID(),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
-                "UserA",Date(),).apply { contract = mockAgreementA }
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
+                Date(),).apply { contract = mockAgreementA }
+
+        mockConditionA = mockConditionA.apply { proposingUser = userA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.rejectCondition(RejectConditionRequest(conditionAUUID))
@@ -421,17 +539,28 @@ internal class NegotiationServiceTest
     {
         //Given
         val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
-        val mockAgreementA = Agreements(UUID.randomUUID(),PartyA = "User A",
-                PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.randomUUID(),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
         val conditionARequest = RejectConditionRequest(conditionAUUID)
-        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
-                "UserA",Date(),).apply { contract = mockAgreementA }
+        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+                Date(),).apply { contract = mockAgreementA }
+
+        mockConditionA = mockConditionA.apply { proposingUser = userA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.rejectCondition(conditionARequest)
@@ -444,15 +573,28 @@ internal class NegotiationServiceTest
     fun `getAllConditions successful with conditions`() {
         //given
         val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),PartyA = "User A",
-                PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
-        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
-                "UserA",Date(),).apply { contract = mockAgreementA }
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+                Date(),).apply { contract = mockAgreementA }
+
+        mockConditionA = mockConditionA.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(true)
         whenever(agreementsRepository.getById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+
 
         //when
         val response = negotiationService.getAllConditions(GetAllConditionsRequest(mockAgreementA.ContractID))
@@ -464,13 +606,22 @@ internal class NegotiationServiceTest
     @Test
     fun `getAllConditions successful without conditions`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),PartyA = "User A",
-                PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
         whenever(agreementsRepository.existsById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(true)
         whenever(agreementsRepository.getById(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"))).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.getAllConditions(GetAllConditionsRequest(mockAgreementA.ContractID))
@@ -494,36 +645,43 @@ internal class NegotiationServiceTest
     @Test
     fun `sealAgreement successful`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
-                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
                                                 "Payment of 500",
                                                 ConditionStatus.ACCEPTED,
-                                                "b6060b01-1505-4d8d-8294-0c5495e26441",
                                                 Date(),).apply { contract = mockAgreementA }
 
-        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+        mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
+
+        var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                                                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                                                 ConditionStatus.ACCEPTED,
-                                                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                                                 Date(),).apply { contract = mockAgreementA }
 
-        val mockRejectedCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+        mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
+
+        var mockRejectedCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                                                     "Reject this condition",
                                                     ConditionStatus.REJECTED,
-                                                    "df8dc898-bd7a-4bdb-9e36-781b70784528",
                                                     Date(),).apply { contract = mockAgreementA }
 
-        val conditionsList = ArrayList<Conditions>()
+        mockRejectedCondition = mockRejectedCondition.apply { proposingUser = userA }
+
+        /*val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
         conditionsList.add(mockPaymentCondition)
         conditionsList.add(mockRejectedCondition)
 
-        mockAgreementA.conditions = conditionsList
+        mockAgreementA.conditions = conditionsList*/
 
         mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
         mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
@@ -533,6 +691,10 @@ internal class NegotiationServiceTest
         whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
         whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
@@ -557,29 +719,36 @@ internal class NegotiationServiceTest
     @Test
     fun `sealAgreement a condition is pending not duration or payment`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
-                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
-                "b6060b01-1505-4d8d-8294-0c5495e26441",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+        mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
+
+        var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+        mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
+
+        var mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.PENDING,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
+
+        mockPendingCondition = mockPendingCondition.apply { proposingUser = userA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -595,6 +764,10 @@ internal class NegotiationServiceTest
         whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
         whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
@@ -606,29 +779,35 @@ internal class NegotiationServiceTest
     @Test
     fun `sealAgreement duration is not set`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
-                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
-                "b6060b01-1505-4d8d-8294-0c5495e26441",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+        mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
+
+        var mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.PENDING,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val conditionsList = ArrayList<Conditions>()
+        mockPendingCondition = mockPendingCondition.apply { proposingUser = userB }
+
+        /*val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockPaymentCondition)
         conditionsList.add(mockPendingCondition)
 
-        mockAgreementA.conditions = conditionsList
+        mockAgreementA.conditions = conditionsList*/
 
         mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
 
@@ -636,6 +815,10 @@ internal class NegotiationServiceTest
         whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
         whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
@@ -647,35 +830,46 @@ internal class NegotiationServiceTest
     @Test
     fun `sealAgreement payment not set`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
-                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+        mockDurationCondition = mockDurationCondition.apply { proposingUser = userA }
+
+        var mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.PENDING,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val conditionsList = ArrayList<Conditions>()
+        mockPendingCondition = mockPendingCondition.apply { proposingUser = userB }
+
+        /*val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
         conditionsList.add(mockPendingCondition)
 
-        mockAgreementA.conditions = conditionsList
+        mockAgreementA.conditions = conditionsList*/
 
         mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
 
         whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+        whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
@@ -687,29 +881,36 @@ internal class NegotiationServiceTest
     @Test
     fun `sealAgreement a payment condition is pending`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
-                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
                 "Payment of 500",
                 ConditionStatus.PENDING,
-                "b6060b01-1505-4d8d-8294-0c5495e26441",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+        mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
+
+        var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+        mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
+
+        var mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.REJECTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
+
+        mockOtherCondition = mockOtherCondition.apply { proposingUser = userA }
 
         val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
@@ -725,6 +926,10 @@ internal class NegotiationServiceTest
         whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
         whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
@@ -736,36 +941,43 @@ internal class NegotiationServiceTest
     @Test
     fun `sealAgreement a duration condition is pending`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
-                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
-                "b6060b01-1505-4d8d-8294-0c5495e26441",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+        mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
+
+        var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.PENDING,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+        mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
+
+        var mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.ACCEPTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val conditionsList = ArrayList<Conditions>()
+        mockOtherCondition = mockOtherCondition.apply { proposingUser = userA }
+
+        /*val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
         conditionsList.add(mockPaymentCondition)
         conditionsList.add(mockOtherCondition)
 
-        mockAgreementA.conditions = conditionsList
+        mockAgreementA.conditions = conditionsList*/
 
         mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
         mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
@@ -773,7 +985,12 @@ internal class NegotiationServiceTest
         whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
         whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
+        whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
@@ -785,36 +1002,43 @@ internal class NegotiationServiceTest
     @Test
     fun `sealAgreement a payment condition is rejected`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
-                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
                 "Payment of 500",
                 ConditionStatus.REJECTED,
-                "b6060b01-1505-4d8d-8294-0c5495e26441",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+        mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
+
+        var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+       mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
+
+        var mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.ACCEPTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val conditionsList = ArrayList<Conditions>()
+        mockOtherCondition = mockOtherCondition.apply { proposingUser = userA }
+
+        /*val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
         conditionsList.add(mockPaymentCondition)
         conditionsList.add(mockOtherCondition)
 
-        mockAgreementA.conditions = conditionsList
+        mockAgreementA.conditions = conditionsList*/
 
         mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
         mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
@@ -824,6 +1048,10 @@ internal class NegotiationServiceTest
         whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
         whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
@@ -835,36 +1063,43 @@ internal class NegotiationServiceTest
     @Test
     fun `sealAgreement a duration condition is rejected`() {
         //given
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                PartyA = "b6060b01-1505-4d8d-8294-0c5495e26441",
-                PartyB = "df8dc898-bd7a-4bdb-9e36-781b70784528",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
-                "b6060b01-1505-4d8d-8294-0c5495e26441",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
+        mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
+
+        var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
                 "Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.REJECTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
+        mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
+
+        var mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
                 "Reject this condition",
                 ConditionStatus.ACCEPTED,
-                "df8dc898-bd7a-4bdb-9e36-781b70784528",
                 Date(),).apply { contract = mockAgreementA }
 
-        val conditionsList = ArrayList<Conditions>()
+        mockOtherCondition = mockOtherCondition.apply { proposingUser = userA }
+
+        /*val conditionsList = ArrayList<Conditions>()
         conditionsList.add(mockDurationCondition)
         conditionsList.add(mockPaymentCondition)
         conditionsList.add(mockOtherCondition)
 
-        mockAgreementA.conditions = conditionsList
+        mockAgreementA.conditions = conditionsList*/
 
         mockAgreementA.DurationConditionUUID = mockDurationCondition.conditionID
         mockAgreementA.PaymentConditionUUID = mockPaymentCondition.conditionID
@@ -874,6 +1109,10 @@ internal class NegotiationServiceTest
         whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
         whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.sealAgreement(SealAgreementRequest(mockAgreementA.ContractID))
@@ -886,15 +1125,27 @@ internal class NegotiationServiceTest
     fun `getConditionDetails successful`(){
         //given
         val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
-        val mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),PartyA = "User A",
-                PartyB = "User B",
+        var mockAgreementA = Agreements(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
-        val mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
-                "UserA",Date(),).apply { contract = mockAgreementA }
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreementA = mockAgreementA.apply { partyA = userA }
+        mockAgreementA = mockAgreementA.apply { partyB = userB }
+
+        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+                Date(),).apply { contract = mockAgreementA }
+
+        mockConditionA = mockConditionA.apply { proposingUser = userA }
 
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userB)
 
         //when
         val response = negotiationService.getConditionDetails(GetConditionDetailsRequest(conditionAUUID))
@@ -920,24 +1171,33 @@ internal class NegotiationServiceTest
     @Test
     fun `setPaymentCondition successful`(){
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Payment of 500.0",
                 ConditionStatus.PENDING,
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
                 500.0))
 
@@ -948,22 +1208,31 @@ internal class NegotiationServiceTest
     @Test
     fun `setPayment Agreement does not exist`(){
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Unit test",
                 ConditionStatus.PENDING,
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
                 Date(),).apply { contract = mockAgreement }
 
+        mockCondition = mockCondition.apply { proposingUser = userA }
+
         whenever(agreementsRepository.existsById(mockCondition.contract.ContractID)).thenReturn(false)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
                 500.0))
 
@@ -973,24 +1242,33 @@ internal class NegotiationServiceTest
 
     @Test
     fun `setPayment Payment is a negative value`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Payment of -500.0",
                 ConditionStatus.PENDING,
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
                 -500.0))
 
@@ -1000,24 +1278,31 @@ internal class NegotiationServiceTest
 
     @Test
     fun `setPayment condition proposed user is empty`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
 
         val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Unit test",
                 ConditionStatus.PENDING,
-                "",
                 Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("",
                 mockCondition.contract.ContractID,
                 500.0))
 
@@ -1027,24 +1312,33 @@ internal class NegotiationServiceTest
 
     @Test
     fun `setPayment proposed user is not part of agreement`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Payment of 500.0",
                 ConditionStatus.PENDING,
-                "Not valid user",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("Invalid user",
                 mockCondition.contract.ContractID,
                 500.0))
 
@@ -1055,24 +1349,33 @@ internal class NegotiationServiceTest
     @Test
     fun `setDurationCondition successful`(){
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
                 Duration.ofSeconds(500)))
 
@@ -1083,22 +1386,33 @@ internal class NegotiationServiceTest
     @Test
     fun `setDuration Agreement does not exist`(){
         //given
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
                 Date(),).apply { contract = mockAgreement }
 
+        mockCondition = mockCondition.apply { proposingUser = userA }
+
+
+
         whenever(agreementsRepository.existsById(mockCondition.contract.ContractID)).thenReturn(false)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
                 Duration.ofSeconds(500)))
 
@@ -1108,24 +1422,33 @@ internal class NegotiationServiceTest
 
     @Test
     fun `setDuration Duration is a negative value`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Duration of " + Duration.ofSeconds(-500).seconds,
                 ConditionStatus.PENDING,
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
 
         //when
-        val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
                 Duration.ofSeconds(-500)))
 
@@ -1135,24 +1458,31 @@ internal class NegotiationServiceTest
 
     @Test
     fun `setDuration condition proposed user is empty`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
+
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
 
         val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
-                "",
                 Date(),).apply { contract = mockAgreement }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setDurationCondition(SetDurationConditionRequest("",
                 mockCondition.contract.ContractID,
                 Duration.ofSeconds(500)))
 
@@ -1162,24 +1492,33 @@ internal class NegotiationServiceTest
 
     @Test
     fun `setDuration proposed user is not part of agreement`(){
-        val mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
-                PartyA = "0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                PartyB = "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+
+        mockAgreement = mockAgreement.apply { partyA = userA }
+        mockAgreement = mockAgreement.apply { partyB = userB }
+
+        var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                 "Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
-                "Not valid user",
                 Date(),).apply { contract = mockAgreement }
+
+        mockCondition = mockCondition.apply { proposingUser = userA }
 
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userB)
 
         //when
-        val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser,
+        val response = negotiationService.setDurationCondition(SetDurationConditionRequest("Invalid user",
                 mockCondition.contract.ContractID,
                 Duration.ofSeconds(500)))
 
