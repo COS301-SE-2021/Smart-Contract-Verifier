@@ -1,1 +1,10 @@
-
+name: CI tests
+on: [push]
+jobs:
+  Integration-and-Unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Integration tests-----------------------------------------------------------------------------------"
+      - run: ls ${{ github.workspace }}
+      #- run: mvn clean install #integration tests
+      - run: echo "Unit tests------------------------------------------------------------------------------------------"
