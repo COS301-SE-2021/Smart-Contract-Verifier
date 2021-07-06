@@ -4,7 +4,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-data class ContactList(@Id @GeneratedValue val contactListID: UUID,
+data class ContactList(@Id @GeneratedValue val contactListID: UUID?=null,
                        val contactListName: String,)
 {
     @ManyToOne(fetch = FetchType.LAZY)
