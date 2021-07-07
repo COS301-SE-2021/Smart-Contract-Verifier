@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/widgets/contract_detail_info_panel.dart';
+import '../widgets/contract_conditions_panel.dart';
+import '../widgets/contract_detail_info_panel.dart';
 import '../providers/contracts.dart';
 import '../providers/auth.dart';
 
@@ -19,6 +20,7 @@ class ViewContractScreen extends StatelessWidget {
         body: Column(
           children: [
             ContractDetailInfoPanel(loadedContract),
+            Expanded(child: ContractConditionsPanel(loadedContract)),
           ],
         ));
   }

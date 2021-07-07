@@ -30,6 +30,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
     price: 0,
     imageUrl: '',
     partyBId: '',
+    conditions: [],
   );
   var _isInit = true;
   var _isLoading = false;
@@ -40,6 +41,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
     'price': '',
     'imageUrl': '',
     'partyBId': '',
+    'conditions': []
   };
   @override
   void initState() {
@@ -183,6 +185,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                           imageUrl: _editedContract.imageUrl,
                           partyBId: _editedContract.partyBId,
                           isFavorite: _editedContract.isFavorite,
+                          conditions: [],
                         );
                       },
                       validator: (value) {
@@ -209,19 +212,20 @@ class _EditContractScreenState extends State<EditContractScreen> {
                       },
                       onSaved: (value) {
                         _editedContract = Contract(
-                          //because the values of a Product
-                          // are final - we need to create a new Product (we cannot
-                          // simply edit them) and then replace the existing one
-                          contractId: _editedContract.contractId,
-                          title: _editedContract.title, //This is the value that
-                          // needs to be
-                          // updated
-                          description: _editedContract.description,
-                          price: _editedContract.price,
-                          imageUrl: _editedContract.imageUrl,
-                          partyBId: value,
-                          isFavorite: _editedContract.isFavorite,
-                        );
+                            //because the values of a Product
+                            // are final - we need to create a new Product (we cannot
+                            // simply edit them) and then replace the existing one
+                            contractId: _editedContract.contractId,
+                            title:
+                                _editedContract.title, //This is the value that
+                            // needs to be
+                            // updated
+                            description: _editedContract.description,
+                            price: _editedContract.price,
+                            imageUrl: _editedContract.imageUrl,
+                            partyBId: value,
+                            isFavorite: _editedContract.isFavorite,
+                            conditions: []);
                       },
                       validator: (value) {
                         //Used to validate the value in the edit field
@@ -246,14 +250,14 @@ class _EditContractScreenState extends State<EditContractScreen> {
                       },
                       onSaved: (value) {
                         _editedContract = Contract(
-                          contractId: _editedContract.contractId,
-                          title: _editedContract.title,
-                          description: _editedContract.description,
-                          price: double.parse(value),
-                          imageUrl: _editedContract.imageUrl,
-                          partyBId: _editedContract.partyBId,
-                          isFavorite: _editedContract.isFavorite,
-                        );
+                            contractId: _editedContract.contractId,
+                            title: _editedContract.title,
+                            description: _editedContract.description,
+                            price: double.parse(value),
+                            imageUrl: _editedContract.imageUrl,
+                            partyBId: _editedContract.partyBId,
+                            isFavorite: _editedContract.isFavorite,
+                            conditions: []);
                       },
                       validator: (value) {
                         if (value.isEmpty) return 'Please enter a price.';
@@ -272,14 +276,14 @@ class _EditContractScreenState extends State<EditContractScreen> {
                       focusNode: _descriptionFocusNode,
                       onSaved: (value) {
                         _editedContract = Contract(
-                          contractId: _editedContract.contractId,
-                          title: _editedContract.title,
-                          description: value,
-                          price: _editedContract.price,
-                          imageUrl: _editedContract.imageUrl,
-                          partyBId: _editedContract.partyBId,
-                          isFavorite: _editedContract.isFavorite,
-                        );
+                            contractId: _editedContract.contractId,
+                            title: _editedContract.title,
+                            description: value,
+                            price: _editedContract.price,
+                            imageUrl: _editedContract.imageUrl,
+                            partyBId: _editedContract.partyBId,
+                            isFavorite: _editedContract.isFavorite,
+                            conditions: []);
                       },
                       validator: (value) {
                         if (value.isEmpty) return 'Please enter a description.';
@@ -320,14 +324,14 @@ class _EditContractScreenState extends State<EditContractScreen> {
                             },
                             onSaved: (value) {
                               _editedContract = Contract(
-                                contractId: _editedContract.contractId,
-                                title: _editedContract.title,
-                                description: _editedContract.description,
-                                price: _editedContract.price,
-                                imageUrl: value,
-                                partyBId: _editedContract.partyBId,
-                                isFavorite: _editedContract.isFavorite,
-                              );
+                                  contractId: _editedContract.contractId,
+                                  title: _editedContract.title,
+                                  description: _editedContract.description,
+                                  price: _editedContract.price,
+                                  imageUrl: value,
+                                  partyBId: _editedContract.partyBId,
+                                  isFavorite: _editedContract.isFavorite,
+                                  conditions: []);
                             },
                             validator: (value) {
                               if (value.isEmpty) {

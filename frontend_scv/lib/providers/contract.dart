@@ -12,7 +12,7 @@ class Contract with ChangeNotifier {
   final String createdDate;
   String sealedDate;
   bool movedToBlockchain;
-  final List<String> conditions; //TODO
+  List<dynamic> conditions = ['Hello', 'Hello 2']; //TODO
 
   final String title;
   final String description;

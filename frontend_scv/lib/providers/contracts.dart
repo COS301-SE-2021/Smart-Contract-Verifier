@@ -58,6 +58,7 @@ class Contracts with ChangeNotifier {
           isFavorite:
               favoriteData == null ? false : favoriteData[contId] ?? false,
           imageUrl: contData['imageUrl'],
+          conditions: contData['conditions'],
         ));
       });
       _items = loadedContracts;
@@ -82,6 +83,7 @@ class Contracts with ChangeNotifier {
           'price': contract.price,
           'partyBId': contract.partyBId,
           'creatorId': userId,
+          'conditions': contract.conditions,
         }),
       );
       //The code below will only run after the await is complete
@@ -92,6 +94,7 @@ class Contracts with ChangeNotifier {
         partyBId: contract.partyBId,
         imageUrl: contract.imageUrl,
         contractId: json.decode(response.body)['name'],
+        conditions: contract.conditions,
       );
       _items.add(newContract);
       // _items.insert(0, newContract); // at the start of the list
@@ -116,6 +119,7 @@ class Contracts with ChangeNotifier {
             'imageUrl': newContract.imageUrl,
             'price': newContract.price,
             'partyBId': newContract.partyBId,
+            'conditions': newContract.conditions,
           }));
       _items[contIndex] = newContract;
       notifyListeners();
@@ -127,7 +131,8 @@ class Contracts with ChangeNotifier {
   Future<void> deleteContract(String id) async {
     final url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
         '.com/contracts/$id.json?auth=$authToken';
-    final existingContractIndex = _items.indexWhere((cont) => cont.contractId == id);
+    final existingContractIndex =
+        _items.indexWhere((cont) => cont.contractId == id);
     var existingContract = _items[existingContractIndex];
     _items.removeAt(existingContractIndex);
     notifyListeners();
