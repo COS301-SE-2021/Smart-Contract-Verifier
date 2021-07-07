@@ -8,6 +8,7 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.Contac
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserToContactListRequest
+import com.savannasolutions.SmartContractVerifierServer.user.requests.CreateContactListRequest
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -20,7 +21,7 @@ class ContactListServiceTest {
     private val userRepository : UserRepository = mock()
     private val contactListRepository : ContactListRepository = mock()
     private val contactListProfileRepository : ContactListProfileRepository = mock()
-    private val conditionListService = ContactListService(contactListRepository, userRepository, contactListProfileRepository)
+    private val contactListService = ContactListService(contactListRepository, userRepository, contactListProfileRepository)
 
     @Test
     fun `AddUserToContactList successful`()
@@ -42,7 +43,7 @@ class ContactListServiceTest {
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
-        val response = conditionListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
+        val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                                                                                                 contactList.contactListID!!,
                                                                                                 contactListProfile.ContactAlias))
 
@@ -70,7 +71,7 @@ class ContactListServiceTest {
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
-        val response = conditionListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
+        val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
                 contactListProfile.ContactAlias))
 
@@ -98,7 +99,7 @@ class ContactListServiceTest {
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
-        val response = conditionListService.addUserToContactList(AddUserToContactListRequest("",
+        val response = contactListService.addUserToContactList(AddUserToContactListRequest("",
                 contactList.contactListID!!,
                 contactListProfile.ContactAlias))
 
@@ -126,7 +127,7 @@ class ContactListServiceTest {
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
-        val response = conditionListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
+        val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
                 contactListProfile.ContactAlias))
 
@@ -154,7 +155,7 @@ class ContactListServiceTest {
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
-        val response = conditionListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
+        val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
                 contactListProfile.ContactAlias))
 
@@ -188,7 +189,7 @@ class ContactListServiceTest {
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
-        val response = conditionListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
+        val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
                 contactListProfile.ContactAlias))
 
@@ -216,7 +217,7 @@ class ContactListServiceTest {
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
-        val response = conditionListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
+        val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
                 contactListProfile.ContactAlias))
 
@@ -224,5 +225,99 @@ class ContactListServiceTest {
         assertEquals(response.status, ResponseStatus.FAILED)
     }
 
+    @Test
+    fun `CreateContactList successful`(){
+        //Given
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+        contactList = contactList.apply { owner = user }
+
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+        whenever(contactListRepository.existsByOwnerAndContactListName(user,contactList.contactListName)).thenReturn(false)
+        whenever(contactListRepository.save(any<ContactList>())).thenReturn(contactList)
+
+
+        //When
+        val response = contactListService.createContactList(CreateContactListRequest(user.publicWalletID,contactList.contactListName))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `CreateContactList contact list name is empty`(){
+        //Given
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+        contactList = contactList.apply { owner = user }
+
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+        whenever(contactListRepository.existsByOwnerAndContactListName(user,contactList.contactListName)).thenReturn(false)
+
+
+        //When
+        val response = contactListService.createContactList(CreateContactListRequest(user.publicWalletID,""))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `CreateContactList user id is empty`(){
+        //Given
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+        whenever(contactListRepository.existsByOwnerAndContactListName(user,contactList.contactListName)).thenReturn(false)
+
+
+        //When
+        val response = contactListService.createContactList(CreateContactListRequest("",contactList.contactListName))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `CreateContactList user does not exist`(){
+        //Given
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+        contactList = contactList.apply { owner = user }
+
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(false)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+        whenever(contactListRepository.existsByOwnerAndContactListName(user,contactList.contactListName)).thenReturn(false)
+        whenever(contactListRepository.save(any<ContactList>())).thenReturn(contactList)
+
+
+        //When
+        val response = contactListService.createContactList(CreateContactListRequest(user.publicWalletID,contactList.contactListName))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `CreateContactList exists by owner and contact list name returns true`(){
+        //Given
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+        whenever(contactListRepository.existsByOwnerAndContactListName(user,contactList.contactListName)).thenReturn(true)
+
+
+        //When
+        val response = contactListService.createContactList(CreateContactListRequest(user.publicWalletID,contactList.contactListName))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
 
 }
