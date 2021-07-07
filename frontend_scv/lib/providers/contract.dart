@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/http_exception.dart';
+import 'package:flutter/material.dart';
 
 class Contract with ChangeNotifier {
   final String contractId; //agreementID
@@ -20,6 +21,7 @@ class Contract with ChangeNotifier {
   final String imageUrl;
   final String partyBId;
   bool isFavorite;
+  ContractColor color;
 
   Contract({
     this.contractId,
@@ -37,6 +39,7 @@ class Contract with ChangeNotifier {
     this.imageUrl,
     this.partyBId, //RC: What is partyB vs partyBID?
     this.isFavorite = false,
+    this.color = ContractColor.cyan,
   }); // Contract({
   //   @required this.contractId,
   //   @required this.title,
@@ -46,7 +49,6 @@ class Contract with ChangeNotifier {
   //   @required this.partyBId,
   //   this.isFavorite = false,
   // }); //not final because it will be changing
-
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
   Contract.fromJson(Map<String, dynamic> json)
@@ -84,7 +86,6 @@ class Contract with ChangeNotifier {
     notifyListeners();
   }
 
-
   //RC: Could this be stored locally rather than on the db? Since it's a user preference
   Future<void> toggleFavoriteStatus(String token, String userId) async {
     final oldStatus = isFavorite;
@@ -100,6 +101,33 @@ class Contract with ChangeNotifier {
         throw HttpException('Couldn\'t toggle favorite');
     } catch (error) {
       _setFavValue(oldStatus);
+    }
+  }
+}
+
+enum ContractColor {
+  cyan,
+  deepOrange,
+  pink,
+  purple,
+  green,
+}
+
+extension ContractColorExtension on ContractColor {
+  Color get name {
+    switch (this) {
+      case ContractColor.cyan:
+        return Colors.cyan;
+      case ContractColor.deepOrange:
+        return Colors.deepOrange;
+      case ContractColor.pink:
+        return Colors.pink;
+      case ContractColor.purple:
+        return Colors.purple;
+      case ContractColor.green:
+        return Colors.green;
+      default:
+        return Colors.cyan;
     }
   }
 }
