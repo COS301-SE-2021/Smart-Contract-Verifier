@@ -572,7 +572,7 @@ class ContactListServiceTest {
     fun `RetrieveUserAgreements does not exist`()
     {
         //Given
-        var userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
 
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(false)
 
@@ -584,5 +584,88 @@ class ContactListServiceTest {
         assertEquals(response.status, ResponseStatus.FAILED)
     }
 
+    @Test
+    fun `RetrieveUserContactLists successful empty list`()
+    {
+        //Given
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
 
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+
+        //When
+        val response = contactListService.retrieveUserContactLists(RetrieveUserContactListRequest(user.publicWalletID))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertEquals(response.ContactListInfo, emptyList())
+    }
+
+    @Test
+    fun `RetrieveUserContactLists successful with populated list`()
+    {
+        //Given
+        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+
+        val list = ArrayList<ContactList>()
+        list.add(contactList)
+
+        user = user.apply { this.contactList = list }
+
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+
+        //When
+        val response = contactListService.retrieveUserContactLists(RetrieveUserContactListRequest(user.publicWalletID))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertNotNull(response.ContactListInfo)
+        assertTrue { response.ContactListInfo!!.isNotEmpty() }
+    }
+
+    @Test
+    fun `RetrieveUserContactLists user id is empty`()
+    {
+        //Given
+        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+
+        val list = ArrayList<ContactList>()
+        list.add(contactList)
+
+        user = user.apply { this.contactList = list }
+
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+
+        //When
+        val response = contactListService.retrieveUserContactLists(RetrieveUserContactListRequest(""))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `RetrieveUserContactLists userid does not exist`()
+    {
+        //Given
+        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+
+        val list = ArrayList<ContactList>()
+        list.add(contactList)
+
+        user = user.apply { this.contactList = list }
+
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(false)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+
+        //When
+        val response = contactListService.retrieveUserContactLists(RetrieveUserContactListRequest(user.publicWalletID))
+
+        //Then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
 }
