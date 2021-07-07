@@ -33,8 +33,8 @@ internal class NegotiationServiceTest
                                         CreatedDate = Date(),
                                         MovedToBlockChain = false,)
 
-        val userA = User("UserA", "test@test.com","uA")
-        val userB = User("UserB", "test@test.com", "uB")
+        val userA = User("UserA","uA")
+        val userB = User("UserB", "uB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -83,8 +83,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false,)
 
-        val userA = User("UserA", "test@test.com","uA")
-        val userB = User("UserB", "test@test.com", "uB")
+        val userA = User("UserA","uA")
+        val userB = User("UserB", "uB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -117,8 +117,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false,)
 
-        val userA = User("UserA", "test@test.com","uA")
-        val userB = User("UserB", "test@test.com", "uB")
+        val userA = User("UserA", "uA")
+        val userB = User("UserB", "uB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -146,8 +146,8 @@ internal class NegotiationServiceTest
                                         CreatedDate = Date(),
                                         MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -210,8 +210,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -249,8 +249,8 @@ internal class NegotiationServiceTest
                 MovedToBlockChain = false)
 
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -286,8 +286,8 @@ internal class NegotiationServiceTest
                 MovedToBlockChain = false)
 
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -324,8 +324,8 @@ internal class NegotiationServiceTest
                 MovedToBlockChain = false)
 
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -357,8 +357,8 @@ internal class NegotiationServiceTest
                 MovedToBlockChain = false)
 
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -394,8 +394,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -428,8 +428,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -465,8 +465,8 @@ internal class NegotiationServiceTest
                                         CreatedDate = Date(),
                                         MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -508,8 +508,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -543,8 +543,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -577,8 +577,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -610,8 +610,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -649,8 +649,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -723,8 +723,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -783,8 +783,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -834,8 +834,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -885,8 +885,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -945,8 +945,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -1006,8 +1006,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -1067,8 +1067,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -1129,8 +1129,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
@@ -1175,8 +1175,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1212,8 +1212,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1246,8 +1246,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1282,8 +1282,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1316,8 +1316,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1353,8 +1353,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1390,8 +1390,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1426,8 +1426,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1462,8 +1462,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
@@ -1496,8 +1496,8 @@ internal class NegotiationServiceTest
                 CreatedDate = Date(),
                 MovedToBlockChain = false)
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com", "testA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "tes2@gmail.com", "testB")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
 
         mockAgreement = mockAgreement.apply { partyA = userA }
         mockAgreement = mockAgreement.apply { partyB = userB }
