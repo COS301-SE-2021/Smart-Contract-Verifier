@@ -137,6 +137,23 @@ class ContactListService(   val contactListRepository: ContactListRepository,
     }
 
     fun retrieveUserContactLists(retrieveUserContactListRequest: RetrieveUserContactListRequest): RetrieveUserContactListResponse{
-        return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
+        if(retrieveUserContactListRequest.UserID.isEmpty())
+            return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
+
+        if(!userRepository.existsById(retrieveUserContactListRequest.UserID))
+            return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
+
+        val contactList = userRepository.getById(retrieveUserContactListRequest.UserID).contactList
+
+        contactList?:return RetrieveUserContactListResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+
+        val resultList = ArrayList<Pair<UUID,String>>()
+
+        for(list in contactList!!)
+        {
+            resultList.add(Pair(list.contactListID!!, list.contactListName))
+        }
+
+        return RetrieveUserContactListResponse(resultList, ResponseStatus.SUCCESSFUL)
     }
 }
