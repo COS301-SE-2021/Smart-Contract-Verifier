@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './screens/contracts_overview_screen.dart';
-import './screens/contract_detail_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/splash_screen.dart';
 import './screens/edit_contract_screen.dart';

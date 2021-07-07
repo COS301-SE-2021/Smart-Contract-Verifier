@@ -166,8 +166,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                         labelText: 'Title',
                         // errorText:
                       ),
-                      textInputAction: TextInputAction
-                          .next, //bottom right button in soft keyboard
+                      textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) {
                         //not neccessary
                         FocusScope.of(context).requestFocus(_partyBIdFocusNode);
