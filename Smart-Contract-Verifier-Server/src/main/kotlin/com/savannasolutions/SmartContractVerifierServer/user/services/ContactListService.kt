@@ -117,25 +117,6 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         return RetrieveContactListResponse(list,ResponseStatus.SUCCESSFUL)
     }
 
-    fun retrieveUserAgreements(retrieveUserAgreementsRequest: RetrieveUserAgreementsRequest): RetrieveUserAgreementsResponse{
-        if(retrieveUserAgreementsRequest.UserID.isEmpty())
-            return RetrieveUserAgreementsResponse(status = ResponseStatus.FAILED)
-
-        if(!userRepository.existsById(retrieveUserAgreementsRequest.UserID))
-            return RetrieveUserAgreementsResponse(status = ResponseStatus.FAILED)
-
-        val user = userRepository.getById(retrieveUserAgreementsRequest.UserID)
-
-        user.agreements?:return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
-
-        val list = ArrayList<UUID>()
-
-        for(agreement in user.agreements!!)
-            list.add(agreement.ContractID)
-
-        return RetrieveUserAgreementsResponse(list,ResponseStatus.SUCCESSFUL)
-    }
-
     fun retrieveUserContactLists(retrieveUserContactListRequest: RetrieveUserContactListRequest): RetrieveUserContactListResponse{
         if(retrieveUserContactListRequest.UserID.isEmpty())
             return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
