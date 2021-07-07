@@ -5,7 +5,6 @@ import javax.persistence.*
 
 @Entity
 data class User(@Id val publicWalletID: String,
-                val email: String,
                 val alias: String,)
 {
                 @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true, cascade = [CascadeType.ALL])
