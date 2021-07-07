@@ -25,7 +25,7 @@ class Contract with ChangeNotifier {
 
   Contract({
     this.contractId,
-    this.durationId,
+    this.durationId, //RC: Duration could be time
     this.paymentId,
     this.partyA,
     this.partyB,
@@ -67,6 +67,19 @@ class Contract with ChangeNotifier {
         price = 0,
         title = '',
         conditions = json['conditions'];
+
+  //To JSON. RC: Subject to the great field discussion
+  Map<String, dynamic> toJson() => {
+    'agreementID': contractId,
+    'duration': durationId,
+    'PartyA' : partyA,
+    'PartyB' : partyB,
+    'createdDate' : createdDate,
+    'sealedDate' : sealedDate,
+    'movedToBlockChain' : movedToBlockchain,
+    'conditions' : conditions,
+  };
+
 
   void _setFavValue(bool newValue) {
     isFavorite = newValue;
