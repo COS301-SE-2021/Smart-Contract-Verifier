@@ -15,7 +15,7 @@ class ConditionItem extends StatelessWidget {
     return ListTile(
       title: Text(contractCondition.toString()),
       leading: CircleAvatar(
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.black12,
         // backgroundImage: NetworkImage(contract.imageUrl),
       ),
       trailing: Row(

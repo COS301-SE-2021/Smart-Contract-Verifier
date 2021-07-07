@@ -19,7 +19,6 @@ class ContractConditionsPanel extends StatelessWidget {
               itemBuilder: (_, i) => Column(
                 children: [
                   ConditionItem(contractCondition: _contract.conditions[i]),
-                  // Text(_contract.conditions[i].toString()),
                   Divider(),
                 ],
               ),

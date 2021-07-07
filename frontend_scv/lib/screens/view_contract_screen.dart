@@ -20,6 +20,19 @@ class ViewContractScreen extends StatelessWidget {
         body: Column(
           children: [
             ContractDetailInfoPanel(loadedContract),
+            Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 8,
+              ),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Agreement Conditions:',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
             Expanded(child: ContractConditionsPanel(loadedContract)),
           ],
         ));
