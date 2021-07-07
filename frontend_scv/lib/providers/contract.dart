@@ -36,7 +36,7 @@ class Contract with ChangeNotifier {
     this.price,
     this.imageUrl,
     this.partyBId,
-    this.isFavorite,
+    this.isFavorite = false,
   }); // Contract({
   //   @required this.contractId,
   //   @required this.title,
