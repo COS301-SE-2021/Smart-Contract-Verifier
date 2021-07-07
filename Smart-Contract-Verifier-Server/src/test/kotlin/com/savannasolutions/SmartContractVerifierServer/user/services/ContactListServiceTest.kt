@@ -16,11 +16,10 @@ import org.mockito.kotlin.whenever
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class ContactListServiceTest {
+internal class ContactListServiceTest {
     private val userRepository : UserRepository = mock()
     private val contactListRepository : ContactListRepository = mock()
     private val contactListProfileRepository : ContactListProfileRepository = mock()
@@ -30,7 +29,7 @@ class ContactListServiceTest {
     fun `AddUserToContactList successful`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile.apply { this.contactList = contactList }
@@ -58,7 +57,7 @@ class ContactListServiceTest {
     fun `AddUserToContactList alias is empty`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","testA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "")
         contactListProfile.apply { this.contactList = contactList }
@@ -86,7 +85,7 @@ class ContactListServiceTest {
     fun `AddUserToContactList userid is empty`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile.apply { this.contactList = contactList }
@@ -114,7 +113,7 @@ class ContactListServiceTest {
     fun `AddUserToContactList userid does not exist in userRepository`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile.apply { this.contactList = contactList }
@@ -142,7 +141,7 @@ class ContactListServiceTest {
     fun `AddUserToContactList contactListId does not exist in contactListRepository`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile.apply { this.contactList = contactList }
@@ -170,7 +169,7 @@ class ContactListServiceTest {
     fun `AddUserToContactList getAllByContactListAndUser will return a list of length greater than 1`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile.apply { this.contactList = contactList }
@@ -204,7 +203,7 @@ class ContactListServiceTest {
     fun `AddUserToContactList existByAliasAndContactListAndUser will return true`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile.apply { this.contactList = contactList }
@@ -231,7 +230,7 @@ class ContactListServiceTest {
     @Test
     fun `CreateContactList successful`(){
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         contactList = contactList.apply { owner = user }
 
@@ -251,7 +250,7 @@ class ContactListServiceTest {
     @Test
     fun `CreateContactList contact list name is empty`(){
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         contactList = contactList.apply { owner = user }
 
@@ -270,8 +269,8 @@ class ContactListServiceTest {
     @Test
     fun `CreateContactList user id is empty`(){
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
-        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
+        val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
@@ -288,7 +287,7 @@ class ContactListServiceTest {
     @Test
     fun `CreateContactList user does not exist`(){
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         contactList = contactList.apply { owner = user }
 
@@ -308,7 +307,7 @@ class ContactListServiceTest {
     @Test
     fun `CreateContactList exists by owner and contact list name returns true`(){
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
@@ -327,7 +326,7 @@ class ContactListServiceTest {
     fun `RemoveUserFromContactList successful`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile.apply { this.contactList = contactList }
@@ -353,7 +352,6 @@ class ContactListServiceTest {
     fun `RemoveUserFromContactList userid is empty`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         //When
@@ -367,7 +365,7 @@ class ContactListServiceTest {
     fun `RemoveUserFromContactList userid does not exist`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(false)
@@ -383,7 +381,7 @@ class ContactListServiceTest {
     fun `RemoveUserFromContactList contactlist does not exist`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
@@ -401,7 +399,7 @@ class ContactListServiceTest {
     fun `RemoveUserFromContactList exitsByContactListAndUser will return false`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
@@ -421,7 +419,7 @@ class ContactListServiceTest {
     fun `RemoveUserFromContactList failed to delete from database, exits returns true`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         val contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile.apply { this.contactList = contactList }
@@ -465,7 +463,7 @@ class ContactListServiceTest {
     fun `RetrieveContactList successful with populated list`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         var contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile = contactListProfile.apply { this.contactList = contactList }
@@ -491,7 +489,7 @@ class ContactListServiceTest {
     fun `RetrieveContactList contact list does not exist`()
     {
         //Given
-        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+        val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(false)
 
@@ -506,7 +504,7 @@ class ContactListServiceTest {
     fun `RetrieveUserAgreements successful without agreement`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
 
@@ -523,8 +521,8 @@ class ContactListServiceTest {
     fun `RetrieveUserAgreements successful with an agreement`()
     {
         //Given
-        var userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "test2@test.com", "TestB")
+        var userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
+        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "TestB")
 
         var agreement = Agreements(UUID.fromString("6e28cc77-d2e2-4221-abd7-7a6d0e84dbd3"),
                                     CreatedDate = Date(),
@@ -555,7 +553,7 @@ class ContactListServiceTest {
     fun `RetrieveUserAgreements userid is empty`()
     {
         //Given
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
 
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
@@ -572,7 +570,7 @@ class ContactListServiceTest {
     fun `RetrieveUserAgreements does not exist`()
     {
         //Given
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
 
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(false)
 
@@ -588,7 +586,7 @@ class ContactListServiceTest {
     fun `RetrieveUserContactLists successful empty list`()
     {
         //Given
-        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
 
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
@@ -605,7 +603,7 @@ class ContactListServiceTest {
     fun `RetrieveUserContactLists successful with populated list`()
     {
         //Given
-        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         val list = ArrayList<ContactList>()
@@ -629,7 +627,7 @@ class ContactListServiceTest {
     fun `RetrieveUserContactLists user id is empty`()
     {
         //Given
-        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         val list = ArrayList<ContactList>()
@@ -651,7 +649,7 @@ class ContactListServiceTest {
     fun `RetrieveUserContactLists userid does not exist`()
     {
         //Given
-        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "test@test.com","TestA")
+        var user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
 
         val list = ArrayList<ContactList>()
