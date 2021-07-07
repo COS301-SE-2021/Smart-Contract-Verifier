@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
 import '../providers/contract.dart';
-// import '../screens/contract_detail_screen.dart';
 import '../screens/view_contract_screen.dart';
 
 class ContractItem extends StatelessWidget {

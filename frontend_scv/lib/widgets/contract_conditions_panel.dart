@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unison/widgets/condition_item.dart';
 import '../providers/contract.dart';
 
 class ContractConditionsPanel extends StatelessWidget {
@@ -17,7 +18,8 @@ class ContractConditionsPanel extends StatelessWidget {
               itemCount: _contract.conditions.length,
               itemBuilder: (_, i) => Column(
                 children: [
-                  Text(_contract.conditions[i].toString()),
+                  ConditionItem(contractCondition: _contract.conditions[i]),
+                  // Text(_contract.conditions[i].toString()),
                   Divider(),
                 ],
               ),
