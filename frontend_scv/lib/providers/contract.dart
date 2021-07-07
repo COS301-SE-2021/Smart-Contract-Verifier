@@ -35,7 +35,7 @@ class Contract with ChangeNotifier {
     this.description,
     this.price,
     this.imageUrl,
-    this.partyBId,
+    this.partyBId, //RC: What is partyB vs partyBID?
     this.isFavorite = false,
   }); // Contract({
   //   @required this.contractId,
@@ -47,11 +47,33 @@ class Contract with ChangeNotifier {
   //   this.isFavorite = false,
   // }); //not final because it will be changing
 
+
+  //JSON constructor. Uses response from getAgreement. RC: Should be revised
+  Contract.fromJson(Map<String, dynamic> json)
+      : contractId = json['agreementID'],
+        //duration = json['duration'], //Should be durationID?
+        durationId = json['duration'],
+        partyA = json['PartyA'],
+        partyB = json['PartyB'],
+        createdDate = json['createdDate'],
+        sealedDate = json['sealedDate'],
+        //status = json['status'],
+        movedToBlockchain = json['movedToBlockChain'],
+        description = '',
+        imageUrl = '',
+        partyBId = '',
+        price = 0,
+        title = '',
+        conditions = json['conditions'];
+
+
   void _setFavValue(bool newValue) {
     isFavorite = newValue;
     notifyListeners();
   }
 
+
+  //RC: Could this be stored locally rather than on the db? Since it's a user preference
   Future<void> toggleFavoriteStatus(String token, String userId) async {
     final oldStatus = isFavorite;
     _setFavValue(!isFavorite);

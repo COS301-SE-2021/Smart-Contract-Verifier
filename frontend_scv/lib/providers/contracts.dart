@@ -69,7 +69,7 @@ class Contracts with ChangeNotifier {
   }
 
   Future<void> addContract(Contract contract) async {
-    final url =
+    final url = //RC: Does this correspond to the GetAgreement call of the api? The fields are different
         'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/contracts'
         '.json?auth=$authToken';
     try {
@@ -86,6 +86,8 @@ class Contracts with ChangeNotifier {
           'conditions': contract.conditions,
         }),
       );
+
+      //RC: I believe this can be replaced with a fromJson constructor
       //The code below will only run after the await is complete
       final newContract = Contract(
         title: contract.title,
