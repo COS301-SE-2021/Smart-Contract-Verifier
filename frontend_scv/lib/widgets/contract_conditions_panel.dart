@@ -10,8 +10,8 @@ class ContractConditionsPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(_contract.conditions);
-    return Padding(
-      padding: EdgeInsets.all(8),
+    return Container(
+      // padding: EdgeInsets.all(8),
       child: _contract.conditions.length == 1 //TODO
           ? Text('No Conditions Set!')
           : ListView.builder(
