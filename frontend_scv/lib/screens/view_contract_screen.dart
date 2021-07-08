@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/models/functions.dart';
 import '../widgets/contract_conditions_panel.dart';
 import '../widgets/contract_detail_info_panel.dart';
 import '../providers/contracts.dart';
@@ -14,27 +15,43 @@ class ViewContractScreen extends StatelessWidget {
         Provider.of<Contracts>(context, listen: false).findById(contractId);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(loadedContract.title),
-        ),
-        body: Column(
-          children: [
-            ContractDetailInfoPanel(loadedContract),
-            Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 8,
-              ),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Agreement Conditions:',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+      appBar: AppBar(
+        title: Text(loadedContract.title),
+      ),
+      body: Column(
+        children: [
+          ContractDetailInfoPanel(loadedContract),
+          Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 8,
+            ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Agreement Conditions:',
+              style: TextStyle(
+                fontSize: 16,
               ),
             ),
-            Expanded(child: ContractConditionsPanel(loadedContract)),
-          ],
-        ));
+          ),
+          Expanded(
+            child: ContractConditionsPanel(loadedContract),
+            flex: 6,
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+                // TODO: More Information or actions here?
+                ),
+          )
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        label: Text('Agreement Chat'),
+        icon: Icon(Icons.chat),
+      ),
+    );
   }
 }
