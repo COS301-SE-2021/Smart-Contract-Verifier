@@ -27,11 +27,21 @@ class ViewContractScreen extends StatelessWidget {
               horizontal: 8,
             ),
             alignment: Alignment.centerLeft,
-            child: Text(
-              'Agreement Conditions:',
-              style: TextStyle(
-                fontSize: 16,
-              ),
+            child: Row(
+              children: [
+                Text(
+                  'Agreement Conditions:',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    print('Add Condition');
+                  },
+                  child: Text('Add Condition'),
+                ),
+              ],
             ),
           ),
           Expanded(
