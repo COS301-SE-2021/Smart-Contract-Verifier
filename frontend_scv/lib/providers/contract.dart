@@ -13,7 +13,7 @@ class Contract with ChangeNotifier {
   final String createdDate;
   String sealedDate;
   bool movedToBlockchain;
-  List<dynamic> conditions = ['empty']; //TODO
+  List<dynamic> conditions = ['empty']; //TODO Handle empty/initial conditions
 
   final String title;
   final String description;
@@ -70,16 +70,15 @@ class Contract with ChangeNotifier {
 
   //To JSON. RC: Subject to the great field discussion
   Map<String, dynamic> toJson() => {
-    'agreementID': contractId,
-    'duration': durationId,
-    'PartyA' : partyA,
-    'PartyB' : partyB,
-    'createdDate' : createdDate,
-    'sealedDate' : sealedDate,
-    'movedToBlockChain' : movedToBlockchain,
-    'conditions' : conditions,
-  };
-
+        'agreementID': contractId,
+        'duration': durationId,
+        'PartyA': partyA,
+        'PartyB': partyB,
+        'createdDate': createdDate,
+        'sealedDate': sealedDate,
+        'movedToBlockChain': movedToBlockchain,
+        'conditions': conditions,
+      };
 
   void _setFavValue(bool newValue) {
     isFavorite = newValue;

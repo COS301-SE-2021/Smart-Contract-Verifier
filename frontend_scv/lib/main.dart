@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
               previousProducts == null ? [] : previousProducts.items),
           create: null,
         ),
-        // TODO: Notification Provider
+        // TODO: Add Notification Provider Here
       ],
       child: Consumer<Auth>(
         builder: ((ctx, auth, _) => MaterialApp(

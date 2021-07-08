@@ -25,7 +25,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.gavel),
             title: Text('Judge Duty'),
             onTap: () {
-              //TODO
+              //TODO: Add Judge Duty Screen
               // Navigator.of(context)
               //     .pushReplacementNamed(JudgeDutyScreen.routeName);
             },

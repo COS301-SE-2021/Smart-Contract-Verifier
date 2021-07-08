@@ -16,8 +16,10 @@ class ConditionItem extends StatelessWidget {
       showDialog(
           context: context,
           builder: (_) => new AlertDialog(
-                title: new Text(contractCondition.toString()), //TODO
-                content: new Text("Condition description (TODO)"),
+                //TODO: read from dynamic
+                title: new Text(contractCondition.toString()),
+                content: new Text("This is where  the Condition description "
+                    "will go, it needs to be read from a dynamic object - TODO"),
                 actions: <Widget>[
                   TextButton(
                     child: Text('Close'),
@@ -29,34 +31,37 @@ class ConditionItem extends StatelessWidget {
               ));
     }
 
-    return GestureDetector(
+    return ListTile(
+      //TODO: read from dynamic
+      title: Text(contractCondition.toString()),
+      leading: CircleAvatar(
+        backgroundColor: Colors.black12,
+        // backgroundImage: NetworkImage(contract.imageUrl),
+      ),
+      subtitle: Text('Status: Todo'),
       onTap: () => _showConditionDialog(contractCondition),
-      child: ListTile(
-        title: Text(contractCondition.toString()),
-        leading: CircleAvatar(
-          backgroundColor: Colors.black12,
-          // backgroundImage: NetworkImage(contract.imageUrl),
-        ),
-        subtitle: Text('Status: Todo'),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.thumb_down_outlined,
-                color: Colors.deepOrangeAccent,
-              ),
-              onPressed: null,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.thumb_down_outlined,
+              color: Colors.deepOrangeAccent,
             ),
-            IconButton(
-              icon: Icon(
-                Icons.thumb_up_outlined,
-                color: Colors.cyan,
-              ),
-              onPressed: null,
+            onPressed: () {
+              print('Reject');
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.thumb_up_outlined,
+              color: Colors.cyan,
             ),
-          ],
-        ),
+            onPressed: () {
+              print('Accept');
+            },
+          ),
+        ],
       ),
     );
   }

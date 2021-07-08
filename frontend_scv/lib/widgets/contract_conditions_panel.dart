@@ -12,7 +12,7 @@ class ContractConditionsPanel extends StatelessWidget {
     print(_contract.conditions);
     return Container(
       // padding: EdgeInsets.all(8),
-      child: _contract.conditions.length == 1 //TODO
+      child: _contract.conditions.length == 1 //TODO handle empty conditions
           ? Text('No Conditions Set!')
           : ListView.builder(
               itemCount: _contract.conditions.length,
