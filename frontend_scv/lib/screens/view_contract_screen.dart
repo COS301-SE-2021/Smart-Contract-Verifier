@@ -26,8 +26,9 @@ class ViewContractScreen extends StatelessWidget {
               vertical: 10,
               horizontal: 8,
             ),
-            alignment: Alignment.centerLeft,
+            // alignment: Alignment.centerLeft,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Agreement Conditions:',
@@ -39,7 +40,9 @@ class ViewContractScreen extends StatelessWidget {
                   onPressed: () {
                     print('Add Condition');
                   },
-                  child: Text('Add Condition'),
+                  child: Row(
+                    children: [Icon(Icons.add), Text('Add New Condition')],
+                  ),
                 ),
               ],
             ),
