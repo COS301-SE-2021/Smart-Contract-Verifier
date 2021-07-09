@@ -1,7 +1,8 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
+import com.savannasolutions.SmartContractVerifierServer.common.ContactListIDContactListNameResponse
+import com.savannasolutions.SmartContractVerifierServer.common.ContactListAliasWalletResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
@@ -10,7 +11,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRe
 import com.savannasolutions.SmartContractVerifierServer.user.requests.*
 import com.savannasolutions.SmartContractVerifierServer.user.responses.*
 import org.springframework.stereotype.Service
-import java.util.*
 import kotlin.collections.ArrayList
 
 @Service
@@ -40,10 +40,10 @@ class ContactListService(   val contactListRepository: ContactListRepository,
                 return AddUserToContactListResponse(ResponseStatus.FAILED)
         }
 
-        if(contactListProfileRepository.existByAliasAndContactListAndUser(vcontactList,vuser,addUserToContactListRequest.UserAlias))
+        if(contactListProfileRepository.existsByContactAliasAndContactListAndUser(addUserToContactListRequest.UserAlias,vcontactList,vuser))
             return AddUserToContactListResponse(ResponseStatus.FAILED)
 
-        var contactListProfile = ContactListProfile(ContactAlias = addUserToContactListRequest.UserAlias)
+        var contactListProfile = ContactListProfile(contactAlias = addUserToContactListRequest.UserAlias)
         contactListProfile = contactListProfile.apply { contactList = vcontactList }
         contactListProfile = contactListProfile.apply { user = vuser }
 
@@ -72,7 +72,7 @@ class ContactListService(   val contactListRepository: ContactListRepository,
 
         contactList = contactListRepository.save(contactList)
 
-        return CreateContactListResponse(contactList.contactListID, ResponseStatus.FAILED)
+        return CreateContactListResponse(contactList.contactListID, ResponseStatus.SUCCESSFUL)
     }
 
     fun removeUserFromContactList(removeUserFromContactListRequest: RemoveUserFromContactListRequest): RemoveUserFromContactListResponse{
@@ -88,7 +88,7 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         val user = userRepository.getById(removeUserFromContactListRequest.RemoveUserID)
         val contactList = contactListRepository.getById(removeUserFromContactListRequest.ContactListID)
 
-        if(!contactListProfileRepository.exitsByContactListAndUser(contactList, user))
+        if(!contactListProfileRepository.existsByContactListAndUser(contactList, user))
             return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
 
         val contactListProfile = contactListProfileRepository.getByContactListAndUser(contactList, user)!!
@@ -109,10 +109,13 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         val contactList = contactListRepository.getById(retrieveContactListRequest.ContactListID)
         contactList.contactListProfiles?: return RetrieveContactListResponse(emptyList(), ResponseStatus.SUCCESSFUL)
 
-        val list = ArrayList<Pair<UUID,String>>()
+        val list = ArrayList<ContactListAliasWalletResponse>()
+        val contactListProfiles = contactListProfileRepository.getAllByContactList(contactList)
 
-        for(profiles in contactList.contactListProfiles!!)
-            list.add(Pair(profiles.ProfileID!!,profiles.ContactAlias))
+        for(cLP in contactListProfiles)
+        {
+            list.add(ContactListAliasWalletResponse( cLP.contactAlias, cLP.user.publicWalletID))
+        }
 
         return RetrieveContactListResponse(list,ResponseStatus.SUCCESSFUL)
     }
@@ -125,14 +128,16 @@ class ContactListService(   val contactListRepository: ContactListRepository,
             return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
 
         val contactList = userRepository.getById(retrieveUserContactListRequest.UserID).contactList
+        val user = userRepository.getById(retrieveUserContactListRequest.UserID)
 
         contactList?:return RetrieveUserContactListResponse(emptyList(), ResponseStatus.SUCCESSFUL)
 
-        val resultList = ArrayList<Pair<UUID,String>>()
+        val resultList = ArrayList<ContactListIDContactListNameResponse>()
+        val contactLists = contactListRepository.getAllByOwner(user)
 
-        for(list in contactList!!)
+        for(list in contactLists)
         {
-            resultList.add(Pair(list.contactListID!!, list.contactListName))
+            resultList.add(ContactListIDContactListNameResponse(list.contactListName, list.contactListID!!,))
         }
 
         return RetrieveUserContactListResponse(resultList, ResponseStatus.SUCCESSFUL)
