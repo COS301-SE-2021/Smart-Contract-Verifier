@@ -166,11 +166,18 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         if(!agreementsRepository.existsById(getAllConditionsRequest.AgreementID))
             return GetAllConditionsResponse(null, ResponseStatus.FAILED)
 
-        val conditions = agreementsRepository.getById(getAllConditionsRequest.AgreementID).conditions
-        val conditionList = ArrayList<UUID>()
-        if (conditions != null) {
-            for(cond in conditions)
-                conditionList.add(cond.conditionID)
+        val conditions = conditionsRepository.getAllByContract(agreementsRepository.getById(getAllConditionsRequest.AgreementID))
+        val conditionList = ArrayList<ConditionResponse>()
+        for(cond in conditions)
+        {
+            conditionList.add(
+                ConditionResponse(cond.conditionID,
+                    cond.conditionDescription,
+                    UserResponse(cond.proposingUser.publicWalletID),
+                    cond.proposalDate,
+                    cond.contract.ContractID,
+                    cond.conditionStatus)
+            )
         }
         return GetAllConditionsResponse(conditionList, ResponseStatus.SUCCESSFUL)
     }
