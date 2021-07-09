@@ -8,6 +8,7 @@ enum class ConditionStatus{ACCEPTED, REJECTED, PENDING}
 
 @Entity
 data class Conditions(@Id @GeneratedValue val conditionID: UUID,
+                      var conditionTitle : String,
                       var conditionDescription: String,
                       var conditionStatus: Enum<ConditionStatus>,
                       val proposalDate: Date,)
