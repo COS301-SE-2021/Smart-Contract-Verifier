@@ -50,7 +50,7 @@ contract JurorStore{
         emit RemoveJuror(j);
     }
 
-    event AddJuror(address j, uint256 index);
-    event RemoveJuror(address j);
+    event AddJuror(address juror, uint256 index);
+    event RemoveJuror(address juror);
 
 }
