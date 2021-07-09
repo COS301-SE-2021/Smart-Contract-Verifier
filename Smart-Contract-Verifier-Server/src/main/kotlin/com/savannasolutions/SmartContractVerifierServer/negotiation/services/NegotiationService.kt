@@ -176,7 +176,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                     UserResponse(cond.proposingUser.publicWalletID),
                     cond.proposalDate,
                     cond.contract.ContractID,
-                    cond.conditionStatus)
+                    cond.conditionStatus,
+                    cond.conditionTitle)
             )
         }
         return GetAllConditionsResponse(conditionList, ResponseStatus.SUCCESSFUL)
