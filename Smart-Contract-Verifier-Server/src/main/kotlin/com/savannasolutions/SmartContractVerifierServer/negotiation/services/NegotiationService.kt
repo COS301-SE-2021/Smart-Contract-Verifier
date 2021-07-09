@@ -126,7 +126,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 UserResponse(cond.proposingUser.publicWalletID),
                 cond.proposalDate,
                 agreement.ContractID,
-                cond.conditionStatus,)
+                cond.conditionStatus,
+                cond.conditionTitle)
             conditions.add(tempCond)
         }
 
@@ -177,7 +178,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                     cond.proposalDate,
                     cond.contract.ContractID,
                     cond.conditionStatus,
-                    cond.conditionTitle)
+                    cond.conditionTitle
+                )
             )
         }
         return GetAllConditionsResponse(conditionList, ResponseStatus.SUCCESSFUL)
@@ -215,17 +217,16 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     fun getConditionDetails(getConditionDetailsRequest: GetConditionDetailsRequest): GetConditionDetailsResponse
     {
         if(!conditionsRepository.existsById(getConditionDetailsRequest.conditionID))
-            return GetConditionDetailsResponse(getConditionDetailsRequest.conditionID,
-                                                status = ResponseStatus.FAILED)
+            return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
 
         val condition = conditionsRepository.getById(getConditionDetailsRequest.conditionID)
-        return GetConditionDetailsResponse(condition.conditionID,
+        return GetConditionDetailsResponse(ConditionResponse(condition.conditionID,
                                             condition.conditionDescription,
-                                            condition.proposingUser.publicWalletID,
+                                            UserResponse(condition.proposingUser.publicWalletID),
                                             condition.proposalDate,
                                             condition.contract.ContractID,
                                             condition.conditionStatus,
-
+                                            condition.conditionTitle),
                                             ResponseStatus.SUCCESSFUL)
     }
 
