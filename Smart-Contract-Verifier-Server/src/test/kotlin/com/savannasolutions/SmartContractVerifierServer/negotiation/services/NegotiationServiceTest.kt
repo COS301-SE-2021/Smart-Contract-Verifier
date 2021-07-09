@@ -41,6 +41,7 @@ internal class NegotiationServiceTest
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
         var mockConditionA = Conditions(conditionAUUID,
+                            "title",
                                         "",
                                         ConditionStatus.PENDING,
                                         Date()).apply { contract = mockAgreementA }
@@ -90,7 +91,7 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
-        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
+        var mockConditionA = Conditions(conditionAUUID,"","title",ConditionStatus.REJECTED,
                 Date()).apply { contract = mockAgreementA }
 
         mockConditionA = mockConditionA.apply { proposingUser = userA }
@@ -124,7 +125,7 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         val conditionARequest = AcceptConditionRequest(conditionAUUID)
-        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+        var mockConditionA = Conditions(conditionAUUID,"","title",ConditionStatus.ACCEPTED,
                 Date()).apply { contract = mockAgreementA }
 
         mockConditionA = mockConditionA.apply { proposingUser = userA }
@@ -220,7 +221,8 @@ internal class NegotiationServiceTest
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
                         "Unit test",
-                                        ConditionStatus.PENDING,
+                                    "title",
+                                    ConditionStatus.PENDING,
                                     Date(),).apply { contract = mockAgreement }
 
         mockCondition = mockCondition.apply { proposingUser = userB }
@@ -235,6 +237,7 @@ internal class NegotiationServiceTest
 
         //when
         val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser.publicWalletID,
+                                                            "title",
                                                             mockCondition.contract.ContractID,
                                                             mockCondition.conditionDescription))
 
@@ -256,7 +259,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "",
+                "title","",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract=mockAgreement }
 
@@ -272,6 +275,7 @@ internal class NegotiationServiceTest
 
         //when
         val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser.publicWalletID,
+                "title",
                 mockCondition.contract.ContractID,
                 mockCondition.conditionDescription))
 
@@ -293,7 +297,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "",
+                "title","",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -309,6 +313,7 @@ internal class NegotiationServiceTest
 
         //when
         val response = negotiationService.createCondition(CreateConditionRequest("",
+                "title",
                 mockCondition.contract.ContractID,
                 mockCondition.conditionDescription))
 
@@ -331,7 +336,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Unit test",
+                "title","Unit test",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -341,6 +346,7 @@ internal class NegotiationServiceTest
 
         //when
         val response = negotiationService.createCondition(CreateConditionRequest(mockCondition.proposingUser.publicWalletID,
+                                                                                    "title",
                                                                                     mockCondition.contract.ContractID,
                                                                                     mockCondition.conditionDescription))
 
@@ -364,7 +370,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Unit test",
+                "title","Unit test",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -380,6 +386,7 @@ internal class NegotiationServiceTest
 
         //when
         val response = negotiationService.createCondition(CreateConditionRequest("Incorrect user",
+                "title",
                 mockCondition.contract.ContractID,
                 mockCondition.conditionDescription))
 
@@ -401,7 +408,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Unit test",
+                "title","Unit test",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -471,7 +478,7 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
-        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.PENDING,
+        var mockConditionA = Conditions(conditionAUUID,"title","",ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreementA }
 
         mockConditionA = mockConditionA.apply { proposingUser = userA }
@@ -514,7 +521,7 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
-        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.REJECTED,
+        var mockConditionA = Conditions(conditionAUUID,"title","",ConditionStatus.REJECTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockConditionA = mockConditionA.apply { proposingUser = userA }
@@ -550,7 +557,7 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         val conditionARequest = RejectConditionRequest(conditionAUUID)
-        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+        var mockConditionA = Conditions(conditionAUUID,"title","",ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockConditionA = mockConditionA.apply { proposingUser = userA }
@@ -583,7 +590,7 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
-        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+        var mockConditionA = Conditions(conditionAUUID,"title","",ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockConditionA = mockConditionA.apply { proposingUser = userA }
@@ -656,21 +663,21 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
-                                                "Payment of 500",
+                                    "title","Payment of 500",
                                                 ConditionStatus.ACCEPTED,
                                                 Date(),).apply { contract = mockAgreementA }
 
         mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
 
         var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
-                                                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                                                "title","Duration of " + Duration.ofDays(50).seconds.toString(),
                                                 ConditionStatus.ACCEPTED,
                                                 Date(),).apply { contract = mockAgreementA }
 
         mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
 
         var mockRejectedCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
-                                                    "Reject this condition",
+                                                    "title","Reject this condition",
                                                     ConditionStatus.REJECTED,
                                                     Date(),).apply { contract = mockAgreementA }
 
@@ -730,6 +737,7 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
+                "title",
                 "Payment of 500",
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
@@ -737,14 +745,14 @@ internal class NegotiationServiceTest
         mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
 
         var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
-                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                "title","Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
 
         var mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
-                "Reject this condition",
+                "title","Reject this condition",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreementA }
 
@@ -790,14 +798,14 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
-                "Payment of 500",
+                "title","Payment of 500",
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
 
         var mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
-                "Reject this condition",
+                "title","Reject this condition",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreementA }
 
@@ -841,14 +849,14 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
-                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                "title","Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockDurationCondition = mockDurationCondition.apply { proposingUser = userA }
 
         var mockPendingCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
-                "Reject this condition",
+                "title","Reject this condition",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreementA }
 
@@ -892,21 +900,21 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
-                "Payment of 500",
+                "title","Payment of 500",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreementA }
 
         mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
 
         var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
-                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                "title","Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
 
         var mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
-                "Reject this condition",
+                "title","Reject this condition",
                 ConditionStatus.REJECTED,
                 Date(),).apply { contract = mockAgreementA }
 
@@ -952,21 +960,21 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
-                "Payment of 500",
+                "title","Payment of 500",
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
 
         var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
-                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                "title","Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreementA }
 
         mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
 
         var mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
-                "Reject this condition",
+                "title","Reject this condition",
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
@@ -1013,21 +1021,21 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
-                "Payment of 500",
+                "title","Payment of 500",
                 ConditionStatus.REJECTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
 
         var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
-                "Duration of " + Duration.ofDays(50).seconds.toString(),
+                "title","Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
        mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
 
         var mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
-                "Reject this condition",
+                "title","Reject this condition",
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
@@ -1074,21 +1082,21 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
         var mockPaymentCondition = Conditions(UUID.fromString("aa3db9c2-ff26-47c2-b14e-e9ab9af1c7ce"),
-                "Payment of 500",
+                "title","Payment of 500",
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockPaymentCondition = mockPaymentCondition.apply { proposingUser = userA }
 
         var mockDurationCondition = Conditions(UUID.fromString("0e7cdc2d-b0e0-4ecf-8c5c-16b503edd8b2"),
-                "Duration of " + Duration.ofDays(50).seconds.toString(),
+            "title","Duration of " + Duration.ofDays(50).seconds.toString(),
                 ConditionStatus.REJECTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockDurationCondition = mockDurationCondition.apply { proposingUser = userB }
 
         var mockOtherCondition = Conditions(UUID.fromString("76a06d5e-874f-4217-aea7-5368932e1712"),
-                "Reject this condition",
+            "title","Reject this condition",
                 ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
@@ -1135,7 +1143,7 @@ internal class NegotiationServiceTest
         mockAgreementA = mockAgreementA.apply { partyA = userA }
         mockAgreementA = mockAgreementA.apply { partyB = userB }
 
-        var mockConditionA = Conditions(conditionAUUID,"",ConditionStatus.ACCEPTED,
+        var mockConditionA = Conditions(conditionAUUID,"title","",ConditionStatus.ACCEPTED,
                 Date(),).apply { contract = mockAgreementA }
 
         mockConditionA = mockConditionA.apply { proposingUser = userA }
@@ -1182,7 +1190,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Payment of 500.0",
+            "title","Payment of 500.0",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1219,7 +1227,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Unit test",
+            "title","Unit test",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1253,7 +1261,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Payment of -500.0",
+            "title","Payment of -500.0",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1289,7 +1297,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Unit test",
+            "title","Unit test",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1323,7 +1331,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Payment of 500.0",
+            "title","Payment of 500.0",
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1360,7 +1368,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Duration of " + Duration.ofSeconds(500).seconds,
+            "title","Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1397,7 +1405,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Duration of " + Duration.ofSeconds(500).seconds,
+            "title","Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1433,7 +1441,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Duration of " + Duration.ofSeconds(-500).seconds,
+            "title","Duration of " + Duration.ofSeconds(-500).seconds,
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1469,7 +1477,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Duration of " + Duration.ofSeconds(500).seconds,
+            "title","Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
@@ -1503,7 +1511,7 @@ internal class NegotiationServiceTest
         mockAgreement = mockAgreement.apply { partyB = userB }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
-                "Duration of " + Duration.ofSeconds(500).seconds,
+            "title","Duration of " + Duration.ofSeconds(500).seconds,
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = mockAgreement }
 
