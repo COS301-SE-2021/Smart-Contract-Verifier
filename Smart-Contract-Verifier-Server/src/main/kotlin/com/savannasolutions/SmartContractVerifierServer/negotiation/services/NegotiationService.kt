@@ -191,7 +191,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return SealAgreementResponse(ResponseStatus.FAILED)
         }
         val agreement = agreementsRepository.getById(sealAgreementRequest.AgreementID)
-        val condList = agreement.conditions
+        val condList = conditionsRepository.getAllByContract(agreement)
         if (condList != null) {
             for (cond in condList) {
                 if(cond.conditionStatus == ConditionStatus.PENDING)
