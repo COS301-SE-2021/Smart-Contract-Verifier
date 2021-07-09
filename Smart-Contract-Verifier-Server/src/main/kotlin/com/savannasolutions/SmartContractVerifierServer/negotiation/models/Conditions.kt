@@ -13,10 +13,10 @@ data class Conditions(@Id @GeneratedValue val conditionID: UUID,
                       val proposalDate: Date,)
 {
                       @ManyToOne(fetch = FetchType.LAZY)
-                      @JoinColumn(name="ContractID")
+                      //@JoinColumn(name="ContractID")
                       lateinit var contract: Agreements
 
                       @ManyToOne(fetch = FetchType.LAZY)
-                      @JoinColumn(name="PublicWalletID")
+                      //@JoinColumn(name="PublicWalletID")
                       lateinit var proposingUser: User
 }
