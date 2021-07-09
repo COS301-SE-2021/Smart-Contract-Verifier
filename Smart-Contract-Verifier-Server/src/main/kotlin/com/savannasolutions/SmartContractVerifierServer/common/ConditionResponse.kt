@@ -8,4 +8,5 @@ data class ConditionResponse(val conditionID: UUID,
                              val proposingUser : UserResponse? = null,
                              val proposalDate : Date? = null,
                              val agreementID : UUID? = null,
-                             val conditionStatus: Enum<ConditionStatus>? = null,)
+                             val conditionStatus: Enum<ConditionStatus>? = null,
+                             val conditionTitle: String? = null,)
