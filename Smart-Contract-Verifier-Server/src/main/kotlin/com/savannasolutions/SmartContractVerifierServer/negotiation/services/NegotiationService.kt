@@ -1,6 +1,9 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.services
 
+import com.savannasolutions.SmartContractVerifierServer.common.AgreementResponse
+import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -40,6 +43,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         if(createAgreementRequest.PartyB.isEmpty())
             return CreateAgreementResponse(status = ResponseStatus.FAILED)
 
+        if(createAgreementRequest.Title.isEmpty())
+            return CreateAgreementResponse(status = ResponseStatus.FAILED)
+
+        if(createAgreementRequest.Description.isEmpty())
+            return CreateAgreementResponse(status = ResponseStatus.FAILED)
+
         if(createAgreementRequest.PartyB == createAgreementRequest.PartyA)
             return CreateAgreementResponse(status = ResponseStatus.FAILED)
 
@@ -53,8 +62,11 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val userB = userRepository.getById(createAgreementRequest.PartyB)
 
         var nAgreement = Agreements(UUID.randomUUID(),
+                                    AgreementTitle = createAgreementRequest.Title,
+                                    AgreementDescription = createAgreementRequest.Description,
                                     CreatedDate = Date(),
                                     MovedToBlockChain = false,
+                                    AgreementImageURL = createAgreementRequest.ImageURL
                                     ).apply { partyA = userA}
         nAgreement = nAgreement.apply { partyB = userB }
 
@@ -98,32 +110,39 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse{
         if(!agreementsRepository.existsById(getAgreementDetailsRequest.AgreementID))
         {
-            return GetAgreementDetailsResponse(agreementID = getAgreementDetailsRequest.AgreementID,
-                                            status = ResponseStatus.FAILED)
+            return GetAgreementDetailsResponse(status = ResponseStatus.FAILED)
         }
         val agreement = agreementsRepository.getById(getAgreementDetailsRequest.AgreementID)
-        val conditions = agreement.conditions
-        val conditionsID = ArrayList<UUID>()
-        if (conditions != null) {
-            if(conditions.isNotEmpty())
-            {
-                for(cond in conditions) {
-                    conditionsID.add(cond.conditionID)
-                }
-            }
-
+        val conditionList = conditionsRepository.getAllByContract(agreement)
+        val conditions = ArrayList<ConditionResponse>()
+        for(cond in conditionList)
+        {
+            val tempCond = ConditionResponse(cond.conditionID,
+                cond.conditionDescription,
+                UserResponse(cond.proposingUser.publicWalletID),
+                cond.proposalDate,
+                agreement.ContractID,
+                cond.conditionStatus,)
+            conditions.add(tempCond)
         }
 
-        return GetAgreementDetailsResponse(agreement.ContractID,
-                                            agreement.DurationConditionUUID,
-                                            agreement.PaymentConditionUUID,
-                                            agreement.partyA.publicWalletID,
-                                            agreement.partyB.publicWalletID,
-                                            agreement.CreatedDate,
-                                            agreement.SealedDate,
-                                            agreement.MovedToBlockChain,
-                                            conditionsID,
-                                            ResponseStatus.SUCCESSFUL)
+        val partyA = UserResponse(agreement.partyA.publicWalletID)
+        val partyB = UserResponse(agreement.partyB.publicWalletID)
+
+        val agreementResponse = AgreementResponse(agreement.ContractID,
+                                                    agreement.AgreementTitle,
+                                                    agreement.AgreementDescription,
+                                                    agreement.DurationConditionUUID,
+                                                    agreement.PaymentConditionUUID,
+                                                    partyA,
+                                                    partyB,
+                                                    agreement.CreatedDate,
+                                                    agreement.SealedDate,
+                                                    agreement.MovedToBlockChain,
+                                                    conditions,
+                                                    agreement.AgreementImageURL)
+
+        return GetAgreementDetailsResponse(agreementResponse,ResponseStatus.SUCCESSFUL)
     }
 
     fun rejectCondition(rejectConditionRequest: RejectConditionRequest): RejectConditionResponse {
