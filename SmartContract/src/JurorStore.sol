@@ -7,7 +7,8 @@ pragma solidity ^0.8.0;
 contract JurorStore{
     address owner;
 
-    bool tempVal = false;
+    address[] jurors;
+    mapping(address => uint256) jurorIndex;
 
     // Restricts usage of any function with this modifier to the owner (the Verifier contract)
     modifier onlyOwner(){
@@ -20,12 +21,12 @@ contract JurorStore{
     }
 
     function addJuror(address j) public onlyOwner(){
-        tempVal = true;
+        uint256 index = jurors.length;
+        jurors.push(j);
+        jurorIndex[j] = index;
+        emit AddJuror(j, index);
     }
 
-    function getTempVal() public view returns(bool){
-        return tempVal;
-    }
-
+    event AddJuror(address j, uint256 index);
 
 }
