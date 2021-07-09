@@ -160,7 +160,7 @@ internal class NegotiationServiceTest
 
         //when
         val response = negotiationService.createAgreement(CreateAgreementRequest("0x743Fb032c0bE976e1178d8157f911a9e825d9E23",
-                                                                                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"))
+                                                                                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4","Mock", "Mock", "image.co.za"))
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
@@ -172,7 +172,7 @@ internal class NegotiationServiceTest
 
         //when
         val response = negotiationService.createAgreement(CreateAgreementRequest("",
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"))
+                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "Mock", "Mock", "image.co.za"))
 
         //then
         assertEquals(ResponseStatus.FAILED, response.status)
@@ -184,7 +184,7 @@ internal class NegotiationServiceTest
 
         //when
         val response = negotiationService.createAgreement(CreateAgreementRequest(
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", ""))
+                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "", "Mock", "Mock", "image.co.za"))
 
         //then
         assertEquals(ResponseStatus.FAILED, response.status)
@@ -197,7 +197,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.createAgreement(CreateAgreementRequest(
                 "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"))
+                "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "Mock", "Mock", "image.co.za"))
 
         //then
         assertEquals(ResponseStatus.FAILED, response.status)
