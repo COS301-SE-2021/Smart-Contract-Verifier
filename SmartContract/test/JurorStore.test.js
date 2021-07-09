@@ -17,13 +17,30 @@ contract('JurorStore', (accounts) =>{
         })
 
         it("Can add a juror", async() =>{
-            let result = await jurorStore.addJuror(accounts[1], {from: accounts[0]});
+            var passedRequire = false;
+            let result;
+            try{
+                result = await jurorStore.addJuror(accounts[1], {from: accounts[0]});
+                passedRequire = true;    
+            }
+            catch(e){}
 
+            assert(passedRequire == true);
             truffleAssert.eventEmitted(result, "AddJuror", (ev)=>{
                 return ev.juror == accounts[1]
             });
         })
 
+        it("Can't add a juror as non-owner", async() =>{
+            var passedRequire = false;
+            try{
+                let result = await jurorStore.addJuror(accounts[1], {from: accounts[1]});
+                passedRequire = true;
+            }
+            catch(e){}
+            assert(passedRequire == false);
+
+        })
     })
 
 })
