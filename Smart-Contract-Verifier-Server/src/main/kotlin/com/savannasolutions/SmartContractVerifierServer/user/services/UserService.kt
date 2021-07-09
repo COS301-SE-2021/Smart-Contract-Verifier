@@ -44,7 +44,11 @@ class UserService(  val userRepository: UserRepository,
 
         val user = userRepository.getById(retrieveUserAgreementsRequest.UserID)
 
-        user.agreements?:return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
+        if(user.agreements == null && user.agreementsB == null)
+            return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
+
+        if(user.agreements!!.isEmpty() && user.agreementsB!!.isEmpty())
+            return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
 
         val agreementList = agreementsRepository.getAllByPartyAOrPartyB(user,user)
         val list = ArrayList<AgreementResponse>()
