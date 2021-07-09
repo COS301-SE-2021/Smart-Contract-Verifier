@@ -85,6 +85,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         if(createConditionRequest.PreposedUser.isEmpty())
             return CreateConditionResponse(status = ResponseStatus.FAILED)
 
+        if(createConditionRequest.Title.isEmpty())
+            return CreateConditionResponse(status = ResponseStatus.FAILED)
+
 
         if(!userRepository.existsById(createConditionRequest.PreposedUser))
             return CreateConditionResponse(status = ResponseStatus.FAILED)
@@ -97,6 +100,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val user = userRepository.getById(createConditionRequest.PreposedUser)
 
         var nCondition = Conditions(UUID.randomUUID(),
+                                    createConditionRequest.Title,
                                     createConditionRequest.ConditionDescription,
                                     ConditionStatus.PENDING,
                                     Date(),).apply { contract = agreement }
@@ -233,6 +237,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val user = userRepository.getById(setPaymentConditionRequest.PreposedUser)
 
         var condition = Conditions(UUID.randomUUID(),
+                     "Payment condition",
                 "Payment of " + setPaymentConditionRequest.Payment.toString(),
                                 ConditionStatus.PENDING,
                                 Date(),).apply { contract = agreement }
@@ -266,6 +271,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val user = userRepository.getById(setDurationConditionRequest.PreposedUser)
 
         var condition = Conditions(UUID.randomUUID(),
+                "Duration condition",
                 "Duration of " + setDurationConditionRequest.Duration.toString(),
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = agreement }
