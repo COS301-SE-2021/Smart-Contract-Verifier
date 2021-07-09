@@ -8,9 +8,9 @@ data class ContactList(@Id @GeneratedValue val contactListID: UUID?=null,
                        val contactListName: String,)
 {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID")
+    //@JoinColumn(name = "UserID")
     lateinit var owner: User
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contactlist", orphanRemoval = true, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contactList", orphanRemoval = true, cascade = [CascadeType.ALL])
     var contactListProfiles : List<ContactListProfile>?= emptyList()
 }
