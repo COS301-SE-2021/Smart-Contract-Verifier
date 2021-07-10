@@ -3,6 +3,7 @@ package com.savannasolutions.SmartContractVerifierServer.user.services
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
+import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
@@ -19,7 +20,8 @@ import kotlin.test.assertTrue
 internal class UserServiceTest {
     private val userRepository : UserRepository = mock()
     private val agreementsRepository : AgreementsRepository = mock()
-    private val userService = UserService(userRepository,agreementsRepository)
+    private val conditionsRepository : ConditionsRepository = mock()
+    private val userService = UserService(userRepository,agreementsRepository, conditionsRepository)
 
     @Test
     fun `RetrieveUserAgreements successful without agreement`()
@@ -35,7 +37,7 @@ internal class UserServiceTest {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertEquals(response.AgreementIDs!!, emptyList())
+        assertEquals(response.Agreements!!, emptyList())
     }
 
     @Test
@@ -66,8 +68,8 @@ internal class UserServiceTest {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.AgreementIDs)
-        assertTrue { response.AgreementIDs!!.isNotEmpty() }
+        assertNotNull(response.Agreements)
+        assertTrue { response.Agreements!!.isNotEmpty() }
     }
 
     @Test

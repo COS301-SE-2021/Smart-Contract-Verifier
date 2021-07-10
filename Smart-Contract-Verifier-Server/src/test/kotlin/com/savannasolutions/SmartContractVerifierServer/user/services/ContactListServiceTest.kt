@@ -41,13 +41,13 @@ internal class ContactListServiceTest {
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
         whenever(contactListProfileRepository.getAllByContactListAndUser(contactList, user)).thenReturn(null)
-        whenever(contactListProfileRepository.existByAliasAndContactListAndUser(contactList,user,contactListProfile.ContactAlias)).thenReturn(false)
+        whenever(contactListProfileRepository.existsByContactAliasAndContactListAndUser(contactListProfile.contactAlias,contactList,user)).thenReturn(false)
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
         val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                                                                                                 contactList.contactListID!!,
-                                                                                                contactListProfile.ContactAlias))
+                                                                                                contactListProfile.contactAlias))
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
@@ -69,13 +69,13 @@ internal class ContactListServiceTest {
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
         whenever(contactListProfileRepository.getAllByContactListAndUser(contactList, user)).thenReturn(null)
-        whenever(contactListProfileRepository.existByAliasAndContactListAndUser(contactList,user,contactListProfile.ContactAlias)).thenReturn(false)
+        whenever(contactListProfileRepository.existsByContactAliasAndContactListAndUser(contactListProfile.contactAlias,contactList,user)).thenReturn(false)
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
         val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
-                contactListProfile.ContactAlias))
+                contactListProfile.contactAlias))
 
         //Then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -97,13 +97,13 @@ internal class ContactListServiceTest {
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
         whenever(contactListProfileRepository.getAllByContactListAndUser(contactList, user)).thenReturn(null)
-        whenever(contactListProfileRepository.existByAliasAndContactListAndUser(contactList,user,contactListProfile.ContactAlias)).thenReturn(false)
+        whenever(contactListProfileRepository.existsByContactAliasAndContactListAndUser(contactListProfile.contactAlias,contactList,user)).thenReturn(false)
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
         val response = contactListService.addUserToContactList(AddUserToContactListRequest("",
                 contactList.contactListID!!,
-                contactListProfile.ContactAlias))
+                contactListProfile.contactAlias))
 
         //Then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -125,13 +125,13 @@ internal class ContactListServiceTest {
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
         whenever(contactListProfileRepository.getAllByContactListAndUser(contactList, user)).thenReturn(null)
-        whenever(contactListProfileRepository.existByAliasAndContactListAndUser(contactList,user,contactListProfile.ContactAlias)).thenReturn(false)
+        whenever(contactListProfileRepository.existsByContactAliasAndContactListAndUser(contactListProfile.contactAlias,contactList,user)).thenReturn(false)
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
         val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
-                contactListProfile.ContactAlias))
+                contactListProfile.contactAlias))
 
         //Then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -153,13 +153,13 @@ internal class ContactListServiceTest {
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(false)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
         whenever(contactListProfileRepository.getAllByContactListAndUser(contactList, user)).thenReturn(null)
-        whenever(contactListProfileRepository.existByAliasAndContactListAndUser(contactList,user,contactListProfile.ContactAlias)).thenReturn(false)
+        whenever(contactListProfileRepository.existsByContactAliasAndContactListAndUser(contactListProfile.contactAlias,contactList,user)).thenReturn(false)
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
         val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
-                contactListProfile.ContactAlias))
+                contactListProfile.contactAlias))
 
         //Then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -187,20 +187,20 @@ internal class ContactListServiceTest {
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
         whenever(contactListProfileRepository.getAllByContactListAndUser(contactList, user)).thenReturn(list)
-        whenever(contactListProfileRepository.existByAliasAndContactListAndUser(contactList,user,contactListProfile.ContactAlias)).thenReturn(false)
+        whenever(contactListProfileRepository.existsByContactAliasAndContactListAndUser(contactListProfile.contactAlias,contactList,user)).thenReturn(false)
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
         val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
-                contactListProfile.ContactAlias))
+                contactListProfile.contactAlias))
 
         //Then
         assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
-    fun `AddUserToContactList existByAliasAndContactListAndUser will return true`()
+    fun `AddUserToContactList existsByContactAliasAndContactListAndUser() will return true`()
     {
         //Given
         val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
@@ -215,13 +215,13 @@ internal class ContactListServiceTest {
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
         whenever(contactListProfileRepository.getAllByContactListAndUser(contactList, user)).thenReturn(null)
-        whenever(contactListProfileRepository.existByAliasAndContactListAndUser(contactList,user,contactListProfile.ContactAlias)).thenReturn(true)
+        whenever(contactListProfileRepository.existsByContactAliasAndContactListAndUser(contactListProfile.contactAlias,contactList,user)).thenReturn(true)
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
 
         //When
         val response = contactListService.addUserToContactList(AddUserToContactListRequest(user.publicWalletID,
                 contactList.contactListID!!,
-                contactListProfile.ContactAlias))
+                contactListProfile.contactAlias))
 
         //Then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -244,7 +244,7 @@ internal class ContactListServiceTest {
         val response = contactListService.createContactList(CreateContactListRequest(user.publicWalletID,contactList.contactListName))
 
         //Then
-        assertEquals(response.status, ResponseStatus.FAILED)
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
     }
 
     @Test
@@ -337,7 +337,7 @@ internal class ContactListServiceTest {
         whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
-        whenever(contactListProfileRepository.exitsByContactListAndUser(contactList,user)).thenReturn(true)
+        whenever(contactListProfileRepository.existsByContactListAndUser(contactList,user)).thenReturn(true)
         whenever(contactListProfileRepository.getByContactListAndUser(contactList,user)).thenReturn(contactListProfile)
         whenever(contactListProfileRepository.existsById(contactListProfile.ProfileID!!)).thenReturn(false)
 
@@ -406,7 +406,7 @@ internal class ContactListServiceTest {
         whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
-        whenever(contactListProfileRepository.exitsByContactListAndUser(contactList,user)).thenReturn(false)
+        whenever(contactListProfileRepository.existsByContactListAndUser(contactList,user)).thenReturn(false)
 
         //When
         val response = contactListService.removeUserFromContactList(RemoveUserFromContactListRequest(user.publicWalletID,contactList.contactListID!!))
@@ -430,7 +430,7 @@ internal class ContactListServiceTest {
         whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
-        whenever(contactListProfileRepository.exitsByContactListAndUser(contactList,user)).thenReturn(true)
+        whenever(contactListProfileRepository.existsByContactListAndUser(contactList,user)).thenReturn(true)
         whenever(contactListProfileRepository.getByContactListAndUser(contactList,user)).thenReturn(contactListProfile)
         whenever(contactListProfileRepository.existsById(contactListProfile.ProfileID!!)).thenReturn(true)
 
