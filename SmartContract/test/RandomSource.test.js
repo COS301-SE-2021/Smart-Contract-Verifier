@@ -20,9 +20,9 @@ contract('RandomSource', (accounts) =>{
             result = await randomSource.getRandVal();
         })
 
-        // it("Can generate random value from seed", async() =>{
-        //     result = await randomSource.getRandVal(1);
-        // })
+        it("Can generate random value from seed", async() =>{
+            result = await randomSource.getRandVal(BigInt(15), {from: accounts[0]});
+        })
 
     })
 

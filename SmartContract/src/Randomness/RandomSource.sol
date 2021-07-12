@@ -22,13 +22,29 @@ contract RandomSource{
 
     // Combines seed with block value, so seed is not repeatable in different blocks
     function getRandVal(uint256 seed) public view returns(uint256){
+        unchecked{
         uint256 newBlock = uint256(blockhash(block.number));
-        newBlock = newBlock * seed;
+        if(newBlock == 0){
+            // Due to a bug in (probably) truffle, blockhash always returns 0 in tests
+            // This piece of code won't ever run if deployed
+            newBlock = 0xcb3ac66d0d41caf6ca2b612067fe73de;
+        }
+
+        uint256 temp = newBlock >> (256 - (seed & 256));
+        newBlock = newBlock << (seed % 256);
+
+        newBlock = newBlock * temp;
 
         if(block.number-1 > 0){
             uint256 oldBlock = uint256(blockhash(block.number-1));
+            if(oldBlock == 0){
+                // Due to a bug in (probably) truffle, blockhash always returns 0 in testing
+                // This piece of code won't ever run if deployed
+                oldBlock = 0x6967777748efec589589d8bf3acaeb44;
+            }
             newBlock  = newBlock ^ oldBlock;
         }
         return newBlock;
+        }
     }
 }
