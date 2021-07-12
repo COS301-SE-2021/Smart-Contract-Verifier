@@ -55,13 +55,35 @@ contract JurorStore{
         emit RemoveJuror(j);
     }
 
+    // Cleared after every execution of assignJury
+    // It's only here since mappings can't be declared in a function scope
+    mapping(address =>bool) assignedJurors;
+
     // Assigns a jury of specified size, if possible
-    function assignJury(uint count) public view onlyOwner() returns(address[] memory jury){
+    function assignJury(uint count, uint seed) public onlyOwner() returns(address[] memory jury){
         require(count > 0, "Jury size must be a positive value");
         require(count <= numJurors, "Jury size is too big, not enough jurors available");
 
-        address[] memory result;
+        address[] memory result = new address[](count);
 
+        for(uint i=0; i<count; i++){
+            bool foundVal = false;
+            address j;
+            while(!foundVal){
+                uint val = randomSource.getRandVal(seed) % numJurors;
+                seed++;
+                j = jurors[val];
+                if(assignedJurors[j] == false)
+                    foundVal = true;
+            }
+
+            assignedJurors[j] = true;
+            result[i] = j;
+        }
+
+        for(uint i=0; i<count; i++){
+            assignedJurors[result[i]] = false;
+        }
 
         return result;
     }
