@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 contract JurorStore{
     address owner;
 
+    uint numJurors;
     address[] jurors;
     mapping(address => uint256) jurorIndex;
 
@@ -24,6 +25,7 @@ contract JurorStore{
     function addJuror(address j) public onlyOwner(){
         uint256 index = jurors.length;
         jurors.push(j);
+        numJurors++;
         jurorIndex[j] = index;
         emit AddJuror(j, index);
     }
@@ -43,9 +45,18 @@ contract JurorStore{
             jurors[index] = jurors[last];
 
         jurors.pop();
+        numJurors--;
         jurorIndex[j] = 0;
 
         emit RemoveJuror(j);
+    }
+
+    // Assigns a jury of specified size, if possible
+    function assignJury(uint count) public onlyOwner() returns(address[] memory){
+        require(count > 0, "Jury size must be a positive value");
+        require(count <= numJurors, "Jury size is too big, not enough jurors available");
+
+        
     }
 
     event AddJuror(address juror, uint256 index);
