@@ -2,7 +2,7 @@ const { assert } = require('chai')
 
 const UnisonToken = artifacts.require("UnisonToken")
 const Verifier = artifacts.require("Verifier")
-const JurorStore = artifacts.require("JurorStore")
+const RandomSource = artifacts.require("Randomness/RandomSource")
 
 require('chai').use(require('chai-as-promised')).should()
 
@@ -17,7 +17,8 @@ contract('Verifier', (accounts) =>{
 
         before(async () =>{
             token = await UnisonToken.new()
-            verifier = await Verifier.new(token.address)
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
         })
 
         it("Can create agreement", async () =>{

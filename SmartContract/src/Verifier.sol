@@ -19,9 +19,9 @@ contract Verifier{
     JurorStore jurorStore;
     UnisonToken unisonToken;
 
-    constructor(UnisonToken token){
+    constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
-        jurorStore = new JurorStore(address(this));
+        jurorStore = new JurorStore(address(this), randomSource);
     }
 
     function createAgreement(address party2, uint resolutionTime, string calldata text) public{

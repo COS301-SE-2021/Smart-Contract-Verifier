@@ -2,8 +2,11 @@
 
 pragma solidity ^0.8.0;
 
+import "./Randomness/RandomSource.sol";
+
 contract JurorStore{
     address owner;
+    RandomSource randomSource;
 
     uint numJurors;
     address[] jurors;
@@ -15,8 +18,9 @@ contract JurorStore{
         _;
     }
 
-    constructor(address _owner){
+    constructor(address _owner, RandomSource rs){
         owner = _owner;
+        randomSource = rs;
 
         // index 0 is kept out of use since a 0 in the mapping means that value doesn't exist
         jurors.push(address(0));
@@ -52,11 +56,14 @@ contract JurorStore{
     }
 
     // Assigns a jury of specified size, if possible
-    function assignJury(uint count) public onlyOwner() returns(address[] memory){
+    function assignJury(uint count) public view onlyOwner() returns(address[] memory jury){
         require(count > 0, "Jury size must be a positive value");
         require(count <= numJurors, "Jury size is too big, not enough jurors available");
 
-        
+        address[] memory result;
+
+
+        return result;
     }
 
     event AddJuror(address juror, uint256 index);
