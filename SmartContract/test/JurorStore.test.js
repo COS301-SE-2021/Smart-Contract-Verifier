@@ -43,6 +43,17 @@ contract('JurorStore', (accounts) =>{
             assert(passedRequire == false);
 
         })
+
+
+        it("AssignJury assigns a jury", async() =>{
+            for(var i=1; i<10; i++){
+                await jurorStore.addJuror(accounts[1], {from: accounts[0]});
+
+            }
+  
+            await jurorStore.assignJury(3, BigInt(12351), {from:accounts[0]});
+        })
+
     })
 
 })
