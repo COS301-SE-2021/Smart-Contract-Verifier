@@ -9,6 +9,7 @@ import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUs
 import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.collections.ArrayList
 
 class UserService(  val userRepository: UserRepository,
@@ -18,13 +19,15 @@ class UserService(  val userRepository: UserRepository,
         if(userRepository.existsById(addUserRequest.WalletID))
             return AddUserResponse(status = ResponseStatus.FAILED)
 
-        val user = User(publicWalletID = addUserRequest.WalletID, alias = "")
+        val user = User(
+            publicWalletID = addUserRequest.WalletID,
+            alias = "",
+        )
 
         userRepository.save(user)
 
         return  AddUserResponse(status = ResponseStatus.SUCCESSFUL)
     }
-
 
     fun retrieveUserAgreements(retrieveUserAgreementsRequest: RetrieveUserAgreementsRequest): RetrieveUserAgreementsResponse {
         if(retrieveUserAgreementsRequest.UserID.isEmpty())
