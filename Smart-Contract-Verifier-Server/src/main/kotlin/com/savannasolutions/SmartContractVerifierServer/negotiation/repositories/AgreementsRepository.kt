@@ -8,5 +8,5 @@ import java.util.*
 
 @Repository
 interface AgreementsRepository : JpaRepository<Agreements, UUID>{
-    fun getAllByPartyAOrPartyB(partyA: User, partyB: User): List<Agreements>
+    fun getAllByUsersContaining(user: User): MutableSet<Agreements>?
 }
