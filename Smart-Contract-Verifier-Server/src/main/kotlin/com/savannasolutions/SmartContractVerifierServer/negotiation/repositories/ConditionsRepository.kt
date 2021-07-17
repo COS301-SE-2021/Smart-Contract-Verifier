@@ -9,5 +9,5 @@ import java.util.*
 
 @Repository
 interface ConditionsRepository : JpaRepository<Conditions, UUID>{
-    fun getAllByContract(contract: Agreements): List<Conditions>
+    fun getAllByContract(contract: Agreements): List<Conditions>?
 }

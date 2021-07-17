@@ -44,48 +44,54 @@ class UserService(  val userRepository: UserRepository,
 
         val user = userRepository.getById(retrieveUserAgreementsRequest.UserID)
 
-        if(user.agreements == null && user.agreementsB == null)
+        if(user.agreements.isEmpty())
             return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
 
-        if(user.agreements!!.isEmpty() && user.agreementsB!!.isEmpty())
-            return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
-
-        val agreementList = agreementsRepository.getAllByPartyAOrPartyB(user,user)
+        val agreementList = agreementsRepository.getAllByUsersContaining(user)
         val list = ArrayList<AgreementResponse>()
 
-        for(agreement in agreementList)
+        if(agreementList != null)
         {
-            val conditions = conditionsRepository.getAllByContract(agreement)
-            val conditionList = ArrayList<ConditionResponse>()
-            for (cond in conditions)
+            for(agreement in agreementList)
             {
-                conditionList.add(
-                    ConditionResponse(cond.conditionID,
-                                        cond.conditionDescription,
-                                        UserResponse(cond.proposingUser.publicWalletID),
-                                        cond.proposalDate,
-                                        agreement.ContractID,
-                                        cond.conditionStatus
-                    )
-                )
+                val conditions = conditionsRepository.getAllByContract(agreement)
+                val conditionList = ArrayList<ConditionResponse>()
+                if(conditions != null)
+                {
+                    for (cond in conditions)
+                    {
+                        conditionList.add(
+                            ConditionResponse(cond.conditionID,
+                                cond.conditionDescription,
+                                UserResponse(cond.proposingUser.publicWalletID),
+                                cond.proposalDate,
+                                agreement.ContractID,
+                                cond.conditionStatus
+                            )
+                        )
+                    }
+                }
+
+
+
+                val tempArg = AgreementResponse(agreement.ContractID,
+                    agreement.AgreementTitle,
+                    agreement.AgreementDescription,
+                    agreement.DurationConditionUUID,
+                    agreement.PaymentConditionUUID,
+                    UserResponse(agreement.users.elementAt(0).publicWalletID),
+                    UserResponse(agreement.users.elementAt(1).publicWalletID),
+                    agreement.CreatedDate,
+                    agreement.SealedDate,
+                    agreement.MovedToBlockChain,
+                    conditionList,
+                    agreement.AgreementImageURL,)
+
+                list.add(tempArg)
             }
-
-
-            val tempArg = AgreementResponse(agreement.ContractID,
-                                            agreement.AgreementTitle,
-                                            agreement.AgreementDescription,
-                                            agreement.DurationConditionUUID,
-                                            agreement.PaymentConditionUUID,
-                                            UserResponse(agreement.partyA.publicWalletID),
-                                            UserResponse(agreement.partyB.publicWalletID),
-                                            agreement.CreatedDate,
-                                            agreement.SealedDate,
-                                            agreement.MovedToBlockChain,
-                                            conditionList,
-                                            agreement.AgreementImageURL,)
-
-            list.add(tempArg)
         }
+
+
 
         return RetrieveUserAgreementsResponse(list,ResponseStatus.SUCCESSFUL)
     }

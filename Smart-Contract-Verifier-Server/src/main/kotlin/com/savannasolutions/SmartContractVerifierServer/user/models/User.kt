@@ -8,11 +8,13 @@ import javax.persistence.*
 data class User(@Id val publicWalletID: String,
                 val alias: String? = null,)
 {
-                @OneToMany(fetch = FetchType.LAZY, mappedBy = "partyA", orphanRemoval = true, cascade = [CascadeType.ALL])
-                var agreements: List<Agreements>? = emptyList()
-
-                @OneToMany(fetch = FetchType.LAZY, mappedBy = "partyB", orphanRemoval = true, cascade = [CascadeType.ALL])
-                var agreementsB: List<Agreements>? = emptyList()
+                @ManyToMany(cascade = [CascadeType.ALL])
+                @JoinTable(
+                    name = "user_agreement",
+                    joinColumns = [JoinColumn(name = "public_WalletID")],
+                    inverseJoinColumns = [JoinColumn(name = "ContractID")]
+                )
+                var agreements: MutableSet<Agreements> = mutableSetOf()
 
                 @OneToMany(fetch = FetchType.LAZY, mappedBy = "proposingUser", orphanRemoval = true, cascade = [CascadeType.ALL])
                 var conditions: List<Conditions>? = emptyList()

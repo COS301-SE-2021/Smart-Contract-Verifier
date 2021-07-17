@@ -474,6 +474,7 @@ internal class ContactListServiceTest {
 
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
+        whenever(contactListProfileRepository.getAllByContactList(contactList)).thenReturn(contactList.contactListProfiles)
 
 
         //When
@@ -531,6 +532,7 @@ internal class ContactListServiceTest {
 
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+        whenever(contactListRepository.getAllByOwner(user)).thenReturn(list)
 
         //When
         val response = contactListService.retrieveUserContactLists(RetrieveUserContactListRequest(user.publicWalletID))

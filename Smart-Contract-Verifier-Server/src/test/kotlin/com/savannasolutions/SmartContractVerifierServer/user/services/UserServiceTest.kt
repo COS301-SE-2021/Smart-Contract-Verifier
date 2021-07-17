@@ -51,16 +51,21 @@ internal class UserServiceTest {
                 CreatedDate = Date(),
                 MovedToBlockChain = true)
 
-        agreement = agreement.apply { partyA = userA }
-        agreement = agreement.apply { partyB = userB }
+        agreement = agreement.apply { users.add(userA) }
+        agreement = agreement.apply { users.add(userB)}
 
-        val list = ArrayList<Agreements>()
+        val list : MutableSet<Agreements> = mutableSetOf()
         list.add(agreement)
 
         userA = userA.apply { agreements = list }
 
+        val agreementList = ArrayList<Agreements>()
+        agreementList.add(agreement)
+
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(agreementsRepository.getAllByUsersContaining(userA)).thenReturn(list)
+        whenever(conditionsRepository.getAllByContract(agreement)).thenReturn(agreement.conditions)
 
 
         //When
