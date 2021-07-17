@@ -22,11 +22,6 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
     /*@OneToMany(fetch = FetchType.LAZY, mappedBy = "agreements", orphanRemoval = true, cascade = [CascadeType.ALL])
     var messages: List<Messages>? = emptyList()*/
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name="PublicWalletID")
-    lateinit var partyA: User
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name="PublicWalletID")
-    lateinit var partyB: User
+    @ManyToMany(mappedBy = "agreements", cascade = [CascadeType.ALL])
+    val users: MutableSet<User> = mutableSetOf()
 }
