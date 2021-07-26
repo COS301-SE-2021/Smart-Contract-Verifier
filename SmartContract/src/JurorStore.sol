@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "./Randomness/RandomSource.sol";
+import "./Utilities/RandomSource.sol";
 
 contract JurorStore{
     address owner;
@@ -57,32 +57,31 @@ contract JurorStore{
 
     // Cleared after every execution of assignJury
     // It's only here since mappings can't be declared in a function scope
-    mapping(address =>bool) assignedJurors;
+    mapping(uint =>bool) assignedJurors;
 
     // Assigns a jury of specified size, if possible
     function assignJury(uint count, uint seed) public onlyOwner() returns(address[] memory jury){
         require(count > 0, "Jury size must be a positive value");
         require(count <= numJurors, "Jury size is too big, not enough jurors available");
 
+        uint[] memory indices = new uint[](count);
         address[] memory result = new address[](count);
 
+        uint val = randomSource.getRandVal(seed);
         for(uint i=0; i<count; i++){
-            bool foundVal = false;
-            address j;
-            while(!foundVal){
-                uint val = randomSource.getRandVal(seed) % numJurors;
-                seed++;
-                j = jurors[val];
-                if(assignedJurors[j] == false)
-                    foundVal = true;
-            }
+            uint index = val % numJurors;
+            while(assignedJurors[index])
+                index++;
+            
+            assignedJurors[index] = true;
+            indices[i] = index;
+            result[i] = jurors[index];
 
-            assignedJurors[j] = true;
-            result[i] = j;
+            val = val / numJurors;
         }
 
         for(uint i=0; i<count; i++){
-            assignedJurors[result[i]] = false;
+            assignedJurors[indices[i]] = false;
         }
 
         return result;
