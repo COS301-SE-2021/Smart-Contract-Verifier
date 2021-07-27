@@ -1,6 +1,6 @@
-package com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
+package com.savannasolutions.SmartContractVerifierServer.messenger.repositories
 
-import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Messages
+import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*
