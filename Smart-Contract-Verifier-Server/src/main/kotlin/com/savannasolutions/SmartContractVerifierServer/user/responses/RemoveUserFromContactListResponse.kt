@@ -1,0 +1,5 @@
+package com.savannasolutions.SmartContractVerifierServer.user.responses
+
+import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+
+data class RemoveUserFromContactListResponse(val status: ResponseStatus)
