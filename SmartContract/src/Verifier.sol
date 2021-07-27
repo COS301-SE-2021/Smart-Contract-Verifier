@@ -15,8 +15,10 @@ contract Verifier{
 
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => AgreementLib.Agreement) agreements;
+    mapping(uint => address[]) juries;
 
     JurorStore jurorStore;
+    uint jurySeed = 10;
     UnisonToken unisonToken;
 
     constructor(UnisonToken token, RandomSource randomSource){
@@ -90,16 +92,32 @@ contract Verifier{
         }
     }
 
+    function updateStateAfterVote(uint agreeID) internal{
+
+        if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
+                agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
+            if(agreements[agreeID].hasJury)
+                return; //Already has jury
+
+            // If at least one party voted no, agreement becomes contested
+            address[] memory jury = jurorStore.assignJury(5, jurySeed);
+            juries[agreeID] = jury;
+            agreements[agreeID].hasJury = true;
+        }
+    }
+
     function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
-        require(agreements[agreeID].resolutionTime < block.timestamp);
+        require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
         require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED);
+            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
 
         if(msg.sender == agreements[agreeID].party1){
             agreements[agreeID].party1Vote = vote;
+            updateStateAfterVote(agreeID);
         }
         else if(msg.sender == agreements[agreeID].party2){
             agreements[agreeID].party2Vote = vote;
+            updateStateAfterVote(agreeID);
         }
     }
 
