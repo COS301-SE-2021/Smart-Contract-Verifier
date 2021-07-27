@@ -101,6 +101,7 @@ contract Verifier{
 
             // If at least one party voted no, agreement becomes contested
             address[] memory jury = jurorStore.assignJury(5, jurySeed);
+            jurySeed += 0xAA;
             juries[agreeID] = jury;
             agreements[agreeID].hasJury = true;
         }
