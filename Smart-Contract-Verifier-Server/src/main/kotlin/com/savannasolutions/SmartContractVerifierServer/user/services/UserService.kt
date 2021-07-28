@@ -10,9 +10,13 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserRequest
+import com.savannasolutions.SmartContractVerifierServer.user.requests.GetNonceRequest
+import com.savannasolutions.SmartContractVerifierServer.user.requests.LoginRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.UserExistsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserResponse
+import com.savannasolutions.SmartContractVerifierServer.user.responses.GetNonceResponse
+import com.savannasolutions.SmartContractVerifierServer.user.responses.LoginResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.UserExistsResponse
 import org.springframework.stereotype.Service
@@ -108,6 +112,15 @@ class UserService(  val userRepository: UserRepository,
             UserExistsResponse(true, ResponseStatus.SUCCESSFUL)
         else
             UserExistsResponse(status = ResponseStatus.SUCCESSFUL)
+    }
+
+
+    fun getNonce(getNonceRequest: GetNonceRequest): GetNonceResponse{
+        return GetNonceResponse(0, ResponseStatus.FAILED)
+    }
+
+    fun login(loginRequest: LoginRequest): LoginResponse{
+        return LoginResponse("", ResponseStatus.FAILED)
     }
 
 }
