@@ -1,0 +1,5 @@
+package com.savannasolutions.SmartContractVerifierServer.messenger.responses
+
+import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+
+data class SetMessageAsReadResponse(val status: ResponseStatus)
