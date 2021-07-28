@@ -51,7 +51,7 @@ contract('JurorStore', (accounts) =>{
 
             }
   
-            await jurorStore.assignJury(1, BigInt(12351), {from:accounts[0]});
+            await jurorStore.assignJury(1, BigInt(12351),[], {from:accounts[0]});
         })
 
     })

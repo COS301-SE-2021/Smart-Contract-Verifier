@@ -100,7 +100,12 @@ contract Verifier{
                 return; //Already has jury
 
             // If at least one party voted no, agreement becomes contested
-            address[] memory jury = jurorStore.assignJury(5, jurySeed);
+            address[] memory noUse = new address[](2);
+            noUse[0] = agreements[agreeID].party1;
+            noUse[1] = agreements[agreeID].party2;
+
+
+            address[] memory jury = jurorStore.assignJury(5, jurySeed, noUse);
             jurySeed += 0xAA;
             juries[agreeID] = jury;
             agreements[agreeID].hasJury = true;
@@ -122,6 +127,7 @@ contract Verifier{
         }
     }
 
+    // Sign yourself up to become a juror
     function addJuror() public{
         jurorStore.addJuror(msg.sender);
     }
