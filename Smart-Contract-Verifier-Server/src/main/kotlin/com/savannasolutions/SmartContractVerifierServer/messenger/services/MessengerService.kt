@@ -4,6 +4,7 @@ import com.savannasolutions.SmartContractVerifierServer.common.MessageResponse
 import com.savannasolutions.SmartContractVerifierServer.common.MessageStatusResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
@@ -45,7 +46,7 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
                     var read = true
                     if(messageStatus.ReadDate == null)
                         read = false
-                    val tempMessageStatusResponse = MessageStatusResponse(messageStatus.recepient.publicWalletID,
+                    val tempMessageStatusResponse = MessageStatusResponse(messageStatus.recipient.publicWalletID,
                                                                             read,
                                                                             messageStatus.ReadDate)
                     messageStatusList.add(tempMessageStatusResponse)
@@ -72,6 +73,7 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
     }
 
     fun sendMessage(sendMessageRequest: SendMessageRequest): SendMessageResponse{
+        //TODO Implement setting jury as recipients as well
         if(!userRepository.existsById(sendMessageRequest.SendingUser))
             return SendMessageResponse(status = ResponseStatus.FAILED)
 
@@ -87,10 +89,30 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         var message = Messages(UUID.fromString("eebe3abc-b594-4a2f-a7dc-246bad26aaa5"),
                                 sendMessageRequest.Message,
                                 Date())
-        message.apply { agreements = agreement }
-        message.apply { sender = user }
+        message = message.apply { agreements = agreement }
+        message = message.apply { sender = user }
+
+        val usersInAgreement = userRepository.getUsersByAgreementsContaining(agreement)
+        val messageStatusList = ArrayList<MessageStatus>()
 
         message = messagesRepository.save(message)
+
+        for(otherUser in usersInAgreement)
+        {
+            if(otherUser != user)
+            {
+                var tempMessageStatus = MessageStatus(UUID.fromString("eebe3abc-b594-4a2f-a7dc-246bad26aaa5"))
+                tempMessageStatus.recipient = otherUser
+                tempMessageStatus.message = message;
+                tempMessageStatus = messageStatusRepository.save(tempMessageStatus)
+                messageStatusList.add(tempMessageStatus)
+            }
+        }
+
+        message.messageStatuses = messageStatusList
+
+        message = messagesRepository.save(message)
+
         return SendMessageResponse(message.messageID, ResponseStatus.SUCCESSFUL)
     }
 
