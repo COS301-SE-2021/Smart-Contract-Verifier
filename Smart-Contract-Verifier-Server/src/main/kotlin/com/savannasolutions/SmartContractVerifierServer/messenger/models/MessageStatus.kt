@@ -6,8 +6,13 @@ import javax.persistence.*
 
 @Entity
 data class MessageStatus(@Id @GeneratedValue val MessageStatusID:UUID,
-                         @OneToOne(fetch = FetchType.LAZY) val MessagesID: Messages,
-                         @OneToOne(fetch = FetchType.LAZY) val RecipientID: User,
-                         val ReadDate:Date,)
+                         val ReadDate:Date?=null,)
+{
+    @ManyToOne(fetch = FetchType.LAZY)
+    lateinit var message: Messages
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    lateinit var recepient: User
+}
 
 
