@@ -26,10 +26,21 @@ contract Verifier{
         jurorStore = new JurorStore(address(this), randomSource);
     }
 
+    // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0
+    modifier inAgreement(uint agreeID){
+        require(msg.sender == agreements[agreeID].party1 || msg.sender == agreements[agreeID].party1);
+        _;
+    }
+
     function createAgreement(address party2, uint resolutionTime, string calldata text) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
 
-        agreements[nextAgreeID] = AgreementLib.makeAgreement(msg.sender, party2, resolutionTime, text, 1000000000);
+        agreements[nextAgreeID].party1 = msg.sender;
+        agreements[nextAgreeID].party2 = party2;
+        agreements[nextAgreeID].resolutionTime = resolutionTime;
+        agreements[nextAgreeID].text = text;
+        agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
+        agreements[nextAgreeID].platformFee = 1000000000;
 
         emit CreateAgreement(msg.sender, party2, nextAgreeID);
         nextAgreeID++;
@@ -73,21 +84,20 @@ contract Verifier{
     }
 
 
-    function getAgreement(uint agreeID) public view returns(AgreementLib.Agreement memory){
-        return agreements[agreeID];
+    function getAgreement(uint agreeID) public view returns(AgreementLib.ReturnAgreement memory){
+        return AgreementLib.makeReturnAgreement(agreements[agreeID]);
     }
 
     function checkVotes(uint agreeID) internal{
         // Checks if both votes are in
-        AgreementLib.Agreement memory a = agreements[agreeID];
 
-        require(a.state == AgreementLib.AgreementState.ACTIVE
-            || a.state == AgreementLib.AgreementState.COMPLETED);
+        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
+            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED);
 
-        if(a.party1Vote == AgreementLib.Vote.YES 
-                && a.party2Vote == AgreementLib.Vote.YES){
-            unisonToken.transfer(a.feePayer, a.feePaid);
-            a.state = AgreementLib.AgreementState.CLOSED;
+        if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES 
+                && agreements[agreeID].party2Vote == AgreementLib.Vote.YES){
+            unisonToken.transfer(agreements[agreeID].feePayer, agreements[agreeID].feePaid);
+            agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
             emit CloseAgreement(agreeID);
         }
     }
@@ -112,7 +122,7 @@ contract Verifier{
         }
     }
 
-    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+    function voteResolution(uint agreeID, AgreementLib.Vote vote) inAgreement(agreeID) public{
         require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
         require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
             || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");

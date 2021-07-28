@@ -3,6 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "../UnisonToken.sol";
+import "./PaymentInfo.sol";
 
 library AgreementLib{
 
@@ -43,22 +44,55 @@ library AgreementLib{
         Vote party2Vote;
         bool hasJury;
 
+        mapping(uint => PaymentInfoLib.PaymentInfo) payments;
+        uint numPayments;
     }
 
-    // Below are constructors for the Agreement struct
+    // Version of Agreement to be used in functions as return value
+    // Agreement can't be returned by a function since it contains a mapping, but ReturnAgreement can't
+    // be in storage since it contains a dynamic array of structs
+    struct ReturnAgreement{
+        address party1;
+        address party2;
+        uint resolutionTime;
+        string text;
 
-    function makeAgreement() pure internal returns(Agreement memory){
-        return Agreement(address(0),address(0),0, "",0,0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE, false);
+        uint256 platformFee;
+        uint256 feePaid;
+        address feePayer;
+
+        AgreementState state;
+
+        Vote party1Vote;
+        Vote party2Vote;
+        bool hasJury;
+
+        PaymentInfoLib.PaymentInfo[] payments;
     }
 
-    function makeAgreement(address party1, address party2, uint resolutionTime, string calldata text) pure internal
-            returns(Agreement memory){
-        return Agreement(party1, party2, resolutionTime, text, 0, 0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE, false);
-    }
+    function makeReturnAgreement(Agreement storage agreement) view internal returns(ReturnAgreement memory){
+        ReturnAgreement memory result;
 
-    function makeAgreement(address party1, address party2, uint resolutionTime, string calldata text, uint256 platformFee) pure internal
-            returns(Agreement memory){
-        return Agreement(party1, party2, resolutionTime, text, platformFee, 0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE, false);
-    }
+        result.party1 = agreement.party1;
+        result.party2 = agreement.party2;
+        result.resolutionTime = agreement.resolutionTime;
+        result.text = agreement.text;
 
+        result.platformFee = agreement.platformFee;
+        result.feePaid = agreement.feePaid;
+        result.feePayer = agreement.feePayer;
+
+        result.state = agreement.state;
+
+        result.party1Vote = agreement.party1Vote;
+        result.party2Vote = agreement.party2Vote;
+        result.hasJury = agreement.hasJury;
+
+        result.payments = new PaymentInfoLib.PaymentInfo[](agreement.numPayments);
+        for(uint i=0; i<agreement.numPayments; i++){
+            result.payments[i] = agreement.payments[i];
+        }
+
+        return result;
+    }
 }
