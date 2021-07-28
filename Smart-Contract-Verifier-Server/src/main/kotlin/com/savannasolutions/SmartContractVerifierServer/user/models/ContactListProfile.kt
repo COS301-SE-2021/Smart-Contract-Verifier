@@ -5,13 +5,13 @@ import javax.persistence.*
 
 @Entity
 data class ContactListProfile(@GeneratedValue @Id val ProfileID: UUID ?=null,
-                              val ContactAlias:String, )
+                              val contactAlias:String, )
 {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ContactListID")
+    //@JoinColumn(name = "ContactListID")
     lateinit var contactList: ContactList
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID")
+    //@JoinColumn(name = "UserID")
     lateinit var user: User
 }

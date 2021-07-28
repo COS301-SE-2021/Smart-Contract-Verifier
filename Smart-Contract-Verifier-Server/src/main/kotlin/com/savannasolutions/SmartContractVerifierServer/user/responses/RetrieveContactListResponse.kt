@@ -1,7 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.user.responses
 
+import com.savannasolutions.SmartContractVerifierServer.common.ContactListAliasWalletResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import java.util.*
 
-data class RetrieveContactListResponse(val WalletAndAlias: List<Pair<UUID,String>>? = null,
-                                        val status: ResponseStatus,)
+data class RetrieveContactListResponse(val WalletAndAlias: List<ContactListAliasWalletResponse>? = null,
+                                       val status: ResponseStatus,)
