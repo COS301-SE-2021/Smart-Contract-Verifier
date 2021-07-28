@@ -132,6 +132,11 @@ contract Verifier{
         jurorStore.addJuror(msg.sender);
     }
 
+    // remove yourself from available jurors list
+    function removeJuror() public{
+        jurorStore.removeJuror(msg.sender);
+    }
+
     event CreateAgreement(address party1, address party2, uint agreeID);
     event AcceptAgreement(uint agreeID);
     event ActiveAgreement(uint agreeID);
