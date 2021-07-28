@@ -12,7 +12,7 @@ data class MessageStatus(@Id @GeneratedValue val MessageStatusID:UUID,
     lateinit var message: Messages
 
     @ManyToOne(fetch = FetchType.LAZY)
-    lateinit var recepient: User
+    lateinit var recipient: User
 }
 
 
