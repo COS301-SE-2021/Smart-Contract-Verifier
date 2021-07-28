@@ -60,7 +60,10 @@ contract JurorStore{
     mapping(uint =>bool) assignedJurors;
 
     // Assigns a jury of specified size, if possible
-    function assignJury(uint count, uint seed) public onlyOwner() returns(address[] memory jury){
+    // noUse contains addresses that can't be jurors for this case.
+    // parties involved in agreement should be put in noUse list
+    function assignJury(uint count, uint seed, address[] calldata noUse)
+             public onlyOwner() returns(address[] memory jury){
         require(count > 0, "Jury size must be a positive value");
         require(count <= numJurors, "Jury size is too big, not enough jurors available");
 
@@ -68,10 +71,26 @@ contract JurorStore{
         address[] memory result = new address[](count);
 
         uint val = randomSource.getRandVal(seed);
+
+        uint noUseLen = noUse.length;
         for(uint i=0; i<count; i++){
             uint index = val % numJurors;
-            while(assignedJurors[index])
-                index++;
+            bool valid = false;
+
+            while(!valid){
+                if(!assignedJurors[index]){
+                    valid = true;
+                    for(uint j=0; j<noUseLen; j++){
+                        if(jurors[index] == noUse[j]){
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+                if(!valid)
+                    index++;
+            }
+
             
             assignedJurors[index] = true;
             indices[i] = index;
