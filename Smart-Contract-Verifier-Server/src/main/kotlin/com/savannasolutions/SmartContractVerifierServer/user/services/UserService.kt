@@ -29,10 +29,6 @@ class UserService(  val userRepository: UserRepository,
             return AddUserResponse(status = ResponseStatus.FAILED)
 
         val user = User(publicWalletID = addUserRequest.WalletID, alias = addUserRequest.Alias)
-        val user = User(
-            publicWalletID = addUserRequest.WalletID,
-            alias = "",
-        )
 
         userRepository.save(user)
 
