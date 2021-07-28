@@ -11,6 +11,6 @@ data class GetAgreementDetailsResponse(val agreementID: UUID,
                                         val createdDate: Date?,
                                         val sealedDate: Date?,
                                         val movedToBlockchain: Boolean?,
-                                        val conditions: List<Conditions>?,
+                                        val conditions: List<UUID>?,
                                         val status: Enum<ResponseStatus>,)
 
