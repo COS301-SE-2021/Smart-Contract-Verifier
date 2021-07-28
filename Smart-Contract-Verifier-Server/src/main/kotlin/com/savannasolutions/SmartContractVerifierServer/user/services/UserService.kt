@@ -116,10 +116,12 @@ class UserService(  val userRepository: UserRepository,
 
 
     fun getNonce(getNonceRequest: GetNonceRequest): GetNonceResponse{
+        //should generate and persist a randomised Nonce which it will also return in the response object to be signed
         return GetNonceResponse(0, ResponseStatus.FAILED)
     }
 
     fun login(loginRequest: LoginRequest): LoginResponse{
+        // Verify the signed nonce and generate a jwt token to respond with adding the claim user=walletID
         return LoginResponse("", ResponseStatus.FAILED)
     }
 
