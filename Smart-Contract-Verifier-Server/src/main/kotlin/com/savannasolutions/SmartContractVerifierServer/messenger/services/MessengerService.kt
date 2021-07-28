@@ -1,6 +1,9 @@
 package com.savannasolutions.SmartContractVerifierServer.messenger.services
 
+import com.savannasolutions.SmartContractVerifierServer.common.MessageResponse
+import com.savannasolutions.SmartContractVerifierServer.common.MessageStatusResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
@@ -10,6 +13,7 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Service
 class MessengerService constructor(val messagesRepository: MessagesRepository,
@@ -18,7 +22,45 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
                                     val agreementsRepository: AgreementsRepository){
 
     fun getAllMessagesByAgreement(getAllMessagesByAgreementRequest: GetAllMessagesByAgreementRequest): GetAllMessagesByAgreementResponse{
-        return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+        if(!userRepository.existsById(getAllMessagesByAgreementRequest.RequestingUser))
+            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+
+        if(!agreementsRepository.existsById(getAllMessagesByAgreementRequest.AgreementID))
+            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+
+        val agreement = agreementsRepository.getById(getAllMessagesByAgreementRequest.AgreementID)
+
+        val messageList = messagesRepository.getAllByAgreements(agreement) ?:
+            return GetAllMessagesByAgreementResponse(emptyList(), status = ResponseStatus.SUCCESSFUL)
+
+        val messageResponseList = ArrayList<MessageResponse>()
+
+        for(message in messageList){
+            val messageStatuses = messageStatusRepository.getAllByMessage(message)
+            val messageStatusList = ArrayList<MessageStatusResponse>()
+            if(messageStatuses != null)
+            {
+                for(messageStatus in messageStatuses)
+                {
+                    var read = true
+                    if(messageStatus.ReadDate == null)
+                        read = false
+                    val tempMessageStatusResponse = MessageStatusResponse(messageStatus.recepient.publicWalletID,
+                                                                            read,
+                                                                            messageStatus.ReadDate)
+                    messageStatusList.add(tempMessageStatusResponse)
+                }
+            }
+            val messageResponse = MessageResponse(message.messageID,
+                                                    UserResponse(message.sender.publicWalletID),
+                                                    message.sendDate,
+                                                    message.agreements.ContractID,
+                                                    message.message,
+                                                    messageStatusList,)
+            messageResponseList.add(messageResponse)
+        }
+
+        return GetAllMessagesByAgreementResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
     }
 
     fun getAllMessagesByUser(getAllMessagesByUserRequest: GetAllMessagesByUserRequest): GetAllMessagesByUserResponse{
