@@ -15,4 +15,7 @@ data class Messages(@Id @GeneratedValue val messageID: UUID,
 
                     @ManyToOne(fetch = FetchType.LAZY)
                     lateinit var sender: User
+
+                    @OneToMany(fetch = FetchType.LAZY, mappedBy = "message", orphanRemoval = true, cascade = [CascadeType.ALL])
+                    var messageStatuses: List<MessageStatus>? = emptyList()
                     }
