@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "./UnisonToken.sol";
-import "./AgreementLib.sol";
+import "./Structs/AgreementLib.sol";
 import "./JurorStore.sol";
 
 // pragma experimental ABIEncoderV2;
