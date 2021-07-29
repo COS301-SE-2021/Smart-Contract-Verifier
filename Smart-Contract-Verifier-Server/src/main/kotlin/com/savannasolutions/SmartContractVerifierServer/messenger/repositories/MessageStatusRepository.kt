@@ -11,4 +11,5 @@ import java.util.*
 interface MessageStatusRepository: JpaRepository<MessageStatus, UUID> {
     fun getAllByMessage(messages: Messages): List<MessageStatus>?= emptyList()
     fun getAllByRecipient(recipient : User): List<MessageStatus>?= emptyList()
+    fun getByRecipientAndMessage(recipient: User, messages: Messages): MessageStatus?
 }
