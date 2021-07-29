@@ -154,7 +154,27 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
     }
 
     fun setMessageAsRead(setMessageAsReadRequest: SetMessageAsReadRequest): SetMessageAsReadResponse{
-        return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+        if(setMessageAsReadRequest.RecipientID.isEmpty())
+            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+
+        if(!userRepository.existsById(setMessageAsReadRequest.RecipientID))
+            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+
+        if(!messagesRepository.existsById(setMessageAsReadRequest.MessageID))
+            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+
+        val user = userRepository.getById(setMessageAsReadRequest.RecipientID)
+        val message = messagesRepository.getById(setMessageAsReadRequest.MessageID)
+        val messageStatus = messageStatusRepository.getByRecipientAndMessage(user, message)?:
+            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+
+        if(messageStatus.ReadDate != null)
+            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+
+        messageStatus.ReadDate = Date()
+
+        messageStatusRepository.save(messageStatus)
+        return SetMessageAsReadResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
 }
