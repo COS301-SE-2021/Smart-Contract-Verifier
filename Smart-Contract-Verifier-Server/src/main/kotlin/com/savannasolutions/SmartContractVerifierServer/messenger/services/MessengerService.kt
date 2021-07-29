@@ -22,18 +22,7 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
                                     val userRepository: UserRepository,
                                     val agreementsRepository: AgreementsRepository){
 
-    fun getAllMessagesByAgreement(getAllMessagesByAgreementRequest: GetAllMessagesByAgreementRequest): GetAllMessagesByAgreementResponse{
-        if(!userRepository.existsById(getAllMessagesByAgreementRequest.RequestingUser))
-            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
-
-        if(!agreementsRepository.existsById(getAllMessagesByAgreementRequest.AgreementID))
-            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
-
-        val agreement = agreementsRepository.getById(getAllMessagesByAgreementRequest.AgreementID)
-
-        val messageList = messagesRepository.getAllByAgreements(agreement) ?:
-            return GetAllMessagesByAgreementResponse(emptyList(), status = ResponseStatus.SUCCESSFUL)
-
+    private fun generateMessageResponseList(messageList : List<Messages>): List<MessageResponse>{
         val messageResponseList = ArrayList<MessageResponse>()
 
         for(message in messageList){
@@ -47,25 +36,65 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
                     if(messageStatus.ReadDate == null)
                         read = false
                     val tempMessageStatusResponse = MessageStatusResponse(messageStatus.recipient.publicWalletID,
-                                                                            read,
-                                                                            messageStatus.ReadDate)
+                        read,
+                        messageStatus.ReadDate)
                     messageStatusList.add(tempMessageStatusResponse)
                 }
             }
             val messageResponse = MessageResponse(message.messageID,
-                                                    UserResponse(message.sender.publicWalletID),
-                                                    message.sendDate,
-                                                    message.agreements.ContractID,
-                                                    message.message,
-                                                    messageStatusList,)
+                UserResponse(message.sender.publicWalletID),
+                message.sendDate,
+                message.agreements.ContractID,
+                message.message,
+                messageStatusList,)
             messageResponseList.add(messageResponse)
         }
+        return messageResponseList;
+    }
+
+    fun getAllMessagesByAgreement(getAllMessagesByAgreementRequest: GetAllMessagesByAgreementRequest): GetAllMessagesByAgreementResponse{
+        if(!userRepository.existsById(getAllMessagesByAgreementRequest.RequestingUser))
+            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+
+        if(!agreementsRepository.existsById(getAllMessagesByAgreementRequest.AgreementID))
+            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+
+        val agreement = agreementsRepository.getById(getAllMessagesByAgreementRequest.AgreementID)
+
+        val messageList = messagesRepository.getAllByAgreements(agreement) ?:
+            return GetAllMessagesByAgreementResponse(emptyList(), status = ResponseStatus.SUCCESSFUL)
+
+        val messageResponseList = generateMessageResponseList(messageList)
 
         return GetAllMessagesByAgreementResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
     }
 
     fun getAllMessagesByUser(getAllMessagesByUserRequest: GetAllMessagesByUserRequest): GetAllMessagesByUserResponse{
-        return GetAllMessagesByUserResponse(status = ResponseStatus.FAILED)
+        if(getAllMessagesByUserRequest.RequestingUser.isEmpty())
+            return GetAllMessagesByUserResponse(status = ResponseStatus.FAILED)
+
+        if(!userRepository.existsById(getAllMessagesByUserRequest.RequestingUser))
+            return GetAllMessagesByUserResponse(status = ResponseStatus.FAILED)
+
+        val user = userRepository.getById(getAllMessagesByUserRequest.RequestingUser)
+        val sentMessageList = messagesRepository.getAllBySender(user)
+        val receivedMessageList = messageStatusRepository.getAllByRecipient(user)
+        val messageList = ArrayList<Messages>()
+        if(sentMessageList != null)
+            messageList.addAll(sentMessageList);
+
+        if(receivedMessageList != null)
+        {
+            for(msg in receivedMessageList)
+            {
+                val message = messagesRepository.getById(msg.message.messageID)
+                messageList.add(message)
+            }
+        }
+
+        val messageResponseList = generateMessageResponseList(messageList)
+
+        return GetAllMessagesByUserResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
     }
 
     fun getMessageDetail(getMessageDetailRequest: GetMessageDetailRequest): GetMessageDetailResponse{
