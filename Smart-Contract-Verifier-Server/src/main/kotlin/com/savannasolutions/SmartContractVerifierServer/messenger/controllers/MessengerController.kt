@@ -28,7 +28,7 @@ class MessengerController constructor(private val messengerService: MessengerSer
     fun sendMessage(@RequestBody sendMessageRequest: SendMessageRequest) =
         messengerService.sendMessage(sendMessageRequest)
 
-    @PostMapping("set-message-as-read")
+    @PostMapping("/set-message-as-read")
     fun setMessageAsRead(@RequestBody setMessageAsReadRequest: SetMessageAsReadRequest) =
         messengerService.setMessageAsRead(setMessageAsReadRequest)
 }
