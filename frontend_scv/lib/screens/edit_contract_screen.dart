@@ -142,7 +142,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Contract'),
+        title: Text('New Agreement'),
         actions: [
           IconButton(
             onPressed: _saveForm,
