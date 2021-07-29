@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/screens/judge_duty_screen.dart';
 import '../providers/auth.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -25,9 +26,8 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.gavel),
             title: Text('Judge Duty'),
             onTap: () {
-              //TODO: Add Judge Duty Screen
-              // Navigator.of(context)
-              //     .pushReplacementNamed(JudgeDutyScreen.routeName);
+              Navigator.of(context)
+                  .pushReplacementNamed(JudgeDutyScreen.routeName);
             },
           ),
           Divider(),
