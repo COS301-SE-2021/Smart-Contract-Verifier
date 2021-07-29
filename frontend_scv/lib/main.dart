@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/screens/judge_duty_screen.dart';
 
 import './screens/contracts_overview_screen.dart';
 import './screens/auth_screen.dart';
@@ -9,6 +10,7 @@ import './screens/view_contract_screen.dart';
 //
 import './providers/contracts.dart';
 import './providers/auth.dart';
+import './providers/api_test_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,6 +28,9 @@ class MyApp extends StatelessWidget {
               auth.userId,
               previousProducts == null ? [] : previousProducts.items),
           create: null,
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => TestApi(),
         ),
         // TODO: Add Notification Provider Here
       ],
@@ -55,6 +60,7 @@ class MyApp extends StatelessWidget {
                 // ContractDetailScreen.routeName: (ctx) => ContractDetailScreen(),
                 ViewContractScreen.routeName: (ctx) => ViewContractScreen(),
                 EditContractScreen.routeName: (ctx) => EditContractScreen(),
+                JudgeDutyScreen.routeName: (ctx) => JudgeDutyScreen(),
               },
             )),
       ),
