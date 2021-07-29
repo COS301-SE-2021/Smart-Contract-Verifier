@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:unison/widgets/judge_active_cases_grid.dart';
 import '../widgets/app_drawer.dart';
-import '../widgets/contracts_grid.dart';
 
 class JudgeDutyScreen extends StatelessWidget {
   static const routeName = '/judge-duty';
@@ -13,7 +12,7 @@ class JudgeDutyScreen extends StatelessWidget {
       ),
       drawer: AppDrawer(),
       body: Center(
-        child: ContractsGrid(),
+        child: JudgeActiveCasesGrid(),
       ),
     );
   }
