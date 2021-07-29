@@ -49,7 +49,7 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
                 messageStatusList,)
             messageResponseList.add(messageResponse)
         }
-        return messageResponseList;
+        return messageResponseList
     }
 
     fun getAllMessagesByAgreement(getAllMessagesByAgreementRequest: GetAllMessagesByAgreementRequest): GetAllMessagesByAgreementResponse{
@@ -81,7 +81,7 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         val receivedMessageList = messageStatusRepository.getAllByRecipient(user)
         val messageList = ArrayList<Messages>()
         if(sentMessageList != null)
-            messageList.addAll(sentMessageList);
+            messageList.addAll(sentMessageList)
 
         if(receivedMessageList != null)
         {
@@ -98,7 +98,15 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
     }
 
     fun getMessageDetail(getMessageDetailRequest: GetMessageDetailRequest): GetMessageDetailResponse{
-        return GetMessageDetailResponse(status = ResponseStatus.FAILED)
+        if(!messagesRepository.existsById(getMessageDetailRequest.MessageID))
+            return GetMessageDetailResponse(status = ResponseStatus.FAILED)
+
+        val message = messagesRepository.getById(getMessageDetailRequest.MessageID)
+        val messageList = ArrayList<Messages>()
+        messageList.add(message)
+        val messageResponseList = generateMessageResponseList(messageList)
+
+        return GetMessageDetailResponse(messageResponseList[0], status = ResponseStatus.SUCCESSFUL)
     }
 
     fun sendMessage(sendMessageRequest: SendMessageRequest): SendMessageResponse{
@@ -132,7 +140,7 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
             {
                 var tempMessageStatus = MessageStatus(UUID.fromString("eebe3abc-b594-4a2f-a7dc-246bad26aaa5"))
                 tempMessageStatus.recipient = otherUser
-                tempMessageStatus.message = message;
+                tempMessageStatus.message = message
                 tempMessageStatus = messageStatusRepository.save(tempMessageStatus)
                 messageStatusList.add(tempMessageStatus)
             }
