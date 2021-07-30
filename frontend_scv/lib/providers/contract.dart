@@ -103,11 +103,3 @@ class Contract with ChangeNotifier {
     }
   }
 }
-
-enum ContractColor {
-  cyan,
-  deepOrange,
-  pink,
-  purple,
-  green,
-}
