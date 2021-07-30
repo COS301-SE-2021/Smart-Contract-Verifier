@@ -41,23 +41,25 @@ library AgreementLib{
 
         Vote party1Vote;
         Vote party2Vote;
+        bool hasJury;
+
 
     }
 
     // Below are constructors for the Agreement struct
 
     function makeAgreement() pure internal returns(Agreement memory){
-        return Agreement(address(0),address(0),0, "",0,0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE);
+        return Agreement(address(0),address(0),0, "",0,0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE, false);
     }
 
     function makeAgreement(address party1, address party2, uint resolutionTime, string calldata text) pure internal
             returns(Agreement memory){
-        return Agreement(party1, party2, resolutionTime, text, 0, 0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE);
+        return Agreement(party1, party2, resolutionTime, text, 0, 0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE, false);
     }
 
     function makeAgreement(address party1, address party2, uint resolutionTime, string calldata text, uint256 platformFee) pure internal
             returns(Agreement memory){
-        return Agreement(party1, party2, resolutionTime, text, platformFee, 0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE);
+        return Agreement(party1, party2, resolutionTime, text, platformFee, 0, address(0), AgreementState.PROPOSED, Vote.NONE, Vote.NONE, false);
     }
 
 }
