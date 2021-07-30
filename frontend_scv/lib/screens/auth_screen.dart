@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../models/http_exception.dart';
 import '../providers/auth.dart';
 
+import '../models/backendAPI.dart';
+
 enum AuthMode { Signup, Login }
 
 class AuthScreen extends StatelessWidget {
@@ -115,7 +117,24 @@ class _AuthCardState extends State<AuthCard> {
             ));
   }
 
+  //Temp
   Future<void> _submit() async {
+  apiInteraction thing = apiInteraction();
+  var res;
+
+  try {
+    res = await thing.postData('negotiation/hello', <String, String>{});
+    }
+    on Exception catch(e)
+    {
+      print (e);
+      res = 'Nothing';
+    }
+  print (res);
+
+  }
+
+  Future<void> _submit2() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;

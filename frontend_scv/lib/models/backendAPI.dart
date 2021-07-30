@@ -1,3 +1,7 @@
+//This class is used for interaction with the deployed server backend.
+//String baseUrl is the root url of the server.
+//When using these functions, the url passed in is effectively the api endpoint, an extension to the root url.
+
 import 'dart:convert';
 import 'package:retry/retry.dart';
 import 'package:http/http.dart';
