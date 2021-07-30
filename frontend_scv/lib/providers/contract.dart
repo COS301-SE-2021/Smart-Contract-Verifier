@@ -111,22 +111,3 @@ enum ContractColor {
   purple,
   green,
 }
-
-extension ContractColorExtension on ContractColor {
-  Color get name {
-    switch (this) {
-      case ContractColor.cyan:
-        return Colors.cyan;
-      case ContractColor.deepOrange:
-        return Colors.deepOrange;
-      case ContractColor.pink:
-        return Colors.pink;
-      case ContractColor.purple:
-        return Colors.purple;
-      case ContractColor.green:
-        return Colors.green;
-      default:
-        return Colors.cyan;
-    }
-  }
-}
