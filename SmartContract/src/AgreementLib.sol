@@ -43,6 +43,7 @@ library AgreementLib{
         Vote party2Vote;
         bool hasJury;
 
+
     }
 
     // Below are constructors for the Agreement struct

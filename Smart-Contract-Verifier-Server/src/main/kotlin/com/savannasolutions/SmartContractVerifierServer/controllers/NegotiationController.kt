@@ -4,7 +4,7 @@ import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.services.NegotiationService
 import org.springframework.web.bind.annotation.*
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/negotiation")
 class NegotiationController constructor(private val negotiationService: NegotiationService) {
