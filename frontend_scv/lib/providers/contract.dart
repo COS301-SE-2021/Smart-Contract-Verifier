@@ -21,7 +21,6 @@ class Contract with ChangeNotifier {
   final String imageUrl;
   final String partyBId;
   bool isFavorite;
-  ContractColor color;
 
   Contract({
     this.contractId,
@@ -39,7 +38,6 @@ class Contract with ChangeNotifier {
     this.imageUrl,
     this.partyBId, //RC: What is partyB vs partyBID?
     this.isFavorite = false,
-    this.color = ContractColor.cyan,
   }); // Contract({
   //   @required this.contractId,
   //   @required this.title,
