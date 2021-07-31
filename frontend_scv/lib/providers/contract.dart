@@ -76,6 +76,9 @@ class Contract with ChangeNotifier {
         'sealedDate': sealedDate,
         'movedToBlockChain': movedToBlockchain,
         'conditions': conditions,
+        'title' : title,
+        'description' : description,
+        'imageUrl' : imageUrl,
       };
 
   void _setFavValue(bool newValue) {

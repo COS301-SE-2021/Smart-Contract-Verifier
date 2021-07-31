@@ -3,29 +3,38 @@
 //Should these be called services?
 //Also, are these multiple files too fragmented?
 
-import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'dart:async';
 import '../models/backendAPI.dart';
 import '../providers/contract.dart';
 
 class NegotiationService {
 
-  apiInteraction api = apiInteraction();
+  ApiInteraction api = ApiInteraction();
 
  Future<dynamic> getNotifications(String party) async {
 
     return;
  }
 
- Future<void> saveAgreement (Contract agr) async { //Save current version of agreement to backend
+ Future<void> saveAgreement (Contract agr) async { //Save initial version of agreement to backend
     //TODO list:
-   //Change into map
-   //Send map to api/post
-
    //Add exception handling. Maybe change return type to String
 
-   return;
+   Map<String, dynamic> agrMap = agr.toJson();
+   Map<String, String> body = {'PartyA' : agrMap['PartyA'], 'PartyB' : agrMap['PartyB'], 'AgreementTitle' : agrMap['title'], 'AgreementDescription' : agrMap['description'], 'AgreementImageURL' : agrMap['imageUrl']};
+
+   Map<String, dynamic> response;
+   try {
+     response = await api.postData('/negotiation/create-agreement', body);
+
+     if (response['status'] != 'SUCCESSFUL')
+       throw Exception('Agreement could not be saved');
+   } on Exception catch(e) {
+      //Handle exception
+     print (e);
+     return;
+   }
+
  }
 
  Future<void> saveCondition(String id, /*Condition*/dynamic cond) async { //Save a condition associated with a contract

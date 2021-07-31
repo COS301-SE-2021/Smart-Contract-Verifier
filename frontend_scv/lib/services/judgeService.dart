@@ -9,7 +9,7 @@ import '../providers/contract.dart';
 
 class JudgeService {
 
-  apiInteraction api = apiInteraction();
+  ApiInteraction api = ApiInteraction();
 
   Future<List<Contract>> getInvolvedAgreements(String party) async { //Get all agreements where a user is the judge
 

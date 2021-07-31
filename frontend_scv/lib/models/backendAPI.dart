@@ -52,7 +52,6 @@ class ApiInteraction {
     if (response.statusCode != 200)
       throw Exception('An error occurred while making the request. The server responded with status code ' + response.statusCode.toString()); //Failed http request
 
-    print (response.body);
     return json.decode(response.body.toString());
   }
 
