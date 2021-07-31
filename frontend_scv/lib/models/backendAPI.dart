@@ -31,7 +31,7 @@ class apiInteraction {
 
   }
 
-  Future<Map<dynamic, dynamic>> postData(String url, Map<dynamic, dynamic> jsn) async{ //Pass in url extension and json body
+  Future<Map<String, String>> postData(String url, Map<dynamic, dynamic> jsn) async{ //Pass in url extension and json body
     var response;
     try {
       response = await RetryOptions(maxAttempts: 5).retry(

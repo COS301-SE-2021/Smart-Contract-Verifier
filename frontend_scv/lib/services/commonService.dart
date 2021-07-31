@@ -17,10 +17,25 @@ class NegotiationService {
     //Get list of all contracts with this party
     //Convert each item in the list to Contract object
 
-    Map<String, String> body = {};
-    final response = api.postData('/user/retrieve-suer-agreements', body);
+    Map<String, String> body = {'UserID' : party};
+    var response;
 
-    return [];
+    try {
+      response = api.postData('/user/retrieve-user-agreements', body);
+    }
+    on Exception catch(e) {
+      //Handle Exception
+      return [];
+    }
+
+    final jsonList = jsonDecode(response);
+    List<Contract> ret;
+    for (int i =0; i<jsonList.length;i++)
+    {
+      ret.add(Contract.fromJson(jsonList[i]));
+    }
+
+    return ret;
   }
 
   Future<Contract> getAgreement(String id) async { //Get agreement with specified id
@@ -29,7 +44,19 @@ class NegotiationService {
     //Convert map to contract
     //On Exception: Maybe special error contract object?
 
-    return Contract();
+    Map<String, String> body = {'AgreementID' : id};
+    var response;
+
+    try {
+      response = api.postData('/negotiation/get-agreement-details', body);
+    }
+    on Exception catch(e) {
+      //Handle Exception,
+      //possibly with custom contract object
+      return Contract();
+    }
+
+    return Contract.fromJson(jsonDecode(response));
 
   }
 
