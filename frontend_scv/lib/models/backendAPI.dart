@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
-class apiInteraction {
+class ApiInteraction {
 
   final String baseUrl = "https://localhost:8080/"; //Url where the backend is deployed
 

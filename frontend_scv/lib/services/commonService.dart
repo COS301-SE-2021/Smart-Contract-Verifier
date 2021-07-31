@@ -10,12 +10,11 @@ import '../providers/contract.dart';
 
 class NegotiationService {
 
-  apiInteraction api = apiInteraction();
+  ApiInteraction api = ApiInteraction();
 
   Future<List<Contract>> getInvolvedAgreements(String party) async {
     //TODO list:
-    //Get list of all contracts with this party
-    //Convert each item in the list to Contract object
+    //Verify that this works
 
     Map<String, String> body = {'UserID' : party};
     var response;
@@ -40,8 +39,7 @@ class NegotiationService {
 
   Future<Contract> getAgreement(String id) async { //Get agreement with specified id
     //TODO list:
-    //Send api request
-    //Convert map to contract
+    //Verify that this works.
     //On Exception: Maybe special error contract object?
 
     Map<String, String> body = {'AgreementID' : id};
