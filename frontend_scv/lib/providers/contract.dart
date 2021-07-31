@@ -49,22 +49,22 @@ class Contract with ChangeNotifier {
   // }); //not final because it will be changing
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
-  Contract.fromJson(Map<String, dynamic> json)
-      : contractId = json['agreementID'],
+  Contract.fromJson(Map<String, dynamic> jsn)
+      : contractId = jsn['agreementID'],
         //duration = json['duration'], //Should be durationID?
-        durationId = json['duration'],
-        partyA = json['PartyA'],
-        partyB = json['PartyB'],
-        createdDate = json['createdDate'],
-        sealedDate = json['sealedDate'],
+        durationId = '',//jsn['duration'],
+        partyA = jsn['partyA']['publicWalletID'],
+        partyB = jsn['partyB']['publicWalletID'],
+        createdDate = jsn['createdDate'],
+        sealedDate = jsn['sealedDate'],
         //status = json['status'],
-        movedToBlockchain = json['movedToBlockChain'],
-        description = '',
-        imageUrl = '',
+        movedToBlockchain = jsn['movedToBlockChain'],
+        description = jsn['agreementDescription'],
+        imageUrl = jsn['agreementImageURL'],
         partyBId = '',
         price = 0,
-        title = '',
-        conditions = json['conditions'];
+        title = jsn['agreementTitle'],
+        conditions = jsn['conditions'];
 
   //To JSON. RC: Subject to the great field discussion
   Map<String, dynamic> toJson() => {
@@ -100,4 +100,13 @@ class Contract with ChangeNotifier {
       _setFavValue(oldStatus);
     }
   }
+
+  String toString() { //A ToString method for debugging purposes
+    String ret = 'ID: ' + contractId + '\n';
+    ret += 'Party A: ' + partyA.toString() + '\n';
+    ret += 'Party B: ' + partyB.toString() + '\n';
+
+    return ret;
+  }
+
 }
