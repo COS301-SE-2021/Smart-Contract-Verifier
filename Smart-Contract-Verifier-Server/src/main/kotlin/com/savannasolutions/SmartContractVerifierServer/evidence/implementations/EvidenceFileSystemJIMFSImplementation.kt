@@ -1,0 +1,7 @@
+package com.savannasolutions.SmartContractVerifierServer.evidence.implementations
+
+import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.EvidenceFileSystem
+
+class EvidenceFileSystemJIMFSImplementation: EvidenceFileSystem{
+
+}
