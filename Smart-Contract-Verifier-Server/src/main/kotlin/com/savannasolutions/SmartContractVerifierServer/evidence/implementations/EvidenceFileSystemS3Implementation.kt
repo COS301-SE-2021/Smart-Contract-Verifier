@@ -1,7 +1,10 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.implementations
 
 import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.EvidenceFileSystem
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.stereotype.Component
 
+@Component
 class EvidenceFileSystemS3Implementation: EvidenceFileSystem{
 
 }
