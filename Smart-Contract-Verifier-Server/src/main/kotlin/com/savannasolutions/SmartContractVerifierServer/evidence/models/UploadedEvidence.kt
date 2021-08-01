@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.negotiation.models
+package com.savannasolutions.SmartContractVerifierServer.evidence.models
 
 import java.util.*
 import javax.persistence.*

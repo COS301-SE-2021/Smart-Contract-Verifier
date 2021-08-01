@@ -1,6 +1,6 @@
-package com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
+package com.savannasolutions.SmartContractVerifierServer.evidence.repositories
 
-import com.savannasolutions.SmartContractVerifierServer.negotiation.models.UploadedEvidence
+import com.savannasolutions.SmartContractVerifierServer.evidence.models.UploadedEvidence
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*
