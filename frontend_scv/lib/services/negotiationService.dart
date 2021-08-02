@@ -21,7 +21,8 @@ class NegotiationService {
    //Add exception handling. Maybe change return type to String
 
    Map<String, dynamic> agrMap = agr.toJson();
-   Map<String, String> body = {'PartyA' : agrMap['PartyA'], 'PartyB' : agrMap['PartyB'], 'AgreementTitle' : agrMap['title'], 'AgreementDescription' : agrMap['description'], 'AgreementImageURL' : agrMap['imageUrl']};
+   Map<String, String> body = {'PartyA' : agrMap['PartyA'], 'PartyB' : agrMap['PartyB'], 'AgreementTitle' : agrMap['title'],
+     'AgreementDescription' : agrMap['description'], 'AgreementImageURL' : agrMap['imageUrl']};
 
    Map<String, dynamic> response;
    try {
