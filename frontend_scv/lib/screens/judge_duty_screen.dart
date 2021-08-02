@@ -11,8 +11,28 @@ class JudgeDutyScreen extends StatelessWidget {
         title: Text('Judge Duty'),
       ),
       drawer: AppDrawer(),
-      body: Center(
-        child: JudgeActiveCasesGrid(),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                'Current Assignments:',
+                style: TextStyle(
+                  fontSize: 16,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ],
+          ),
+          Expanded(child: JudgeActiveCasesGrid()),
+        ],
       ),
     );
   }
