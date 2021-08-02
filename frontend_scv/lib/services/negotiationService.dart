@@ -6,6 +6,7 @@
 import 'dart:async';
 import '../models/backendAPI.dart';
 import '../providers/contract.dart';
+import '../providers/condition.dart';
 
 class NegotiationService {
 
@@ -38,17 +39,58 @@ class NegotiationService {
 
  }
 
- Future<void> saveCondition(String id, /*Condition*/dynamic cond) async { //Save a condition associated with a contract
+ Future<void> saveCondition(String id, Condition cond) async { //Save a condition associated with a contract
 
     //TODO list:
-   //Create Condition class
-   //Send to api
-   //Review return type (for special cases)
-   return;
+   //Review return type and error handling (for special cases)
+
+   Map<String, dynamic> con = cond.toJson();
+   Map<String, String> body = {'AgreementID' : id, 'ConditionTitle' : con['ConditionTitle'],
+     'ProposedUser' : con['ProposedUser'], 'ConditionDescription' : con['ConditionDescription']}; //Maybe change proposedUser to map to the current user? To ensure it's correct
+
+   Map<String, dynamic> response;
+   try {
+     response = await api.postData('/negotiation/create-condition', body);
+
+     if (response['status'] != 'SUCCESSFUL')
+       throw Exception('Condition could not be saved');
+   } on Exception catch(e) {
+     //Handle exception
+     print (e);
+     return;
+   }
 
  }
 
- Future<void> updateCondition(/*Condition*/ dynamic cond) async {
+  void acceptCondition(String id) async { //Or condition object?
+
+    await handleCondition(id, true);
+  }
+
+  void rejectCondition(String id) async {
+
+    await handleCondition(id, false);
+  }
+
+  Future<void> handleCondition(String id, bool acc) async {
+
+   Map<String, String> body = {'ConditionID' : id};
+   String path = acc ? 'accept-condition' : 'reject-condition';
+
+   Map<String, dynamic> response;
+   try {
+     response = await api.postData('/negotiation/$path', body);
+
+     if (response['status'] != 'SUCCESSFUL')
+       throw Exception('Condition could not be ' + (acc ? 'accepted' : 'rejected'));
+   } on Exception catch(e) {
+     //Handle exception
+     print (e);
+     return;
+   }
+ }
+
+ Future<void> updateCondition(Condition cond) async {
 
     //TODO list:
    //Use condition to either remove/resave,
