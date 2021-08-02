@@ -1,13 +1,10 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.implementations
 
 import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.EvidenceFileSystem
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 
-@Component
-class EvidenceFileSystemS3Implementation: EvidenceFileSystem{
+class EvidenceFileSystemJavaFilesystemImplementation: EvidenceFileSystem {
     override fun saveFile(fileToSave: MultipartFile) {
         TODO("Not yet implemented")
     }
@@ -19,5 +16,4 @@ class EvidenceFileSystemS3Implementation: EvidenceFileSystem{
     override fun deleteFile(fileToDelete: String) {
         TODO("Not yet implemented")
     }
-
 }

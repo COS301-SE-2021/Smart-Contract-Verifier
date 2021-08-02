@@ -4,11 +4,12 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.Evid
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
+import org.springframework.web.multipart.MultipartFile
 import java.io.File
 
 @Component
 class EvidenceFileSystemJIMFSImplementation: EvidenceFileSystem{
-    override fun saveFile(fileToSave: File) {
+    override fun saveFile(fileToSave: MultipartFile) {
         TODO("Not yet implemented")
     }
 

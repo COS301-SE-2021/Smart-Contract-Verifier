@@ -1,4 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.responses
 
-class LinkEvidenceResponse {
-}
+import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+
+data class LinkEvidenceResponse(val responseStatus: ResponseStatus,)
