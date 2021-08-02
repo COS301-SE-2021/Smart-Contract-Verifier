@@ -1,4 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.responses
 
-class RemoveEvidenceResponse {
-}
+import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+
+data class RemoveEvidenceResponse(val responseStatus: ResponseStatus)

@@ -1,4 +1,4 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.requests
 
-class RemoveEvidenceRequest {
-}
+data class RemoveEvidenceRequest(val userId: String,
+                                 val evidenceHash: String,)
