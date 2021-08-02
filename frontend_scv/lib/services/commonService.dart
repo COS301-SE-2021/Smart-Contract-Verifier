@@ -5,6 +5,7 @@
 import 'dart:async';
 import '../models/backendAPI.dart';
 import '../providers/contract.dart';
+import '../providers/condition.dart';
 
 class CommonService {
 
@@ -56,9 +57,30 @@ class CommonService {
     return Contract.fromJson(response['agreementResponse']);
   }
 
-  Future</*Condition*/dynamic> getConditions(String id) async { //Get a list of conditions for an agreement
+  Future<List<Condition>> getConditions(String id) async { //Get a list of conditions for an agreement
 
-    return;
+    List<Condition> res = [];
+
+    Map<String, dynamic> response;
+    Map<String, dynamic> body = {'AgreementID' : id};
+
+    try {
+      response = await api.postData('', body);
+
+      if (response['status'] != 'SUCCESSFUL')
+        throw Exception('Conditions could not be retrieved');
+    } on Exception catch(e) {
+      //Handle Exception,
+      //maybe with custom error condition
+      print (e.toString());
+      return res;
+    }
+
+    for (int i =0;i<response['conditions'].length;i++) {
+      res.add(Condition.fromJson(response['conditions'][i]));
+    }
+
+    return res;
   }
 
   Future<void> getHello() async { //To test api
