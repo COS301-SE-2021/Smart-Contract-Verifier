@@ -32,6 +32,11 @@ contract Verifier{
         _;
     }
 
+    function _addPaymentToAgreement(uint256 agreeID, PaymentInfoLib.PaymentInfo memory payment) internal{
+        agreements[agreeID].payments[agreements[agreeID].numPayments] = payment;
+        agreements[agreeID].numPayments++;
+    }
+
     function createAgreement(address party2, uint resolutionTime, string calldata text) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
 
@@ -55,6 +60,35 @@ contract Verifier{
             agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
             emit AcceptAgreement(agreeID);
         }
+    }
+
+    // Each payment must have the allowance ready, it will be transferred immediately
+    function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
+        require(tokens.length == amount.length, "mismatch between tokens and amounts");
+        uint numPayments = tokens.length;
+
+        address otherParty;
+        if(msg.sender == agreements[agreeID].party1)
+            otherParty = agreements[agreeID].party2;
+        else
+            agreements[agreeID].party2;
+
+        for(uint i=0; i<numPayments; i++){
+            uint256 allowed = tokens[i].allowance(msg.sender, address(this));
+            require(allowed >= amount[i], "Insufficient allowance on a specified payment");
+
+            PaymentInfoLib.PaymentInfo memory p;
+            p.token = tokens[i];
+            p.from = msg.sender;
+            p.to = otherParty;
+            p.amount = amount[i];
+
+            tokens[i].transferFrom(msg.sender, address(this), amount[i]);
+            _addPaymentToAgreement(agreeID, p);
+
+        }        
+
+
     }
 
     function payPlatformFee(uint agreeID) public{
