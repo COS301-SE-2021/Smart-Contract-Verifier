@@ -1,4 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.requests
 
-class GetAllEvidenceRequest {
-}
+import java.util.*
+
+data class GetAllEvidenceRequest(val contractId: UUID,)

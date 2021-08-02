@@ -1,4 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.responses
 
-class GetAllEvidenceResponse {
-}
+import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+
+data class GetAllEvidenceResponse(val responseStatus: ResponseStatus,
+                                  var evidenceHashes: List<String>,)
