@@ -1,4 +1,3 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.requests
 
-class FetchEvidenceRequest {
-}
+data class FetchEvidenceRequest(val evidenceHash: String,)
