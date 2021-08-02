@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/evidence")
-class EvidenceController constructor(private val evidenceService: EvidenceService,
-                                     @Qualifier("evidenceFileSystemJIMFSImplementation") val evidenceFileSystem: EvidenceFileSystem,) {
+class EvidenceController constructor(private val evidenceService: EvidenceService,) {
 
     @PostMapping("/upload")
     fun uploadEvidence(@RequestBody uploadEvidenceRequest: UploadEvidenceRequest) =
