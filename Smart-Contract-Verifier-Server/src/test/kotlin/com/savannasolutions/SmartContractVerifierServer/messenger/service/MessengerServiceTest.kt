@@ -7,8 +7,10 @@ import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.M
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetAllMessagesByAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetAllMessagesByUserRequest
+import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetMessageDetailRequest
 import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByAgreementResponse
 import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByUserResponse
+import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetMessageDetailResponse
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -119,6 +121,27 @@ internal class MessengerServiceTest {
         //then
         return messengerService.getAllMessagesByUser(GetAllMessagesByUserRequest(userAddress))
         }
+
+    private fun parameterizeGetMessageDetail(messageID: UUID,
+                                                messageExist: Boolean): GetMessageDetailResponse
+    {
+        //given
+        var message = Messages(messageID,"Test Data", Date())
+
+        val agreement = Agreements(ContractID = UUID.fromString("7b67f0f4-6433-4a72-b467-c6ddb9dd772a"),
+            CreatedDate = Date(),
+            MovedToBlockChain = false,)
+
+        message = message.apply { agreements = agreement }
+        message = message.apply { sender = User("user A") }
+
+        //when
+        whenever(messagesRepository.existsById(messageID)).thenReturn(messageExist)
+        whenever(messagesRepository.getById(messageID)).thenReturn(message)
+
+        //then
+        return messengerService.getMessageDetail(GetMessageDetailRequest(messageID))
+    }
 
     @Test
     fun `Successful test for getAllMessagesByAgreement without messages`(){
@@ -395,5 +418,26 @@ internal class MessengerServiceTest {
         assertEquals(response.status, ResponseStatus.FAILED)
     }
 
+    @Test
+    fun `getMessageDetail success`(){
+        //given
+
+        //when
+        val response = parameterizeGetMessageDetail(UUID.fromString("887372ab-d2e9-45a7-af1f-d2a6924c1466"), true)
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `getMessageDetail failure message does not exist`(){
+        //given
+
+        //when
+        val response = parameterizeGetMessageDetail(UUID.fromString("887372ab-d2e9-45a7-af1f-d2a6924c1466"), false)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
 
 }
