@@ -5,14 +5,8 @@ import com.savannasolutions.SmartContractVerifierServer.messenger.models.Message
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetAllMessagesByAgreementRequest
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetAllMessagesByUserRequest
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetMessageDetailRequest
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.SendMessageRequest
-import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByAgreementResponse
-import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByUserResponse
-import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetMessageDetailResponse
-import com.savannasolutions.SmartContractVerifierServer.messenger.responses.SendMessageResponse
+import com.savannasolutions.SmartContractVerifierServer.messenger.requests.*
+import com.savannasolutions.SmartContractVerifierServer.messenger.responses.*
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -184,6 +178,51 @@ internal class MessengerServiceTest {
 
         //then
         return messengerService.sendMessage(SendMessageRequest(sendingUserID, agreementID, messageData))
+    }
+
+    private fun parameterizeSetMessageAsRead(recipientID: String,
+                                             recipientExists: Boolean,
+                                             messageExists: Boolean,
+                                             ReadDate: Boolean,
+                                             userMessageExists: Boolean): SetMessageAsReadResponse{
+        //given
+        val recipient = User(recipientID)
+        val otherUser = User("other user")
+        val userList = ArrayList<User>()
+        userList.add(recipient)
+        userList.add(otherUser)
+
+        var agreement = Agreements(ContractID = UUID.fromString("7b67f0f4-6433-4a72-b467-c6ddb9dd772a"),
+            CreatedDate = Date(),
+            MovedToBlockChain = false,).apply { users.add(recipient) }
+        agreement = agreement.apply { users.add(otherUser) }
+
+        var message = Messages(UUID.fromString("d34f7ef4-c109-426a-b20d-25f866e216f8"),
+                                "TestMessage",Date())
+        message = message.apply { sender = otherUser }
+        message = message.apply { agreements = agreement }
+
+        var messageStatus : MessageStatus = if(ReadDate)
+            MessageStatus(UUID.fromString("f6d252fa-a4f8-439e-9ab3-e5f9e8225a78"),
+                Date())
+        else
+            MessageStatus(UUID.fromString("f6d252fa-a4f8-439e-9ab3-e5f9e8225a78"))
+
+        messageStatus = messageStatus.apply { this.recipient = recipient }
+        messageStatus = messageStatus.apply { this.message = message }
+
+        //when
+        whenever(userRepository.existsById(recipientID)).thenReturn(recipientExists)
+        whenever(userRepository.getById(recipientID)).thenReturn(recipient)
+        whenever(messagesRepository.existsById(message.messageID)).thenReturn(messageExists)
+        whenever(messagesRepository.getById(message.messageID)).thenReturn(message)
+        if(userMessageExists)
+            whenever(messageStatusRepository.getByRecipientAndMessage(recipient,message)).thenReturn(messageStatus)
+        else
+            whenever(messageStatusRepository.getByRecipientAndMessage(recipient,message)).thenReturn(null)
+        whenever(messageStatusRepository.save(any<MessageStatus>())).thenReturn(messageStatus)
+
+        return messengerService.setMessageAsRead(SetMessageAsReadRequest(message.messageID,recipientID))
     }
 
     @Test
@@ -543,4 +582,93 @@ internal class MessengerServiceTest {
         assertEquals(response.status, ResponseStatus.FAILED)
     }
 
+    @Test
+    fun `setMessageAsRead successful`(){
+        //given
+
+        //when
+        val response = parameterizeSetMessageAsRead("userA",
+                                                    recipientExists = true,
+                                                    messageExists = true,
+                                                    ReadDate = false,
+                                                    userMessageExists = true)
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+    }
+
+    @Test
+    fun `setMessageAsRead failed recipientID is empty`(){
+        //given
+
+        //when
+        val response = parameterizeSetMessageAsRead("",
+            recipientExists = true,
+            messageExists = true,
+            ReadDate = false,
+            userMessageExists = true)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `setMessageAsRead failed user does not exist`(){
+        //given
+
+        //when
+        val response = parameterizeSetMessageAsRead("user A",
+            recipientExists = false,
+            messageExists = true,
+            ReadDate = false,
+            userMessageExists = true)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `setMessageAsRead failed message does not exist`(){
+        //given
+
+        //when
+        val response = parameterizeSetMessageAsRead("user A",
+            recipientExists = true,
+            messageExists = false,
+            ReadDate = false,
+            userMessageExists = true)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `setMessageAsRead failed message has already marked as read`(){
+        //given
+
+        //when
+        val response = parameterizeSetMessageAsRead("user b",
+            recipientExists = true,
+            messageExists = true,
+            ReadDate = true,
+            userMessageExists = true)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `setMessageAsRead failed user is not part of the message`(){
+        //given
+
+        //when
+        val response = parameterizeSetMessageAsRead("user a",
+            recipientExists = true,
+            messageExists = true,
+            ReadDate = false,
+            userMessageExists = false)
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
 }
