@@ -136,7 +136,7 @@ contract Verifier{
         }
     }
 
-    function updateStateAfterVote(uint agreeID) internal{
+    function _updateStateAfterVote(uint agreeID) internal{
 
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
                 agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
@@ -163,11 +163,11 @@ contract Verifier{
 
         if(msg.sender == agreements[agreeID].party1){
             agreements[agreeID].party1Vote = vote;
-            updateStateAfterVote(agreeID);
+            _updateStateAfterVote(agreeID);
         }
         else if(msg.sender == agreements[agreeID].party2){
             agreements[agreeID].party2Vote = vote;
-            updateStateAfterVote(agreeID);
+            _updateStateAfterVote(agreeID);
         }
     }
 
