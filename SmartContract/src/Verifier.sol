@@ -28,7 +28,7 @@ contract Verifier{
 
     // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0
     modifier inAgreement(uint agreeID){
-        require(msg.sender == agreements[agreeID].party1 || msg.sender == agreements[agreeID].party1);
+        require(msg.sender == agreements[agreeID].party1 || msg.sender == agreements[agreeID].party2);
         _;
     }
 
@@ -158,18 +158,30 @@ contract Verifier{
         }
     }
 
-    function voteResolution(uint agreeID, AgreementLib.Vote vote) inAgreement(agreeID) public{
-        require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
-        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
+    function _partyIndex(uint agreeID, address a) internal view returns(uint){
+        // index starts at 1, 0 means not included
+        if(agreements[agreeID].party1 == a)
+            return 1;
+        if(agreements[agreeID].party2 == a)
+            return 2;
+        return 0;
+    }
 
-        if(msg.sender == agreements[agreeID].party1){
-            require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
+    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+        // require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
+        // require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
+        //     || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
+
+        uint index = _partyIndex(agreeID, msg.sender);
+        // require(index > 0, "You can only vote if you're part of the agreement");
+
+        if(index == 1){
+            // require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party1Vote = vote;
             _updateStateAfterVote(agreeID);
         }
-        else if(msg.sender == agreements[agreeID].party2){
-            require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
+        else{
+            // require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party2Vote = vote;
             _updateStateAfterVote(agreeID);
         }
