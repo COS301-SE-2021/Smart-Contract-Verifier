@@ -162,10 +162,12 @@ contract Verifier{
             || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
 
         if(msg.sender == agreements[agreeID].party1){
+            require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party1Vote = vote;
             _updateStateAfterVote(agreeID);
         }
         else if(msg.sender == agreements[agreeID].party2){
+            require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party2Vote = vote;
             _updateStateAfterVote(agreeID);
         }

@@ -91,13 +91,13 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Vote no on agreement ", async()=>{
-            console.log("Vote no");
+            // console.log("Vote no");
 
             await verifier.voteResolution(1, 1, {from: accounts[0]});
 
 
             var agree = await verifier.getAgreement(1);
-            console.log(agree);
+            // console.log(agree);
 
             assert.equal(agree.party1Vote, 1, "incorrect vote in Agreement")
             assert.equal(agree.hasJury, true, "Jury wasn't assigned");
