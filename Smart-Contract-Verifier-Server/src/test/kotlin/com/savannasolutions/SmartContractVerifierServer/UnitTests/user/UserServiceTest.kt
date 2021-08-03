@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.user.services
+package com.savannasolutions.SmartContractVerifierServer.UnitTests.user
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
@@ -7,8 +7,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
+import com.savannasolutions.SmartContractVerifierServer.user.services.UserService
 import org.junit.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.*
