@@ -9,8 +9,6 @@ require('chai').use(require('chai-as-promised')).should()
 contract('Verifier', (accounts) =>{
     // Unit tests for smart contract go here
 
-
-
     describe("Verifier unit tests", async () =>{
 
         let verifier
@@ -101,5 +99,40 @@ contract('Verifier', (accounts) =>{
             assert.equal(agree.party1Vote, 1, "incorrect vote in Agreement")
             assert.equal(agree.hasJury, true, "Jury wasn't assigned");
         })
+    })
+
+    describe("Verifier unit tests 2", async () =>{
+
+        let verifier
+
+        before(async () =>{
+            token = await UnisonToken.new()
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
+
+            // Create agreement
+            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement");
+            verifier.acceptAgreement(0, {from: accounts[1]})
+
+            // Pay platofrm fee
+            var agree = await verifier.getAgreement(0);
+            var mustPay = agree.platformFee
+
+            token.approve(verifier.address, mustPay);
+            verifier.payPlatformFee(0);
+        })
+
+        it("Add payment condition", async()=>{
+            var agree = await verifier.getAgreement(0);
+            var numPaymentsAlready = agree.payments.length;
+
+            var amount = 100
+            token.approve(verifier.address, amount);
+            verifier.addPaymentConditions(0, [token.address], [amount]);
+
+            agree = await verifier.getAgreement(0);
+            assert(agree.payments.length == numPaymentsAlready + 1);
+        })
+
     })
 })
