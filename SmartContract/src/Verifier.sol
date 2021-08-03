@@ -103,6 +103,8 @@ contract Verifier{
         require(payment > 0);
 
         uint256 allowed = unisonToken.allowance(msg.sender, address(this));
+        require(allowed >= payment, "insufficient allowance to pay platform fee");
+
         if(allowed < payment)
             payment = allowed;
 
