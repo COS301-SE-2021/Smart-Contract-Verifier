@@ -146,5 +146,16 @@ contract('Verifier', (accounts) =>{
             assert(agree.payments.length == numPaymentsAlready + 2);
         })
 
+        it("Need allowance for payment condition", async()=>{
+            var agree = await verifier.getAgreement(0);
+            var numPaymentsAlready = agree.payments.length;
+
+            var amount = 100
+            verifier.addPaymentConditions(0, [token.address], [amount]);
+
+            agree = await verifier.getAgreement(0);
+            assert(agree.payments.length == numPaymentsAlready);
+        })        
+
     })
 })
