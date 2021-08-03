@@ -134,5 +134,17 @@ contract('Verifier', (accounts) =>{
             assert(agree.payments.length == numPaymentsAlready + 1);
         })
 
+        it("Add multiple payment conditions", async()=>{
+            var agree = await verifier.getAgreement(0);
+            var numPaymentsAlready = agree.payments.length;
+
+            var amount = 100
+            token.approve(verifier.address, amount*2);
+            verifier.addPaymentConditions(0, [token.address, token.address], [amount, amount]);
+
+            agree = await verifier.getAgreement(0);
+            assert(agree.payments.length == numPaymentsAlready + 2);
+        })
+
     })
 })
