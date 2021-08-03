@@ -6,6 +6,7 @@ import "./UnisonToken.sol";
 import "./Structs/AgreementLib.sol";
 import "./JurorStore.sol";
 
+
 // pragma experimental ABIEncoderV2;
 
 contract Verifier{

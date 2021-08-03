@@ -8,6 +8,7 @@ import com.savannasolutions.SmartContractVerifierServer.repositories.ConditionsR
 import com.savannasolutions.SmartContractVerifierServer.requests.*
 import com.savannasolutions.SmartContractVerifierServer.responses.*
 import org.springframework.stereotype.Service
+import java.time.Duration
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -41,16 +42,11 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return CreateAgreementResponse(null, ResponseStatus.FAILED)
 
         var nAgreement = Agreements(UUID.randomUUID(),
-                                    null,
-                                    createAgreementRequest.PartyA,
-                                    createAgreementRequest.PartyB,
-                                    Date(),
-                                    null,
-                                    null,
-                                    false,
-                                    null,
-                                    null,
-                                    null,)
+                                    PartyA = createAgreementRequest.PartyA,
+                                    PartyB = createAgreementRequest.PartyB,
+                                    CreatedDate = Date(),
+                                    MovedToBlockChain = false,
+                                    )
 
         nAgreement = agreementsRepository.save(nAgreement)
 
@@ -81,8 +77,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                     createConditionRequest.ConditionDescription,
                                     ConditionStatus.PENDING,
                                     createConditionRequest.PreposedUser,
-                                    Date(),
-                                    agreement)
+                                    Date(),).apply { contract = agreement }
 
         nCondition = conditionsRepository.save(nCondition)
 
@@ -92,15 +87,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse{
         if(!agreementsRepository.existsById(getAgreementDetailsRequest.AgreementID))
         {
-            return GetAgreementDetailsResponse(getAgreementDetailsRequest.AgreementID,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            ResponseStatus.FAILED)
+            return GetAgreementDetailsResponse(agreementID = getAgreementDetailsRequest.AgreementID,
+                                            status = ResponseStatus.FAILED)
         }
         val agreement = agreementsRepository.getById(getAgreementDetailsRequest.AgreementID)
         val conditions = agreement.conditions
@@ -116,7 +104,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         }
 
         return GetAgreementDetailsResponse(agreement.ContractID,
-                                            agreement.Duration,
+                                            agreement.DurationConditionUUID,
+                                            agreement.PaymentConditionUUID,
                                             agreement.PartyA,
                                             agreement.PartyB,
                                             agreement.CreatedDate,
@@ -166,10 +155,14 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             }
         }
 
-        agreement.Duration?: return SealAgreementResponse(ResponseStatus.FAILED)
+        agreement.DurationConditionUUID?: return SealAgreementResponse(ResponseStatus.FAILED)
+        if(conditionsRepository.getById(agreement.DurationConditionUUID!!).conditionStatus == ConditionStatus.PENDING ||
+                conditionsRepository.getById(agreement.DurationConditionUUID!!).conditionStatus == ConditionStatus.REJECTED)
+                    return SealAgreementResponse(ResponseStatus.FAILED)
+
         agreement.PaymentConditionUUID?: return SealAgreementResponse(ResponseStatus.FAILED)
-        if(conditionsRepository.getById(agreement.PaymentConditionUUID!!).conditionStatus != ConditionStatus.PENDING ||
-                conditionsRepository.getById(agreement.PaymentConditionUUID!!).conditionStatus != ConditionStatus.REJECTED)
+        if(conditionsRepository.getById(agreement.PaymentConditionUUID!!).conditionStatus == ConditionStatus.PENDING ||
+                conditionsRepository.getById(agreement.PaymentConditionUUID!!).conditionStatus == ConditionStatus.REJECTED)
                     return SealAgreementResponse(ResponseStatus.FAILED)
 
         agreement.SealedDate = Date()
@@ -181,11 +174,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
     {
         if(!conditionsRepository.existsById(getConditionDetailsRequest.conditionID))
             return GetConditionDetailsResponse(getConditionDetailsRequest.conditionID,
-                                null,
-                                    null,
-                                     null,
-                                      null,
-                                                ResponseStatus.FAILED)
+                                                status = ResponseStatus.FAILED)
 
         val condition = conditionsRepository.getById(getConditionDetailsRequest.conditionID)
         return GetConditionDetailsResponse(condition.conditionID,
@@ -193,6 +182,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             condition.proposingUser,
                                             condition.proposalDate,
                                             condition.contract.ContractID,
+                                            condition.conditionStatus,
+
                                             ResponseStatus.SUCCESSFUL)
     }
 
@@ -213,8 +204,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 "Payment of " + setPaymentConditionRequest.Payment.toString(),
                                 ConditionStatus.PENDING,
                                 setPaymentConditionRequest.PreposedUser,
-                                Date(),
-                                agreement,)
+                                Date(),).apply { contract = agreement }
 
         condition = conditionsRepository.save(condition)
 
@@ -241,12 +231,11 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 "Duration of " + setDurationConditionRequest.Duration.toString(),
                 ConditionStatus.PENDING,
                 setDurationConditionRequest.PreposedUser,
-                Date(),
-                agreement,)
+                Date(),).apply { contract = agreement }
 
         condition = conditionsRepository.save(condition)
 
-        agreement.Duration = setDurationConditionRequest.Duration
+        agreement.DurationConditionUUID = condition.conditionID
 
         agreementsRepository.save(agreement)
 

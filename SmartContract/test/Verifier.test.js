@@ -20,6 +20,7 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Can create agreement", async () =>{
+
             verifier.createAgreement(accounts[1], 0, "do nothing with this agreement");
 
             var agree = await verifier.getAgreement(0)
@@ -99,6 +100,7 @@ contract('Verifier', (accounts) =>{
             assert.equal(agree.party1Vote, 1, "incorrect vote in Agreement")
             assert.equal(agree.hasJury, true, "Jury wasn't assigned");
         })
+
     })
 
     describe("Verifier unit tests 2", async () =>{
