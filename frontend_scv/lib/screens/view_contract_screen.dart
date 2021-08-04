@@ -6,8 +6,45 @@ import '../widgets/contract_detail_info_panel.dart';
 import '../providers/contracts.dart';
 import '../providers/auth.dart';
 
-class ViewContractScreen extends StatelessWidget {
+class ViewContractScreen extends StatefulWidget {
   static const routeName = '/view-contract';
+
+  @override
+  _ViewContractScreenState createState() => _ViewContractScreenState();
+}
+
+class _ViewContractScreenState extends State<ViewContractScreen> {
+  final _conditionTitleController = TextEditingController();
+
+  Future<void> _newConditionDialog() async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Form(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    validator: (value) {
+                      return value.isNotEmpty ? null : "Invalid Field";
+                    },
+                    decoration: InputDecoration(hintText: 'Enter some text'),
+                    controller: _conditionTitleController,
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: Text('okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          );
+        });
+  }
 
   Widget build(BuildContext context) {
     final contractId = ModalRoute.of(context).settings.arguments as String;
@@ -37,8 +74,8 @@ class ViewContractScreen extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    print('Add Condition');
+                  onPressed: () async {
+                    await _newConditionDialog();
                   },
                   child: Row(
                     children: [Icon(Icons.add), Text('Add New Condition')],
