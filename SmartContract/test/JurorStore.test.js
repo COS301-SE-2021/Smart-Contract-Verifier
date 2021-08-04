@@ -17,10 +17,6 @@ contract('JurorStore', (accounts) =>{
         before(async () =>{
             r = await RandomSource.new(); 
             var token = await UnisonToken.new();
-            needCoins = [];
-            for(var i = 1; i<9; i++){
-                needCoins.push(accounts[i]);
-            }
 
             jurorStore = await JurorStore.new(accounts[0], r.address, token.address, {from: accounts[0]});
         })

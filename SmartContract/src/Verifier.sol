@@ -22,6 +22,8 @@ contract Verifier{
     uint jurySeed = 10;
     UnisonToken unisonToken;
 
+    uint stakingAmount = 10000;
+
     constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
         jurorStore = new JurorStore(address(this), randomSource, token);
@@ -193,7 +195,6 @@ contract Verifier{
     function addJuror() public{
         address j = msg.sender;
 
-        uint stakingAmount = 0;
         uint allowed = unisonToken.allowance(j, address(this));
         require(allowed >= stakingAmount);
         unisonToken.transferFrom(j, address(this), stakingAmount);
