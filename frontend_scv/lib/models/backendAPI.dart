@@ -1,4 +1,4 @@
-//This class is used for interaction with the deployed server backend.
+//This class is used for interaction with the deployed server backend. It is also a singleton.
 //String baseUrl is the root url of the server.
 //When using these functions, the url passed in is effectively the api endpoint, an extension to the root url.
 
@@ -12,6 +12,13 @@ import 'dart:io';
 class ApiInteraction {
 
   final String baseUrl = "http://localhost:8080"; //Url where the backend is deployed
+  static final ApiInteraction api = ApiInteraction._internal(); //Only instance of the class
+
+  factory ApiInteraction() { //Factory constructor to return instance;
+    return api;
+  }
+
+  ApiInteraction._internal(); //Private constructor
 
   Future<Map<dynamic, dynamic>> getData(String url) async{ //Pass in url extension
     var response;
