@@ -1,30 +1,32 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.negotiation
 
 import com.savannasolutions.SmartContractVerifierServer.negotiation.controllers.NegotiationController
-import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit4.SpringRunner
-import kotlin.test.assertEquals
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest(NegotiationController::class)
 class HelloTest{
 
     @Autowired
-    lateinit var negotiationController: NegotiationController
+    lateinit var mockMvc : MockMvc
+
+    @MockBean
+    lateinit var negotiationService: NegotiationService
 
     @Test
-    fun `Call hello`()
+    fun `MVC call hello`()
     {
-        val response = negotiationController.hello()
-        assertEquals(response, "HELLO!")
+        val response = mockMvc.perform(MockMvcRequestBuilders.get("/negotiation/hello"))
+        response.andExpect(MockMvcResultMatchers.status().isOk)
+        response.andExpect(MockMvcResultMatchers.content().string("HELLO!"))
     }
 }
