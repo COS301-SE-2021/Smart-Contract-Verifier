@@ -30,11 +30,6 @@ contract JurorStore{
     }
 
     function addJuror(address j) public onlyOwner(){
-        uint stakingAmount = 0;
-        uint allowed = token.allowance(j, address(this));
-        require(allowed >= stakingAmount);
-        token.transferFrom(j, address(this), stakingAmount);
-
         uint256 index = jurors.length;
         jurors.push(j);
         numJurors++;

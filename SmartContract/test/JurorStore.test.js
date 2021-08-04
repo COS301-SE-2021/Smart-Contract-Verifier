@@ -6,8 +6,6 @@ const UnisonToken = artifacts.require("UnisonToken")
 const JurorStore = artifacts.require("JurorStore")
 const RandomSource = artifacts.require("Randomness/RandomSource")
 
-const {giveJurorsCoins} = require("./helper.js")
-
 require('chai').use(require('chai-as-promised')).should()
 
 contract('JurorStore', (accounts) =>{
@@ -23,7 +21,6 @@ contract('JurorStore', (accounts) =>{
             for(var i = 1; i<9; i++){
                 needCoins.push(accounts[i]);
             }
-            giveJurorsCoins(token, accounts[0], needCoins, 100000);
 
             jurorStore = await JurorStore.new(accounts[0], r.address, token.address, {from: accounts[0]});
         })
@@ -33,11 +30,11 @@ contract('JurorStore', (accounts) =>{
             let result;
             try{
                 result = await jurorStore.addJuror(accounts[1], {from: accounts[0]});
-                passedRequire = true;    
+                passedRequire = true;
             }
             catch(e){}
 
-            assert(passedRequire == true);
+            assert(passedRequire == true, "Could not add juror");
             truffleAssert.eventEmitted(result, "AddJuror", (ev)=>{
                 return ev.juror == accounts[1]
             });
@@ -50,7 +47,7 @@ contract('JurorStore', (accounts) =>{
                 passedRequire = true;
             }
             catch(e){}
-            assert(passedRequire == false);
+            assert(passedRequire == false, "Could add juror as non-owner");
 
         })
 

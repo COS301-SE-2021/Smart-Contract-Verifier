@@ -191,7 +191,14 @@ contract Verifier{
     // Sign yourself up to become a juror
     // You have to approve an allowance for the staked coins
     function addJuror() public{
-        jurorStore.addJuror(msg.sender);
+        address j = msg.sender;
+
+        uint stakingAmount = 0;
+        uint allowed = unisonToken.allowance(j, address(this));
+        require(allowed >= stakingAmount);
+        unisonToken.transferFrom(j, address(this), stakingAmount);
+
+        jurorStore.addJuror(j);
     }
 
     // remove yourself from available jurors list
