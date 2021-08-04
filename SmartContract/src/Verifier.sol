@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "./UnisonToken.sol";
-import "./AgreementLib.sol";
+import "./Structs/AgreementLib.sol";
 import "./JurorStore.sol";
 
 
@@ -27,10 +27,26 @@ contract Verifier{
         jurorStore = new JurorStore(address(this), randomSource);
     }
 
+    // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0
+    modifier inAgreement(uint agreeID){
+        require(msg.sender == agreements[agreeID].party1 || msg.sender == agreements[agreeID].party2);
+        _;
+    }
+
+    function _addPaymentToAgreement(uint256 agreeID, PaymentInfoLib.PaymentInfo memory payment) internal{
+        agreements[agreeID].payments[agreements[agreeID].numPayments] = payment;
+        agreements[agreeID].numPayments++;
+    }
+
     function createAgreement(address party2, uint resolutionTime, string calldata text) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
 
-        agreements[nextAgreeID] = AgreementLib.makeAgreement(msg.sender, party2, resolutionTime, text, 1000000000);
+        agreements[nextAgreeID].party1 = msg.sender;
+        agreements[nextAgreeID].party2 = party2;
+        agreements[nextAgreeID].resolutionTime = resolutionTime;
+        agreements[nextAgreeID].text = text;
+        agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
+        agreements[nextAgreeID].platformFee = 1000000000;
 
         emit CreateAgreement(msg.sender, party2, nextAgreeID);
         nextAgreeID++;
@@ -47,6 +63,35 @@ contract Verifier{
         }
     }
 
+    // Each payment must have the allowance ready, it will be transferred immediately
+    function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
+        require(tokens.length == amount.length, "mismatch between tokens and amounts");
+        uint numPayments = tokens.length;
+
+        address otherParty;
+        if(msg.sender == agreements[agreeID].party1)
+            otherParty = agreements[agreeID].party2;
+        else
+            agreements[agreeID].party2;
+
+        for(uint i=0; i<numPayments; i++){
+            uint256 allowed = tokens[i].allowance(msg.sender, address(this));
+            require(allowed >= amount[i], "Insufficient allowance on a specified payment");
+
+            PaymentInfoLib.PaymentInfo memory p;
+            p.token = tokens[i];
+            p.from = msg.sender;
+            p.to = otherParty;
+            p.amount = amount[i];
+
+            tokens[i].transferFrom(msg.sender, address(this), amount[i]);
+            _addPaymentToAgreement(agreeID, p);
+
+        }        
+
+
+    }
+
     function payPlatformFee(uint agreeID) public{
         // Anyone can pay the platform fee, it does not even have to be one of the
         // parties involved in the agreement
@@ -59,6 +104,8 @@ contract Verifier{
         require(payment > 0);
 
         uint256 allowed = unisonToken.allowance(msg.sender, address(this));
+        require(allowed >= payment, "insufficient allowance to pay platform fee");
+
         if(allowed < payment)
             payment = allowed;
 
@@ -74,26 +121,25 @@ contract Verifier{
     }
 
 
-    function getAgreement(uint agreeID) public view returns(AgreementLib.Agreement memory){
-        return agreements[agreeID];
+    function getAgreement(uint agreeID) public view returns(AgreementLib.ReturnAgreement memory){
+        return AgreementLib.makeReturnAgreement(agreements[agreeID]);
     }
 
     function checkVotes(uint agreeID) internal{
         // Checks if both votes are in
-        AgreementLib.Agreement memory a = agreements[agreeID];
 
-        require(a.state == AgreementLib.AgreementState.ACTIVE
-            || a.state == AgreementLib.AgreementState.COMPLETED);
+        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
+            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED);
 
-        if(a.party1Vote == AgreementLib.Vote.YES 
-                && a.party2Vote == AgreementLib.Vote.YES){
-            unisonToken.transfer(a.feePayer, a.feePaid);
-            a.state = AgreementLib.AgreementState.CLOSED;
+        if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES 
+                && agreements[agreeID].party2Vote == AgreementLib.Vote.YES){
+            unisonToken.transfer(agreements[agreeID].feePayer, agreements[agreeID].feePaid);
+            agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
             emit CloseAgreement(agreeID);
         }
     }
 
-    function updateStateAfterVote(uint agreeID) internal{
+    function _updateStateAfterVote(uint agreeID) internal{
 
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
                 agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
@@ -113,18 +159,32 @@ contract Verifier{
         }
     }
 
-    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
-        require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
-        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
+    function _partyIndex(uint agreeID, address a) internal view returns(uint){
+        // index starts at 1, 0 means not included
+        if(agreements[agreeID].party1 == a)
+            return 1;
+        if(agreements[agreeID].party2 == a)
+            return 2;
+        return 0;
+    }
 
-        if(msg.sender == agreements[agreeID].party1){
+    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+        // require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
+        // require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
+        //     || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
+
+        uint index = _partyIndex(agreeID, msg.sender);
+        // require(index > 0, "You can only vote if you're part of the agreement");
+
+        if(index == 1){
+            // require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party1Vote = vote;
-            updateStateAfterVote(agreeID);
+            _updateStateAfterVote(agreeID);
         }
-        else if(msg.sender == agreements[agreeID].party2){
+        else{
+            // require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party2Vote = vote;
-            updateStateAfterVote(agreeID);
+            _updateStateAfterVote(agreeID);
         }
     }
 
