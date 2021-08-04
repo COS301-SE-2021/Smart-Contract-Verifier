@@ -4,9 +4,9 @@
 //Also, are these multiple files too fragmented?
 
 import 'dart:async';
-import '../models/backendAPI.dart';
-import '../providers/contract.dart';
-import '../providers/condition.dart';
+import 'backendAPI.dart';
+import '../../providers/contract.dart';
+import '../../providers/condition.dart';
 
 class NegotiationService {
 
@@ -91,7 +91,7 @@ class NegotiationService {
    }
  }
 
- Future<void> updateCondition(Condition cond) async {
+ Future<void> updateCondition(Condition cond) async { //May not be necessary
 
     //TODO list:
    //Use condition to either remove/resave,

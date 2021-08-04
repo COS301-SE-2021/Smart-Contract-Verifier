@@ -3,9 +3,9 @@
 //like getting a list of agreements involving a user.
 
 import 'dart:async';
-import '../models/backendAPI.dart';
-import '../providers/contract.dart';
-import '../providers/condition.dart';
+import 'backendAPI.dart';
+import '../../providers/contract.dart';
+import '../../providers/condition.dart';
 
 class CommonService {
 

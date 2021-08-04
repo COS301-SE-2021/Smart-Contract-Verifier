@@ -34,7 +34,6 @@ class ApiInteraction {
     if (response.statusCode != 200)
       throw Exception('Request could not be made'); //Failed http request
 
-    //print (response.body);
     return json.decode(response.body);
 
   }

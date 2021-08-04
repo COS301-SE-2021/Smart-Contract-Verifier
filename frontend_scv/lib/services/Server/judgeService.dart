@@ -2,8 +2,8 @@
 //This one deals with judge-related issues.
 
 import 'dart:async';
-import '../models/backendAPI.dart';
-import '../providers/contract.dart';
+import 'backendAPI.dart';
+import '../../providers/contract.dart';
 
 class JudgeService {
 

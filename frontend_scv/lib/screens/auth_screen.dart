@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import '../models/http_exception.dart';
 import '../providers/auth.dart';
 
-import '../models/backendAPI.dart';
+import '../services/Server/backendAPI.dart';
+import '../services/Server/negotiationService.dart';
 
 enum AuthMode { Signup, Login }
 
