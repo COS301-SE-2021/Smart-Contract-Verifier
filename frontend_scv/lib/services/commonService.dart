@@ -10,6 +10,8 @@ import '../providers/condition.dart';
 class CommonService {
 
   ApiInteraction api = ApiInteraction();
+  Contract errorContract = new Contract(title: 'Error', description: 'An error was encountered, and the agreement could not be retrieved');
+  //Error object to return on exception.
 
   Future<List<Contract>> getInvolvedAgreements(String party) async {
 
@@ -23,7 +25,7 @@ class CommonService {
         throw Exception('Retrieval of agreements failed');
     } on Exception catch(e) {
       //Handle Exception
-      return [];
+      return [errorContract]; //This should be revised
     }
 
     List<dynamic> jsonList = ((response['agreements']));
@@ -51,7 +53,7 @@ class CommonService {
       //Handle Exception,
       //possibly with custom contract object
       print (e.toString());
-      return Contract();
+      return errorContract; //This should be revised
     }
 
     return Contract.fromJson(response['agreementResponse']);
