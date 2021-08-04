@@ -26,7 +26,7 @@ contract Verifier{
 
     constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
-        jurorStore = new JurorStore(address(this), randomSource, token);
+        jurorStore = new JurorStore(address(this), randomSource);
     }
 
     // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0

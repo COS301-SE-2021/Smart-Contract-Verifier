@@ -3,12 +3,10 @@
 pragma solidity ^0.8.0;
 
 import "./Utilities/RandomSource.sol";
-import "./Token/IERC20.sol";
 
 contract JurorStore{
     address owner;
     RandomSource randomSource;
-    IERC20 token;
 
     uint numJurors;
     address[] jurors;
@@ -20,10 +18,9 @@ contract JurorStore{
         _;
     }
 
-    constructor(address _owner, RandomSource rs, IERC20 _token){
+    constructor(address _owner, RandomSource rs){
         owner = _owner;
         randomSource = rs;
-        token = _token;
 
         // index 0 is kept out of use since a 0 in the mapping means that value doesn't exist
         jurors.push(address(0));
