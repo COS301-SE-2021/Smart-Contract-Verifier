@@ -2,6 +2,7 @@ const { assert } = require('chai')
 
 const truffleAssert = require('truffle-assertions');
 
+const UnisonToken = artifacts.require("UnisonToken")
 const JurorStore = artifacts.require("JurorStore")
 const RandomSource = artifacts.require("Randomness/RandomSource")
 
@@ -15,7 +16,8 @@ contract('JurorStore', (accounts) =>{
         // In these unit tests, accounts[0] is the owner of JurorStore
         before(async () =>{
             r = await RandomSource.new(); 
-            jurorStore = await JurorStore.new(accounts[0], r.address, {from: accounts[0]});
+            var token = await UnisonToken.new();
+            jurorStore = await JurorStore.new(accounts[0], r.address, token.address, {from: accounts[0]});
         })
 
         it("Can add a juror", async() =>{

@@ -24,7 +24,7 @@ contract Verifier{
 
     constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
-        jurorStore = new JurorStore(address(this), randomSource);
+        jurorStore = new JurorStore(address(this), randomSource, token);
     }
 
     // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0
@@ -189,6 +189,7 @@ contract Verifier{
     }
 
     // Sign yourself up to become a juror
+    // You have to approve an allowance for the staked coins
     function addJuror() public{
         jurorStore.addJuror(msg.sender);
     }
