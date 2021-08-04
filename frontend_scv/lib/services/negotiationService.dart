@@ -72,7 +72,7 @@ class NegotiationService {
     await handleCondition(id, false);
   }
 
-  Future<void> handleCondition(String id, bool acc) async {
+  Future<void> handleCondition(String id, bool acc) async { //Either accept or reject condition
 
    Map<String, String> body = {'ConditionID' : id};
    String path = acc ? 'accept-condition' : 'reject-condition';
@@ -99,6 +99,24 @@ class NegotiationService {
     return;
  }
 
+
+ Future<void> sealAgreement(String id) async { //Or pass in Contract?
+
+   Map<String, String> body = {'AgreementID' : id};
+
+   Map<String, dynamic> response;
+   try {
+     response = await api.postData('/negotiation/seal-agreement', body);
+
+     if (response['status'] != 'SUCCESSFUL')
+       throw Exception('Agreement could not be sealed');
+   } on Exception catch(e) {
+     //Handle exception
+     print (e);
+     return;
+   }
+
+ }
 
 }
 
