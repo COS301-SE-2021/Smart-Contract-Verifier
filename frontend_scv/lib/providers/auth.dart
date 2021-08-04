@@ -34,7 +34,7 @@ class Auth with ChangeNotifier {
         '.com/v1/accounts:$urlSegment?key=AIzaSyBh-NMBUup50KhJVIKI4cYJK6ajbqK1dk0';
     try {
       final response = await http.post(
-        url,
+        Uri.parse(url),
         body: json.encode(
           {
             'email': email,

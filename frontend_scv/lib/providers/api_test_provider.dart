@@ -11,7 +11,7 @@ class TestApi with ChangeNotifier {
     final url = 'http://localhost:8080/negotiation/hello';
     try {
       final response = await http.get(
-        url,
+        Uri.parse(url),
       );
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {

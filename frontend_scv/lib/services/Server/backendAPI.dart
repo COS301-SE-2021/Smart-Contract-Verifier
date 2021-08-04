@@ -23,7 +23,7 @@ class ApiInteraction {
     var response;
     try {
       response = await RetryOptions(maxAttempts: 5).retry(
-            () => get(baseUrl + url).timeout(Duration(seconds: 5)),
+            () => get(Uri.parse(baseUrl + url)).timeout(Duration(seconds: 5)),
         retryIf: (e) => e is SocketException || e is TimeoutException,
       );
     } on Exception catch(e) { //Some other exception
@@ -44,7 +44,7 @@ class ApiInteraction {
     try {
       response = await RetryOptions(maxAttempts: 5).retry(
             () =>
-            post(baseUrl + url, headers: <String, String>{
+            post(Uri.parse(baseUrl + url), headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
             body: jsonEncode(jsn)).timeout(Duration(seconds: 1)),
