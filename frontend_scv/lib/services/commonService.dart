@@ -25,6 +25,7 @@ class CommonService {
         throw Exception('Retrieval of agreements failed');
     } on Exception catch(e) {
       //Handle Exception
+      print(e);
       return [errorContract]; //This should be revised
     }
 

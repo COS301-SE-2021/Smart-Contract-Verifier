@@ -46,7 +46,8 @@ class NegotiationService {
 
    Map<String, dynamic> con = cond.toJson();
    Map<String, String> body = {'AgreementID' : id, 'ConditionTitle' : con['ConditionTitle'],
-     'ProposedUser' : con['ProposedUser'], 'ConditionDescription' : con['ConditionDescription']}; //Maybe change proposedUser to map to the current user? To ensure it's correct
+     'ProposedUser' : con['ProposedUser'], 'ConditionDescription' : con['ConditionDescription']}; //Maybe change proposedUser to map to the current user? To ensure
+   // it's correct, since only the proposing user can save a condition.
 
    Map<String, dynamic> response;
    try {

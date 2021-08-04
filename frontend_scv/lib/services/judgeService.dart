@@ -1,8 +1,6 @@
 //This is for the ui to request data from the api in an abstract sense.
 //This one deals with judge-related issues.
 
-import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'dart:async';
 import '../models/backendAPI.dart';
 import '../providers/contract.dart';

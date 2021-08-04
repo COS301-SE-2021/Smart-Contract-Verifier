@@ -5,7 +5,6 @@
 import 'dart:convert';
 import 'package:retry/retry.dart';
 import 'package:http/http.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -28,6 +27,7 @@ class ApiInteraction {
         retryIf: (e) => e is SocketException || e is TimeoutException,
       );
     } on Exception catch(e) { //Some other exception
+      print(e);
       throw Exception('Could not connect to backend'); //Could be expanded in the future
     }
 
