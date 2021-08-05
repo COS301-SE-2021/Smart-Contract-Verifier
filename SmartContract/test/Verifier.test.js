@@ -64,7 +64,6 @@ contract('Verifier', (accounts) =>{
 
             var agree = await verifier.getAgreement(0);
             assert(agree.feePaid == agree.platformFee);
-            console.log(agree.state);
 
         })
 

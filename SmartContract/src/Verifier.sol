@@ -187,8 +187,9 @@ contract Verifier{
 
     function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
         require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
-        // require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-        //     || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
+
+        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
+            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
 
         uint index = _partyIndex(agreeID, msg.sender);
         require(index > 0, "You can only vote if you're part of the agreement");
