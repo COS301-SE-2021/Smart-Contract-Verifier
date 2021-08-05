@@ -141,20 +141,6 @@ contract Verifier{
         return AgreementLib.makeReturnAgreement(agreements[agreeID]);
     }
 
-    function checkVotes(uint agreeID) internal{
-        // Checks if both votes are in
-
-        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED);
-
-        if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES 
-                && agreements[agreeID].party2Vote == AgreementLib.Vote.YES){
-            unisonToken.transfer(agreements[agreeID].feePayer, agreements[agreeID].feePaid);
-            agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
-            emit CloseAgreement(agreeID);
-        }
-    }
-
     function _updateStateAfterVote(uint agreeID) internal{
 
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
@@ -173,6 +159,21 @@ contract Verifier{
             juries[agreeID] = jury;
             agreements[agreeID].hasJury = true;
         }
+        else if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES && 
+                agreements[agreeID].party1Vote == AgreementLib.Vote.YES){
+            // Both parties voted yes
+
+            // Refund platform fee
+            unisonToken.transfer(agreements[agreeID].feePayer, agreements[agreeID].feePaid);
+
+            // Pay out all payment conditions
+            _payoutAgreement(agreeID);
+
+            // Close the agreement
+            agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+            emit CloseAgreement(agreeID);
+        }
+
     }
 
     function _partyIndex(uint agreeID, address a) internal view returns(uint){
