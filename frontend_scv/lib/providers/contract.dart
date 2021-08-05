@@ -22,6 +22,7 @@ class Contract with ChangeNotifier {
   final String partyBId;
   bool isFavorite;
 
+
   Contract({
     this.contractId,
     this.durationId, //RC: Duration could be time
@@ -47,6 +48,7 @@ class Contract with ChangeNotifier {
   //   @required this.partyBId,
   //   this.isFavorite = false,
   // }); //not final because it will be changing
+
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
   Contract.fromJson(Map<String, dynamic> jsn)

@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'wallet.dart';
+import '../../providers/global.dart';
 
-final String bNet = ''; //Url to blockchain. Preferably, this would be a global variable in a file of globals.
 
 class SmartContract {
 
-  final Web3Client smC = Web3Client(bNet, Client()); //smC = Smart Contract
+  final Web3Client smC = Web3Client(Global.contractId, Client()); //smC = Smart Contract
   WalletInteraction wallet = WalletInteraction();
 
   //Should this be called every time? Or should it only be loaded once....
