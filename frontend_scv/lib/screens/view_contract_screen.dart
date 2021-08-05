@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/models/functions.dart';
 import '../widgets/contract_conditions_panel.dart';
 import '../widgets/contract_detail_info_panel.dart';
 import '../providers/contracts.dart';
-import '../providers/auth.dart';
 
 class ViewContractScreen extends StatefulWidget {
   static const routeName = '/view-contract';
@@ -16,8 +14,47 @@ class ViewContractScreen extends StatefulWidget {
 class _ViewContractScreenState extends State<ViewContractScreen> {
   final _conditionTitleController = TextEditingController();
   final _conditionDescriptionController = TextEditingController();
+  var _isLoading = false;
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  Future<void> _saveForm() async {
+    final isValid = _formKey.currentState.validate();
+    if (!isValid) return;
+    _formKey.currentState.save();
+    //^^^^saves the form -> executes the 'onSaved' of each input
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      //TODO: Add New Condition (Server Call) here:
+      // await Provider.of<Contract>(context, listen: false)
+      //     .addCondition(_newCondition);
+      print('Add new condition: ${_conditionTitleController.text}'
+          '** ** **${_conditionDescriptionController.text}');
+    } catch (error) {
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('An error occurred!'),
+          content: Text('Something went wrong.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            )
+          ],
+        ),
+      );
+    }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
+  }
 
   Future<void> _newConditionDialog() async {
     return await showDialog(
@@ -32,7 +69,11 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                 children: [
                   TextFormField(
                     validator: (value) {
-                      return value.isNotEmpty ? null : "Please enter a title.";
+                      if (value.isEmpty) {
+                        return 'Please enter a title.';
+                      } else {
+                        return null;
+                      }
                     },
                     decoration: InputDecoration(labelText: 'Title'),
                     controller: _conditionTitleController,
@@ -65,14 +106,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
               TextButton(
                 child: Text('Add'),
                 onPressed: () {
-                  //Check Form State
-                  if (_formKey.currentState.validate()) {
-                    //if true - i.e the form is valid
-                    Navigator.of(context).pop();
-                  }
-                  print('Add new condition: ${_conditionTitleController.text}'
-                      '** ** **${_conditionDescriptionController.text}');
-                  //TODO: Add New Condition (Server Call) here:
+                  _saveForm();
                 },
               ),
             ],
@@ -112,14 +146,21 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                     await _newConditionDialog();
                   },
                   child: Row(
-                    children: [Icon(Icons.add), Text('Add New Condition')],
+                    children: [
+                      Icon(Icons.add),
+                      Text('Add New Condition'),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: ContractConditionsPanel(loadedContract),
+            child: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ContractConditionsPanel(loadedContract),
             flex: 6,
           ),
           Expanded(
