@@ -145,7 +145,7 @@ contract Verifier{
 
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
                 agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
-            if(agreements[agreeID].hasJury)
+            if(juries[agreeID].assigned)
                 return; //Already has jury
 
             // If at least one party voted no, agreement becomes contested
@@ -160,8 +160,8 @@ contract Verifier{
             for(uint i=0; i<jury.length; i++){
                 juries[agreeID].jurors[i] = jury[i];
             }
-            
-            agreements[agreeID].hasJury = true;
+
+            juries[agreeID].assigned = true;
         }
         else if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES && 
                 agreements[agreeID].party2Vote == AgreementLib.Vote.YES){

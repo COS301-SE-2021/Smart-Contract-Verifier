@@ -49,7 +49,6 @@ library AgreementLib{
 
         Vote party1Vote;
         Vote party2Vote;
-        bool hasJury;
 
         mapping(uint => PaymentInfoLib.PaymentInfo) payments;
         uint numPayments;
@@ -72,7 +71,6 @@ library AgreementLib{
 
         Vote party1Vote;
         Vote party2Vote;
-        bool hasJury;
 
         PaymentInfoLib.PaymentInfo[] payments;
     }
@@ -93,7 +91,6 @@ library AgreementLib{
 
         result.party1Vote = agreement.party1Vote;
         result.party2Vote = agreement.party2Vote;
-        result.hasJury = agreement.hasJury;
 
         result.payments = new PaymentInfoLib.PaymentInfo[](agreement.numPayments);
         for(uint i=0; i<agreement.numPayments; i++){
