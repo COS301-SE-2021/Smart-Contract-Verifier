@@ -10,17 +10,17 @@ import '../../providers/global.dart';
 
 class SmartContract {
 
-  final Web3Client smC = Web3Client(Global.contractId, Client()); //smC = Smart Contract
-  WalletInteraction wallet = WalletInteraction();
+  final Web3Client _smC = Web3Client(Global.contractId, Client()); //smC = Smart Contract
+  WalletInteraction _wallet = WalletInteraction();
 
   //Should this be called every time? Or should it only be loaded once....
   //Metamask will automatically detect multiple requests, but I am not certain about loading the abi.
   Future<DeployedContract> _getContract() async {
     String abi = await rootBundle.loadString("/assets/JSON/abi.json"); //Load contract from json
-    await wallet.metamaskConnect(); //Request metamask connection
+    await _wallet.metamaskConnect(); //Request metamask connection
 
     final theContract = DeployedContract(ContractAbi.fromJson(abi, "SCV"),
-        wallet.getCredentials().address);
+        _wallet.getCredentials().address);
     return theContract;
   }
 
@@ -28,7 +28,7 @@ class SmartContract {
     final theContract = await _getContract();
     final fun = theContract.function(function);
     List<dynamic> theResult =
-    await smC.call(contract: theContract, function: fun, params: args);
+    await _smC.call(contract: theContract, function: fun, params: args);
     return theResult;
   }
 
@@ -36,8 +36,8 @@ class SmartContract {
 
     final theContract = await _getContract();
     final fun = theContract.function(funct);
-    final theResult = await smC.sendTransaction(
-        wallet.getCredentials(),
+    final theResult = await _smC.sendTransaction(
+        _wallet.getCredentials(),
         Transaction.callContract(
             contract: theContract, function: fun, parameters: args));
     return theResult;

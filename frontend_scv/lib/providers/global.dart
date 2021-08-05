@@ -2,7 +2,7 @@
 
 class Global {
 
-  static String userAddress = ''; //The eth address of the current user
-  static String contractId = ''; //The identifier of the deployed contract
+  static String userAddress = ''; //The eth address of the current user. Can change.
+  static final String contractId = ''; //The identifier of the deployed contract. It is final, since it is basically hard-coded.
 }
 
