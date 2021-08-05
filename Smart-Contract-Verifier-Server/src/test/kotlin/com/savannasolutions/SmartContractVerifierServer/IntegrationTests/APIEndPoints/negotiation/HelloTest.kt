@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.negotiation
+package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.negotiation
 
 import com.savannasolutions.SmartContractVerifierServer.negotiation.controllers.NegotiationController
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
