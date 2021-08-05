@@ -32,7 +32,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                 children: [
                   TextFormField(
                     validator: (value) {
-                      return value.isNotEmpty ? null : "Invalid Field";
+                      return value.isNotEmpty ? null : "Please enter a title.";
                     },
                     decoration: InputDecoration(labelText: 'Title'),
                     controller: _conditionTitleController,
@@ -46,7 +46,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                       if (value.isEmpty) return 'Please enter a description.';
                       if (value.length < 8)
                         return 'Please enter at least 8 '
-                            'characters for the description';
+                            'characters for the description.';
                       return null;
                     },
                   ),
@@ -64,12 +64,13 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                 child: Text('Add'),
                 onPressed: () {
                   //Check Form State
-
+                  if (_formKey.currentState.validate()) {
+                    //if true - i.e the form is valid
+                    Navigator.of(context).pop();
+                  }
                   print('Add new condition: ${_conditionTitleController.text}'
                       '** ** **${_conditionDescriptionController.text}');
                   //TODO: Add New Condition (Server Call) here:
-
-                  Navigator.of(context).pop();
                 },
               ),
             ],
