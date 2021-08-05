@@ -52,7 +52,7 @@ class Contract with ChangeNotifier {
   Contract.fromJson(Map<String, dynamic> jsn)
       : contractId = jsn['agreementID'],
         //duration = json['duration'], //Should be durationID?
-        durationId = '',//jsn['duration'],
+        durationId = '', //jsn['duration'],
         partyA = jsn['partyA']['publicWalletID'],
         partyB = jsn['partyB']['publicWalletID'],
         createdDate = jsn['createdDate'],
@@ -76,9 +76,9 @@ class Contract with ChangeNotifier {
         'sealedDate': sealedDate,
         'movedToBlockChain': movedToBlockchain,
         'conditions': conditions,
-        'title' : title,
-        'description' : description,
-        'imageUrl' : imageUrl,
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
       };
 
   void _setFavValue(bool newValue) {
@@ -87,13 +87,16 @@ class Contract with ChangeNotifier {
   }
 
   //RC: Could this be stored locally rather than on the db? Since it's a user preference
+  //KC: The idea was incase they have multiple devices
+  //    (like mobile and web or 2 different web machines, their favorites would still be there
+  //    favorites regardless of what device or machine they are on)
   Future<void> toggleFavoriteStatus(String token, String userId) async {
     final oldStatus = isFavorite;
     _setFavValue(!isFavorite);
     final url =
         'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/userFavorites/$userId/$contractId.json?auth=$token';
     try {
-      final response = await http.put(url,
+      final response = await http.put(Uri.parse(url),
           body: json.encode(
             isFavorite,
           ));
@@ -104,12 +107,12 @@ class Contract with ChangeNotifier {
     }
   }
 
-  String toString() { //A ToString method for debugging purposes
+  String toString() {
+    //A ToString method for debugging purposes
     String ret = 'ID: ' + contractId + '\n';
     ret += 'Party A: ' + partyA.toString() + '\n';
     ret += 'Party B: ' + partyB.toString() + '\n';
 
     return ret;
   }
-
 }
