@@ -17,12 +17,16 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
   final _conditionTitleController = TextEditingController();
   final _conditionDescriptionController = TextEditingController();
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   Future<void> _newConditionDialog() async {
     return await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
+            title: Text('Add New Condition'),
             content: Form(
+              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -51,10 +55,23 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
             ),
             actions: <Widget>[
               TextButton(
-                  child: Text('okay'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
+                child: Text('Discard'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Add'),
+                onPressed: () {
+                  //Check Form State
+
+                  print('Add new condition: ${_conditionTitleController.text}'
+                      '** ** **${_conditionDescriptionController.text}');
+                  //TODO: Add New Condition (Server Call) here:
+
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           );
         });
