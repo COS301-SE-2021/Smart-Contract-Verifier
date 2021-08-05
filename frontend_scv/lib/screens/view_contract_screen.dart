@@ -57,6 +57,8 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
               TextButton(
                 child: Text('Discard'),
                 onPressed: () {
+                  _conditionTitleController.clear();
+                  _conditionDescriptionController.clear();
                   Navigator.of(context).pop();
                 },
               ),
