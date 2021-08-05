@@ -49,6 +49,7 @@ library AgreementLib{
 
     struct Jury{
         bool assigned;
+        uint deadline;
         mapping(uint => address) jurors;
         mapping(uint => Vote) votes;
         uint numJurors;
@@ -77,6 +78,7 @@ library AgreementLib{
 
     struct ReturnJury{
         bool assigned;
+        uint deadline;
         address[] jurors;
         Vote[] votes;
     }
@@ -113,6 +115,7 @@ library AgreementLib{
         if(!result.assigned)
             return result;
 
+        result.deadline = jury.deadline;
         result.jurors = new address[](jury.numJurors);
         result.votes = new Vote[](jury.numJurors);
         for(uint i=0; i<jury.numJurors; i++){

@@ -40,8 +40,7 @@ contract JurorStore{
         // b) It's index really is 0 so it would return even if it were in the mapping
 
         uint256 index = jurorIndex[j];
-        if(index == 0)
-            return;
+        require(index != 0, "You need to be a juror in the first place in order to be removed");
         
         uint256 last = jurors.length -1;
 

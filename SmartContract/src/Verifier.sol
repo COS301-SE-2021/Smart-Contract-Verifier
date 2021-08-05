@@ -35,6 +35,16 @@ contract Verifier{
         _;
     }
 
+    modifier inJury(uint agreeID){
+        require(juries[agreeID].assigned, "Specified agreement has no jury");
+        for(uint i=0; i<juries[agreeID].numJurors; i++){
+            if(juries[agreeID].jurors[i] == msg.sender)
+                return;
+        }
+        require(false, "You are not on this jury");
+        _;
+    }
+
     function _addPaymentToAgreement(uint256 agreeID, PaymentInfoLib.PaymentInfo memory payment) internal{
         agreements[agreeID].payments[agreements[agreeID].numPayments] = payment;
         agreements[agreeID].numPayments++;
@@ -230,6 +240,83 @@ contract Verifier{
     // remove yourself from available jurors list
     function removeJuror() public{
         jurorStore.removeJuror(msg.sender);
+        unisonToken.transfer(msg.sender, stakingAmount);
+    }
+
+    function _jurorIndex(uint agreeID) internal view returns(int){
+        if(!juries[agreeID].assigned)
+            return -1;
+
+        for(uint i=0; i<juries[agreeID].numJurors; i++){
+            if(juries[agreeID].jurors[i] == msg.sender)
+                return int(i);
+        }
+        return -1;
+    }
+
+    function _decisionTime(uint agreeID) internal view returns(bool){
+        // Returns true if it's time to take action on jury's decision
+        // Either when voting deadline has been reached or if all jurors voted
+
+        if(!juries[agreeID].assigned)
+            return false;
+        
+        // True if deadline reached
+        if(juries[agreeID].deadline <= block.timestamp)
+            return true;
+
+        // False if anyone hasn't voted yet
+        for(uint i=0; i < juries[agreeID].numJurors; i++){
+            if(juries[agreeID].votes[i] == AgreementLib.Vote.NO)
+                return false;
+        }
+
+        return true;
+    }
+
+
+    function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
+        // Yes means pay out as normal, no means refund all payments
+
+        require(juries[agreeID].assigned, "There is no jury for this agreement");
+
+        int index = _jurorIndex(agreeID);
+
+        require(index >= 0, "You are not on this jury");
+
+        // Set vote
+        juries[agreeID].votes[uint(index)] = vote;
+
+        if(_decisionTime(agreeID)){
+            // Time to tally up votes & make a decision
+            // Yes is +1 and No is -1
+            int tally = 0;
+            // numVotes used to determine if decision was controversial, 
+            // deviating jurors aren't punished on controversial votes
+            int numVotes = 0; 
+
+            for(uint i=0; i < juries[agreeID].numJurors; i++){
+                AgreementLib.Vote v = juries[agreeID].votes[i];
+                if(v == AgreementLib.Vote.NO){
+                    tally--;
+                    numVotes++;
+                }
+                else if(v == AgreementLib.Vote.YES){
+                    tally--;
+                    numVotes++;
+                }
+            }
+
+            if(tally < 0){
+                // Jury voted no, do a refund
+                _refundAgreement(agreeID);
+            }
+            else{
+                // Jury voted yes (even counted as yes), pay out as normal
+                _payoutAgreement(agreeID);
+            }
+        }
+
     }
 
     event CreateAgreement(address party1, address party2, uint agreeID);
