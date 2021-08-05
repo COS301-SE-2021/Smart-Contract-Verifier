@@ -40,6 +40,20 @@ contract Verifier{
         agreements[agreeID].numPayments++;
     }
 
+    function _payoutAgreement(uint agreeID) internal{
+        for(uint i=0; i<agreements[agreeID].numPayments; i++){
+            PaymentInfoLib.PaymentInfo memory payment = agreements[agreeID].payments[i];
+            payment.token.transfer(payment.to, payment.amount);
+        }
+    }
+
+    function _refundAgreement(uint agreeID) internal{
+        for(uint i=0; i<agreements[agreeID].numPayments; i++){
+            PaymentInfoLib.PaymentInfo memory payment = agreements[agreeID].payments[i];
+            payment.token.transfer(payment.from, payment.amount);
+        }
+    }
+
     function createAgreement(address party2, uint resolutionTime, string calldata text) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
 
