@@ -28,6 +28,13 @@ library AgreementLib{
         YES   // 2
     }
 
+    struct Jury{
+        bool assigned;
+        mapping(uint => address) jurors;
+        mapping(uint => Vote) votes;
+        uint numJurors;
+    }
+
     struct Agreement{
         address party1;
         address party2;

@@ -16,7 +16,7 @@ contract Verifier{
 
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => AgreementLib.Agreement) agreements;
-    mapping(uint => address[]) juries;
+    mapping(uint => AgreementLib.Jury) juries;
 
     JurorStore jurorStore;
     uint jurySeed = 10;
@@ -156,7 +156,11 @@ contract Verifier{
 
             address[] memory jury = jurorStore.assignJury(5, jurySeed, noUse);
             jurySeed += 0xAA;
-            juries[agreeID] = jury;
+
+            for(uint i=0; i<jury.length; i++){
+                juries[agreeID].jurors[i] = jury[i];
+            }
+            
             agreements[agreeID].hasJury = true;
         }
         else if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES && 
