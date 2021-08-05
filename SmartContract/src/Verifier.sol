@@ -160,7 +160,7 @@ contract Verifier{
             agreements[agreeID].hasJury = true;
         }
         else if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES && 
-                agreements[agreeID].party1Vote == AgreementLib.Vote.YES){
+                agreements[agreeID].party2Vote == AgreementLib.Vote.YES){
             // Both parties voted yes
 
             // Refund platform fee
@@ -186,20 +186,20 @@ contract Verifier{
     }
 
     function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
-        // require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
+        require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
         // require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
         //     || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
 
         uint index = _partyIndex(agreeID, msg.sender);
-        // require(index > 0, "You can only vote if you're part of the agreement");
+        require(index > 0, "You can only vote if you're part of the agreement");
 
         if(index == 1){
-            // require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
+            require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party1Vote = vote;
             _updateStateAfterVote(agreeID);
         }
         else{
-            // require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
+            require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party2Vote = vote;
             _updateStateAfterVote(agreeID);
         }
