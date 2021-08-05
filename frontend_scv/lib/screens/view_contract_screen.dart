@@ -15,6 +15,7 @@ class ViewContractScreen extends StatefulWidget {
 
 class _ViewContractScreenState extends State<ViewContractScreen> {
   final _conditionTitleController = TextEditingController();
+  final _conditionDescriptionController = TextEditingController();
 
   Future<void> _newConditionDialog() async {
     return await showDialog(
@@ -29,9 +30,22 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                     validator: (value) {
                       return value.isNotEmpty ? null : "Invalid Field";
                     },
-                    decoration: InputDecoration(hintText: 'Enter some text'),
+                    decoration: InputDecoration(labelText: 'Title'),
                     controller: _conditionTitleController,
-                  )
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Description'),
+                    maxLines: 3,
+                    keyboardType: TextInputType.multiline,
+                    controller: _conditionDescriptionController,
+                    validator: (value) {
+                      if (value.isEmpty) return 'Please enter a description.';
+                      if (value.length < 8)
+                        return 'Please enter at least 8 '
+                            'characters for the description';
+                      return null;
+                    },
+                  ),
                 ],
               ),
             ),
