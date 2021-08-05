@@ -1,8 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.negotiation
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.savannasolutions.SmartContractVerifierServer.negotiation.controllers.NegotiationController
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
