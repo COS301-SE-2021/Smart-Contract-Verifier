@@ -104,10 +104,11 @@ contract('Verifier', (accounts) =>{
 
 
             var agree = await verifier.getAgreement(1);
+            var jury = await verifier.getJury(1);
             // console.log(agree);
 
             assert.equal(agree.party1Vote, 1, "incorrect vote in Agreement")
-            // assert.equal(agree.hasJury, true, "Jury wasn't assigned");
+            assert.equal(jury.assigned, true, "Jury wasn't assigned");
         })
 
     })
