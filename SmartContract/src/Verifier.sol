@@ -166,6 +166,7 @@ contract Verifier{
             }
 
             juries[agreeID].assigned = true;
+            emit JuryAssigned(agreeID);
         }
         else if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES && 
                 agreements[agreeID].party2Vote == AgreementLib.Vote.YES){
@@ -235,5 +236,7 @@ contract Verifier{
     event AcceptAgreement(uint agreeID);
     event ActiveAgreement(uint agreeID);
     event CloseAgreement(uint agreeID);
+
+    event JuryAssigned(uint agreeID);
 
 }
