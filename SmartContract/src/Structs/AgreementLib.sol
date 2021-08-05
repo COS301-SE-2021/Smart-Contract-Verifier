@@ -28,13 +28,6 @@ library AgreementLib{
         YES   // 2
     }
 
-    struct Jury{
-        bool assigned;
-        mapping(uint => address) jurors;
-        mapping(uint => Vote) votes;
-        uint numJurors;
-    }
-
     struct Agreement{
         address party1;
         address party2;
@@ -52,6 +45,13 @@ library AgreementLib{
 
         mapping(uint => PaymentInfoLib.PaymentInfo) payments;
         uint numPayments;
+    }
+
+    struct Jury{
+        bool assigned;
+        mapping(uint => address) jurors;
+        mapping(uint => Vote) votes;
+        uint numJurors;
     }
 
     // Version of Agreement to be used in functions as return value
@@ -73,6 +73,12 @@ library AgreementLib{
         Vote party2Vote;
 
         PaymentInfoLib.PaymentInfo[] payments;
+    }
+
+    struct ReturnJury{
+        bool assigned;
+        address[] jurors;
+        Vote[] votes;
     }
 
     function makeReturnAgreement(Agreement storage agreement) view internal returns(ReturnAgreement memory){
@@ -97,6 +103,23 @@ library AgreementLib{
             result.payments[i] = agreement.payments[i];
         }
 
+        return result;
+    }
+
+    function makeReturnJury(Jury storage jury) view internal returns(ReturnJury memory){
+        ReturnJury memory result;
+
+        result.assigned = jury.assigned;
+        if(!result.assigned)
+            return result;
+
+        result.jurors = new address[](jury.numJurors);
+        result.votes = new Vote[](jury.numJurors);
+        for(uint i=0; i<jury.numJurors; i++){
+            result.jurors[i] = jury.jurors[i];
+            result.votes[i] = jury.votes[i];
+        }
+        
         return result;
     }
 }

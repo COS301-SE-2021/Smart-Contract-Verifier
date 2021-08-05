@@ -141,6 +141,10 @@ contract Verifier{
         return AgreementLib.makeReturnAgreement(agreements[agreeID]);
     }
 
+    function getJury(uint agreeID) public view returns(AgreementLib.ReturnJury memory){
+        return AgreementLib.makeReturnJury(juries[agreeID]);
+    }
+
     function _updateStateAfterVote(uint agreeID) internal{
 
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
