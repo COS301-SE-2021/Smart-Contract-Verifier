@@ -6,11 +6,9 @@ import '../models/http_exception.dart';
 
 class Contracts with ChangeNotifier {
   List<Contract> _items = [];
-  final String authToken;
-  final String userId;
+  final String userWalletAddress;
   Contracts(
-    this.authToken,
-    this.userId,
+    this.userWalletAddress,
     this._items,
   );
 
@@ -31,9 +29,9 @@ class Contracts with ChangeNotifier {
 
   Future<void> fetchAndSetContracts([bool filterByUser = false]) async {
     final filterString =
-        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userWalletAddress"' : '';
     var url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
-        '.com/contracts.json?auth=$authToken&$filterString';
+        '.com/contracts.json&$filterString';
     try {
       final response = await http.get(Uri.parse(url));
       // print(json.decode(response.body));
@@ -43,8 +41,8 @@ class Contracts with ChangeNotifier {
         return;
       }
 
-      url =
-          'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
+          '.com/userFavorites/$userWalletAddress.json?';
       final favoriteResponse = await http.get(Uri.parse(url));
       final favoriteData = json.decode(favoriteResponse.body);
       final List<Contract> loadedContracts = [];
@@ -72,7 +70,7 @@ class Contracts with ChangeNotifier {
     final url = //RC: Does this correspond to the GetAgreement call of the api? The fields are different
 
         'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/contracts'
-        '.json?auth=$authToken';
+        '.json';
     try {
       final response = await http //wait for this to finish
           .post(
@@ -83,7 +81,7 @@ class Contracts with ChangeNotifier {
           'imageUrl': contract.imageUrl,
           'price': contract.price,
           'partyBId': contract.partyBId,
-          'creatorId': userId,
+          'creatorId': userWalletAddress,
           'conditions': contract.conditions,
         }),
       );
@@ -113,7 +111,7 @@ class Contracts with ChangeNotifier {
     if (contIndex >= 0) {
       //Send patch request
       final url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
-          '.com/contracts/$id.json?auth=$authToken';
+          '.com/contracts/$id.json';
       //can do try catch here:
       await http.patch(Uri.parse(url),
           body: json.encode({
@@ -133,7 +131,7 @@ class Contracts with ChangeNotifier {
 
   Future<void> deleteContract(String id) async {
     final url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
-        '.com/contracts/$id.json?auth=$authToken';
+        '.com/contracts/$id.json';
     final existingContractIndex =
         _items.indexWhere((cont) => cont.contractId == id);
     var existingContract = _items[existingContractIndex];

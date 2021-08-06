@@ -23,13 +23,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<Auth, Contracts>(
           update: (ctx, auth, previousProducts) => Contracts(
-              auth.token,
-              auth.userId,
+              auth.userWalletAddress,
               previousProducts == null ? [] : previousProducts.items),
           create: null,
         ),
-
-        // TODO: Add Notification Provider Here
       ],
       child: Consumer<Auth>(
         builder: ((ctx, auth, _) => MaterialApp(
@@ -43,16 +40,7 @@ class MyApp extends StatelessWidget {
                 fontFamily: 'Lato',
               ),
               // themeMode: ThemeMode.dark,
-              home: auth.isAuth
-                  ? ContractsOverviewScreen()
-                  : FutureBuilder(
-                      future: auth.tryAutoLogin(),
-                      builder: (ctx, authResultSnapshot) =>
-                          authResultSnapshot.connectionState ==
-                                  ConnectionState.waiting
-                              ? SplashScreen()
-                              : AuthScreen(),
-                    ),
+              home: auth.isAuth ? ContractsOverviewScreen() : AuthScreen(),
               routes: {
                 // ContractDetailScreen.routeName: (ctx) => ContractDetailScreen(),
                 ViewContractScreen.routeName: (ctx) => ViewContractScreen(),

@@ -36,10 +36,9 @@ class ContractItem extends StatelessWidget {
                   ),
                   // label: child,
                   onPressed: () => {
-                    product.toggleFavoriteStatus(
-                      authData.token,
-                      authData.userId,
-                    ),
+                    // product.toggleFavoriteStatus(
+                    //   authData.userWalletAddress,
+                    // ),
                   },
                   color: Theme.of(context).accentColor,
                 ),

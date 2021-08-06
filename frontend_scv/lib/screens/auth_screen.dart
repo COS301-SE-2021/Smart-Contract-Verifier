@@ -1,7 +1,7 @@
-// import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/screens/contracts_overview_screen.dart';
+import 'package:unison/screens/dashboard_screen.dart';
 import '../providers/auth.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -132,14 +132,17 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+      //Success -> go to home screen
+      Navigator.pushNamed(context, '/');
     } catch (error) {
-      const errorMessage = 'Could not authenticate you. Please try again later';
+      const errorMessage = 'Could not authenticate you. Please ensure you '
+          'have the metamask extension installed';
       _showErrorDialog(errorMessage);
     }
     setState(() {
       _isLoading = false;
     });
-    _print('Metamask Login Successful');
+    // _print('Metamask Login Successful');
   }
 
   @override
@@ -168,9 +171,22 @@ class _AuthCardState extends State<AuthCard> {
                 else
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 8.0),
+                        horizontal: 30.0, vertical: 10.0),
                     child: ElevatedButton(
-                      child: Text('MetaMask Login'),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            'images/metamask-logo-png-transparent.png',
+                            height: 24,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text('MetaMask Login'),
+                        ],
+                      ),
                       onPressed: _submit,
                       style: ButtonStyle(
                         shape:
