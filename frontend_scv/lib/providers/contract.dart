@@ -21,7 +21,7 @@ class Contract with ChangeNotifier {
   final String imageUrl;
   final String partyBId;
   bool isFavorite;
-  ContractColor color;
+
 
   Contract({
     this.contractId,
@@ -39,7 +39,6 @@ class Contract with ChangeNotifier {
     this.imageUrl,
     this.partyBId, //RC: What is partyB vs partyBID?
     this.isFavorite = false,
-    this.color = ContractColor.cyan,
   }); // Contract({
   //   @required this.contractId,
   //   @required this.title,
@@ -50,23 +49,24 @@ class Contract with ChangeNotifier {
   //   this.isFavorite = false,
   // }); //not final because it will be changing
 
+
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
-  Contract.fromJson(Map<String, dynamic> json)
-      : contractId = json['agreementID'],
+  Contract.fromJson(Map<String, dynamic> jsn)
+      : contractId = jsn['agreementID'],
         //duration = json['duration'], //Should be durationID?
-        durationId = json['duration'],
-        partyA = json['PartyA'],
-        partyB = json['PartyB'],
-        createdDate = json['createdDate'],
-        sealedDate = json['sealedDate'],
+        durationId = '', //jsn['duration'],
+        partyA = jsn['partyA']['publicWalletID'],
+        partyB = jsn['partyB']['publicWalletID'],
+        createdDate = jsn['createdDate'],
+        sealedDate = jsn['sealedDate'],
         //status = json['status'],
-        movedToBlockchain = json['movedToBlockChain'],
-        description = '',
-        imageUrl = '',
+        movedToBlockchain = jsn['movedToBlockChain'],
+        description = jsn['agreementDescription'],
+        imageUrl = jsn['agreementImageURL'],
         partyBId = '',
         price = 0,
-        title = '',
-        conditions = json['conditions'];
+        title = jsn['agreementTitle'],
+        conditions = jsn['conditions'];
 
   //To JSON. RC: Subject to the great field discussion
   Map<String, dynamic> toJson() => {
@@ -78,6 +78,9 @@ class Contract with ChangeNotifier {
         'sealedDate': sealedDate,
         'movedToBlockChain': movedToBlockchain,
         'conditions': conditions,
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
       };
 
   void _setFavValue(bool newValue) {
@@ -86,13 +89,16 @@ class Contract with ChangeNotifier {
   }
 
   //RC: Could this be stored locally rather than on the db? Since it's a user preference
+  //KC: The idea was incase they have multiple devices
+  //    (like mobile and web or 2 different web machines, their favorites would still be there
+  //    favorites regardless of what device or machine they are on)
   Future<void> toggleFavoriteStatus(String token, String userId) async {
     final oldStatus = isFavorite;
     _setFavValue(!isFavorite);
     final url =
         'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/userFavorites/$userId/$contractId.json?auth=$token';
     try {
-      final response = await http.put(url,
+      final response = await http.put(Uri.parse(url),
           body: json.encode(
             isFavorite,
           ));
@@ -102,31 +108,13 @@ class Contract with ChangeNotifier {
       _setFavValue(oldStatus);
     }
   }
-}
 
-enum ContractColor {
-  cyan,
-  deepOrange,
-  pink,
-  purple,
-  green,
-}
+  String toString() {
+    //A ToString method for debugging purposes
+    String ret = 'ID: ' + contractId + '\n';
+    ret += 'Party A: ' + partyA.toString() + '\n';
+    ret += 'Party B: ' + partyB.toString() + '\n';
 
-extension ContractColorExtension on ContractColor {
-  Color get name {
-    switch (this) {
-      case ContractColor.cyan:
-        return Colors.cyan;
-      case ContractColor.deepOrange:
-        return Colors.deepOrange;
-      case ContractColor.pink:
-        return Colors.pink;
-      case ContractColor.purple:
-        return Colors.purple;
-      case ContractColor.green:
-        return Colors.green;
-      default:
-        return Colors.cyan;
-    }
+    return ret;
   }
 }

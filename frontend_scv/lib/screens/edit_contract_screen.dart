@@ -142,7 +142,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Contract'),
+        title: Text('New Agreement'),
         actions: [
           IconButton(
             onPressed: _saveForm,
@@ -232,38 +232,6 @@ class _EditContractScreenState extends State<EditContractScreen> {
                         //returning text -> 'This  is wrong' (something is wrong)
                         // -> message for user
                         if (value.isEmpty) return 'Please provide a value.';
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: _initValues['price'],
-                      decoration: InputDecoration(labelText: 'Price'),
-                      textInputAction: TextInputAction
-                          .next, //bottom right button in soft keyboard
-                      keyboardType: TextInputType.number,
-                      focusNode: _priceFocusNode,
-                      onFieldSubmitted: (_) {
-                        //not neccessary
-                        FocusScope.of(context)
-                            .requestFocus(_descriptionFocusNode);
-                      },
-                      onSaved: (value) {
-                        _editedContract = Contract(
-                            contractId: _editedContract.contractId,
-                            title: _editedContract.title,
-                            description: _editedContract.description,
-                            price: double.parse(value),
-                            imageUrl: _editedContract.imageUrl,
-                            partyBId: _editedContract.partyBId,
-                            isFavorite: _editedContract.isFavorite,
-                            conditions: []);
-                      },
-                      validator: (value) {
-                        if (value.isEmpty) return 'Please enter a price.';
-                        if (double.tryParse(value) == null)
-                          return 'Please provide a value number.';
-                        if (double.parse(value) <= 0)
-                          return 'Please enter a number greater than zero.';
                         return null;
                       },
                     ),

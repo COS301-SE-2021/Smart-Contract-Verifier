@@ -35,7 +35,7 @@ class Contracts with ChangeNotifier {
     var url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
         '.com/contracts.json?auth=$authToken&$filterString';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       // print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
 
@@ -45,7 +45,7 @@ class Contracts with ChangeNotifier {
 
       url =
           'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
-      final favoriteResponse = await http.get(url);
+      final favoriteResponse = await http.get(Uri.parse(url));
       final favoriteData = json.decode(favoriteResponse.body);
       final List<Contract> loadedContracts = [];
       extractedData.forEach((contId, contData) {
@@ -76,7 +76,7 @@ class Contracts with ChangeNotifier {
     try {
       final response = await http //wait for this to finish
           .post(
-        url,
+        Uri.parse(url),
         body: json.encode({
           'title': contract.title,
           'description': contract.description,
@@ -115,7 +115,7 @@ class Contracts with ChangeNotifier {
       final url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
           '.com/contracts/$id.json?auth=$authToken';
       //can do try catch here:
-      await http.patch(url,
+      await http.patch(Uri.parse(url),
           body: json.encode({
             'title': newContract.title,
             'description': newContract.description,
@@ -139,7 +139,7 @@ class Contracts with ChangeNotifier {
     var existingContract = _items[existingContractIndex];
     _items.removeAt(existingContractIndex);
     notifyListeners();
-    final response = await http.delete(url);
+    final response = await http.delete(Uri.parse(url));
     if (response.statusCode >= 400) {
       _items.insert(existingContractIndex, existingContract);
       notifyListeners();

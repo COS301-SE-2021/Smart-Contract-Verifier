@@ -1,9 +1,13 @@
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/http_exception.dart';
 import '../providers/auth.dart';
+
+import '../services/Server/backendAPI.dart';
+import '../services/Server/negotiationService.dart';
+import '../services/Blockchain/wallet.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -105,7 +109,7 @@ class _AuthCardState extends State<AuthCard> {
               title: Text('An Error Occurred!'),
               content: Text(message),
               actions: [
-                FlatButton(
+                TextButton(
                   child: Text('Okay'),
                   onPressed: () {
                     Navigator.of(ctx).pop();
@@ -114,6 +118,22 @@ class _AuthCardState extends State<AuthCard> {
               ],
             ));
   }
+
+  //Temp
+  // TODO: Commented out -> not working
+  // Future<void> _submit() async {
+  //   WalletInteraction thing = WalletInteraction();
+  //   var res;
+  //
+  //   try {
+  //    // res = await thing.postData('negotiation/hello', <String, String>{});
+  //     thing.metamaskConnect();
+  //   } on Exception catch (e) {
+  //     print(e);
+  //     res = 'Nothing';
+  //   }
+  //   print(res);
+  // }
 
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
@@ -241,17 +261,22 @@ class _AuthCardState extends State<AuthCard> {
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                  RaisedButton(
-                    child:
-                        Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 8.0),
+                    child: ElevatedButton(
+                      child: Text(
+                          _authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                      onPressed: _submit,
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Theme.of(context).accentColor,
-                    textColor: Theme.of(context).accentTextTheme.button.color,
                   ),
                 FlatButton(
                   child: Text(
