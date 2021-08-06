@@ -155,6 +155,23 @@ contract Verifier{
         return AgreementLib.makeReturnJury(juries[agreeID]);
     }
 
+    function _assignJury(uint agreeID) internal{
+        address[] memory noUse = new address[](2);
+        noUse[0] = agreements[agreeID].party1;
+        noUse[1] = agreements[agreeID].party2;
+
+
+        address[] memory jury = jurorStore.assignJury(5, jurySeed, noUse);
+        jurySeed += 0xAA;
+
+        for(uint i=0; i<jury.length; i++){
+            juries[agreeID].jurors[i] = jury[i];
+        }
+
+        juries[agreeID].assigned = true;
+        emit JuryAssigned(agreeID);
+    }
+
     function _updateStateAfterVote(uint agreeID) internal{
 
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
@@ -163,20 +180,7 @@ contract Verifier{
                 return; //Already has jury
 
             // If at least one party voted no, agreement becomes contested
-            address[] memory noUse = new address[](2);
-            noUse[0] = agreements[agreeID].party1;
-            noUse[1] = agreements[agreeID].party2;
-
-
-            address[] memory jury = jurorStore.assignJury(5, jurySeed, noUse);
-            jurySeed += 0xAA;
-
-            for(uint i=0; i<jury.length; i++){
-                juries[agreeID].jurors[i] = jury[i];
-            }
-
-            juries[agreeID].assigned = true;
-            emit JuryAssigned(agreeID);
+            _assignJury(agreeID);
         }
         else if(agreements[agreeID].party1Vote == AgreementLib.Vote.YES && 
                 agreements[agreeID].party2Vote == AgreementLib.Vote.YES){

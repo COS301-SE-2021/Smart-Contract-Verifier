@@ -111,6 +111,11 @@ contract('Verifier', (accounts) =>{
             assert.equal(jury.assigned, true, "Jury wasn't assigned");
         })
 
+        it("Get jury", async()=>{
+            var jury = await verifier.getJury(1);
+            console.log(jury);
+        })
+
     })
 
     describe("Verifier unit tests 2", async () =>{
