@@ -10,7 +10,6 @@ import './screens/view_contract_screen.dart';
 //
 import './providers/contracts.dart';
 import './providers/auth.dart';
-import './providers/api_test_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,9 +28,7 @@ class MyApp extends StatelessWidget {
               previousProducts == null ? [] : previousProducts.items),
           create: null,
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => TestApi(),
-        ),
+
         // TODO: Add Notification Provider Here
       ],
       child: Consumer<Auth>(
