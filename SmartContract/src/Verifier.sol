@@ -274,21 +274,8 @@ contract Verifier{
         return true;
     }
 
-
-    function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
-        // Yes means pay out as normal, no means refund all payments
-
-        require(juries[agreeID].assigned, "There is no jury for this agreement");
-
-        int index = _jurorIndex(agreeID);
-
-        require(index >= 0, "You are not on this jury");
-
-        // Set vote
-        juries[agreeID].votes[uint(index)] = vote;
-
-        if(_decisionTime(agreeID)){
-            // Time to tally up votes & make a decision
+    function _juryMakeDecision(uint agreeID) internal{
+           // Time to tally up votes & make a decision
             // Yes is +1 and No is -1
             int tally = 0;
             // numVotes used to determine if decision was controversial, 
@@ -315,6 +302,27 @@ contract Verifier{
                 // Jury voted yes (even counted as yes), pay out as normal
                 _payoutAgreement(agreeID);
             }
+            agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+            emit CloseAgreement(agreeID);
+    }
+
+    function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
+        // Yes means pay out as normal, no means refund all payments
+
+        require(juries[agreeID].assigned, "There is no jury for this agreement");
+
+        int index = _jurorIndex(agreeID);
+
+        require(index >= 0, "You are not on this jury");
+        // If the following two conditions hold, then the agreement can't be closed. So that doesn't need to be checked
+        require(juries[agreeID].deadline > block.timestamp);
+        require(juries[agreeID].votes[uint(index)] == AgreementLib.Vote.NONE, "You already voted");
+
+        // Set vote
+        juries[agreeID].votes[uint(index)] = vote;
+
+        if(_decisionTime(agreeID)){
+            _juryMakeDecision(agreeID);
         }
 
     }
