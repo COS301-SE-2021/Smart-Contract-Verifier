@@ -170,7 +170,7 @@ contract Verifier{
         juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;
-        emit JuryAssigned(agreeID);
+        emit JuryAssigned(agreeID, jury);
     }
 
     function _updateStateAfterVote(uint agreeID) internal{
@@ -354,6 +354,6 @@ contract Verifier{
     event ActiveAgreement(uint agreeID);
     event CloseAgreement(uint agreeID);
 
-    event JuryAssigned(uint agreeID);
+    event JuryAssigned(uint agreeID, address[] jury);
 
 }

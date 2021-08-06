@@ -6,6 +6,7 @@ const UnisonToken = artifacts.require("UnisonToken")
 const Verifier = artifacts.require("Verifier")
 const RandomSource = artifacts.require("Randomness/RandomSource")
 
+const truffleAssert = require('truffle-assertions');
 require('chai').use(require('chai-as-promised')).should()
 
 contract('Verifier', (accounts) =>{
@@ -100,7 +101,7 @@ contract('Verifier', (accounts) =>{
         it("Vote no on agreement ", async()=>{
             // console.log("Vote no");
 
-            await verifier.voteResolution(1, 1, {from: accounts[0]});
+            result = await verifier.voteResolution(1, 1, {from: accounts[0]});
 
 
             var agree = await verifier.getAgreement(1);
@@ -109,11 +110,17 @@ contract('Verifier', (accounts) =>{
 
             assert.equal(agree.party1Vote, 1, "incorrect vote in Agreement")
             assert.equal(jury.assigned, true, "Jury wasn't assigned");
+
+            truffleAssert.eventEmitted(result, "JuryAssigned", (ev)=>{
+                return ev.agreeID == 1
+            });
+
         })
+
 
         it("Get jury", async()=>{
             var jury = await verifier.getJury(1);
-            console.log(jury);
+            // console.log(jury);
         })
 
     })
