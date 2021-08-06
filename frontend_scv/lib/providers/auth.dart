@@ -4,8 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/http_exception.dart';
+import '../services/Blockchain/wallet.dart';
 
 class Auth with ChangeNotifier {
+  //Setup wallet interaction object
+  WalletInteraction walletInteraction = WalletInteraction();
+
   String _token;
   DateTime _expiryDate;
   String _userId;
@@ -80,6 +84,11 @@ class Auth with ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     return _authenticate(email, password, 'signInWithPassword');
+  }
+
+  Future<void> metaMaskLogin() async {
+    return walletInteraction.metamaskConnect();
+    // print(walletInteraction.getCredentials().toString());
   }
 
   Future<bool> tryAutoLogin() async {
