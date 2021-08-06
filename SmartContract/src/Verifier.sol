@@ -274,34 +274,39 @@ contract Verifier{
         return true;
     }
 
+    function _abs(int x) internal pure returns (int) {
+        return x >= 0 ? x : -x;
+    }
+
     function _juryMakeDecision(uint agreeID) internal{
            // Time to tally up votes & make a decision
-            // Yes is +1 and No is -1
-            int tally = 0;
-            // numVotes used to determine if decision was controversial, 
-            // deviating jurors aren't punished on controversial votes
-            int numVotes = 0; 
+            int yes = 0;
+            int no =0;
 
             for(uint i=0; i < juries[agreeID].numJurors; i++){
                 AgreementLib.Vote v = juries[agreeID].votes[i];
                 if(v == AgreementLib.Vote.NO){
-                    tally--;
-                    numVotes++;
+                    no++;
                 }
                 else if(v == AgreementLib.Vote.YES){
-                    tally--;
-                    numVotes++;
+                    yes++;
                 }
             }
 
-            if(tally < 0){
+            AgreementLib.Vote decision;
+
+            if(no > yes){
                 // Jury voted no, do a refund
+                decision = AgreementLib.Vote.NO;
                 _refundAgreement(agreeID);
             }
             else{
-                // Jury voted yes (even counted as yes), pay out as normal
+                // Jury voted yes (even result is counted as yes), pay out as normal
+                decision = AgreementLib.Vote.YES;
                 _payoutAgreement(agreeID);
             }
+
+
             agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
             emit CloseAgreement(agreeID);
     }
