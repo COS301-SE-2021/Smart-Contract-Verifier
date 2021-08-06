@@ -7,6 +7,7 @@ import '../providers/auth.dart';
 
 import '../services/Server/backendAPI.dart';
 import '../services/Server/negotiationService.dart';
+import '../services/Blockchain/wallet.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -120,20 +121,21 @@ class _AuthCardState extends State<AuthCard> {
 
   //Temp
   // TODO: Commented out -> not working
-  // Future<void> _submit() async {
-  //   apiInteraction thing = apiInteraction();
-  //   var res;
-  //
-  //   try {
-  //     res = await thing.postData('negotiation/hello', <String, String>{});
-  //   } on Exception catch (e) {
-  //     print(e);
-  //     res = 'Nothing';
-  //   }
-  //   print(res);
-  // }
-
   Future<void> _submit() async {
+    WalletInteraction thing = WalletInteraction();
+    var res;
+
+    try {
+     // res = await thing.postData('negotiation/hello', <String, String>{});
+      thing.metamaskConnect();
+    } on Exception catch (e) {
+      print(e);
+      res = 'Nothing';
+    }
+    print(res);
+  }
+
+  Future<void> _submit2() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;

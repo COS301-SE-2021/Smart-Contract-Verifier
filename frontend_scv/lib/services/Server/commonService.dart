@@ -93,6 +93,32 @@ class CommonService {
     print ('Res: '+res.toString());
 
   }
+  Future<List<Contract>> getAllAgreements() async { //Get all agreements in the db. This is purely for testing
+
+    Map<String, String> body = {};
+    var response;
+
+    try {
+      response = await api.postData('/negotiation/get-agreement', body); //Revise url
+
+      if (response['status'] != 'SUCCESSFUL')
+        throw Exception('Agreements could not be retrieved');
+    } on Exception catch(e) {
+      //Handle Exception,
+      print (e.toString());
+      return [errorContract]; //This should be revised
+    }
+
+    List<dynamic> jsonList = ((response['agreements']));
+
+    List<Contract> ret = [];
+    for (int i =0; i<jsonList.length;i++)
+    {
+      ret.add(Contract.fromJson(jsonList[i]));
+    }
+
+    return ret;
+  }
 
 
 }
