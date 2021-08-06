@@ -279,36 +279,48 @@ contract Verifier{
     }
 
     function _juryMakeDecision(uint agreeID) internal{
-           // Time to tally up votes & make a decision
-            int yes = 0;
-            int no =0;
+        // Time to tally up votes & make a decision
+        uint yes = 0;
+        uint no =0;
 
-            for(uint i=0; i < juries[agreeID].numJurors; i++){
-                AgreementLib.Vote v = juries[agreeID].votes[i];
-                if(v == AgreementLib.Vote.NO){
-                    no++;
-                }
-                else if(v == AgreementLib.Vote.YES){
-                    yes++;
-                }
+        for(uint i=0; i < juries[agreeID].numJurors; i++){
+            AgreementLib.Vote v = juries[agreeID].votes[i];
+            if(v == AgreementLib.Vote.NO){
+                no++;
             }
-
-            AgreementLib.Vote decision;
-
-            if(no > yes){
-                // Jury voted no, do a refund
-                decision = AgreementLib.Vote.NO;
-                _refundAgreement(agreeID);
+            else if(v == AgreementLib.Vote.YES){
+                yes++;
             }
-            else{
-                // Jury voted yes (even result is counted as yes), pay out as normal
-                decision = AgreementLib.Vote.YES;
-                _payoutAgreement(agreeID);
+        }
+
+        AgreementLib.Vote decision;
+        uint payPerJuror;
+
+        if(no > yes){
+            // Jury voted no, do a refund
+            decision = AgreementLib.Vote.NO;
+            _refundAgreement(agreeID);
+            payPerJuror = stakingAmount / no;
+        }
+        else{
+            // Jury voted yes (even result is counted as yes), pay out as normal
+            decision = AgreementLib.Vote.YES;
+            _payoutAgreement(agreeID);
+            payPerJuror = stakingAmount / yes;
+
+        }
+
+        // Pay the jurors who voted correctly
+        for(uint i=0; i<juries[agreeID].numJurors; i++){
+            if(juries[agreeID].votes[i] == decision){
+                unisonToken.transfer(juries[agreeID].jurors[i], payPerJuror);
             }
+        }
 
 
-            agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
-            emit CloseAgreement(agreeID);
+
+        agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+        emit CloseAgreement(agreeID);
     }
 
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
