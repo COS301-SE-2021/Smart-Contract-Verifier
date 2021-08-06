@@ -167,6 +167,7 @@ contract Verifier{
         for(uint i=0; i<jury.length; i++){
             juries[agreeID].jurors[i] = jury[i];
         }
+        juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;
         emit JuryAssigned(agreeID);
