@@ -13,11 +13,11 @@ class Condition with ChangeNotifier {
   Condition({this.agreementId, this.title, this.proposedBy, this.description, this.conditionId = ''}); //Constructor
 
   Condition.fromJson(Map<String, dynamic> jsn) //Create instance from JSON
-      : agreementId = jsn['agreementID'],
-        conditionId = jsn['conditionID'],
-        title = jsn['conditionTitle'],
-        proposedBy = jsn['proposedUser']['publicWalletID'],
-        description = jsn['conditionDescription'];
+      : agreementId = jsn['AgreementID'],
+        conditionId = jsn['ConditionID'],
+        title = jsn['ConditionTitle'],
+        proposedBy = jsn['ProposedUser']['PublicWalletID'],
+        description = jsn['ConditionDescription'];
 
   Map<String, dynamic> toJson() => { //Convert instance to JSON
     'AgreementID': agreementId,

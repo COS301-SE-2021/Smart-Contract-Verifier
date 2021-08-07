@@ -52,35 +52,35 @@ class Contract with ChangeNotifier {
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
   Contract.fromJson(Map<String, dynamic> jsn)
-      : contractId = jsn['agreementID'],
+      : contractId = jsn['AgreementID'],
         //duration = json['duration'], //Should be durationID?
         durationId = '', //jsn['duration'],
-        partyA = jsn['partyA']['publicWalletID'],
-        partyB = jsn['partyB']['publicWalletID'],
-        createdDate = jsn['createdDate'],
-        sealedDate = jsn['sealedDate'],
+        partyA = jsn['PartyA']['PublicWalletID'],
+        partyB = jsn['PartyB']['PublicWalletID'],
+        createdDate = jsn['CreatedDate'],
+        sealedDate = jsn['SealedDate'],
         //status = json['status'],
-        movedToBlockchain = jsn['movedToBlockChain'],
-        description = jsn['agreementDescription'],
-        imageUrl = jsn['agreementImageURL'],
+        movedToBlockchain = jsn['MovedToBlockChain'],
+        description = jsn['AgreementDescription'],
+        imageUrl = jsn['AgreementImageURL'],
         partyBId = '',
         price = 0,
-        title = jsn['agreementTitle'],
-        conditions = jsn['conditions'];
+        title = jsn['AgreementTitle'],
+        conditions = jsn['Conditions'];
 
   //To JSON. RC: Subject to the great field discussion
   Map<String, dynamic> toJson() => {
-        'agreementID': contractId,
-        'duration': durationId,
+        'AgreementID': contractId,
+        'Duration': durationId,
         'PartyA': partyA,
         'PartyB': partyB,
-        'createdDate': createdDate,
-        'sealedDate': sealedDate,
-        'movedToBlockChain': movedToBlockchain,
-        'conditions': conditions,
-        'title': title,
-        'description': description,
-        'imageUrl': imageUrl,
+        'CreatedDate': createdDate,
+        'SealedDate': sealedDate,
+        'MovedToBlockChain': movedToBlockchain,
+        'Conditions': conditions,
+        'Title': title,
+        'Description': description,
+        'ImageUrl': imageUrl,
       };
 
   void _setFavValue(bool newValue) {

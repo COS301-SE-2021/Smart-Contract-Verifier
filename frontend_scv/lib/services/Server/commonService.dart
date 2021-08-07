@@ -21,7 +21,7 @@ class CommonService {
     try {
       response = await api.postData('/user/retrieve-user-agreements', body);
 
-      if (response['status'] != 'SUCCESSFUL')
+      if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Retrieval of agreements failed');
     } on Exception catch(e) {
       //Handle Exception
@@ -29,7 +29,7 @@ class CommonService {
       return [errorContract]; //This should be revised
     }
 
-    List<dynamic> jsonList = ((response['agreements']));
+    List<dynamic> jsonList = ((response['Agreements']));
 
     List<Contract> ret = [];
     for (int i =0; i<jsonList.length;i++)
@@ -48,7 +48,7 @@ class CommonService {
     try {
       response = await api.postData('/negotiation/get-agreement-details', body);
 
-      if (response['status'] != 'SUCCESSFUL')
+      if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be retrieved');
     } on Exception catch(e) {
       //Handle Exception,
@@ -57,7 +57,7 @@ class CommonService {
       return errorContract; //This should be revised
     }
 
-    return Contract.fromJson(response['agreementResponse']);
+    return Contract.fromJson(response['AgreementResponse']);
   }
 
   Future<List<Condition>> getConditions(String id) async { //Get a list of conditions for an agreement
@@ -70,7 +70,7 @@ class CommonService {
     try {
       response = await api.postData('', body);
 
-      if (response['status'] != 'SUCCESSFUL')
+      if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Conditions could not be retrieved');
     } on Exception catch(e) {
       //Handle Exception,
@@ -79,8 +79,8 @@ class CommonService {
       return res;
     }
 
-    for (int i =0;i<response['conditions'].length;i++) {
-      res.add(Condition.fromJson(response['conditions'][i]));
+    for (int i =0;i<response['Conditions'].length;i++) {
+      res.add(Condition.fromJson(response['Conditions'][i]));
     }
 
     return res;
@@ -101,7 +101,7 @@ class CommonService {
     try {
       response = await api.postData('/negotiation/get-agreement', body); //Revise url
 
-      if (response['status'] != 'SUCCESSFUL')
+      if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreements could not be retrieved');
     } on Exception catch(e) {
       //Handle Exception,
@@ -109,7 +109,7 @@ class CommonService {
       return [errorContract]; //This should be revised
     }
 
-    List<dynamic> jsonList = ((response['agreements']));
+    List<dynamic> jsonList = ((response['Agreements']));
 
     List<Contract> ret = [];
     for (int i =0; i<jsonList.length;i++)

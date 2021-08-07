@@ -29,7 +29,7 @@ class NegotiationService {
    try {
      response = await api.postData('/negotiation/create-agreement', body);
 
-     if (response['status'] != 'SUCCESSFUL')
+     if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Agreement could not be saved');
    } on Exception catch(e) {
       //Handle exception
@@ -53,7 +53,7 @@ class NegotiationService {
    try {
      response = await api.postData('/negotiation/create-condition', body);
 
-     if (response['status'] != 'SUCCESSFUL')
+     if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Condition could not be saved');
    } on Exception catch(e) {
      //Handle exception
@@ -82,7 +82,7 @@ class NegotiationService {
    try {
      response = await api.postData('/negotiation/$path', body);
 
-     if (response['status'] != 'SUCCESSFUL')
+     if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Condition could not be ' + (acc ? 'accepted' : 'rejected'));
    } on Exception catch(e) {
      //Handle exception
@@ -109,7 +109,7 @@ class NegotiationService {
    try {
      response = await api.postData('/negotiation/seal-agreement', body);
 
-     if (response['status'] != 'SUCCESSFUL')
+     if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Agreement could not be sealed');
    } on Exception catch(e) {
      //Handle exception
