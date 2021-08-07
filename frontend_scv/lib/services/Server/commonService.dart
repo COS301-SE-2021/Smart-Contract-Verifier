@@ -51,10 +51,8 @@ class CommonService {
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be retrieved');
     } on Exception catch(e) {
-      //Handle Exception,
-      //possibly with custom contract object
       print (e.toString());
-      return errorContract; //This should be revised
+      throw e;
     }
 
     return Contract.fromJson(response['AgreementResponse']);
@@ -73,10 +71,8 @@ class CommonService {
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Conditions could not be retrieved');
     } on Exception catch(e) {
-      //Handle Exception,
-      //maybe with custom error condition
       print (e.toString());
-      return res;
+      throw e;
     }
 
     for (int i =0;i<response['Conditions'].length;i++) {
@@ -106,7 +102,7 @@ class CommonService {
     } on Exception catch(e) {
       //Handle Exception,
       print (e.toString());
-      return [errorContract]; //This should be revised
+      throw e; //This should be revised
     }
 
     List<dynamic> jsonList = ((response['Agreements']));
