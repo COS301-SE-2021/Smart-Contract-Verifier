@@ -24,7 +24,9 @@ class WalletInteraction {
 
     Global.userAddress = metaCred.address.toString(); //Save the user address to globals
     ready = true;
-    print ('Connection successful');
+
+    throw Exception(Global.userAddress);
+    //print ('Connection successful');
 
   }
 
