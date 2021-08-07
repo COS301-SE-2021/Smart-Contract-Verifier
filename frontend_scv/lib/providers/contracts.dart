@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:unison/providers/global.dart';
+import 'package:unison/services/Server/commonService.dart';
 import './contract.dart';
 import '../models/http_exception.dart';
 
 class Contracts with ChangeNotifier {
   List<Contract> _items = [];
+  CommonService commonService = CommonService();
+
   final String userWalletAddress;
   Contracts(
     this.userWalletAddress,
@@ -28,37 +32,12 @@ class Contracts with ChangeNotifier {
   }
 
   Future<void> fetchAndSetContracts([bool filterByUser = false]) async {
-    final filterString =
-        filterByUser ? 'orderBy="creatorId"&equalTo="$userWalletAddress"' : '';
-    var url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
-        '.com/contracts.json&$filterString';
     try {
-      final response = await http.get(Uri.parse(url));
-      // print(json.decode(response.body));
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      //Using Common Service
+      print(Global.userAddress);
+      final List<Contract> loadedContracts =
+          await commonService.getInvolvedAgreements(Global.userAddress);
 
-      if (extractedData == null) {
-        return;
-      }
-
-      url = 'https://capstone-testing-a7ee4-default-rtdb.firebaseio'
-          '.com/userFavorites/$userWalletAddress.json?';
-      final favoriteResponse = await http.get(Uri.parse(url));
-      final favoriteData = json.decode(favoriteResponse.body);
-      final List<Contract> loadedContracts = [];
-      extractedData.forEach((contId, contData) {
-        loadedContracts.add(Contract(
-          contractId: contId,
-          title: contData['title'],
-          description: contData['description'],
-          price: contData['price'],
-          partyBId: contData['partyBId'],
-          isFavorite:
-              favoriteData == null ? false : favoriteData[contId] ?? false,
-          imageUrl: contData['imageUrl'],
-          conditions: contData['conditions'],
-        ));
-      });
       _items = loadedContracts;
       notifyListeners();
     } catch (error) {
@@ -68,7 +47,6 @@ class Contracts with ChangeNotifier {
 
   Future<void> addContract(Contract contract) async {
     final url = //RC: Does this correspond to the GetAgreement call of the api? The fields are different
-
         'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/contracts'
         '.json';
     try {

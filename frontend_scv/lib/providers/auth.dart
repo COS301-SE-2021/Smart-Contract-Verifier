@@ -2,6 +2,7 @@ import 'dart:async'; //for timer
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unison/providers/global.dart';
 import '../services/Blockchain/wallet.dart';
 
 class Auth with ChangeNotifier {
@@ -19,20 +20,15 @@ class Auth with ChangeNotifier {
     return _userWalletAddress;
   }
 
-  Future<void> metaMaskLoginSuccess() async {
-    try {
-      final cred = walletInteraction.getCredentials();
-      _isAuth = true;
-      _userWalletAddress = cred.address.toString();
-      notifyListeners();
-    } catch (error) {
-      throw error;
-    }
-  }
-
   Future<void> metaMaskLogin() async {
-    await walletInteraction.metamaskConnect();
-    metaMaskLoginSuccess();
+    try {
+      await walletInteraction.metamaskConnect();
+    } catch (error) {
+      throw (error);
+    }
+    final cred = walletInteraction.getCredentials();
+    _isAuth = true;
+    _userWalletAddress = cred.address.toString();
     notifyListeners();
     // print(walletInteraction.getCredentials().toString());
   }

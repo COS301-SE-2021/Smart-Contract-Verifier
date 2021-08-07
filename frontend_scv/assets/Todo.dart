@@ -38,4 +38,9 @@
 //// Notifications (for Jury activity):
 /*
  * -> List of Notification objects
-*/
+
+*
+* NB: LOWER CASE ADDRESSES
+*
+*
+* */

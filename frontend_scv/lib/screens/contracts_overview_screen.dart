@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/providers/global.dart';
 
 import '../providers/contracts.dart';
 import '../screens/edit_contract_screen.dart';
@@ -48,7 +49,8 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: Text(Global.userAddress),
+        // title: Text('Dashboard'),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {

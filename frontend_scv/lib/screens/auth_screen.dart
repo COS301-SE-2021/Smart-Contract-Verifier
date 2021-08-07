@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/screens/contracts_overview_screen.dart';
-import 'package:unison/screens/dashboard_screen.dart';
 import '../providers/auth.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -104,27 +102,6 @@ class _AuthCardState extends State<AuthCard> {
             ));
   }
 
-  Future<void> _print(String message) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Debug'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Approve'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> _submit() async {
     _formKey.currentState.save();
     setState(() {
@@ -132,12 +109,14 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+      _showErrorDialog('Done');
       //Success -> go to home screen
       Navigator.pushNamed(context, '/');
     } catch (error) {
       const errorMessage = 'Could not authenticate you. Please ensure you '
           'have the metamask extension installed';
-      _showErrorDialog(errorMessage);
+      _showErrorDialog(error);
+      // _showErrorDialog(errorMessage);
     }
     setState(() {
       _isLoading = false;

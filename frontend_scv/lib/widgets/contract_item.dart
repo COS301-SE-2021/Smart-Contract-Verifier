@@ -22,8 +22,8 @@ class ContractItem extends StatelessWidget {
       child: ListTile(
         title: Text(contract.title),
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(contract.imageUrl),
-        ),
+            // backgroundImage: NetworkImage(contract.imageUrl),
+            ),
         trailing: Container(
           width: 50,
           child: Row(
