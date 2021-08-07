@@ -11,8 +11,10 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
+import com.savannasolutions.SmartContractVerifierServer.user.requests.UserExistsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
+import com.savannasolutions.SmartContractVerifierServer.user.responses.UserExistsResponse
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
@@ -96,4 +98,16 @@ class UserService(  val userRepository: UserRepository,
 
         return RetrieveUserAgreementsResponse(list,ResponseStatus.SUCCESSFUL)
     }
+
+    fun userExists(userExistsRequest: UserExistsRequest): UserExistsResponse
+    {
+        if(userExistsRequest.walletID.isEmpty())
+            return UserExistsResponse(status = ResponseStatus.FAILED)
+
+        return if(userRepository.existsById(userExistsRequest.walletID))
+            UserExistsResponse(true, ResponseStatus.SUCCESSFUL)
+        else
+            UserExistsResponse(status = ResponseStatus.SUCCESSFUL)
+    }
+
 }
