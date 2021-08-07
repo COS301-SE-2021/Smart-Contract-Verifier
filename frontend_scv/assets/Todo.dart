@@ -41,6 +41,6 @@
 
 *
 * NB: LOWER CASE ADDRESSES
-*
+* https://pub.dev/packages/identicon
 *
 * */

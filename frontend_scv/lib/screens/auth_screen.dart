@@ -87,19 +87,20 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   void _showErrorDialog(String message) {
     showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: Text('An Error Occurred!'),
-              content: Text(message),
-              actions: [
-                TextButton(
-                  child: Text('Okay'),
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                ),
-              ],
-            ));
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An Error Occurred!'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _submit() async {
@@ -109,7 +110,6 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       await Provider.of<Auth>(context, listen: false).metaMaskLogin();
-      _showErrorDialog('Done');
       //Success -> go to home screen
       Navigator.pushNamed(context, '/');
     } catch (error) {

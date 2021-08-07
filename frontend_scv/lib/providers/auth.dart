@@ -27,7 +27,7 @@ class Auth with ChangeNotifier {
       throw (error);
     }
     final cred = walletInteraction.getCredentials();
-    _isAuth = true;
+    _isAuth = await true;
     _userWalletAddress = cred.address.toString();
     notifyListeners();
     // print(walletInteraction.getCredentials().toString());
