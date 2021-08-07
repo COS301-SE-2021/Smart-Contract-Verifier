@@ -39,13 +39,13 @@ class NegotiationService {
 
  }
 
- Future<void> saveCondition(String id, Condition cond) async { //Save a condition associated with a contract
+ Future<void> saveCondition(Condition cond) async { //Save a condition associated with a contract
 
     //TODO list:
    //Review return type and error handling (for special cases)
 
    Map<String, dynamic> con = cond.toJson();
-   Map<String, String> body = {'AgreementID' : id, 'ConditionTitle' : con['ConditionTitle'],
+   Map<String, String> body = {'AgreementID' : cond.agreementId, 'ConditionTitle' : con['ConditionTitle'],
      'ProposedUser' : con['ProposedUser'], 'ConditionDescription' : con['ConditionDescription']}; //Maybe change proposedUser to map to the current user? To ensure
    // it's correct, since only the proposing user can save a condition.
 
