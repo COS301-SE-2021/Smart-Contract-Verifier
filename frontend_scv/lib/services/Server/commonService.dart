@@ -22,7 +22,7 @@ class CommonService {
       response = await api.postData('/user/retrieve-user-agreements', body);
 
       if (response['Status'] != 'SUCCESSFUL')
-        throw Exception(response.body.toString());//('Retrieval of agreements failed');
+        throw Exception('Retrieval of agreements failed');
     } on Exception catch(e) {
       //Handle Exception
       print(e);
