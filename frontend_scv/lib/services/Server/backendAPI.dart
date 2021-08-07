@@ -28,7 +28,8 @@ class ApiInteraction {
       );
     } on Exception catch(e) { //Some other exception
       print(e);
-      throw Exception('Could not connect to backend'); //Could be expanded in the future
+      throw e;
+      //throw Exception('Could not connect to backend'); //Could be expanded in the future
     }
 
     if (response.statusCode != 200)
