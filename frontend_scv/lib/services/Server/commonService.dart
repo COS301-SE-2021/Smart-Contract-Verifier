@@ -29,7 +29,7 @@ class CommonService {
       return [errorContract]; //This should be revised
     }
 
-    List<dynamic> jsonList = ((response['Agreements']));
+    List<dynamic> jsonList = ((response['agreements']));
 
     List<Contract> ret = [];
     for (int i =0; i<jsonList.length;i++)

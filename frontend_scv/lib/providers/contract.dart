@@ -55,8 +55,8 @@ class Contract with ChangeNotifier {
       : contractId = jsn['AgreementID'],
         //duration = json['duration'], //Should be durationID?
         durationId = '', //jsn['duration'],
-        partyA = jsn['PartyA']['PublicWalletID'],
-        partyB = jsn['PartyB']['PublicWalletID'],
+        partyA = jsn['PartyA']['publicWalletID'],
+        partyB = jsn['PartyB']['publicWalletID'],
         createdDate = jsn['CreatedDate'],
         sealedDate = jsn['SealedDate'],
         //status = json['status'],
