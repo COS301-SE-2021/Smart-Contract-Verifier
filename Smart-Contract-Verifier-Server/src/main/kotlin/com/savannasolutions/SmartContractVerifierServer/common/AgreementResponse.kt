@@ -1,16 +1,17 @@
 package com.savannasolutions.SmartContractVerifierServer.common
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
-data class AgreementResponse(val agreementID: UUID,
-                             val agreementTitle: String,
-                             val agreementDescription: String,
-                             val durationID: UUID? = null,
-                             val paymentID: UUID? = null,
-                             val partyA: UserResponse? = null,
-                             val partyB: UserResponse? = null,
-                             val createdDate: Date? = null,
-                             val sealedDate: Date? = null,
-                             val movedToBlockchain: Boolean? = null,
-                             val conditions: List<ConditionResponse>? = null,
-                             val agreementImageURL: String? = null)
+data class AgreementResponse(@JsonProperty("AgreementID") val agreementID: UUID,
+                             @JsonProperty("AgreementTitle") val agreementTitle: String,
+                             @JsonProperty("AgreementDescription") val agreementDescription: String,
+                             @JsonProperty("DurationID") val durationID: UUID? = null,
+                             @JsonProperty("PaymentID") val paymentID: UUID? = null,
+                             @JsonProperty("PartyA") val partyA: UserResponse? = null,
+                             @JsonProperty("PartyB") val partyB: UserResponse? = null,
+                             @JsonProperty("CreatedDate") val createdDate: Date? = null,
+                             @JsonProperty("SealedDate") val sealedDate: Date? = null,
+                             @JsonProperty("MovedToBlockchain") val movedToBlockchain: Boolean? = null,
+                             @JsonProperty("Conditions") val conditions: List<ConditionResponse>? = null,
+                             @JsonProperty("AgreementImageURL") val agreementImageURL: String? = null)

@@ -111,7 +111,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         val agreement = agreementsRepository.getById(createConditionRequest.AgreementID)
 
-        if(agreement.users.elementAt(0).publicWalletID != createConditionRequest.PreposedUser && agreement.users.elementAt(1).publicWalletID != createConditionRequest.PreposedUser)
+        val users = userRepository.getUsersByAgreementsContaining(agreement)
+
+        if(users.elementAt(0).publicWalletID != createConditionRequest.PreposedUser && users.elementAt(1).publicWalletID != createConditionRequest.PreposedUser)
             return CreateConditionResponse(status = ResponseStatus.FAILED)
 
         val user = userRepository.getById(createConditionRequest.PreposedUser)
