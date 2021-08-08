@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/providers/global.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
 import '../providers/auth.dart';
 
@@ -12,6 +13,11 @@ class AppDrawer extends StatelessWidget {
           AppBar(
             title: Text('Unison.'),
             automaticallyImplyLeading: false, //never adds a back button
+          ),
+          Divider(),
+          ListTile(
+            // leading: Icon(Icons.list_alt),
+            title: Text(Global.userAddress),
           ),
           Divider(),
           ListTile(
