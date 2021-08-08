@@ -98,13 +98,52 @@ class SetPaymentConditionTest {
     @Test
     fun `SetPaymentCondition successful`()
     {
-        //TODO fix this function once negotiation has been updated
-        val rjson = "{\"ProposedUser\" : \"${userA}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0}"
+        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0}"
 
         val response = requestSender(rjson)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, conditionUUID.toString())
+    }
+
+    @Test
+    fun `SetPaymentCondition failed due to proposing user being empty`()
+    {
+        val rjson = "{\"ProposedUser\" : \"\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0}"
+
+        val response = requestSender(rjson)
+
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+    }
+
+    @Test
+    fun `SetPaymentCondition failed due to amount being below 0`()
+    {
+        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : -500.0}"
+
+        val response = requestSender(rjson)
+
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+    }
+
+    @Test
+    fun `SetPaymentCondition failed agreement does not exist`()
+    {
+        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"12a292bd-43e1-4690-8bdb-6d6cc20c1bb9\",\"Payment\" : 500.0}"
+
+        val response = requestSender(rjson)
+
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+    }
+
+    @Test
+    fun `SetPaymentCondition proposing user not part of agreement`()
+    {
+        val rjson = "{\"ProposedUser\" : \"${userC.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0}"
+
+        val response = requestSender(rjson)
+
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
 
