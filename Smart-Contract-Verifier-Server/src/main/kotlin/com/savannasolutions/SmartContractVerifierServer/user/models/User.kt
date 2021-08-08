@@ -9,7 +9,7 @@ data class User(@Id val publicWalletID: String,
                 val alias: String? = null,
                 var nonce: Int = 0,)
 {
-                @ManyToMany(cascade = [CascadeType.ALL])
+                @ManyToMany(cascade = [CascadeType.PERSIST])
                 @JoinTable(
                     name = "user_agreement",
                     joinColumns = [JoinColumn(name = "public_WalletID")],

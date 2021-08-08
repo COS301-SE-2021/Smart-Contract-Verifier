@@ -80,14 +80,16 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val tempB = agreementsRepository.getAllByUsersContaining(userB) ?:
         mutableSetOf()
 
+
+        nAgreement = agreementsRepository.save(nAgreement)
+
         userA.agreements = tempA
         userB.agreements = tempB
 
         userA.agreements.add(nAgreement)
         userB.agreements.add(nAgreement)
-
-        nAgreement = agreementsRepository.save(nAgreement)
-
+        userRepository.save(userA)
+        userRepository.save(userB)
 
         return CreateAgreementResponse(nAgreement.ContractID, ResponseStatus.SUCCESSFUL)
     }
@@ -258,6 +260,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun setPaymentCondition(setPaymentConditionRequest: SetPaymentConditionRequest): SetPaymentConditionResponse
     {
+        if(setPaymentConditionRequest.PreposedUser.isEmpty())
+            return SetPaymentConditionResponse(null, status = ResponseStatus.FAILED)
+
         if(!agreementsRepository.existsById(setPaymentConditionRequest.AgreementID))
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
@@ -265,9 +270,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
         val agreement = agreementsRepository.getById(setPaymentConditionRequest.AgreementID)
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(setPaymentConditionRequest.PreposedUser != agreement.users.elementAt(0).publicWalletID
-            && setPaymentConditionRequest.PreposedUser != agreement.users.elementAt(0).publicWalletID)
+        if(setPaymentConditionRequest.PreposedUser != userList.elementAt(0).publicWalletID
+            && setPaymentConditionRequest.PreposedUser != userList.elementAt(1).publicWalletID)
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
         val user = userRepository.getById(setPaymentConditionRequest.PreposedUser)
@@ -280,6 +286,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         condition = condition.apply { proposingUser = user }
 
         condition = conditionsRepository.save(condition)
+        if(agreement.PaymentConditionUUID != null)
+        {
+            val prevPaymentCondition = conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+            prevPaymentCondition.conditionStatus = ConditionStatus.REJECTED
+            conditionsRepository.save(prevPaymentCondition)
+        }
 
         agreement.PaymentConditionUUID = condition.conditionID
 
@@ -300,22 +312,30 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
         val agreement = agreementsRepository.getById(setDurationConditionRequest.AgreementID)
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(agreement.users.elementAt(0).publicWalletID != setDurationConditionRequest.PreposedUser &&
-            agreement.users.elementAt(1).publicWalletID != setDurationConditionRequest.PreposedUser)
+        if(userList.elementAt(0).publicWalletID != setDurationConditionRequest.PreposedUser &&
+            userList.elementAt(1).publicWalletID != setDurationConditionRequest.PreposedUser)
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
         val user = userRepository.getById(setDurationConditionRequest.PreposedUser)
 
         var condition = Conditions(UUID.randomUUID(),
                 "Duration condition",
-                "Duration of " + setDurationConditionRequest.Duration.toString(),
+                "Duration of " + setDurationConditionRequest.Duration.toSeconds().toString(),
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = agreement }
 
         condition = condition.apply { proposingUser = user}
 
         condition = conditionsRepository.save(condition)
+
+        if(agreement.DurationConditionUUID != null)
+        {
+            val prevDurationCondition = conditionsRepository.getById(agreement.DurationConditionUUID!!)
+            prevDurationCondition.conditionStatus = ConditionStatus.REJECTED
+            conditionsRepository.save(prevDurationCondition)
+        }
 
         agreement.DurationConditionUUID = condition.conditionID
 
