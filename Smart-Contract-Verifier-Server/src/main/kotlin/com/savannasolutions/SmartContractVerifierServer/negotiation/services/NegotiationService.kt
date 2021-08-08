@@ -80,14 +80,16 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val tempB = agreementsRepository.getAllByUsersContaining(userB) ?:
         mutableSetOf()
 
+
+        nAgreement = agreementsRepository.save(nAgreement)
+
         userA.agreements = tempA
         userB.agreements = tempB
 
         userA.agreements.add(nAgreement)
         userB.agreements.add(nAgreement)
-
-        nAgreement = agreementsRepository.save(nAgreement)
-
+        userRepository.save(userA)
+        userRepository.save(userB)
 
         return CreateAgreementResponse(nAgreement.ContractID, ResponseStatus.SUCCESSFUL)
     }
@@ -281,6 +283,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         condition = condition.apply { proposingUser = user }
 
         condition = conditionsRepository.save(condition)
+        if(agreement.PaymentConditionUUID != null)
+        {
+            val prevPaymentCondition = conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+            prevPaymentCondition.conditionStatus = ConditionStatus.REJECTED
+            conditionsRepository.save(prevPaymentCondition)
+        }
 
         agreement.PaymentConditionUUID = condition.conditionID
 
@@ -311,13 +319,20 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         var condition = Conditions(UUID.randomUUID(),
                 "Duration condition",
-                "Duration of " + setDurationConditionRequest.Duration.toString(),
+                "Duration of " + setDurationConditionRequest.Duration.toSeconds().toString(),
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = agreement }
 
         condition = condition.apply { proposingUser = user}
 
         condition = conditionsRepository.save(condition)
+
+        if(agreement.DurationConditionUUID != null)
+        {
+            val prevDurationCondition = conditionsRepository.getById(agreement.DurationConditionUUID!!)
+            prevDurationCondition.conditionStatus = ConditionStatus.REJECTED
+            conditionsRepository.save(prevDurationCondition)
+        }
 
         agreement.DurationConditionUUID = condition.conditionID
 
