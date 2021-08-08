@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 class Contract with ChangeNotifier {
   String contractId; //agreementID
-  String durationId;
   String paymentId;
   String partyA;
   String partyB;
@@ -23,10 +22,8 @@ class Contract with ChangeNotifier {
   String partyBId;
   bool isFavorite;
 
-
   Contract({
     this.contractId,
-    this.durationId, //RC: Duration could be time
     this.paymentId,
     this.partyA,
     this.partyB,
@@ -50,34 +47,29 @@ class Contract with ChangeNotifier {
   //   this.isFavorite = false,
   // }); //not final because it will be changing
 
-
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
   Contract.fromJson(Map<String, dynamic> jsn) {
-        contractId = jsn['AgreementID'];
-        //duration = json['duration'], //Should be durationID?
-        durationId = ''; //jsn['duration'],
-        partyA = jsn['PartyA']['publicWalletID'];
-        partyB = jsn['PartyB']['publicWalletID'];
-        createdDate = jsn['CreatedDate'];
-        sealedDate = jsn['SealedDate'];
-        //status = json['status'],
-        movedToBlockchain = jsn['MovedToBlockChain'];
-        description = jsn['AgreementDescription'];
-        imageUrl = jsn['AgreementImageURL'];
-        partyBId = '';
-        price = 0;
-        title = jsn['AgreementTitle'];
-        contractId = '';
-        conditions = [];//jsn['Conditions'];
-        for (int i =0;i<jsn['Conditions'].length;i++) {
-          conditions.add(Condition.fromJson(jsn['Conditions'][i]));
-        }
-
+    contractId = jsn['AgreementID'];
+    partyA = jsn['PartyA']['publicWalletID'];
+    partyB = jsn['PartyB']['publicWalletID'];
+    createdDate = jsn['CreatedDate'];
+    sealedDate = jsn['SealedDate'];
+    //status = json['status'],
+    movedToBlockchain = jsn['MovedToBlockChain'];
+    description = jsn['AgreementDescription'];
+    imageUrl = jsn['AgreementImageURL'];
+    partyBId = '';
+    price = 0;
+    title = jsn['AgreementTitle'];
+    // contractId = '';
+    conditions = []; //jsn['Conditions'];
+    for (int i = 0; i < jsn['Conditions'].length; i++) {
+      conditions.add(Condition.fromJson(jsn['Conditions'][i]));
+    }
   }
   //To JSON. RC: Subject to the great field discussion
   Map<String, dynamic> toJson() => {
         'AgreementID': contractId,
-        'Duration': durationId,
         'PartyA': partyA,
         'PartyB': partyB,
         'CreatedDate': createdDate,
