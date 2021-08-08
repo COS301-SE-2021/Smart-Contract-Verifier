@@ -39,5 +39,10 @@ class WalletInteraction {
     return (window.ethereum != null);
   }
 
+  void metamaskDisconnect() { //Disconnect from Metamask
+
+    metaCred = null;
+    ready = false;
+  }
 
 }
