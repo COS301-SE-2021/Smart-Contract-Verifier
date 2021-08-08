@@ -260,6 +260,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun setPaymentCondition(setPaymentConditionRequest: SetPaymentConditionRequest): SetPaymentConditionResponse
     {
+        if(setPaymentConditionRequest.PreposedUser.isEmpty())
+            return SetPaymentConditionResponse(null, status = ResponseStatus.FAILED)
+
         if(!agreementsRepository.existsById(setPaymentConditionRequest.AgreementID))
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
