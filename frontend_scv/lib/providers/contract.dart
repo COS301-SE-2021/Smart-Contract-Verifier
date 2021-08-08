@@ -68,6 +68,14 @@ class Contract with ChangeNotifier {
         'AgreementImageURL': imageUrl,
       };
 
+  Map<String, String> toJsonChain() => { //This is used in the save to the blockchain.
+    'PartyA': partyA,
+    'PartyB': partyB,
+    'AgreementTitle': title,
+    'AgreementDescription': description,
+    'AgreementImageURL': imageUrl,
+  };
+
   void _setFavValue(bool newValue) {
     isFavorite = newValue;
     notifyListeners();

@@ -1,7 +1,5 @@
 //This is for the ui to request data from the api in an abstract sense.
 //This one deals with negotiation-related issues.
-//Should these be called services?
-//Also, are these multiple files too fragmented?
 
 import 'dart:async';
 import 'backendAPI.dart';

@@ -2,6 +2,7 @@
 
 import '../../providers/contract.dart';
 import 'smartContract.dart';
+import '../../providers/global.dart';
 
 class UnisonService {
 
@@ -14,6 +15,11 @@ class UnisonService {
     //In a real deployed contract, what will the delay be?
     //When will a result be returned?
     //How should it be handled in the UI?
+
+    var jsn = con.toJsonChain();
+
+    //Pass in second party, resolution time and 'calldata text'
+    await _smC.makeWriteCall("createAgreement", [(Global.userAddress == jsn['PartyA'])? jsn['PartyB'] : jsn['PartyA'], 0, '']);
 
   }
 
