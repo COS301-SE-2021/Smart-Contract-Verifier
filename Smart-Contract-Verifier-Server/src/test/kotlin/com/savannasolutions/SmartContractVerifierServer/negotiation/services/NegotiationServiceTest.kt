@@ -1205,6 +1205,9 @@ internal class NegotiationServiceTest
 
         val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
         val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
+        val userList = ArrayList<User>()
+        userList.add(userA)
+        userList.add(userB)
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
@@ -1223,6 +1226,7 @@ internal class NegotiationServiceTest
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(userRepository.getUsersByAgreementsContaining(mockAgreement)).thenReturn(userList)
 
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
@@ -1346,6 +1350,9 @@ internal class NegotiationServiceTest
 
         val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
         val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
+        val userList = ArrayList<User>()
+        userList.add(userA)
+        userList.add(userB)
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
@@ -1364,6 +1371,7 @@ internal class NegotiationServiceTest
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(userRepository.getUsersByAgreementsContaining(mockAgreement)).thenReturn(userList)
 
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("Invalid user",
@@ -1383,6 +1391,9 @@ internal class NegotiationServiceTest
 
         val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
         val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
+        val userList = ArrayList<User>()
+        userList.add(userA)
+        userList.add(userB)
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
@@ -1401,6 +1412,7 @@ internal class NegotiationServiceTest
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(userRepository.getUsersByAgreementsContaining(mockAgreement)).thenReturn(userList)
 
         //when
         val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser.publicWalletID,
