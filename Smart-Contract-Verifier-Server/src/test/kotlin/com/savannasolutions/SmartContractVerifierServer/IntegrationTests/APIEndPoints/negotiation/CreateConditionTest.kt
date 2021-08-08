@@ -103,7 +103,7 @@ class CreateConditionTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"SUCCESSFUL\"")
+        assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
 
     @Test
@@ -117,7 +117,7 @@ class CreateConditionTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -131,7 +131,7 @@ class CreateConditionTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -145,7 +145,7 @@ class CreateConditionTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -159,7 +159,7 @@ class CreateConditionTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -173,6 +173,6 @@ class CreateConditionTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 }
