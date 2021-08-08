@@ -6,4 +6,5 @@ class Global {
   static final String contractId =
       ''; //The identifier of the deployed contract. It is final, since it is basically hard-coded.
 
+  static String apiToken = '';
 }

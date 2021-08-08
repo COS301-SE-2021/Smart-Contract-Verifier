@@ -15,5 +15,15 @@ class MessageService {
 
   }
 
+  Future<List<Message>> getMessages(String id) async { //Will usually be the current user, nut this implementation for consistency
+    //TODO list:
+    //Get endpoints
+    //Parse result
+    //Build list of messages
+    //Error handling
+
+    return [];
+  }
+
 
 }

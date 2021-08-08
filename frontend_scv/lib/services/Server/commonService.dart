@@ -33,7 +33,7 @@ class CommonService {
     }
 
     List<dynamic> jsonList = ((response['agreements']));
-    print("Fetched" + jsonList.toString());
+    //print("Fetched" + jsonList.toString());
     List<Contract> ret = [];
     for (int i = 0; i < jsonList.length; i++) {
       ret.add(Contract.fromJson(jsonList[i]));
