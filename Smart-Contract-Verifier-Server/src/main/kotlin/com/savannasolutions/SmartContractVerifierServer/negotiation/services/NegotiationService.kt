@@ -265,9 +265,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
         val agreement = agreementsRepository.getById(setPaymentConditionRequest.AgreementID)
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(setPaymentConditionRequest.PreposedUser != agreement.users.elementAt(0).publicWalletID
-            && setPaymentConditionRequest.PreposedUser != agreement.users.elementAt(0).publicWalletID)
+        if(setPaymentConditionRequest.PreposedUser != userList.elementAt(0).publicWalletID
+            && setPaymentConditionRequest.PreposedUser != userList.elementAt(1).publicWalletID)
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
         val user = userRepository.getById(setPaymentConditionRequest.PreposedUser)
