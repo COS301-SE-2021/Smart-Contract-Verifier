@@ -115,7 +115,7 @@ class GetAllConditionsTest {
         whenever(conditionsRepository.getAllByContract(agreement)).thenReturn(conditionList)
         whenever(agreementsRepository.existsById(agreementEmpty.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(agreementEmpty.ContractID)).thenReturn(agreementEmpty)
-        whenever(conditionsRepository.getAllByContract(agreement)).thenReturn(null)
+        whenever(conditionsRepository.getAllByContract(agreementEmpty)).thenReturn(null)
     }
 
     private fun requestSender(rjson: String) : MockHttpServletResponse
