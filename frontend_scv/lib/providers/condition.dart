@@ -21,7 +21,6 @@ class Condition with ChangeNotifier {
         conditionId = jsn['ConditionID'],
         title = jsn['ConditionTitle'],
         proposedBy = jsn['ProposingUser']['publicWalletID'],
-        // proposedBy = jsn['ProposedUser']['PublicWalletID'],
         description = jsn['ConditionDescription'];
 
   Map<String, dynamic> toJson() => {

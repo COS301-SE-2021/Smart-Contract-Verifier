@@ -23,5 +23,12 @@ class UnisonService {
 
   }
 
+  Future<void> acceptAgreement(Contract con) async { //This should probably be called immediately after the contract is sealed on backend.
+    //TODO list:
+    //Use function name acceptAgreement
+    //Create parameter list. Only Agreement id. From where?
+
+  }
+
 
 }

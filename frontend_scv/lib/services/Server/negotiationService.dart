@@ -54,15 +54,15 @@ class NegotiationService {
 
   void acceptCondition(String id) async { //Or condition object?
 
-    await handleCondition(id, true);
+    await _handleCondition(id, true);
   }
 
   void rejectCondition(String id) async {
 
-    await handleCondition(id, false);
+    await _handleCondition(id, false);
   }
 
-  Future<void> handleCondition(String id, bool acc) async { //Either accept or reject condition
+  Future<void> _handleCondition(String id, bool acc) async { //Either accept or reject condition
 
    Map<String, String> body = {'ConditionID' : id};
    String path = acc ? 'accept-condition' : 'reject-condition';
@@ -80,19 +80,27 @@ class NegotiationService {
    }
  }
 
- Future<void> updateCondition(Condition cond) async { //May not be necessary
+ Future<void> setPrice(Contract con) async { //Set the price condition of an agreement.
+   //TODO list:
+   //Construct body
+   //Get endpoint
+   //Handle exceptions
 
-    //TODO list:
-   //Use condition to either remove/resave,
-   //or use update functionality if available
 
-    return;
  }
 
+  Future<void> setDuration(Contract con) async { //Set the duration condition of an agreement.
+    //TODO list:
+    //Construct body
+    //Get endpoint
+    //Handle exceptions
 
- Future<void> sealAgreement(String id) async { //Or pass in Contract?
 
-   Map<String, String> body = {'AgreementID' : id};
+  }
+
+ Future<void> sealAgreement(Contract con) async { //Or pass in Contract?
+
+   Map<String, String> body = {'AgreementID' : con.contractId};
 
    Map<String, dynamic> response;
    try {
