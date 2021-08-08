@@ -12,7 +12,7 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       val CreatedDate:Date,
                       var SealedDate:Date? = null,
                       var DurationConditionUUID: UUID? = null,
-                      var MovedToBlockChain:Boolean,
+                      var MovedToBlockChain:Boolean = false,
                       var PaymentConditionUUID: UUID? = null,
                       var AgreementImageURL: String? = null)
 {

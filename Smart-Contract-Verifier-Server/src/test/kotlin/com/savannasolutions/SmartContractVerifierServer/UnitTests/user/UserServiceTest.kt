@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.UnitTests.user
+package com.savannasolutions.SmartContractVerifierServer.user.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
@@ -7,13 +7,15 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
-import com.savannasolutions.SmartContractVerifierServer.user.services.UserService
+import com.savannasolutions.SmartContractVerifierServer.user.requests.UserExistsRequest
 import org.junit.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -109,4 +111,45 @@ internal class UserServiceTest {
         //Then
         assertEquals(response.status, ResponseStatus.FAILED)
     }
+
+    @Test
+    fun `UserExists successful and true`()
+    {
+        //given
+        whenever(userRepository.existsById("walletAddress")).thenReturn(true)
+
+        //when
+        val response = userService.userExists(UserExistsRequest("walletAddress"))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertTrue { response.Exists }
+    }
+
+    @Test
+    fun `UserExists successful and false`()
+    {
+        //given
+        whenever(userRepository.existsById("walletAddress")).thenReturn(false)
+
+        //when
+        val response = userService.userExists(UserExistsRequest("walletAddress"))
+
+        //then
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertFalse { response.Exists }
+    }
+
+    @Test
+    fun `UserExists failed due to empty wallet id`()
+    {
+        //given
+
+        //when
+        val response = userService.userExists(UserExistsRequest(""))
+
+        //then
+        assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
 }
