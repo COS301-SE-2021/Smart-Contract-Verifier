@@ -301,9 +301,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
         val agreement = agreementsRepository.getById(setDurationConditionRequest.AgreementID)
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(agreement.users.elementAt(0).publicWalletID != setDurationConditionRequest.PreposedUser &&
-            agreement.users.elementAt(1).publicWalletID != setDurationConditionRequest.PreposedUser)
+        if(userList.elementAt(0).publicWalletID != setDurationConditionRequest.PreposedUser &&
+            userList.elementAt(1).publicWalletID != setDurationConditionRequest.PreposedUser)
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
         val user = userRepository.getById(setDurationConditionRequest.PreposedUser)
