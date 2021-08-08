@@ -21,20 +21,16 @@ class NegotiationService {
     //TODO list:
    //Add exception handling. Maybe change return type to String
 
-   Map<String, dynamic> agrMap = agr.toJson();
-   Map<String, String> body = {'PartyA' : agrMap['PartyA'], 'PartyB' : agrMap['PartyB'], 'AgreementTitle' : agrMap['title'],
-     'AgreementDescription' : agrMap['description'], 'AgreementImageURL' : agrMap['imageUrl']};
-
    Map<String, dynamic> response;
    try {
-     response = await api.postData('/negotiation/create-agreement', body);
+     response = await api.postData('/negotiation/create-agreement', agr.toJson());
 
      if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Agreement could not be saved');
    } on Exception catch(e) {
       //Handle exception
      print (e);
-     return;
+     throw e;
    }
 
  }
@@ -44,21 +40,16 @@ class NegotiationService {
     //TODO list:
    //Review return type and error handling (for special cases)
 
-   Map<String, dynamic> con = cond.toJson();
-   Map<String, String> body = {'AgreementID' : cond.agreementId, 'ConditionTitle' : con['ConditionTitle'],
-     'ProposedUser' : con['ProposedUser'], 'ConditionDescription' : con['ConditionDescription']}; //Maybe change proposedUser to map to the current user? To ensure
-   // it's correct, since only the proposing user can save a condition.
-
    Map<String, dynamic> response;
    try {
-     response = await api.postData('/negotiation/create-condition', body);
+     response = await api.postData('/negotiation/create-condition', cond.toJson());
 
      if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Condition could not be saved');
    } on Exception catch(e) {
      //Handle exception
      print (e);
-     return;
+     throw e;
    }
 
  }

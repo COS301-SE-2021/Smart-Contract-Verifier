@@ -13,7 +13,7 @@ class Contract with ChangeNotifier {
   String createdDate;
   String sealedDate;
   bool movedToBlockchain;
-  List<dynamic> conditions = ['empty']; //TODO Handle empty/initial conditions
+  List<Condition> conditions = []; //TODO Handle empty/initial conditions
 
   String title;
   String description;
@@ -59,18 +59,13 @@ class Contract with ChangeNotifier {
       conditions.add(Condition.fromJson(jsn['Conditions'][i]));
     }
   }
-  //To JSON. RC: Subject to the great field discussion
-  Map<String, dynamic> toJson() => {
-        'AgreementID': contractId,
+
+  Map<String, String> toJson() => { //This is used in the initial save to the backend, hence not all fields being present.
         'PartyA': partyA,
         'PartyB': partyB,
-        'CreatedDate': createdDate,
-        'SealedDate': sealedDate,
-        'MovedToBlockChain': movedToBlockchain,
-        'Conditions': conditions,
-        'Title': title,
-        'Description': description,
-        'ImageUrl': imageUrl,
+        'AgreementTitle': title,
+        'AgreementDescription': description,
+        'AgreementImageURL': imageUrl,
       };
 
   void _setFavValue(bool newValue) {
