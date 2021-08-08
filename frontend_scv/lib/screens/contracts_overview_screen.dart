@@ -49,35 +49,35 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Global.userAddress),
-        // title: Text('Dashboard'),
-        actions: <Widget>[
-          PopupMenuButton(
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.Favourites) {
-                  _showOnlyFavorites = true;
-                } else {
-                  _showOnlyFavorites = false;
-                }
-              });
-            },
-            icon: Icon(
-              Icons.more_vert,
-            ),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text('Only Favourites'),
-                value: FilterOptions.Favourites,
-              ),
-              PopupMenuItem(
-                child: Text('Show All'),
-                value: FilterOptions.All,
-              ),
-            ],
-          ),
-          //TODO: Add notification button with badge
-        ],
+        // title: Text(Global.userAddress),
+        title: Text('Agreements Dashboard'),
+        // actions: <Widget>[
+        //   PopupMenuButton(
+        //     onSelected: (FilterOptions selectedValue) {
+        //       setState(() {
+        //         if (selectedValue == FilterOptions.Favourites) {
+        //           _showOnlyFavorites = true;
+        //         } else {
+        //           _showOnlyFavorites = false;
+        //         }
+        //       });
+        //     },
+        //     icon: Icon(
+        //       Icons.more_vert,
+        //     ),
+        //     itemBuilder: (_) => [
+        //       PopupMenuItem(
+        //         child: Text('Only Favourites'),
+        //         value: FilterOptions.Favourites,
+        //       ),
+        //       PopupMenuItem(
+        //         child: Text('Show All'),
+        //         value: FilterOptions.All,
+        //       ),
+        //     ],
+        //   ),
+        //   //TODO: Add notification button with badge
+        // ],
       ),
       drawer: AppDrawer(),
       body: _isLoading
