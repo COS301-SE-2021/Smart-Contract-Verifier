@@ -37,15 +37,7 @@ class Contract with ChangeNotifier {
     this.imageUrl,
     this.partyBId, //RC: What is partyB vs partyBID?
     this.isFavorite = false,
-  }); // Contract({
-  //   @required this.contractId,
-  //   @required this.title,
-  //   @required this.description,
-  //   @required this.price,
-  //   @required this.imageUrl,
-  //   @required this.partyBId,
-  //   this.isFavorite = false,
-  // }); //not final because it will be changing
+  });
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
   Contract.fromJson(Map<String, dynamic> jsn) {

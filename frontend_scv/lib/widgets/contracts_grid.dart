@@ -11,9 +11,6 @@ class ContractsGrid extends StatelessWidget {
     //-> setting/getting contracts happens in the contracts_overview_screen
     final contracts = Provider.of<Contracts>(context).items; //simply access
     // the items here
-    print(
-        '\n\n_______________GRID contracts[0]__\n\n${contracts[0].toString()}\n'
-        '\n_________________\n\n');
     return ListView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: contracts.length,
