@@ -13,7 +13,7 @@ class Contract with ChangeNotifier {
   String createdDate;
   String sealedDate;
   bool movedToBlockchain;
-  List<Condition> conditions = []; //TODO Handle empty/initial conditions
+  List<Condition> conditions; //TODO Handle empty/initial conditions
 
   String title;
   String description;
@@ -40,7 +40,7 @@ class Contract with ChangeNotifier {
   });
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
-  Contract.fromJson(Map<String, dynamic> jsn) {
+  Contract.fromJson(Map jsn) {
     contractId = jsn['AgreementID'];
     partyA = jsn['PartyA']['publicWalletID'];
     partyB = jsn['PartyB']['publicWalletID'];
@@ -53,14 +53,13 @@ class Contract with ChangeNotifier {
     partyBId = '';
     price = 0;
     title = jsn['AgreementTitle'];
-    // contractId = '';
-    conditions = []; //jsn['Conditions'];
-    for (int i = 0; i < jsn['Conditions'].length; i++) {
-      conditions.add(Condition.fromJson(jsn['Conditions'][i]));
-    }
+    conditions = (jsn['Conditions'])
+        .map<Condition>((i) => Condition.fromJson(i))
+        .toList();
   }
 
-  Map<String, String> toJson() => { //This is used in the initial save to the backend, hence not all fields being present.
+  Map<String, String> toJson() => {
+        //This is used in the initial save to the backend, hence not all fields being present.
         'PartyA': partyA,
         'PartyB': partyB,
         'AgreementTitle': title,
@@ -68,13 +67,14 @@ class Contract with ChangeNotifier {
         'AgreementImageURL': imageUrl,
       };
 
-  Map<String, String> toJsonChain() => { //This is used in the save to the blockchain.
-    'PartyA': partyA,
-    'PartyB': partyB,
-    'AgreementTitle': title,
-    'AgreementDescription': description,
-    'AgreementImageURL': imageUrl,
-  };
+  Map<String, String> toJsonChain() => {
+        //This is used in the save to the blockchain.
+        'PartyA': partyA,
+        'PartyB': partyB,
+        'AgreementTitle': title,
+        'AgreementDescription': description,
+        'AgreementImageURL': imageUrl,
+      };
 
   void _setFavValue(bool newValue) {
     isFavorite = newValue;

@@ -298,7 +298,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                                   imageUrl: value,
                                   partyBId: _editedContract.partyBId,
                                   isFavorite: _editedContract.isFavorite,
-                                  conditions: ['empty']);
+                                  conditions: []);
                             },
                             validator: (value) {
                               if (value.isEmpty) {

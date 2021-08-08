@@ -1,7 +1,7 @@
 // Dashboard screen
 //// Involved Agreements (as party A or party B):
 /*
- * -> List of Agreement objects
+ * -> List of Agreement objects DONE
 */
 //// Notifications (for Agreement activity):
 /*

@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:unison/widgets/condition_item.dart';
 import '../providers/contract.dart';
@@ -12,13 +14,14 @@ class ContractConditionsPanel extends StatelessWidget {
     print(_contract.conditions);
     return Container(
       // padding: EdgeInsets.all(8),
-      child: _contract.conditions.length == 1 //TODO handle empty conditions
+      child: _contract.conditions.isEmpty //TODO handle empty conditions
           ? Text('No Conditions Set!')
           : ListView.builder(
               itemCount: _contract.conditions.length,
               itemBuilder: (_, i) => Column(
                 children: [
-                  ConditionItem(contractCondition: _contract.conditions[i]),
+                  Text(_contract.conditions[i].conditionId),
+                  // ConditionItem(contractCondition: _contract.conditions[i]),
                   Divider(),
                 ],
               ),
