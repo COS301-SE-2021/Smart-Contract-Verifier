@@ -71,8 +71,8 @@ class CreateAgreementTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"SUCCESSFUL\"")
-        assertContains(response.contentAsString, "\"agreementID\":\"3c5657d6-e302-48d3-b9df-dcfccec97503\"")
+        assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
+        assertContains(response.contentAsString, "\"AgreementID\":\"3c5657d6-e302-48d3-b9df-dcfccec97503\"")
     }
 
     @Test
@@ -82,7 +82,7 @@ class CreateAgreementTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -92,7 +92,7 @@ class CreateAgreementTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -102,7 +102,7 @@ class CreateAgreementTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -112,7 +112,7 @@ class CreateAgreementTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -121,7 +121,7 @@ class CreateAgreementTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -130,7 +130,7 @@ class CreateAgreementTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
@@ -139,6 +139,6 @@ class CreateAgreementTest {
 
         val response = requestSender(rjson)
 
-        assertContains(response.contentAsString, "\"status\":\"FAILED\"")
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 }
