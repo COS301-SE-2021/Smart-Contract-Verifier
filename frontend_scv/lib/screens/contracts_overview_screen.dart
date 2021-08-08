@@ -84,7 +84,8 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ContractsGrid(_showOnlyFavorites),
+          // : ContractsGrid(_showOnlyFavorites),
+          : ContractsGrid(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () =>
