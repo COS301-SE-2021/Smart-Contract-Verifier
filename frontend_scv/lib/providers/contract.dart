@@ -40,7 +40,7 @@ class Contract with ChangeNotifier {
   });
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
-  Contract.fromJson(Map jsn) {
+  Contract.fromJson(Map jsn) { //TODO: publicWalletID will be upper case soon
     contractId = jsn['AgreementID'];
     partyA = jsn['PartyA']['publicWalletID'];
     partyB = jsn['PartyB']['publicWalletID'];

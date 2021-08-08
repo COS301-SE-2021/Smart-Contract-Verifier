@@ -5,6 +5,7 @@ import 'dart:async';
 import 'backendAPI.dart';
 import '../../providers/contract.dart';
 import '../../providers/condition.dart';
+import '../../providers/global.dart';
 
 class NegotiationService {
 
@@ -89,12 +90,33 @@ class NegotiationService {
 
  }
 
-  Future<void> setDuration(Contract con) async { //Set the duration condition of an agreement.
-    //TODO list:
-    //Construct body
-    //Get endpoint
-    //Handle exceptions
+  Future<void> setPayment(Contract con, double price) async { //Set the payment condition of an agreement.
 
+    await _handlePayDuration(con, price, true);
+  }
+
+  Future<void> setDuration(Contract con, double dur) async { //Set the duration condition of an agreement.
+
+    await _handlePayDuration(con, dur, false);
+  }
+
+
+  Future<void> _handlePayDuration(Contract con, double val, bool price) async { //Handles both price and duration
+
+    Map<String, dynamic> body = {'ProposedUser' : Global.userAddress, 'AgreementID' : con.contractId, (price? 'Payment':'Duration') : val};
+    Map<String, dynamic> response;
+    String path = price? 'payment' : 'duration';
+
+    try {
+      response = await api.postData('/negotiation/set-$path-condition', body);
+
+      if (response['Status'] != 'SUCCESSFUL')
+        throw Exception('${(price? 'Payment':'Duration')} could not be saved');
+    } on Exception catch(e) {
+      //Handle exception
+      print (e);
+      throw e;
+    }
 
   }
 

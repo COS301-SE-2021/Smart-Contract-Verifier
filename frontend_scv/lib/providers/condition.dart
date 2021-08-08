@@ -20,7 +20,7 @@ class Condition with ChangeNotifier {
       : agreementId = jsn['AgreementID'],
         conditionId = jsn['ConditionID'],
         title = jsn['ConditionTitle'],
-        proposedBy = jsn['ProposingUser']['publicWalletID'],
+        proposedBy = jsn['ProposingUser']['publicWalletID'], //TODO: publicWalletID will be uppercase soon
         description = jsn['ConditionDescription'];
 
   Map<String, dynamic> toJson() => {
