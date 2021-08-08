@@ -31,13 +31,12 @@ class Contracts with ChangeNotifier {
     return _items.where((contItem) => contItem.isFavorite).toList();
   }
 
-  Future<void> fetchAndSetContracts([bool filterByUser = false]) async {
+  Future<void> fetchAndSetContracts() async {
     try {
       //Using Common Service
       print(Global.userAddress);
       final List<Contract> loadedContracts =
           await commonService.getInvolvedAgreements(Global.userAddress);
-
       _items = loadedContracts;
       notifyListeners();
     } catch (error) {
