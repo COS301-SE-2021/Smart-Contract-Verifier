@@ -20,7 +20,7 @@ class Condition with ChangeNotifier {
       : agreementId = jsn['AgreementID'],
         conditionId = jsn['ConditionID'],
         title = jsn['ConditionTitle'],
-        proposedBy = jsn['ProposedUser']['publicWalletID'],
+        proposedBy = jsn['ProposingUser']['publicWalletID'],
         // proposedBy = jsn['ProposedUser']['PublicWalletID'],
         description = jsn['ConditionDescription'];
 
