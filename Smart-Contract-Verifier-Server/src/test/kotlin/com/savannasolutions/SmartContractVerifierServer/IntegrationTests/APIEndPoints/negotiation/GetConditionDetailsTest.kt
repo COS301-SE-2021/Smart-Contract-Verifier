@@ -23,7 +23,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class GetConditionDetails {
+class GetConditionDetailsTest {
     @Autowired
     lateinit var mockMvc : MockMvc
 
