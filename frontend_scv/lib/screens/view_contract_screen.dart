@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/providers/condition.dart';
+import 'package:unison/providers/global.dart';
+import 'package:unison/services/Server/negotiationService.dart';
 import '../widgets/contract_conditions_panel.dart';
 import '../widgets/contract_detail_info_panel.dart';
 import '../providers/contracts.dart';
@@ -15,11 +18,20 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
   final _conditionTitleController = TextEditingController();
   final _conditionDescriptionController = TextEditingController();
   var _isLoading = false;
+  NegotiationService negotiationService = NegotiationService();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Future<void> _saveForm() async {
+  Future<void> _saveForm(String cId) async {
     final isValid = _formKey.currentState.validate();
+
+    Condition newCondition = Condition(
+      title: _conditionTitleController.text,
+      proposedBy: Global.userAddress,
+      description: _conditionDescriptionController.text,
+      agreementId: cId,
+    );
+
     if (!isValid) return;
     _formKey.currentState.save();
     //^^^^saves the form -> executes the 'onSaved' of each input
@@ -28,6 +40,8 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
     });
 
     try {
+      await negotiationService.saveCondition(newCondition);
+
       //TODO: Add New Condition (Server Call) here:
       // await Provider.of<Contract>(context, listen: false)
       //     .addCondition(_newCondition);
@@ -56,7 +70,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
     Navigator.of(context).pop();
   }
 
-  Future<void> _newConditionDialog() async {
+  Future<void> _newConditionDialog(String contId) async {
     return await showDialog(
         context: context,
         builder: (context) {
@@ -106,7 +120,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
               TextButton(
                 child: Text('Add'),
                 onPressed: () {
-                  _saveForm();
+                  _saveForm(contId);
                 },
               ),
             ],
@@ -116,6 +130,9 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
 
   Widget build(BuildContext context) {
     final contractId = ModalRoute.of(context).settings.arguments as String;
+    print('\n\n_______________VIEW__\n\n${contractId}\n'
+        '\n_________________\n\n');
+
     final loadedContract =
         Provider.of<Contracts>(context, listen: false).findById(contractId);
 
@@ -143,7 +160,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    await _newConditionDialog();
+                    await _newConditionDialog(contractId);
                   },
                   child: Row(
                     children: [

@@ -13,6 +13,9 @@ class ContractItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        print(
+            '\n\n_______________GESTURE-CONTRACT ITEM__\n\n${contract.contractId}\n'
+            '\n_________________\n\n');
         Navigator.of(context).pushNamed(
           ViewContractScreen.routeName,
           // ContractDetailScreen.routeName,
@@ -28,21 +31,21 @@ class ContractItem extends StatelessWidget {
           width: 50,
           child: Row(
             children: <Widget>[
-              Consumer<Contract>(
-                //consumer takes a builder:
-                builder: (ctx, product, child) => IconButton(
-                  icon: Icon(
-                    product.isFavorite ? Icons.favorite : Icons.favorite_border,
-                  ),
-                  // label: child,
-                  onPressed: () => {
-                    // product.toggleFavoriteStatus(
-                    //   authData.userWalletAddress,
-                    // ),
-                  },
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
+              // Consumer<Contract>(
+              //   //consumer takes a builder:
+              //   builder: (ctx, product, child) => IconButton(
+              //     icon: Icon(
+              //       product.isFavorite ? Icons.favorite : Icons.favorite_border,
+              //     ),
+              //     // label: child,
+              //     onPressed: () => {
+              //       // product.toggleFavoriteStatus(
+              //       //   authData.userWalletAddress,
+              //       // ),
+              //     },
+              //     color: Theme.of(context).accentColor,
+              //   ),
+              // ),
             ],
           ),
         ),

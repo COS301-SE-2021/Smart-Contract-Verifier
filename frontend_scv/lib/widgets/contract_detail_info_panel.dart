@@ -8,6 +8,8 @@ class ContractDetailInfoPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('\n\n_______________Detail__\n\n${_contract.contractId}\n'
+        '\n_________________\n\n');
     return Center(
       child: Card(
         elevation: 15,
@@ -20,8 +22,9 @@ class ContractDetailInfoPanel extends StatelessWidget {
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Created: Todo'),
-                  Text('Status: Todo'),
+                  Text('Created: ${_contract.createdDate}'),
+                  Text(
+                      'Moved to Blockchain: ${_contract.movedToBlockchain.toString() == 'null' ? 'false' : _contract.movedToBlockchain.toString()}'),
                   SizedBox(
                     width: 15,
                   ),
@@ -38,9 +41,9 @@ class ContractDetailInfoPanel extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Agreement ID: Todo'),
-                  Text('Party A: Todo'),
-                  Text('Party B: Todo'),
+                  Text('Agreement ID: ${_contract.contractId}'),
+                  Text('Party A: ${_contract.partyA}'),
+                  Text('Party B: ${_contract.partyB}'),
                 ],
               ),
             ),
