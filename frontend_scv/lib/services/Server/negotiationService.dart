@@ -81,15 +81,6 @@ class NegotiationService {
    }
  }
 
- Future<void> setPrice(Contract con) async { //Set the price condition of an agreement.
-   //TODO list:
-   //Construct body
-   //Get endpoint
-   //Handle exceptions
-
-
- }
-
   Future<void> setPayment(Contract con, double price) async { //Set the payment condition of an agreement.
 
     await _handlePayDuration(con, price, true);
@@ -121,6 +112,7 @@ class NegotiationService {
   }
 
  Future<void> sealAgreement(Contract con) async { //Or pass in Contract?
+   //RFC: Should the blockchain be called immediately after the backend?
 
    Map<String, String> body = {'AgreementID' : con.contractId};
 
