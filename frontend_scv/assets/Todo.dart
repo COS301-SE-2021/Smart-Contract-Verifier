@@ -43,4 +43,8 @@
 * NB: LOWER CASE ADDRESSES
 * https://pub.dev/packages/identicon
 *
+* @Ronan: Maybe we can have a metamaskDisconnect (disconnect metamask from
+* the app) for logout functionality
+*
+*
 * */
