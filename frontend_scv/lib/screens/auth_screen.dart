@@ -110,18 +110,18 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       await Provider.of<Auth>(context, listen: false).metaMaskLogin();
-      //Success -> go to home screen
-      Navigator.pushNamed(context, '/');
+      //Success -> go to home screen - because the MaterialApp is a consumer
+      // of the Auth Provider, we do not need to push/navigate to the
+      // dashboard, it will simply re-render/rebuild the materialApp and set
+      // home to Dashboard
     } catch (error) {
-      const errorMessage = 'Could not authenticate you. Please ensure you '
-          'have the metamask extension installed';
-      _showErrorDialog(error);
-      // _showErrorDialog(errorMessage);
+      const errorMessage = 'Authenticate Failed.\nPlease ensure you '
+          'have the metamask extension installed.';
+      _showErrorDialog(errorMessage + '\nAdditional information:\n' + error);
     }
     setState(() {
       _isLoading = false;
     });
-    // _print('Metamask Login Successful');
   }
 
   @override
