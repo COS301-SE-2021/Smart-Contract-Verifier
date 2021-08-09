@@ -31,47 +31,43 @@ class ConditionItem extends StatelessWidget {
               ));
     }
 
-    return ListTile(
-      title: Text(
-        contractCondition.title == null
-            ? 'Couldn\'t load title'
-            : contractCondition.title,
-      ),
-      leading: CircleAvatar(
-        backgroundColor: Colors.black12,
-        // backgroundImage: NetworkImage(contract.imageUrl),
-      ),
-      subtitle: Text('Status: ${contractCondition.status}\n Proposed by: '
-          '${contractCondition.proposedBy}'),
-      // subtitle: Text(contractCondition.proposedBy),
-
-      onTap: () => _showConditionDialog(contractCondition),
-      trailing: Global.userAddress == contractCondition.proposedBy
-          ? Row(
+    return Global.userAddress == contractCondition.proposedBy
+        ? ListTile(
+            title: Text(
+              contractCondition.title == null
+                  ? 'Couldn\'t load title'
+                  : contractCondition.title,
+            ),
+            leading: CircleAvatar(
+              backgroundColor: Colors.deepOrange,
+              // backgroundImage: NetworkImage(contract.imageUrl),
+            ),
+            subtitle: Text('Status: ${contractCondition.status}\n Proposed by: '
+                '${contractCondition.proposedBy}'),
+            onTap: () => _showConditionDialog(contractCondition),
+            trailing: Row(
+              //The currently logged in user created the condition
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Proposed by you - Status: TODO'),
-                // IconButton(
-                //   icon: Icon(
-                //     Icons.thumb_down_outlined,
-                //     color: Colors.deepOrangeAccent,
-                //   ),
-                //   onPressed: () {
-                //     print('Reject');
-                //   },
-                // ),
-                // IconButton(
-                //   icon: Icon(
-                //     Icons.thumb_up_outlined,
-                //     color: Colors.cyan,
-                //   ),
-                //   onPressed: () {
-                //     print('Accept');
-                //   },
-                // ),
               ],
-            )
-          : Row(
+            ),
+          )
+        : ListTile(
+            title: Text(
+              contractCondition.title == null
+                  ? 'Couldn\'t load title'
+                  : contractCondition.title,
+            ),
+            leading: CircleAvatar(
+              backgroundColor: Colors.cyan,
+              // backgroundImage: NetworkImage(contract.imageUrl),
+            ),
+            subtitle: Text('Status: ${contractCondition.status}\n Proposed by: '
+                '${contractCondition.proposedBy}'),
+            onTap: () => _showConditionDialog(contractCondition),
+            trailing: Row(
+              //The currently logged in user did not create the condition
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Text('Status: ${contractCondition}'),
@@ -98,6 +94,6 @@ class ConditionItem extends StatelessWidget {
                 ),
               ],
             ),
-    );
+          );
   }
 }
