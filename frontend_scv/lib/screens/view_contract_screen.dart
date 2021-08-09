@@ -26,7 +26,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
 
   @override
   void initState() {
-    print('InitState()');
+    // print('InitState()');
     super.initState();
   }
 
@@ -50,6 +50,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
     try {
       //Save to DB:
       await negotiationService.saveCondition(newCondition);
+      print('new condition saved');
     } catch (error) {
       await showDialog(
         context: context,
