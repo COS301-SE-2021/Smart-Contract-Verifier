@@ -8,12 +8,14 @@ class Condition with ChangeNotifier {
   String title;
   String proposedBy;
   String description;
+  String status; //Pending, accepted etc.
 
   Condition(
       {this.agreementId,
       this.title,
       this.proposedBy,
       this.description,
+      this.status = 'Pending',
       this.conditionId = ''}); //Constructor
 
   Condition.fromJson(Map<String, dynamic> jsn)
@@ -21,7 +23,8 @@ class Condition with ChangeNotifier {
         conditionId = jsn['ConditionID'],
         title = jsn['ConditionTitle'],
         proposedBy = jsn['ProposingUser']['publicWalletID'], //TODO: publicWalletID will be uppercase soon
-        description = jsn['ConditionDescription'];
+        description = jsn['ConditionDescription'],
+        status = jsn['ConditionStatus'];
 
   Map<String, dynamic> toJson() => {
         //Convert instance to JSON
@@ -29,5 +32,6 @@ class Condition with ChangeNotifier {
         'ConditionTitle': title,
         'ProposedUser': proposedBy,
         'ConditionDescription': description,
+        'ConditionStatus' :status,
       };
 }
