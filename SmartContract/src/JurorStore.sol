@@ -79,15 +79,21 @@ contract JurorStore{
             while(!valid){
                 if(!assignedJurors[index]){
                     valid = true;
-                    for(uint j=0; j<noUseLen; j++){
-                        if(jurors[index] == noUse[j]){
-                            valid = false;
-                            break;
+                    if(jurors[index] == address(0))
+                        valid = false;
+                    else{
+                        for(uint j=0; j<noUseLen; j++){
+                            if(jurors[index] == noUse[j]){
+                                valid = false;
+                                break;
+                            }
                         }
                     }
                 }
-                if(!valid)
-                    index++;
+                if(!valid){
+                    // Increment by one, but wrap around when end of list is reached
+                    index = (index + 1) % numJurors;
+                }
             }
 
             

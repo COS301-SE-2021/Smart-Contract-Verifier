@@ -120,7 +120,20 @@ contract('Verifier', (accounts) =>{
 
         it("Get jury", async()=>{
             var jury = await verifier.getJury(1);
-            // console.log(jury);
+
+            for(var i=0; i<jury.jurors.length; i++){
+                var found = false;
+
+                for(var j=3; j<9; j++){
+                    //accounts 3 to 8 (included) are signed up as jurors
+                    if(jury.jurors[i] == accounts[j]){
+                        found = true;
+                        break;
+                    }
+                }
+                assert(found, "Invalid account on jury");
+
+            }
         })
 
     })
