@@ -48,5 +48,5 @@
 *
 * Generic API Handler (Hairdu example)
 * Factory JSON methods
-*
+* Update/fix backend to handle 'Title' of condition
 * */

@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/providers/condition.dart';
 
 import '../providers/auth.dart';
 import '../providers/contract.dart';
 
 class ConditionItem extends StatelessWidget {
-  final dynamic contractCondition;
+  final Condition contractCondition;
   ConditionItem({
     @required this.contractCondition,
   });
 
   @override
   Widget build(BuildContext context) {
-    _showConditionDialog(dynamic contractCondition) {
+    _showConditionDialog(Condition contractCondition) {
       showDialog(
           context: context,
           builder: (_) => new AlertDialog(
-                //TODO: read from dynamic
-                title: new Text(contractCondition.toString()),
-                content: new Text("This is where  the Condition description "
-                    "will go, it needs to be read from a dynamic object - TODO"),
+                title: new Text(contractCondition.conditionId),
+                content: new Text(contractCondition.description),
                 actions: <Widget>[
                   TextButton(
                     child: Text('Close'),
@@ -32,8 +31,11 @@ class ConditionItem extends StatelessWidget {
     }
 
     return ListTile(
-      //TODO: read from dynamic
-      title: Text(contractCondition.toString()),
+      title: Text(
+        contractCondition.title == null
+            ? 'Couldn\'t load title'
+            : contractCondition.title,
+      ),
       leading: CircleAvatar(
         backgroundColor: Colors.black12,
         // backgroundImage: NetworkImage(contract.imageUrl),
