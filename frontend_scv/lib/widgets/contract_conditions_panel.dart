@@ -20,7 +20,7 @@ class ContractConditionsPanel extends StatelessWidget {
               itemCount: _contract.conditions.length,
               itemBuilder: (_, i) => Column(
                 children: [
-                  Text(_contract.conditions[i].conditionId),
+                  Text(_contract.conditions[i].description),
                   // ConditionItem(contractCondition: _contract.conditions[i]),
                   Divider(),
                 ],
