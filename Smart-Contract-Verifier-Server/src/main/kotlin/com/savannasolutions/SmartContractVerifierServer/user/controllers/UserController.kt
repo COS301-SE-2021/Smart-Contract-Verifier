@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.user.controllers
 
 import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserRequest
+import com.savannasolutions.SmartContractVerifierServer.user.requests.GetNonceRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.UserExistsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserResponse
@@ -26,4 +27,8 @@ class UserController constructor(private val userService: UserService) {
     @PostMapping("/user-exists")
     fun userExists(@RequestBody userExistsRequest: UserExistsRequest) =
         userService.userExists(userExistsRequest)
+
+    @PostMapping("/nonce")
+    fun getUserNonce(@RequestBody getNonceRequest: GetNonceRequest) =
+        userService.getNonce(getNonceRequest)
 }
