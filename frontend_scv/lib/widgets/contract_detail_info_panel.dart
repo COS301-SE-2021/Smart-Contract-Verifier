@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unison/providers/global.dart';
 import '../providers/contract.dart';
 
 class ContractDetailInfoPanel extends StatelessWidget {
@@ -40,8 +41,22 @@ class ContractDetailInfoPanel extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Agreement ID: ${_contract.contractId}'),
-                  Text('Party A: ${_contract.partyA}'),
-                  Text('Party B: ${_contract.partyB}'),
+                  Text(
+                    'Party A: ${_contract.partyA}',
+                    style: TextStyle(
+                      color: _contract.partyA == Global.userAddress
+                          ? Colors.deepOrange
+                          : Colors.cyan,
+                    ),
+                  ),
+                  Text(
+                    'Party B: ${_contract.partyB}',
+                    style: TextStyle(
+                      color: _contract.partyB == Global.userAddress
+                          ? Colors.deepOrange
+                          : Colors.cyan,
+                    ),
+                  ),
                 ],
               ),
             ),

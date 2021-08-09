@@ -33,6 +33,7 @@ class ConditionItem extends StatelessWidget {
 
     return Global.userAddress == contractCondition.proposedBy
         ? ListTile(
+            //Current user created the condition
             title: Text(
               contractCondition.title == null
                   ? 'Couldn\'t load title'
@@ -40,7 +41,6 @@ class ConditionItem extends StatelessWidget {
             ),
             leading: CircleAvatar(
               backgroundColor: Colors.deepOrange,
-              // backgroundImage: NetworkImage(contract.imageUrl),
             ),
             subtitle: Text('Status: ${contractCondition.status}\n Proposed by: '
                 '${contractCondition.proposedBy}'),
