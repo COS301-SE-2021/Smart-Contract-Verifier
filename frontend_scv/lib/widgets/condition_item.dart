@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/providers/condition.dart';
+import 'package:unison/providers/global.dart';
 
 import '../providers/auth.dart';
 import '../providers/contract.dart';
@@ -40,31 +41,49 @@ class ConditionItem extends StatelessWidget {
         backgroundColor: Colors.black12,
         // backgroundImage: NetworkImage(contract.imageUrl),
       ),
-      subtitle: Text('Status: Todo'),
+      // subtitle: Text('Status: Todo'),
+      subtitle: Text(contractCondition.proposedBy),
+
       onTap: () => _showConditionDialog(contractCondition),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(
-              Icons.thumb_down_outlined,
-              color: Colors.deepOrangeAccent,
+      trailing: Global.userAddress == contractCondition.proposedBy
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.thumb_down_outlined,
+                    color: Colors.deepOrangeAccent,
+                  ),
+                  onPressed: () {
+                    print('Reject');
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.thumb_up_outlined,
+                    color: Colors.cyan,
+                  ),
+                  onPressed: () {
+                    print('Accept');
+                  },
+                ),
+              ],
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Text('Status: ${contractCondition}'),
+                IconButton(
+                  icon: Icon(
+                    Icons.thumb_up_outlined,
+                    color: Colors.cyan,
+                  ),
+                  onPressed: () {
+                    print('Accept');
+                  },
+                ),
+              ],
             ),
-            onPressed: () {
-              print('Reject');
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.thumb_up_outlined,
-              color: Colors.cyan,
-            ),
-            onPressed: () {
-              print('Accept');
-            },
-          ),
-        ],
-      ),
     );
   }
 }
