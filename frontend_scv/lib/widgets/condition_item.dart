@@ -42,14 +42,32 @@ class ConditionItem extends StatelessWidget {
             leading: CircleAvatar(
               backgroundColor: Colors.deepOrange,
             ),
-            subtitle: Text('Status: ${contractCondition.status}\n Proposed by: '
+            // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
+            //     '${contractCondition.proposedBy}'),
+            subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
                 '${contractCondition.proposedBy}'),
             onTap: () => _showConditionDialog(contractCondition),
             trailing: Row(
               //The currently logged in user created the condition
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Proposed by you - Status: TODO'),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Status: '),
+                    Text(
+                      contractCondition.status,
+                      style: TextStyle(
+                          color: (contractCondition.status == 'ACCEPTED')
+                              ? Colors.green
+                              : (contractCondition.status == 'REJECTED')
+                                  ? Colors.red
+                                  : Colors.amber //PENDING
+
+                          ),
+                    ),
+                  ],
+                ),
               ],
             ),
           )
@@ -63,7 +81,7 @@ class ConditionItem extends StatelessWidget {
               backgroundColor: Colors.cyan,
               // backgroundImage: NetworkImage(contract.imageUrl),
             ),
-            subtitle: Text('Status: ${contractCondition.status}\n Proposed by: '
+            subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
                 '${contractCondition.proposedBy}'),
             onTap: () => _showConditionDialog(contractCondition),
             trailing: Row(
