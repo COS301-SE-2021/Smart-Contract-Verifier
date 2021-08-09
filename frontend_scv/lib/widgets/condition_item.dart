@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:unison/providers/condition.dart';
 import 'package:unison/providers/global.dart';
-
-import '../providers/auth.dart';
-import '../providers/contract.dart';
+import 'package:unison/services/Server/negotiationService.dart';
 
 class ConditionItem extends StatelessWidget {
   final Condition contractCondition;
+  final NegotiationService negotiationService;
+
   ConditionItem({
     @required this.contractCondition,
+    @required this.negotiationService,
   });
 
   @override
@@ -41,32 +41,34 @@ class ConditionItem extends StatelessWidget {
         backgroundColor: Colors.black12,
         // backgroundImage: NetworkImage(contract.imageUrl),
       ),
-      // subtitle: Text('Status: Todo'),
-      subtitle: Text(contractCondition.proposedBy),
+      subtitle: Text('Status: ${contractCondition.status}\n Proposed by: '
+          '${contractCondition.proposedBy}'),
+      // subtitle: Text(contractCondition.proposedBy),
 
       onTap: () => _showConditionDialog(contractCondition),
       trailing: Global.userAddress == contractCondition.proposedBy
           ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.thumb_down_outlined,
-                    color: Colors.deepOrangeAccent,
-                  ),
-                  onPressed: () {
-                    print('Reject');
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.thumb_up_outlined,
-                    color: Colors.cyan,
-                  ),
-                  onPressed: () {
-                    print('Accept');
-                  },
-                ),
+                Text('Proposed by you - Status: TODO'),
+                // IconButton(
+                //   icon: Icon(
+                //     Icons.thumb_down_outlined,
+                //     color: Colors.deepOrangeAccent,
+                //   ),
+                //   onPressed: () {
+                //     print('Reject');
+                //   },
+                // ),
+                // IconButton(
+                //   icon: Icon(
+                //     Icons.thumb_up_outlined,
+                //     color: Colors.cyan,
+                //   ),
+                //   onPressed: () {
+                //     print('Accept');
+                //   },
+                // ),
               ],
             )
           : Row(
@@ -75,11 +77,23 @@ class ConditionItem extends StatelessWidget {
                 // Text('Status: ${contractCondition}'),
                 IconButton(
                   icon: Icon(
+                    Icons.thumb_down_outlined,
+                    color: Colors.deepOrangeAccent,
+                  ),
+                  onPressed: () async {
+                    print('Reject');
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
                     Icons.thumb_up_outlined,
                     color: Colors.cyan,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     print('Accept');
+                    await negotiationService
+                        .acceptCondition(contractCondition.conditionId);
+                    print('accepted: ' + contractCondition.conditionId);
                   },
                 ),
               ],

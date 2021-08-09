@@ -1,6 +1,5 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
+import 'package:unison/services/Server/negotiationService.dart';
 import 'package:unison/widgets/condition_item.dart';
 import '../providers/contract.dart';
 
@@ -11,6 +10,8 @@ class ContractConditionsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    NegotiationService negS = NegotiationService();
+
     print(_contract.conditions);
     return Container(
       // padding: EdgeInsets.all(8),
@@ -21,7 +22,10 @@ class ContractConditionsPanel extends StatelessWidget {
               itemBuilder: (_, i) => Column(
                 children: [
                   // Text(_contract.conditions[i].description),
-                  ConditionItem(contractCondition: _contract.conditions[i]),
+                  ConditionItem(
+                    contractCondition: _contract.conditions[i],
+                    negotiationService: negS,
+                  ),
                   Divider(),
                 ],
               ),
