@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:unison/providers/condition.dart';
+import 'package:unison/providers/contracts.dart';
 import 'package:unison/providers/global.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 
-class ConditionItem extends StatelessWidget {
+class ConditionItem extends StatefulWidget {
   final Condition contractCondition;
   final NegotiationService negotiationService;
 
@@ -11,6 +13,19 @@ class ConditionItem extends StatelessWidget {
     @required this.contractCondition,
     @required this.negotiationService,
   });
+
+  @override
+  _ConditionItemState createState() => _ConditionItemState();
+}
+
+class _ConditionItemState extends State<ConditionItem> {
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    // print('InitState()');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +46,13 @@ class ConditionItem extends StatelessWidget {
               ));
     }
 
-    return Global.userAddress == contractCondition.proposedBy
+    return Global.userAddress == widget.contractCondition.proposedBy
         ? ListTile(
             //Current user created the condition
             title: Text(
-              contractCondition.title == null
+              widget.contractCondition.title == null
                   ? 'Couldn\'t load title'
-                  : contractCondition.title,
+                  : widget.contractCondition.title,
             ),
             leading: CircleAvatar(
               backgroundColor: Colors.deepOrange,
@@ -46,7 +61,7 @@ class ConditionItem extends StatelessWidget {
             //     '${contractCondition.proposedBy}'),
             // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
             //     '${contractCondition.proposedBy}'),
-            onTap: () => _showConditionDialog(contractCondition),
+            onTap: () => _showConditionDialog(widget.contractCondition),
             trailing: Row(
               //The currently logged in user created the condition
               mainAxisSize: MainAxisSize.min,
@@ -56,11 +71,11 @@ class ConditionItem extends StatelessWidget {
                   children: [
                     Text('Other Party Response: '),
                     Text(
-                      contractCondition.status,
+                      widget.contractCondition.status,
                       style: TextStyle(
-                          color: (contractCondition.status == 'ACCEPTED')
+                          color: (widget.contractCondition.status == 'ACCEPTED')
                               ? Colors.green
-                              : (contractCondition.status == 'REJECTED')
+                              : (widget.contractCondition.status == 'REJECTED')
                                   ? Colors.red
                                   : Colors.amber //PENDING
 
@@ -73,9 +88,9 @@ class ConditionItem extends StatelessWidget {
           )
         : ListTile(
             title: Text(
-              contractCondition.title == null
+              widget.contractCondition.title == null
                   ? 'Couldn\'t load title'
-                  : contractCondition.title,
+                  : widget.contractCondition.title,
             ),
             leading: CircleAvatar(
               backgroundColor: Colors.cyan,
@@ -84,12 +99,12 @@ class ConditionItem extends StatelessWidget {
             //   'Status: ${contractCondition.status}\nProposed by: '
             //   '${contractCondition.proposedBy}',
             // ),
-            onTap: () => _showConditionDialog(contractCondition),
+            onTap: () => _showConditionDialog(widget.contractCondition),
             trailing: Row(
               //The currently logged in user did not create the condition
               mainAxisSize: MainAxisSize.min,
-              children: contractCondition.status != 'PENDING'
-                  ? contractCondition.status == 'ACCEPTED'
+              children: widget.contractCondition.status != 'PENDING'
+                  ? widget.contractCondition.status == 'ACCEPTED'
                       ? [
                           //ACCEPTED
                           Text(
@@ -117,10 +132,37 @@ class ConditionItem extends StatelessWidget {
                           color: Colors.deepOrangeAccent,
                         ),
                         onPressed: () async {
-                          print('Reject');
-                          await negotiationService
-                              .rejectCondition(contractCondition.conditionId);
-                          print('rejected: ' + contractCondition.conditionId);
+                          print('Accept');
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          try {
+                            await widget.negotiationService.rejectCondition(
+                                widget.contractCondition.conditionId);
+                            print('rejected: ' +
+                                widget.contractCondition.conditionId);
+                          } catch (error) {
+                            await showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text('An error occurred!'),
+                                content: Text('Something went wrong.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Okay'),
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                          setState(() {
+                            _isLoading = false;
+                            Provider.of<Contracts>(context, listen: false)
+                                .fetchAndSetContracts();
+                          });
                         },
                       ),
                       IconButton(
@@ -130,9 +172,36 @@ class ConditionItem extends StatelessWidget {
                         ),
                         onPressed: () async {
                           print('Accept');
-                          await negotiationService
-                              .acceptCondition(contractCondition.conditionId);
-                          print('accepted: ' + contractCondition.conditionId);
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          try {
+                            await widget.negotiationService.acceptCondition(
+                                widget.contractCondition.conditionId);
+                            print('accepted: ' +
+                                widget.contractCondition.conditionId);
+                          } catch (error) {
+                            await showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text('An error occurred!'),
+                                content: Text('Something went wrong.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Okay'),
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                          setState(() {
+                            _isLoading = false;
+                            Provider.of<Contracts>(context, listen: false)
+                                .fetchAndSetContracts();
+                          });
                         },
                       ),
                     ],
