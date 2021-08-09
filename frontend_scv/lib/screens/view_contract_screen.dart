@@ -18,9 +18,17 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
   final _conditionTitleController = TextEditingController();
   final _conditionDescriptionController = TextEditingController();
   var _isLoading = false;
+  var _isInit = true;
+
   NegotiationService negotiationService = NegotiationService();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    print('InitState()');
+    super.initState();
+  }
 
   Future<void> _saveForm(String cId) async {
     final isValid = _formKey.currentState.validate();
@@ -40,13 +48,8 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
     });
 
     try {
+      //Save to DB:
       await negotiationService.saveCondition(newCondition);
-
-      //TODO: Add New Condition (Server Call) here:
-      // await Provider.of<Contract>(context, listen: false)
-      //     .addCondition(_newCondition);
-      print('Add new condition: ${_conditionTitleController.text}'
-          '** ** **${_conditionDescriptionController.text}');
     } catch (error) {
       await showDialog(
         context: context,
@@ -66,6 +69,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
     }
     setState(() {
       _isLoading = false;
+      Provider.of<Contracts>(context, listen: false).fetchAndSetContracts();
     });
     Navigator.of(context).pop();
   }
@@ -130,11 +134,8 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
 
   Widget build(BuildContext context) {
     final contractId = ModalRoute.of(context).settings.arguments as String;
-    print('\n\n_______________VIEW__\n\n${contractId}\n'
-        '\n_________________\n\n');
-
     final loadedContract =
-        Provider.of<Contracts>(context, listen: false).findById(contractId);
+        Provider.of<Contracts>(context, listen: true).findById(contractId);
 
     return Scaffold(
       appBar: AppBar(

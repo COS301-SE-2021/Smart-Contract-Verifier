@@ -13,12 +13,8 @@ class ContractItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        print(
-            '\n\n_______________GESTURE-CONTRACT ITEM__\n\n${contract.contractId}\n'
-            '\n_________________\n\n');
         Navigator.of(context).pushNamed(
           ViewContractScreen.routeName,
-          // ContractDetailScreen.routeName,
           arguments: contract.contractId,
         );
       },
