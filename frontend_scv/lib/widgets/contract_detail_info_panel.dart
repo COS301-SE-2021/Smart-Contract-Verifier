@@ -8,8 +8,6 @@ class ContractDetailInfoPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('\n\n_______________Detail__\n\n${_contract.contractId}\n'
-        '\n_________________\n\n');
     return Center(
       child: Card(
         elevation: 15,
