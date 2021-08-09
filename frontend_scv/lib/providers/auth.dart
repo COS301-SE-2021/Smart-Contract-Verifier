@@ -36,6 +36,7 @@ class Auth with ChangeNotifier {
   Future<void> logout() async {
     _userWalletAddress = null;
     _isAuth = false;
+    walletInteraction.metamaskDisconnect();
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     // prefs.remove('userData');
