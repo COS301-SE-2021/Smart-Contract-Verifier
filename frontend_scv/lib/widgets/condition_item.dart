@@ -44,8 +44,8 @@ class ConditionItem extends StatelessWidget {
             ),
             // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
             //     '${contractCondition.proposedBy}'),
-            subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
-                '${contractCondition.proposedBy}'),
+            // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
+            //     '${contractCondition.proposedBy}'),
             onTap: () => _showConditionDialog(contractCondition),
             trailing: Row(
               //The currently logged in user created the condition
@@ -54,7 +54,7 @@ class ConditionItem extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Status: '),
+                    Text('Other Party Response: '),
                     Text(
                       contractCondition.status,
                       style: TextStyle(
@@ -79,38 +79,63 @@ class ConditionItem extends StatelessWidget {
             ),
             leading: CircleAvatar(
               backgroundColor: Colors.cyan,
-              // backgroundImage: NetworkImage(contract.imageUrl),
             ),
-            subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
-                '${contractCondition.proposedBy}'),
+            // subtitle: Text(
+            //   'Status: ${contractCondition.status}\nProposed by: '
+            //   '${contractCondition.proposedBy}',
+            // ),
             onTap: () => _showConditionDialog(contractCondition),
             trailing: Row(
               //The currently logged in user did not create the condition
               mainAxisSize: MainAxisSize.min,
-              children: [
-                // Text('Status: ${contractCondition}'),
-                IconButton(
-                  icon: Icon(
-                    Icons.thumb_down_outlined,
-                    color: Colors.deepOrangeAccent,
-                  ),
-                  onPressed: () async {
-                    print('Reject');
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.thumb_up_outlined,
-                    color: Colors.cyan,
-                  ),
-                  onPressed: () async {
-                    print('Accept');
-                    await negotiationService
-                        .acceptCondition(contractCondition.conditionId);
-                    print('accepted: ' + contractCondition.conditionId);
-                  },
-                ),
-              ],
+              children: contractCondition.status != 'PENDING'
+                  ? contractCondition.status == 'ACCEPTED'
+                      ? [
+                          //ACCEPTED
+                          Text(
+                            'ACCEPTED',
+                            style: TextStyle(
+                              color: Colors.cyan,
+                            ),
+                          ),
+                        ]
+                      : [
+                          //REJECTED
+                          Text(
+                            'REJECTED',
+                            style: TextStyle(
+                              color: Colors.deepOrangeAccent,
+                            ),
+                          ),
+                        ]
+                  : [
+                      //PENDING
+                      // Text('Status: ${contractCondition}'),
+                      IconButton(
+                        icon: Icon(
+                          Icons.thumb_down_outlined,
+                          color: Colors.deepOrangeAccent,
+                        ),
+                        onPressed: () async {
+                          print('Reject');
+                          await negotiationService
+                              .rejectCondition(contractCondition.conditionId);
+                          print('rejected: ' + contractCondition.conditionId);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.thumb_up_outlined,
+                          color: Colors.cyan,
+                        ),
+                        onPressed: () async {
+                          print('Accept');
+                          await negotiationService
+                              .acceptCondition(contractCondition.conditionId);
+                          print('accepted: ' + contractCondition.conditionId);
+                        },
+                      ),
+                    ],
             ),
           );
   }
