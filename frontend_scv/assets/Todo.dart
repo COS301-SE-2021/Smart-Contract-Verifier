@@ -46,5 +46,7 @@
 * @Ronan: Maybe we can have a metamaskDisconnect (disconnect metamask from
 * the app) for logout functionality
 *
+* Generic API Handler (Hairdu example)
+* Factory JSON methods
 *
 * */
