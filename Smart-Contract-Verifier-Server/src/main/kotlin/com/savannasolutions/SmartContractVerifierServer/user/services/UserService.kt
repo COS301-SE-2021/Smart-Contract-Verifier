@@ -30,7 +30,7 @@ class UserService(  val userRepository: UserRepository,
                     val conditionsRepository: ConditionsRepository) {
 
     fun addUser(addUserRequest: AddUserRequest): AddUserResponse {
-        val wID = addUserRequest.WalletID;
+        val wID = addUserRequest.WalletID
         if(userRepository.existsById(wID))
             return AddUserResponse(status = ResponseStatus.FAILED)
 
@@ -117,6 +117,13 @@ class UserService(  val userRepository: UserRepository,
 
     fun getNonce(getNonceRequest: GetNonceRequest): GetNonceResponse{
         //should generate and persist a randomised Nonce which it will also return in the response object to be signed
+        if (userRepository.existsById(getNonceRequest.UserID)) {
+            val user = userRepository.getById(getNonceRequest.UserID)
+            val nonce = ThreadLocalRandom.current().nextLong(1000000000, 9999999999)
+            user.nonce = nonce
+            userRepository.save(user)
+            return GetNonceResponse(nonce, ResponseStatus.SUCCESSFUL)
+        }
         return GetNonceResponse(0, ResponseStatus.FAILED)
     }
 
