@@ -4,23 +4,19 @@ import com.savannasolutions.SmartContractVerifierServer.common.AgreementResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
-import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.GetNonceRequest
-import com.savannasolutions.SmartContractVerifierServer.user.requests.LoginRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.UserExistsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.GetNonceResponse
-import com.savannasolutions.SmartContractVerifierServer.user.responses.LoginResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.UserExistsResponse
 import org.springframework.stereotype.Service
-import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.collections.ArrayList
 
@@ -116,7 +112,6 @@ class UserService(  val userRepository: UserRepository,
 
 
     fun getNonce(getNonceRequest: GetNonceRequest): GetNonceResponse{
-        //should generate and persist a randomised Nonce which it will also return in the response object to be signed
         if (userRepository.existsById(getNonceRequest.UserID)) {
             val user = userRepository.getById(getNonceRequest.UserID)
             val nonce = ThreadLocalRandom.current().nextLong(1000000000, 9999999999)
@@ -126,10 +121,4 @@ class UserService(  val userRepository: UserRepository,
         }
         return GetNonceResponse(0, ResponseStatus.FAILED)
     }
-
-    fun login(loginRequest: LoginRequest): LoginResponse{
-        // Verify the signed nonce and generate a jwt token to respond with adding the claim user=walletID
-        return LoginResponse("", ResponseStatus.FAILED)
-    }
-
 }
