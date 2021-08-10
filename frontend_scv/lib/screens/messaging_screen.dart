@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/providers/global.dart';
 import 'package:unison/providers/message.dart';
+import 'package:unison/widgets/agreement_messages_panel.dart';
 
 class MessagingScreen extends StatefulWidget {
   static const routeName = '/messaging';
@@ -70,8 +71,28 @@ class _MessagingScreenState extends State<MessagingScreen> {
       ),
     );
     return Scaffold(
-      body: Text('Chat for Agreement: ${agreementId} Goes Here: \n Messages: '
-          '${messages[0].messageText}-${messages[0].sender}'),
+      appBar: AppBar(
+        title: Text('Chat for agreement: ' + agreementId),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 6,
+            child: AgreementMessagesPanel(messages),
+            // padding: EdgeInsets.symmetric(
+            //   vertical: 10,
+            //   horizontal: 8,
+            // ),
+            //
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+                // TODO: More Information or actions here?
+                ),
+          )
+        ],
+      ),
     );
   }
 }
