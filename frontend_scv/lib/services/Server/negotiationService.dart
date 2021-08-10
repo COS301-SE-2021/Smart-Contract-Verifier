@@ -9,7 +9,8 @@ import '../../providers/global.dart';
 
 class NegotiationService {
 
-  ApiInteraction api = ApiInteraction();
+  ApiInteraction _api = ApiInteraction();
+  final String _reqPath = '/negotiation/';
 
  Future<dynamic> getNotifications(String party) async {
 
@@ -22,7 +23,7 @@ class NegotiationService {
 
    Map<String, dynamic> response;
    try {
-     response = await api.postData('/negotiation/create-agreement', agr.toJson());
+     response = await _api.postData(_reqPath + 'create-agreement', agr.toJson());
 
      if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Agreement could not be saved');
@@ -41,7 +42,7 @@ class NegotiationService {
 
    Map<String, dynamic> response;
    try {
-     response = await api.postData('/negotiation/create-condition', cond.toJson());
+     response = await _api.postData(_reqPath + 'create-condition', cond.toJson());
 
      if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Condition could not be saved');
@@ -70,7 +71,7 @@ class NegotiationService {
 
    Map<String, dynamic> response;
    try {
-     response = await api.postData('/negotiation/$path', body);
+     response = await _api.postData(_reqPath + path, body);
 
      if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Condition could not be ' + (acc ? 'accepted' : 'rejected'));
@@ -99,7 +100,7 @@ class NegotiationService {
     String path = price? 'payment' : 'duration';
 
     try {
-      response = await api.postData('/negotiation/set-$path-condition', body);
+      response = await _api.postData(_reqPath + 'set-$path-condition', body);
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('${(price? 'Payment':'Duration')} could not be saved');
@@ -118,7 +119,7 @@ class NegotiationService {
 
    Map<String, dynamic> response;
    try {
-     response = await api.postData('/negotiation/seal-agreement', body);
+     response = await _api.postData(_reqPath + 'seal-agreement', body);
 
      if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Agreement could not be sealed');

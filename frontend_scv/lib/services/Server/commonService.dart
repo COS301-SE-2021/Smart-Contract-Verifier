@@ -8,7 +8,8 @@ import '../../providers/contract.dart';
 import '../../providers/condition.dart';
 
 class CommonService {
-  ApiInteraction api = ApiInteraction();
+  ApiInteraction _api = ApiInteraction();
+  
   Contract errorContract = new Contract(
       title: 'Error',
       description:
@@ -20,7 +21,7 @@ class CommonService {
     var response;
 
     try {
-      response = await api.postData('/user/retrieve-user-agreements', body);
+      response = await _api.postData('/user/retrieve-user-agreements', body);
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Retrieval of agreements failed');
@@ -49,7 +50,7 @@ class CommonService {
     var response;
 
     try {
-      response = await api.postData('/negotiation/get-agreement-details', body);
+      response = await _api.postData('/negotiation/get-agreement-details', body);
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be retrieved');
@@ -70,7 +71,7 @@ class CommonService {
     Map<String, dynamic> body = {'AgreementID': id};
 
     try {
-      response = await api.postData('', body);
+      response = await _api.postData('', body);
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Conditions could not be retrieved');
@@ -90,7 +91,7 @@ class CommonService {
     //To test api
 
     print('Call');
-    final res = await api.getData('/negotiation/hello');
+    final res = await _api.getData('/negotiation/hello');
     print('Res: ' + res.toString());
   }
 
@@ -102,7 +103,7 @@ class CommonService {
 
     try {
       response =
-          await api.postData('/negotiation/get-agreement', body); //Revise url
+          await _api.postData('/negotiation/get-agreement', body); //Revise url
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreements could not be retrieved');

@@ -1,11 +1,16 @@
 //This class will be a service to be used by the messaging service.
 
+import 'dart:convert';
+
+import 'package:unison/providers/global.dart';
+
 import 'backendAPI.dart';
 import '../../providers/message.dart';
 
 class MessageService {
 
-  ApiInteraction api = ApiInteraction();
+  ApiInteraction _api = ApiInteraction();
+  final String _reqPath = '/messenger/';
 
   Future<void> sendMessage(Message mess) async {
     //TODO list:
@@ -15,14 +20,28 @@ class MessageService {
 
   }
 
-  Future<List<Message>> getMessages(String id) async { //Will usually be the current user, nut this implementation for consistency
-    //TODO list:
-    //Get endpoints
-    //Parse result
-    //Build list of messages
-    //Error handling
+  Future<List<Message>> getMessages(String id) async { //Get all messages for the agreement id passed in
 
-    return [];
+    Map<String, dynamic> body = {'AgreementID' : id, 'RequestingUser' : Global.userAddress};
+    Map<String, String> response;
+
+    try {
+      response = await _api.postData(
+          _reqPath + 'get-all-messages-by-agreement', body);
+
+      if (response['Status'] != "SUCCESSFUL")
+        throw Exception('Messages could not be retrieved');
+    } catch (err) {
+      print (err); //Handle exception
+      throw err;
+    }
+
+    List<Message> ret = [];
+    for (int i =0;i<response['Messages'].length;i++) {
+      ret.add(Message.fromJSON(jsonDecode(response['Messages'][i])));
+    }
+
+    return ret;
   }
 
 

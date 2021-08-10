@@ -1,7 +1,6 @@
 //This class holds global variables for use by the entire app.
 
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
 //import 'dart:async';
 
