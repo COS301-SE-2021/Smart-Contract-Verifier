@@ -18,5 +18,4 @@ module.exports = async (deployer) => {
   fs.writeFile("../frontend_scv/assets/JSON/address.json", JSON.stringify(obj), function(err){
     console.log(err);
   })
-  console.log("Adress: ", Verifier.address);
 };
