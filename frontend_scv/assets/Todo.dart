@@ -12,14 +12,20 @@
 //// Save a new/empty Agreement object
 /*
  * -> New Agreement object save to server
+ *    * How do we ensure the other party is on the server already?
+ *
 */
 
 // Agreement Details Screen
 //// Retrieve Agreement with conditions array in Agreement object
 /*
- * -> Get Agreement object from server
- * -> Get Agreement condition objects from server
- * -> Insert Agreement conditions into a list and make it part of the agreement object
+ * -> Get Agreement object from server DONE
+ * -> Get Agreement condition objects from server DONE
+ * -> Insert Agreement conditions into a list and make it part of the
+ * agreement object DONE
+ -> Messaging & Evidence
+
+ *
 */
 //// Save a new Condition
 /*
