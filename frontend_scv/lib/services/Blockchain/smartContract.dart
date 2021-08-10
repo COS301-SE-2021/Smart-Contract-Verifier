@@ -7,40 +7,45 @@ import 'package:web3dart/web3dart.dart';
 import 'wallet.dart';
 import '../../providers/global.dart';
 
-
 class SmartContract {
-
-  final Web3Client _smC = Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+  final Web3Client _smC =
+      Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
   WalletInteraction _wallet = WalletInteraction();
 
   //Should this be called every time? Or should it only be loaded once....
   //Metamask will automatically detect multiple requests, but I am not certain about loading the abi.
   Future<DeployedContract> _getContract() async {
-    String abi = await rootBundle.loadString("JSON/abi.json"); //Load contract from json
+    // String abi = await rootBundle.loadString(
+    // "./../SmartContract/abis/_src_UnisonToken_sol_UnisonToken.abi"); //Load contract from json
+    String abi = await rootBundle
+        .loadString("JSON/_src_UnisonToken_sol_UnisonToken.abi");
     await _wallet.metamaskConnect(); //Request metamask connection
 
     final theContract = DeployedContract(ContractAbi.fromJson(abi, "SCV"),
-       EthereumAddress.fromHex(Global.contractId));
+        EthereumAddress.fromHex(Global.contractId));
     return theContract;
   }
 
-  Future<List<dynamic>> makeReadCall(String function, List<dynamic> args) async { //Read from contract
+  Future<List<dynamic>> makeReadCall(
+      String function, List<dynamic> args) async {
+    //Read from contract
     final theContract = await _getContract();
     final fun = theContract.function(function);
     List<dynamic> theResult =
-    await _smC.call(contract: theContract, function: fun, params: args);
+        await _smC.call(contract: theContract, function: fun, params: args);
     return theResult;
   }
 
-  Future<String> makeWriteCall(String funct, List<dynamic> args) async { //Write to contract
+  Future<String> makeWriteCall(String funct, List<dynamic> args) async {
+    //Write to contract
 
     final theContract = await _getContract();
     final fun = theContract.function(funct);
     final theResult = await _smC.sendTransaction(
-        _wallet.getCredentials(),//EthPrivateKey.fromHex('a928a78db9f9bad13f490cf3d0f6b2314fcee3183b2c424fd4bbccf841e163d0'),//_wallet.getCredentials(),
+        _wallet
+            .getCredentials(), //EthPrivateKey.fromHex('a928a78db9f9bad13f490cf3d0f6b2314fcee3183b2c424fd4bbccf841e163d0'),//_wallet.getCredentials(),
         Transaction.callContract(
             contract: theContract, function: fun, parameters: args));
     return theResult;
   }
-  
 }
