@@ -4,18 +4,18 @@
 import 'global.dart';
 
 class Message {
-
   String sender;
   String messageText;
-
-  Message(String text) { //Constructor used when a message is newly created;
+  //TODO: add time to allow for ordering of messages
+  Message(String text) {
+    //Constructor used when a message is newly created;
     sender = Global.userAddress;
     messageText = text;
   }
 
   Message.fromJSON(Map<String, dynamic> jsn) {
-    this.sender = '';
-    this.messageText = '';
+    this.sender = jsn['sender'];
+    this.messageText = jsn['messageText'];
+    //timestamp/send time?
   }
-
 }

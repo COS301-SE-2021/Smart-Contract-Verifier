@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/providers/condition.dart';
 import 'package:unison/providers/global.dart';
+import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 import '../widgets/contract_conditions_panel.dart';
 import '../widgets/contract_detail_info_panel.dart';
@@ -192,7 +193,12 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            MessagingScreen.routeName,
+            arguments: loadedContract.contractId,
+          );
+        },
         label: Text('Agreement Chat'),
         icon: Icon(Icons.chat),
       ),
