@@ -13,11 +13,17 @@ class MessageService {
   final String _reqPath = '/messenger/';
 
   Future<void> sendMessage(Message mess) async {
-    //TODO list:
-    //Get api endpoints
-    //Pass in relevant things
-    //Error handling
 
+    Map<String, String> response;
+    try {
+      response = await _api.postData(_reqPath + 'send-message', mess.toJSONSend());
+
+      if (response['Status'] != "SUCCESSFUL")
+        throw Exception('Message could not be sent');
+      } catch (err) {
+          print (err); //Handle exception
+          throw err;
+        }
   }
 
   Future<List<Message>> getMessages(String id) async { //Get all messages for the agreement id passed in
@@ -26,15 +32,14 @@ class MessageService {
     Map<String, String> response;
 
     try {
-      response = await _api.postData(
-          _reqPath + 'get-all-messages-by-agreement', body);
+      response = await _api.postData(_reqPath + 'get-all-messages-by-agreement', body);
 
       if (response['Status'] != "SUCCESSFUL")
         throw Exception('Messages could not be retrieved');
-    } catch (err) {
-      print (err); //Handle exception
-      throw err;
-    }
+      } catch (err) {
+          print (err); //Handle exception
+          throw err;
+        }
 
     List<Message> ret = [];
     for (int i =0;i<response['Messages'].length;i++) {
