@@ -15,6 +15,7 @@ contract('JurorStore', (accounts) =>{
         // In these unit tests, accounts[0] is the owner of JurorStore
         before(async () =>{
             r = await RandomSource.new(); 
+
             jurorStore = await JurorStore.new(accounts[0], r.address, {from: accounts[0]});
         })
 
@@ -23,11 +24,11 @@ contract('JurorStore', (accounts) =>{
             let result;
             try{
                 result = await jurorStore.addJuror(accounts[1], {from: accounts[0]});
-                passedRequire = true;    
+                passedRequire = true;
             }
             catch(e){}
 
-            assert(passedRequire == true);
+            assert(passedRequire == true, "Could not add juror");
             truffleAssert.eventEmitted(result, "AddJuror", (ev)=>{
                 return ev.juror == accounts[1]
             });
@@ -40,7 +41,7 @@ contract('JurorStore', (accounts) =>{
                 passedRequire = true;
             }
             catch(e){}
-            assert(passedRequire == false);
+            assert(passedRequire == false, "Could add juror as non-owner");
 
         })
 

@@ -1,9 +1,12 @@
 const { assert } = require('chai')
 
+const {giveJurorsCoins} = require("./helper.js")
+
 const UnisonToken = artifacts.require("UnisonToken")
 const Verifier = artifacts.require("Verifier")
 const RandomSource = artifacts.require("Randomness/RandomSource")
 
+const truffleAssert = require('truffle-assertions');
 require('chai').use(require('chai-as-promised')).should()
 
 contract('Verifier', (accounts) =>{
@@ -17,6 +20,12 @@ contract('Verifier', (accounts) =>{
             token = await UnisonToken.new()
             r = await RandomSource.new();
             verifier = await Verifier.new(token.address, r.address);
+
+            needCoins = [];
+            for(var i = 1; i<9; i++){
+                needCoins.push(accounts[i]);
+            }
+            giveJurorsCoins(token, accounts[0], needCoins, 100000);
         })
 
         it("Can create agreement", async () =>{
@@ -71,7 +80,8 @@ contract('Verifier', (accounts) =>{
 
         it("Add jurors ", async()=>{
             // Add enough potential members to jury
-            for(var i=3; i<10; i++){
+            for(var i=3; i<9; i++){
+                token.approve(verifier.address, 10000, {from: accounts[i]});
                 verifier.addJuror({from: accounts[i]});
             }
         })
@@ -91,14 +101,39 @@ contract('Verifier', (accounts) =>{
         it("Vote no on agreement ", async()=>{
             // console.log("Vote no");
 
-            await verifier.voteResolution(1, 1, {from: accounts[0]});
+            result = await verifier.voteResolution(1, 1, {from: accounts[0]});
 
 
             var agree = await verifier.getAgreement(1);
+            var jury = await verifier.getJury(1);
             // console.log(agree);
 
             assert.equal(agree.party1Vote, 1, "incorrect vote in Agreement")
-            assert.equal(agree.hasJury, true, "Jury wasn't assigned");
+            assert.equal(jury.assigned, true, "Jury wasn't assigned");
+
+            truffleAssert.eventEmitted(result, "JuryAssigned", (ev)=>{
+                return ev.agreeID == 1
+            });
+
+        })
+
+
+        it("Get jury", async()=>{
+            var jury = await verifier.getJury(1);
+
+            for(var i=0; i<jury.jurors.length; i++){
+                var found = false;
+
+                for(var j=3; j<9; j++){
+                    //accounts 3 to 8 (included) are signed up as jurors
+                    if(jury.jurors[i] == accounts[j]){
+                        found = true;
+                        break;
+                    }
+                }
+                assert(found, "Invalid account on jury");
+
+            }
         })
 
     })

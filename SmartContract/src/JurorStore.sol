@@ -40,8 +40,7 @@ contract JurorStore{
         // b) It's index really is 0 so it would return even if it were in the mapping
 
         uint256 index = jurorIndex[j];
-        if(index == 0)
-            return;
+        require(index != 0, "You need to be a juror in the first place in order to be removed");
         
         uint256 last = jurors.length -1;
 
@@ -80,15 +79,21 @@ contract JurorStore{
             while(!valid){
                 if(!assignedJurors[index]){
                     valid = true;
-                    for(uint j=0; j<noUseLen; j++){
-                        if(jurors[index] == noUse[j]){
-                            valid = false;
-                            break;
+                    if(jurors[index] == address(0))
+                        valid = false;
+                    else{
+                        for(uint j=0; j<noUseLen; j++){
+                            if(jurors[index] == noUse[j]){
+                                valid = false;
+                                break;
+                            }
                         }
                     }
                 }
-                if(!valid)
-                    index++;
+                if(!valid){
+                    // Increment by one, but wrap around when end of list is reached
+                    index = (index + 1) % numJurors;
+                }
             }
 
             

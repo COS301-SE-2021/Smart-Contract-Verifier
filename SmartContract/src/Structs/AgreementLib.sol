@@ -42,10 +42,17 @@ library AgreementLib{
 
         Vote party1Vote;
         Vote party2Vote;
-        bool hasJury;
 
         mapping(uint => PaymentInfoLib.PaymentInfo) payments;
         uint numPayments;
+    }
+
+    struct Jury{
+        bool assigned;
+        uint deadline;
+        mapping(uint => address) jurors;
+        mapping(uint => Vote) votes;
+        uint numJurors;
     }
 
     // Version of Agreement to be used in functions as return value
@@ -65,9 +72,15 @@ library AgreementLib{
 
         Vote party1Vote;
         Vote party2Vote;
-        bool hasJury;
 
         PaymentInfoLib.PaymentInfo[] payments;
+    }
+
+    struct ReturnJury{
+        bool assigned;
+        uint deadline;
+        address[] jurors;
+        Vote[] votes;
     }
 
     function makeReturnAgreement(Agreement storage agreement) view internal returns(ReturnAgreement memory){
@@ -86,13 +99,30 @@ library AgreementLib{
 
         result.party1Vote = agreement.party1Vote;
         result.party2Vote = agreement.party2Vote;
-        result.hasJury = agreement.hasJury;
 
         result.payments = new PaymentInfoLib.PaymentInfo[](agreement.numPayments);
         for(uint i=0; i<agreement.numPayments; i++){
             result.payments[i] = agreement.payments[i];
         }
 
+        return result;
+    }
+
+    function makeReturnJury(Jury storage jury) view internal returns(ReturnJury memory){
+        ReturnJury memory result;
+
+        result.assigned = jury.assigned;
+        if(!result.assigned)
+            return result;
+
+        result.deadline = jury.deadline;
+        result.jurors = new address[](jury.numJurors);
+        result.votes = new Vote[](jury.numJurors);
+        for(uint i=0; i<jury.numJurors; i++){
+            result.jurors[i] = jury.jurors[i];
+            result.votes[i] = jury.votes[i];
+        }
+        
         return result;
     }
 }
