@@ -1,6 +1,8 @@
 //This file will contain a class containing methods needed to interact with the smart contract stored on the blockchain.
 //The directory will hold similar classes, e.g. for Metamask communication.
 
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
@@ -48,4 +50,34 @@ class SmartContract {
     print (theResult); //Debug
     return theResult;
   }
+
+  Future<ContractEvent> getEvent(String ev) async { //Get an event from the contract
+    final con = await _getContract();
+    final event = con.event(ev);
+    return event;
+  }
+
+  //This is used to detect the event emitted by creating a contract. This can be made more general, more thought is needed.
+  Future<StreamSubscription> getCreationSubscription() async {
+
+    final con = await _getContract();
+    final ev = con.event('CreateAgreement'); //Revise
+
+    final res = _smC
+        .events(FilterOptions.events(contract: con, event: ev))
+        .take(1)
+        .listen((event) {
+      final decoded = ev.decodeResults(event.topics, event.data);
+
+      final partyA = decoded[0] as EthereumAddress;
+      final partyB = decoded[1] as EthereumAddress;
+      final name = decoded[2] as BigInt;
+
+      print('Contract $name between $partyA and $partyB');
+    });
+
+    return res;
+
+  }
+
 }
