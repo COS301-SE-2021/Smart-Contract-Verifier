@@ -23,9 +23,11 @@ class UnisonService {
     var jsn = con.toJsonChain();
 
     String data = con.title + '#' + con.description;
-    print ('Before');
-    String partyB = (Global.userAddress == jsn['PartyA'])? jsn['PartyB'] : jsn['PartyA'];
+    String partyB = (Global.userAddress == jsn['PartyB'])? jsn['PartyA'] : jsn['PartyB'];
     EthereumAddress partyBA = EthereumAddress.fromHex(partyB);
+    print ('A: '+Global.userAddress);
+
+
     final res = await _smC.makeWriteCall("createAgreement", [partyBA, con.duration, data]); //Soon, this will be replaced bu a spinner in the UI
     // It will have to check for an event.
     print (res);

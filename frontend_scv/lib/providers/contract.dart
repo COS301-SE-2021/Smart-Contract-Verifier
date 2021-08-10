@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class Contract with ChangeNotifier {
   String contractId; //agreementID
-  String blockchainId;
+  BigInt blockchainId;
   String paymentId;
   String partyA;
   String partyB;
@@ -78,7 +78,7 @@ class Contract with ChangeNotifier {
         'AgreementImageURL': imageUrl,
       };
 
-  void setBlockchainID(String id) {
+  void setBlockchainID(BigInt id) {
     blockchainId = id;
     movedToBlockchain = true;
   }
