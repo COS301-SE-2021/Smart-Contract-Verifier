@@ -21,7 +21,7 @@ class SmartContract {
     await _wallet.metamaskConnect(); //Request metamask connection
 
     final theContract = DeployedContract(ContractAbi.fromJson(abi, "SCV"),
-        EthereumAddress.fromHex(Global.contractId));
+        EthereumAddress.fromHex(await Global.getContractId()));
     return theContract;
   }
 

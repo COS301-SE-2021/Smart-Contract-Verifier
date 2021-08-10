@@ -15,7 +15,7 @@ class Global {
   static Future<String> getContractId() async {
 
     if (!_loaded) { //Only load JSON once
-      String jsn = await rootBundle.loadString('assets/my_text.txt');
+      String jsn = await rootBundle.loadString('JSON/address.json');
       try {
         _contractId = jsonDecode(jsn)['Verifier'];
         _loaded = true;
