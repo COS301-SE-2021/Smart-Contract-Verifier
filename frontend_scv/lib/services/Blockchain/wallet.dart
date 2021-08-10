@@ -5,17 +5,15 @@ import 'dart:html';
 import 'package:web3dart/browser.dart';
 import 'package:web3dart/credentials.dart';
 import '../../providers/global.dart';
-// import 'package:http/http.dart';
-// import 'package:web3dart/web3dart.dart';
 
 class WalletInteraction {
   CredentialsWithKnownAddress metaCred;
   bool ready = false; //Basic check if the class can be used yet
-  static final WalletInteraction wall = WalletInteraction._internal();
+  static final WalletInteraction _wall = WalletInteraction._internal();
 
   WalletInteraction._internal();
   factory WalletInteraction() {
-    return wall;
+    return _wall;
   }
 
   //Temp string
@@ -29,11 +27,10 @@ class WalletInteraction {
 
     metaCred = await meta.requestAccount();
 
-    Global.userAddress =
-        metaCred.address.toString(); //Save the user address to globals
+    Global.userAddress = metaCred.address.toString(); //Save the user address to globals
     ready = true;
 
-    //print ('Connection successful');
+    print ('Connection successful: ' + Global.userAddress);
   }
 
   CredentialsWithKnownAddress getCredentials() {

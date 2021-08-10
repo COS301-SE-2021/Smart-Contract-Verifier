@@ -6,6 +6,10 @@ import 'global.dart';
 class Message {
   String sender;
   String messageText;
+  DateTime dateSent;
+  String messageID;
+  String agreement;
+
   //TODO: add time to allow for ordering of messages
   Message(String text) {
     //Constructor used when a message is newly created;
@@ -18,4 +22,22 @@ class Message {
     this.messageText = jsn['messageText'];
     //timestamp/send time?
   }
+
+  //Below is the final implementation
+  // Message.fromJSON(Map<String, dynamic> jsn) { //Generate from backend api response
+  //   this.sender = jsn['sender'];
+  //   this.messageText = jsn['message'];
+  //   this.dateSent = DateTime.fromMicrosecondsSinceEpoch(jsn['sendDate']);
+  //   this.messageID = jsn['messageID'];
+  // }
+
+  Map<String, dynamic> toJSONSend() { //ToJSON when sending a message
+    return {
+      'SendingUser' : Global.userAddress,
+      'AgreementID' : agreement,
+      'Message' : messageText,
+    };
+  }
+
+
 }

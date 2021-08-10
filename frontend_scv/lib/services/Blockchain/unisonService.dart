@@ -1,5 +1,7 @@
 //This class will be used to interact with the Unison smart Contract to save and get contracts from the blockchain
 
+import 'package:web3dart/credentials.dart';
+
 import '../../providers/contract.dart';
 import 'smartContract.dart';
 import '../../providers/global.dart';
@@ -16,10 +18,19 @@ class UnisonService {
     //When will a result be returned?
     //How should it be handled in the UI?
 
+    //Sort out events, and detecting them.
+
     var jsn = con.toJsonChain();
 
-    //Pass in second party, resolution time and 'calldata text'
-    await _smC.makeWriteCall("createAgreement", [(Global.userAddress == jsn['PartyA'])? jsn['PartyB'] : jsn['PartyA'], 0, '']);
+    String data = con.title + '#' + con.description;
+    String partyB = (Global.userAddress == jsn['PartyB'])? jsn['PartyA'] : jsn['PartyB'];
+    EthereumAddress partyBA = EthereumAddress.fromHex(partyB);
+    print ('A: '+Global.userAddress);
+
+
+    final res = await _smC.makeWriteCall("createAgreement", [partyBA, con.duration, data]); //Soon, this will be replaced bu a spinner in the UI
+    // It will have to check for an event.
+    print (res);
 
   }
 
@@ -27,6 +38,12 @@ class UnisonService {
     //TODO list:
     //Use function name acceptAgreement
     //Create parameter list. Only Agreement id. From where?
+
+    if (!con.movedToBlockchain) {
+      throw Exception('Agreement is not on blockchain yet');
+    }
+
+    final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
 
   }
 
