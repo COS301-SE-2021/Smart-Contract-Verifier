@@ -68,17 +68,6 @@ class _ConditionItemState extends State<MessageItem> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('--timestamp--'),
-                    // Text(
-                    //   widget.contractCondition.status,
-                    //   style: TextStyle(
-                    //       color: (widget.contractCondition.status == 'ACCEPTED')
-                    //           ? Colors.green
-                    //           : (widget.contractCondition.status == 'REJECTED')
-                    //               ? Colors.red
-                    //               : Colors.amber //PENDING
-                    //
-                    //       ),
-                    // ),
                   ],
                 ),
               ],
