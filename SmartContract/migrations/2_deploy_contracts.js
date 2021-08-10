@@ -7,7 +7,4 @@ module.exports = async (deployer) => {
   await deployer.deploy(UnisonToken);
   await deployer.deploy(Verifier, UnisonToken.address, RandomSource.address);
 
-  // deployer.deploy(UnisonToken).then(function(){
-  //   return deployer.deploy(Verifier, UnisonToken.address, RandomSource.address);
-  // })
 };
