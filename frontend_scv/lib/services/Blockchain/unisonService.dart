@@ -30,5 +30,12 @@ class UnisonService {
 
   }
 
+  Future<void> getAgreement(BigInt id) async {
+
+    final res = await _smC.makeReadCall('getAgreement', [id]);
+    print (res);
+
+  }
+
 
 }
