@@ -39,8 +39,16 @@ class SmartContract {
   Future<String> makeWriteCall(String funct, List<dynamic> args) async {
     //Write to contract
 
+    print ('Con 1');
     final theContract = await _getContract();
+    print ('Con 2');
     final fun = theContract.function(funct);
+    print ('Con 3');
+    for (int i =0;i<args.length;i++) {
+      print (args[i]);
+    }
+    print ('End');
+
     final theResult = await _smC.sendTransaction(
         _wallet
             .getCredentials(), //EthPrivateKey.fromHex('a928a78db9f9bad13f490cf3d0f6b2314fcee3183b2c424fd4bbccf841e163d0'),//_wallet.getCredentials(),

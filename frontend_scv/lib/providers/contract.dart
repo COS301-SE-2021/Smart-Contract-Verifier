@@ -22,6 +22,7 @@ class Contract with ChangeNotifier {
   String imageUrl;
   String partyBId;
   bool isFavorite;
+  BigInt duration;
 
   Contract({
     this.contractId,
@@ -80,6 +81,10 @@ class Contract with ChangeNotifier {
   void setBlockchainID(String id) {
     blockchainId = id;
     movedToBlockchain = true;
+  }
+
+  void setDuration(BigInt d) {
+    duration = d;
   }
 
   void _setFavValue(bool newValue) {
