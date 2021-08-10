@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class Contract with ChangeNotifier {
   String contractId; //agreementID
+  String blockchainId;
   String paymentId;
   String partyA;
   String partyB;
@@ -75,6 +76,11 @@ class Contract with ChangeNotifier {
         'AgreementDescription': description,
         'AgreementImageURL': imageUrl,
       };
+
+  void setBlockchainID(String id) {
+    blockchainId = id;
+    movedToBlockchain = true;
+  }
 
   void _setFavValue(bool newValue) {
     isFavorite = newValue;

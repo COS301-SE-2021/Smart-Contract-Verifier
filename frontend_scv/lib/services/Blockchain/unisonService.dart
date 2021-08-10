@@ -19,7 +19,9 @@ class UnisonService {
     var jsn = con.toJsonChain();
 
     //Pass in second party, resolution time and 'calldata text'
-    await _smC.makeWriteCall("createAgreement", [(Global.userAddress == jsn['PartyA'])? jsn['PartyB'] : jsn['PartyA'], 0, '']);
+    String data = con.title + '#' + con.description;
+    final res = await _smC.makeWriteCall("createAgreement", [(Global.userAddress == jsn['PartyA'])? jsn['PartyB'] : jsn['PartyA'], 1000, data]);
+    print (res);
 
   }
 
@@ -27,6 +29,12 @@ class UnisonService {
     //TODO list:
     //Use function name acceptAgreement
     //Create parameter list. Only Agreement id. From where?
+
+    if (!con.movedToBlockchain) {
+      throw Exception('Agreement is not on blockchain yet');
+    }
+
+    final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
 
   }
 
