@@ -1,9 +1,9 @@
 //This class represents a message sent between two parties.
 //This is a preliminary class, and should be expected to change
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:unison/models/global.dart';
+
 import 'global.dart';
 
 class Message with ChangeNotifier {
@@ -14,7 +14,7 @@ class Message with ChangeNotifier {
   String agreement;
 
   //TODO: add time to allow for ordering of messages
-  Message(String text, agreementId) {
+  Message(String text, String agreementId) {
     //Constructor used when a message is newly created;
     sender = Global.userAddress;
     messageText = text;
@@ -22,16 +22,20 @@ class Message with ChangeNotifier {
   }
 
   Message.fromJSON(Map<String, dynamic> jsn) {
+    print('b4 - from');
     //Generate from backend api response
     this.sender = jsn['sendingUser']['publicWalletID'];
     print(this.sender);
     this.messageText = jsn['message'];
     this.dateSent = DateTime.tryParse(jsn['sendingDate']);
     this.messageID = jsn['messageID'];
+    print('after - from');
   }
 
   Map<String, dynamic> toJSONSend() {
     //ToJSON when sending a message
+    print('b4 - to');
+
     return {
       'SendingUser': sender,
       'AgreementID': agreement,

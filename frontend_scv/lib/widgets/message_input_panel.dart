@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:unison/models/global.dart';
 import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';
 
@@ -94,14 +91,26 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
                     width: 10,
                   ),
                   Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Type your message ...',
-                        // hintStyle: TextStyle(color: Colors.grey[500]),
+                    child: Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        maxLines: 1,
+                        keyboardType: TextInputType.text,
+                        controller: _messageTextController,
+                        validator: (value) {
+                          if (value.isEmpty) return 'Please enter a message.';
+                          return null;
+                        },
+                        onFieldSubmitted: (value) {
+                          _saveForm(widget.agreementId);
+                        },
                       ),
                     ),
                   ),
+                  IconButton(
+                    onPressed: () => _saveForm(widget.agreementId),
+                    icon: Icon(Icons.send_outlined),
+                  )
                 ],
               ),
             ),

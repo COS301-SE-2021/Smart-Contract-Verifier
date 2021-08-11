@@ -1,81 +1,85 @@
 //This class will be a service to be used by the messaging interface.
 
-import 'dart:convert';
+
 import 'package:unison/models/global.dart';
-import 'backendAPI.dart';
+
 import '../../models/message.dart';
+import 'backendAPI.dart';
 
 class MessageService {
-
   ApiInteraction _api = ApiInteraction();
   final String _reqPath = '/messenger/';
 
   Future<void> sendMessage(Message mess) async {
-
-    Map<String, String> response;
+    var response;
     try {
-      response = await _api.postData(_reqPath + 'send-message', mess.toJSONSend());
+      response =
+          await _api.postData(_reqPath + 'send-message', mess.toJSONSend());
 
       if (response['Status'] != "SUCCESSFUL")
         throw Exception('Message could not be sent');
-      } catch (err) {
-          print (err); //Handle exception
-          throw err;
-        }
+    } catch (err) {
+      print(err); //Handle exception
+      throw err;
+    }
   }
 
-  Future<List<Message>> getMessages(String id) async { //Get all messages for the agreement id passed in
+  Future<List<Message>> getMessages(String id) async {
+    //Get all messages for the agreement id passed in
     return await _getMessageHandler(id, true);
   }
 
   //Get messages either by agreement, or user id
-  Future<List<Message>> _getMessageHandler(String id, bool byAgreement) async { //Used by two other methods
+  Future<List<Message>> _getMessageHandler(String id, bool byAgreement) async {
+    //Used by two other methods
 
-      Map<String, dynamic> body = byAgreement? {'AgreementID' : id, 'RequestingUser' : Global.userAddress} : {'RequestingUser' : id};
-      var response;
+    Map<String, dynamic> body = byAgreement
+        ? {'AgreementID': id, 'RequestingUser': Global.userAddress}
+        : {'RequestingUser': id};
+    var response;
 
-      try {
-        String path = byAgreement? 'agreement' : 'user';
-        response = await _api.postData(_reqPath + 'get-all-messages-by-$path', body);
+    try {
+      String path = byAgreement ? 'agreement' : 'user';
+      response =
+          await _api.postData(_reqPath + 'get-all-messages-by-$path', body);
 
-        if (response['Status'] != "SUCCESSFUL")
-          throw Exception('Messages could not be retrieved');
-      } catch (err) {
-        print (err); //Handle exception
-        throw err;
-      }
+      if (response['Status'] != "SUCCESSFUL")
+        throw Exception('Messages could not be retrieved');
+    } catch (err) {
+      print(err); //Handle exception
+      throw err;
+    }
 
-      List<Message> ret = [];
-      for (int i =0;i<response['Messages'].length;i++) {
-        ret.add(Message.fromJSON((response['Messages'][i])));
-      }
+    List<Message> ret = [];
+    for (int i = 0; i < response['Messages'].length; i++) {
+      ret.add(Message.fromJSON((response['Messages'][i])));
+    }
 
-      return ret;
+    return ret;
   }
 
-
-  Future<void> setMessageRead(Message mes) async { //Let the backend know that a message has been read
+  Future<void> setMessageRead(Message mes) async {
+    //Let the backend know that a message has been read
 
     var response;
 
     try {
-      response = await _api.postData(_reqPath + 'set-message-as-read', mes.toJSONSetRead());
+      response = await _api.postData(
+          _reqPath + 'set-message-as-read', mes.toJSONSetRead());
 
       //RFC: Is error checking even necessary for an 'unimportant' operation?
       if (response['Status'] != "SUCCESSFUL")
         throw Exception('Messages could not be set as read');
     } catch (err) {
-      print (err); //Handle exception
+      print('Is this here? ' + err); //Handle exception
       throw err;
     }
-
   }
 
   //The following methods are implemented for the sake of completeness, should they ever be needed.
 
-  Future<List<Message>> getAllMessages() async { //Get all messages for the current user, across all agreements.
-      return await _getMessageHandler(Global.userAddress, false);
+  Future<List<Message>> getAllMessages() async {
+    //Get all messages for the current user, across all agreements.
+    return await _getMessageHandler(Global.userAddress, false);
   }
-
-
 }

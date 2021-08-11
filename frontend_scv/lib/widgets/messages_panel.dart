@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/messageService.dart';
 
@@ -86,18 +85,15 @@ class _MessagesPanelState extends State<MessagesPanel> {
                                   SizedBox(
                                     width: 40,
                                   ),
-                                Icon(
-                                  Icons.done_all,
-                                  size: 20,
-                                  // color: MyTheme.bodyTextTime.color,
-                                ),
                                 SizedBox(
                                   width: 8,
                                 ),
                                 Text(
                                   DateFormat('yyyy-MM-dd hh:mm')
                                       .format(message.dateSent),
-                                  // style: MyTheme.bodyTextTime,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                  ),
                                 )
                               ],
                             ),
