@@ -3,12 +3,14 @@
 import 'package:web3dart/credentials.dart';
 
 import '../../models/contract.dart';
-import 'smartContract.dart';
 import '../../models/global.dart';
+import 'smartContract.dart';
 
-class UnisonService { //For the Verfier smart contract
+class UnisonService {
+  //For the Verfier smart contract
 
-  SmartContract _smC = SmartContract("JSON/_src_Verifier_sol_Verifier.abi", 'Verifier');
+  SmartContract _smC =
+      SmartContract("JSON/_src_Verifier_sol_Verifier.abi", 'Verifier');
 
   Future<void> saveAgreement(Contract con) async {
     //Todo list:
@@ -23,23 +25,27 @@ class UnisonService { //For the Verfier smart contract
     var jsn = con.toJsonChain();
 
     String data = con.title + '#' + con.description;
-    String partyB = (Global.userAddress == jsn['PartyB'])? jsn['PartyA'] : jsn['PartyB'];
+    String partyB =
+        (Global.userAddress == jsn['PartyB']) ? jsn['PartyA'] : jsn['PartyB'];
     EthereumAddress partyBA = EthereumAddress.fromHex(partyB);
-    print ('A: '+Global.userAddress);
+    print('A: ' + Global.userAddress);
 
-
-    final res = await _smC.makeWriteCall("createAgreement", [partyBA, con.duration, data]); //Soon, this will be replaced bu a spinner in the UI
+    final res = await _smC.makeWriteCall("createAgreement", [
+      partyBA,
+      con.duration,
+      data
+    ]); //Soon, this will be replaced bu a spinner in the UI
     // It will have to check for an event.
 
     final ev = await _smC.getCreationSubscription();
     await ev.asFuture(); //Wait for the block to be added
     await ev.cancel();
 
-    print (res);
-
+    print(res);
   }
 
-  Future<void> acceptAgreement(Contract con) async { //This should probably be called immediately after the contract is sealed on backend.
+  Future<void> acceptAgreement(Contract con) async {
+    //This should probably be called immediately after the contract is sealed on backend.
     //TODO list:
     //Use function name acceptAgreement
     //Create parameter list. Only Agreement id. From where?
@@ -49,26 +55,20 @@ class UnisonService { //For the Verfier smart contract
     }
 
     final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
-
   }
 
   Future<void> getAgreement(BigInt id) async {
-
     final res = await _smC.makeReadCall('getAgreement', [id]);
-    print (res);
-
+    print(res);
   }
 
   //For testing
- Future<void> setEvent() async {
+  Future<void> setEvent() async {
     final res = await _smC.getCreationSubscription();
-    print ('Starting await');
+    print('Starting await');
     await res.asFuture();
-    print ('Starting cancel');
+    print('Starting cancel');
     await res.cancel();
-    print ('Done');
-
- }
-
-
+    print('Done');
+  }
 }
