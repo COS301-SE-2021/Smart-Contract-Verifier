@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.security
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.security.requests.UserExistsRequest
 import com.savannasolutions.SmartContractVerifierServer.security.services.SecurityService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -13,7 +14,8 @@ import kotlin.test.assertTrue
 
 internal class SecurityServiceTest {
     private val userRepository : UserRepository = mock()
-    private val securityService = SecurityService(userRepository)
+    private val securityConfig = SecurityConfig()
+    private val securityService = SecurityService(userRepository, securityConfig)
 
     @Test
     fun `UserExists successful and true`()
