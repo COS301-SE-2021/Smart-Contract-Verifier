@@ -1,5 +1,6 @@
-package com.savannasolutions.SmartContractVerifierServer.negotiation.services
+package com.savannasolutions.SmartContractVerifierServer.UnitTests.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -8,8 +9,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.*
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -1205,6 +1204,9 @@ internal class NegotiationServiceTest
 
         val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
         val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
+        val userList = ArrayList<User>()
+        userList.add(userA)
+        userList.add(userB)
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
@@ -1223,6 +1225,7 @@ internal class NegotiationServiceTest
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(userRepository.getUsersByAgreementsContaining(mockAgreement)).thenReturn(userList)
 
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
@@ -1346,6 +1349,9 @@ internal class NegotiationServiceTest
 
         val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
         val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
+        val userList = ArrayList<User>()
+        userList.add(userA)
+        userList.add(userB)
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
@@ -1364,6 +1370,7 @@ internal class NegotiationServiceTest
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(userRepository.getUsersByAgreementsContaining(mockAgreement)).thenReturn(userList)
 
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("Invalid user",
@@ -1383,6 +1390,9 @@ internal class NegotiationServiceTest
 
         val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "testA")
         val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4", "testB")
+        val userList = ArrayList<User>()
+        userList.add(userA)
+        userList.add(userB)
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
@@ -1401,6 +1411,7 @@ internal class NegotiationServiceTest
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(userRepository.getUsersByAgreementsContaining(mockAgreement)).thenReturn(userList)
 
         //when
         val response = negotiationService.setDurationCondition(SetDurationConditionRequest(mockCondition.proposingUser.publicWalletID,

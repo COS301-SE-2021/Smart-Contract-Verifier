@@ -8,6 +8,7 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.security.requests.UserExistsRequest
+import com.savannasolutions.SmartContractVerifierServer.security.services.SecurityService
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -63,10 +64,15 @@ internal class UserServiceTest {
         val agreementList = ArrayList<Agreements>()
         agreementList.add(agreement)
 
+        val userList = ArrayList<User>()
+        userList.add(userA)
+        userList.add(userB)
+
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(agreementsRepository.getAllByUsersContaining(userA)).thenReturn(list)
         whenever(conditionsRepository.getAllByContract(agreement)).thenReturn(agreement.conditions)
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
 
 
         //When
@@ -108,46 +114,6 @@ internal class UserServiceTest {
         val response = userService.retrieveUserAgreements(RetrieveUserAgreementsRequest(userA.publicWalletID))
 
         //Then
-        assertEquals(response.status, ResponseStatus.FAILED)
-    }
-
-    @Test
-    fun `UserExists successful and true`()
-    {
-        //given
-        whenever(userRepository.existsById("walletAddress")).thenReturn(true)
-
-        //when
-        val response = userService.userExists(UserExistsRequest("walletAddress"))
-
-        //then
-        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertTrue { response.Exists }
-    }
-
-    @Test
-    fun `UserExists successful and false`()
-    {
-        //given
-        whenever(userRepository.existsById("walletAddress")).thenReturn(false)
-
-        //when
-        val response = userService.userExists(UserExistsRequest("walletAddress"))
-
-        //then
-        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertFalse { response.Exists }
-    }
-
-    @Test
-    fun `UserExists failed due to empty wallet id`()
-    {
-        //given
-
-        //when
-        val response = userService.userExists(UserExistsRequest(""))
-
-        //then
         assertEquals(response.status, ResponseStatus.FAILED)
     }
 
