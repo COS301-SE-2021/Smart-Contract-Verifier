@@ -78,6 +78,23 @@ contract('Verifier', (accounts) =>{
             assert.equal(agree.party2Vote, 2)
         })
 
+        if("isJuror function", async() =>{
+            var isJ = await verifier.isJuror(accounts[3]);
+            assert(isJ == false, "non-juror seen as juror");
+
+            token.approve(verifier.address, 10000, {from: accounts[3]});
+            verifier.addJuror({from: accounts[3]});
+
+            isJ = await verifier.isJuror(accounts[3]);
+            assert(isJ == true, "juror seen as non-juror");
+
+            verifier.removeJuror({from: accounts[3]});
+            
+            isJ = await verifier.isJuror(accounts[3]);
+            assert(isJ == false, "removed juror still seen as juror");
+
+        })
+
         it("Add jurors ", async()=>{
             // Add enough potential members to jury
             for(var i=3; i<9; i++){
