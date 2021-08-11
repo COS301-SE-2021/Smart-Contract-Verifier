@@ -1,9 +1,12 @@
 //This class represents a message sent between two parties.
 //This is a preliminary class, and should be expected to change
-
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:unison/models/global.dart';
 import 'global.dart';
 
-class Message {
+class Message with ChangeNotifier {
   String sender;
   String messageText;
   DateTime dateSent;
@@ -18,38 +21,36 @@ class Message {
     agreement = agreementId;
   }
 
-  Message.fromJSON(Map<String, dynamic> jsn) { //Generate from backend api response
+  Message.fromJSON(Map<String, dynamic> jsn) {
+    //Generate from backend api response
     this.sender = jsn['sendingUser']['publicWalletID'];
-    print (this.sender);
+    print(this.sender);
     this.messageText = jsn['message'];
     this.dateSent = DateTime.tryParse(jsn['sendingDate']);
     this.messageID = jsn['messageID'];
-
   }
 
-  Map<String, dynamic> toJSONSend() { //ToJSON when sending a message
+  Map<String, dynamic> toJSONSend() {
+    //ToJSON when sending a message
     return {
-      'SendingUser' : sender,
-      'AgreementID' : agreement,
-      'Message' : messageText,
+      'SendingUser': sender,
+      'AgreementID': agreement,
+      'Message': messageText,
     };
   }
 
-
-  Map<String, dynamic> toJSONSetRead() { //ToJSON when setting a message as read
+  Map<String, dynamic> toJSONSetRead() {
+    //ToJSON when setting a message as read
     return {
-      'MessageID' : messageID,
-      'RecipientID' : Global.userAddress,
+      'MessageID': messageID,
+      'RecipientID': Global.userAddress,
     };
   }
 
   String toString() {
-
-    String ret = 'Sender: '+ sender + '\n';
+    String ret = 'Sender: ' + sender + '\n';
     ret += 'Text: ' + messageText + '\n';
     ret += 'Date Sent: ' + dateSent.toString();
     return ret;
   }
-
-
 }
