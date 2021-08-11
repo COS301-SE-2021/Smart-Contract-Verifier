@@ -30,7 +30,7 @@ contract('Verifier', (accounts) =>{
 
         it("Can create agreement", async () =>{
 
-            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement");
+            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
 
             var agree = await verifier.getAgreement(0)
 
@@ -105,7 +105,7 @@ contract('Verifier', (accounts) =>{
 
         it("Create 2nd agreement ", async()=>{
             // Create new agreement
-            verifier.createAgreement(accounts[1], 0, "For jury test");
+            verifier.createAgreement(accounts[1], 0, "For jury test", "");
             verifier.acceptAgreement(1, {from: accounts[1]})
 
             var agree = await verifier.getAgreement(1);
@@ -165,7 +165,7 @@ contract('Verifier', (accounts) =>{
             verifier = await Verifier.new(token.address, r.address);
 
             // Create agreement
-            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement");
+            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
             verifier.acceptAgreement(0, {from: accounts[1]})
 
             // Pay platofrm fee

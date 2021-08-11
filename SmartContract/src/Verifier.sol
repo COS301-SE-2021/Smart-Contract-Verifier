@@ -64,7 +64,7 @@ contract Verifier{
         }
     }
 
-    function createAgreement(address party2, uint resolutionTime, string calldata text) public{
+    function createAgreement(address party2, uint resolutionTime, string calldata text, string memory uuid) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
 
         agreements[nextAgreeID].party1 = msg.sender;
@@ -73,8 +73,9 @@ contract Verifier{
         agreements[nextAgreeID].text = text;
         agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
         agreements[nextAgreeID].platformFee = 1000000000;
+        agreements[nextAgreeID].uuid = uuid;
 
-        emit CreateAgreement(msg.sender, party2, nextAgreeID);
+        emit CreateAgreement(msg.sender, party2, nextAgreeID, uuid);
         nextAgreeID++;
     }
 
@@ -355,7 +356,7 @@ contract Verifier{
 
     }
 
-    event CreateAgreement(address party1, address party2, uint agreeID);
+    event CreateAgreement(address party1, address party2, uint agreeID, string uuid);
     event AcceptAgreement(uint agreeID);
     event ActiveAgreement(uint agreeID);
     event CloseAgreement(uint agreeID);
