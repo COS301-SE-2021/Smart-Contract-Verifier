@@ -58,7 +58,7 @@ class _MessagesPanelState extends State<MessagesPanel> {
                                 decoration: BoxDecoration(
                                     color: isCurrentUser
                                         ? Colors.deepOrange
-                                        : Colors.grey[200],
+                                        : Colors.cyan,
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(16),
                                       topRight: Radius.circular(16),
