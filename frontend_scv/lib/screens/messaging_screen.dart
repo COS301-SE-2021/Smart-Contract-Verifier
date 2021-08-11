@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:unison/models/global.dart';
 import 'package:unison/widgets/message_input_panel.dart';
 import 'package:unison/widgets/messages_panel.dart';
-
-import '../screens/edit_contract_screen.dart';
-import '../widgets/app_drawer.dart';
 
 class MessagingScreen extends StatefulWidget {
   @override
