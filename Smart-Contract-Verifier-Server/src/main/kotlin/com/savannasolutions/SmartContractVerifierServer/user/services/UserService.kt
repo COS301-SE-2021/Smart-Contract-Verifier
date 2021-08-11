@@ -23,7 +23,7 @@ import kotlin.collections.ArrayList
 @Service
 class UserService(  val userRepository: UserRepository,
                     val agreementsRepository: AgreementsRepository,
-                    val conditionsRepository: ConditionsRepository) {
+                    val conditionsRepository: ConditionsRepository,) {
 
     fun addUser(addUserRequest: AddUserRequest): AddUserResponse {
         val wID = addUserRequest.WalletID;
