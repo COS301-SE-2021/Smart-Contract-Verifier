@@ -1,4 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.user.models
+import com.savannasolutions.SmartContractVerifierServer.judges.models.Judges
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
@@ -33,4 +34,7 @@ data class User(@Id val publicWalletID: String,
 
                 @OneToMany(fetch = FetchType.LAZY, mappedBy = "recipient", orphanRemoval = true, cascade = [CascadeType.ALL])
                 var messageStatusList: List<MessageStatus>?= emptyList()
+
+                @OneToMany(fetch = FetchType.LAZY, mappedBy = "judge", orphanRemoval = true, cascade = [CascadeType.ALL])
+                var judgingList : List<Judges>?= emptyList()
 }
