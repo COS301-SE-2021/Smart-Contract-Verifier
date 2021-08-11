@@ -10,8 +10,13 @@ import com.savannasolutions.SmartContractVerifierServer.security.responses.GetNo
 import com.savannasolutions.SmartContractVerifierServer.security.responses.LoginResponse
 import com.savannasolutions.SmartContractVerifierServer.security.responses.UserExistsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties
 import org.springframework.stereotype.Service
 import java.util.concurrent.ThreadLocalRandom
+import javax.crypto.SecretKey
 
 @Service
 class SecurityService(val userRepository: UserRepository) {
@@ -57,8 +62,9 @@ class SecurityService(val userRepository: UserRepository) {
             val message = prefix + nonce.toString()
             //web3J magic here
             if(match){
-                //generate and return jwt
-                return LoginResponse(ResponseStatus.FAILED, "")
+                val secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+                val jwtToken = Jwts.builder().setSubject(loginRequest.userId).signWith(secretKey).compact()
+                return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)
             }
         }
         return LoginResponse(ResponseStatus.FAILED, "")
