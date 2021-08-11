@@ -16,11 +16,15 @@ class ViewContractScreen extends StatefulWidget {
   _ViewContractScreenState createState() => _ViewContractScreenState();
 }
 
+enum ConditionType { Normal, Payment, Duration }
+
 class _ViewContractScreenState extends State<ViewContractScreen> {
   final _conditionTitleController = TextEditingController();
   final _conditionDescriptionController = TextEditingController();
+  final _paymentConditionAmountController = TextEditingController();
+  final _durationConditionAmountController = TextEditingController();
   var _isLoading = false;
-  var _isInit = true;
+  // var _isInit = true;
 
   NegotiationService negotiationService = NegotiationService();
 
@@ -32,16 +36,24 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
     super.initState();
   }
 
-  Future<void> _saveForm(String cId) async {
+  Future<void> _saveForm(String cId, ConditionType type) async {
     final isValid = _formKey.currentState.validate();
 
     Condition newCondition = Condition(
-      title: _conditionTitleController.text,
+      title: '',
       proposedBy: Global.userAddress,
-      description: _conditionDescriptionController.text,
+      description: '',
       agreementId: cId,
     );
 
+    if (type == ConditionType.Normal) {
+      newCondition = Condition(
+        title: _conditionTitleController.text,
+        proposedBy: Global.userAddress,
+        description: _conditionDescriptionController.text,
+        agreementId: cId,
+      );
+    } else {}
     if (!isValid) return;
     _formKey.currentState.save();
     //^^^^saves the form -> executes the 'onSaved' of each input
@@ -51,7 +63,15 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
 
     try {
       //Save to DB:
-      await negotiationService.saveCondition(newCondition);
+      if (type == ConditionType.Payment) {
+        await negotiationService.setPayment(
+            cId, double.parse(_paymentConditionAmountController.text));
+      } else if (type == ConditionType.Duration) {
+        await negotiationService.setDuration(
+            cId, double.parse(_durationConditionAmountController.text));
+      } else {
+        await negotiationService.saveCondition(newCondition);
+      }
       print('new condition saved');
     } catch (error) {
       await showDialog(
@@ -127,7 +147,71 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
               TextButton(
                 child: Text('Add'),
                 onPressed: () {
-                  _saveForm(contId);
+                  _saveForm(contId, ConditionType.Normal);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
+
+  Future<void> _newSpecialConditionDialog(
+      String contId, ConditionType type) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: type == ConditionType.Payment
+                ? Text('Add New Payment '
+                    'Condition')
+                : Text('Add New Duration '
+                    'Condition'),
+            content: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    decoration: type == ConditionType.Payment
+                        ? InputDecoration(labelText: 'Enter UNT amount')
+                        : InputDecoration(
+                            labelText: 'Enter Duration (in seconds)'
+                                ' from the seal time'),
+                    keyboardType: TextInputType.number,
+                    controller: type == ConditionType.Payment
+                        ? _paymentConditionAmountController
+                        : _durationConditionAmountController,
+                    validator: (value) {
+                      if (value.isEmpty) return 'Please enter an amount.';
+                      if (!isNumeric(value)) return 'Please enter a double.';
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Discard'),
+                onPressed: () {
+                  _paymentConditionAmountController.clear();
+                  _durationConditionAmountController.clear();
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Add'),
+                onPressed: () {
+                  type == ConditionType.Payment
+                      ? _saveForm(contId, ConditionType.Payment)
+                      : _saveForm(contId, ConditionType.Duration);
                 },
               ),
             ],
@@ -170,6 +254,30 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                     children: [
                       Icon(Icons.add),
                       Text('Add New Condition'),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await _newSpecialConditionDialog(
+                        contractId, ConditionType.Payment);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.add),
+                      Text('Add New Payment Condition'),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await _newSpecialConditionDialog(
+                        contractId, ConditionType.Duration);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.add),
+                      Text('Add New Duration Condition'),
                     ],
                   ),
                 ),

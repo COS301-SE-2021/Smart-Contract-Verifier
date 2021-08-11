@@ -64,7 +64,13 @@
 * - Special Conditions:
 *   - Payment Condition (both can set) (there can be multiple)
 *   - Duration Condition ()
-* - Seal Agreement
+*
+* - Seal Agreement /
+*   Migrate to blockchain, once mined enough, on blockchain == true
+*
+* - Check if user exists
+*    -> PartyB in create agreement screen
+*    -> First Time Login (check user is in db)
 *
 * - Judge Screen
 *
