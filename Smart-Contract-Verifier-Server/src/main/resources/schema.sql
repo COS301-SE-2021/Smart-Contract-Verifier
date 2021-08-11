@@ -1,5 +1,5 @@
 drop table if exists public.user;
-create table public.user (public_walletid varchar(255) not null, alias varchar(255), primary key (public_walletid));
+create table public.user (public_walletid varchar(255) not null, alias varchar(255), nonce int4 not null, primary key (public_walletid));
 drop table if exists agreements;
 create table agreements (contractid uuid not null, agreement_description varchar(255), agreement_imageurl varchar(255), agreement_title varchar(255), created_date timestamp, duration_conditionuuid uuid, moved_to_block_chain boolean not null, payment_conditionuuid uuid, sealed_date timestamp, blockchainid varchar(255), primary key (contractid));
 drop table if exists conditions;
@@ -13,9 +13,9 @@ create table evidence (evidence_hash varchar(255) not null, evidence_type bytea,
 drop table if exists linked_evidence;
 create table linked_evidence (evidenceid uuid not null, evidence_url varchar(255), evidence_evidence_hash varchar(255), primary key (evidenceid));
 drop table if exists messages;
-create table messages (messageid uuid not null, message varchar(255), send_date timestamp, contract_contractid uuid, sender_public_walletid varchar(255), primary key (messageid));
+create table messages (messageid uuid not null, message varchar(255), send_date timestamp, agreements_contractid uuid, sender_public_walletid varchar(255), primary key (messageid));
 drop table if exists message_status;
-create table message_status (message_statusid uuid not null, read_date timestamp, messagesid_messageid uuid, recipientid_public_walletid varchar(255), primary key (message_statusid));
+create table message_status (message_statusid uuid not null, read_date timestamp, message_messageid uuid, recipient_public_walletid varchar(255), primary key (message_statusid));
 drop table if exists uploaded_evidence;
 create table uploaded_evidence (evidenceid uuid not null, file_mime_type varchar(255), filename varchar(255), evidence_evidence_hash varchar(255), primary key (evidenceid));
 drop table if exists user_agreement;
@@ -30,10 +30,10 @@ alter table evidence add constraint FKajyqwe4nut3a9nlsnrg5jkdp6 foreign key (evi
 alter table evidence add constraint FKkeqst2mm0d8ikev3y3oc5ov6o foreign key (uploaded_url_evidenceid) references uploaded_evidence;
 alter table evidence add constraint FK98ib2d8e7lq8d96jwrup8u8qf foreign key (user_public_walletid) references public.user;
 alter table linked_evidence add constraint FKc3qd7g9wvw4gaxf16fuk3b47h foreign key (evidence_evidence_hash) references evidence;
-alter table messages add constraint FKtawvl3ujy864wa8yvej43o68b foreign key (contract_contractid) references agreements;
+alter table messages add constraint FK2uxxv8vyqrtmhpge7hoqek05d foreign key (agreements_contractid) references agreements;
 alter table messages add constraint FKpogdllq7macivuimwivkatgaq foreign key (sender_public_walletid) references public.user;
-alter table message_status add constraint FK6stq2rkbviclmrtnucd2djw3n foreign key (messagesid_messageid) references messages;
-alter table message_status add constraint FKtc0v0t1qwbjtgohqvoeacsm0y foreign key (recipientid_public_walletid) references public.user;
+alter table message_status add constraint FKn8xwifbqv0xwvi8byf2lffn7u foreign key (message_messageid) references messages;
+alter table message_status add constraint FKh4xpvtmoew5cvg48aba8uqhyw foreign key (recipient_public_walletid) references public.user;
 alter table uploaded_evidence add constraint FKi1tejij1ntihpua2py82nddoh foreign key (evidence_evidence_hash) references evidence;
 alter table user_agreement add constraint FKqmikxjshk09mrgx5fp6utjcmb foreign key (contractid) references agreements;
 alter table user_agreement add constraint FKm2k4vt46unbq35f9jckoxk12s foreign key (public_walletid) references public.user;

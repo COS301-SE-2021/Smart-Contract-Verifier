@@ -2,6 +2,7 @@ package com.savannasolutions.SmartContractVerifierServer.user.controllers
 
 import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
+import com.savannasolutions.SmartContractVerifierServer.user.requests.UserExistsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.services.UserService
@@ -15,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController
 class UserController constructor(private val userService: UserService) {
 
     @PostMapping("/add-user")
-    fun addUser(@RequestBody addUserRequest : AddUserRequest): AddUserResponse{
-        print("here")
-        return userService.addUser(addUserRequest)
-    }
+    fun addUser(@RequestBody addUserRequest : AddUserRequest) =
+        userService.addUser(addUserRequest)
 
     @PostMapping("/retrieve-user-agreements")
-    fun retrieveUserAgreements(@RequestBody retrieveUserAgreementsRequest: RetrieveUserAgreementsRequest): RetrieveUserAgreementsResponse{
-        return userService.retrieveUserAgreements(retrieveUserAgreementsRequest)
-    }
+    fun retrieveUserAgreements(@RequestBody retrieveUserAgreementsRequest: RetrieveUserAgreementsRequest) =
+        userService.retrieveUserAgreements(retrieveUserAgreementsRequest)
 
+    @PostMapping("/user-exists")
+    fun userExists(@RequestBody userExistsRequest: UserExistsRequest) =
+        userService.userExists(userExistsRequest)
 }
