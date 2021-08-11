@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/models/global.dart';
 
 import '../models/contracts.dart';
 import '../screens/edit_contract_screen.dart';
