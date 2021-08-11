@@ -2,8 +2,10 @@
 //It is also a singleton.
 
 import 'dart:html';
+
 import 'package:web3dart/browser.dart';
 import 'package:web3dart/credentials.dart';
+
 import '../../models/global.dart';
 
 class WalletInteraction {
@@ -27,10 +29,11 @@ class WalletInteraction {
 
     metaCred = await meta.requestAccount();
 
-    Global.userAddress = metaCred.address.toString(); //Save the user address to globals
+    Global.userAddress =
+        metaCred.address.toString(); //Save the user address to globals
     ready = true;
 
-    print ('Connection successful: ' + Global.userAddress);
+    print('Connection successful: ' + Global.userAddress);
   }
 
   CredentialsWithKnownAddress getCredentials() {
