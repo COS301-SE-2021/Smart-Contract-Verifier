@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth.dart';
 import '../models/contract.dart';
+import '../providers/auth.dart';
 import '../screens/view_contract_screen.dart';
 
 class ContractItem extends StatelessWidget {
