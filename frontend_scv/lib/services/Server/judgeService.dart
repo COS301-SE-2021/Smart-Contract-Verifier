@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'package:unison/services/Blockchain/jurorService.dart';
+import 'package:unison/services/Blockchain/unisonService.dart';
 
 import 'backendAPI.dart';
 import '../../models/contract.dart';
@@ -12,6 +13,7 @@ class JudgeService {
 
   ApiInteraction _api = ApiInteraction();
   JurorService _jurServ = JurorService();
+  UnisonService _uniServ = UnisonService();
 
 
   Future<List<Contract>> getInvolvedAgreements(String party) async { //Get all agreements where a user is the judge
@@ -32,12 +34,17 @@ class JudgeService {
   }
 
   //Additional logic may be added to the below functions to enable functionality elsewhere
+  //Adding it would make the class-hierarchy seem less strange
   Future<void> makeUserJudge() async { //Let's the current user act as a judge
       await _jurServ.addUserAsJuror();
   }
 
   Future<void> unMakeJudge() async { //Let's the user opt-out of being a judge
       await _jurServ.removeUserAsJuror();
+  }
+
+  Future<void> vote() async {
+    await _jurServ.vote(1);
   }
 
 }

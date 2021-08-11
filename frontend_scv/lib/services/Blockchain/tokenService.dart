@@ -11,8 +11,10 @@ class TokenService {
   Future<void> setStake(BigInt stake) async { //Let the user stake an amount on UnisonToken.
 
     try {
+      String id = await Global.getContractId('Verifier');
+      print ('ID: ' + id);
      await _smC.makeWriteCall(
-          'approve', [EthereumAddress.fromHex(await Global.getContractId('Verifier')), stake]);
+          'approve', [EthereumAddress.fromHex(id), stake]);
     }
     catch (e) {
       print (e);
@@ -21,5 +23,10 @@ class TokenService {
 
   }
 
+  Future<dynamic> getAllowance() async {
+
+    return (await _smC.makeReadCall('allowance', [EthereumAddress.fromHex(Global.userAddress), EthereumAddress.fromHex(await Global.getContractId('Verifier'))]))[0];
+
+  }
 
 }

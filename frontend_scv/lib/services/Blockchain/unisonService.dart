@@ -73,6 +73,11 @@ class UnisonService {
   }
 
 
+  Future<void> jurorVote(int v) async {
+    
+    await _smC.makeWriteCall('jurorVote', [BigInt.from(0), BigInt.from(v)]);
+  }
+
   //For testing
   Future<void> setEvent() async {
     final res = await _smC.getCreationSubscription();
