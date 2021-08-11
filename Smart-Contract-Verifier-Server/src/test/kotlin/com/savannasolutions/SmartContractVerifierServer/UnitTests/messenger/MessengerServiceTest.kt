@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.messenger.service
+package com.savannasolutions.SmartContractVerifierServer.UnitTests.messenger
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
