@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/contracts.dart';
+
 import './contract_item.dart';
+import '../models/contracts.dart';
 
 class ContractsGrid extends StatelessWidget {
-  final bool showFavs;
-  ContractsGrid([this.showFavs]);
+  // final bool showFavs;
+  ContractsGrid();
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<Contracts>(context);
-    final contracts =
-        showFavs ? productsData.favoriteItems : productsData.items;
+    //-> setting/getting contracts happens in the contracts_overview_screen
+    final contracts = Provider.of<Contracts>(context).items; //simply access
+    // the items here
     return ListView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: contracts.length,

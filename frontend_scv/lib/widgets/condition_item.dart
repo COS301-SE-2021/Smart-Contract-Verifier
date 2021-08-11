@@ -1,25 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/models/condition.dart';
+import 'package:unison/models/contracts.dart';
+import 'package:unison/models/global.dart';
+import 'package:unison/services/Server/negotiationService.dart';
 
-import '../providers/auth.dart';
-import '../providers/contract.dart';
+class ConditionItem extends StatefulWidget {
+  final Condition contractCondition;
+  final NegotiationService negotiationService;
 
-class ConditionItem extends StatelessWidget {
-  final dynamic contractCondition;
   ConditionItem({
     @required this.contractCondition,
+    @required this.negotiationService,
   });
 
   @override
+  _ConditionItemState createState() => _ConditionItemState();
+}
+
+class _ConditionItemState extends State<ConditionItem> {
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    // print('InitState()');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _showConditionDialog(dynamic contractCondition) {
+    _showConditionDialog(Condition contractCondition) {
       showDialog(
           context: context,
           builder: (_) => new AlertDialog(
-                //TODO: read from dynamic
-                title: new Text(contractCondition.toString()),
-                content: new Text("This is where  the Condition description "
-                    "will go, it needs to be read from a dynamic object - TODO"),
+                title: new Text(contractCondition.conditionId),
+                content: new Text(contractCondition.description),
                 actions: <Widget>[
                   TextButton(
                     child: Text('Close'),
@@ -31,38 +46,166 @@ class ConditionItem extends StatelessWidget {
               ));
     }
 
-    return ListTile(
-      //TODO: read from dynamic
-      title: Text(contractCondition.toString()),
-      leading: CircleAvatar(
-        backgroundColor: Colors.black12,
-        // backgroundImage: NetworkImage(contract.imageUrl),
-      ),
-      subtitle: Text('Status: Todo'),
-      onTap: () => _showConditionDialog(contractCondition),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(
-              Icons.thumb_down_outlined,
-              color: Colors.deepOrangeAccent,
+    return Global.userAddress == widget.contractCondition.proposedBy
+        ? ListTile(
+            //Current user created the condition
+            title: Text(
+              widget.contractCondition.title == null
+                  ? 'Couldn\'t load title'
+                  : widget.contractCondition.title,
             ),
-            onPressed: () {
-              print('Reject');
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.thumb_up_outlined,
-              color: Colors.cyan,
+            leading: CircleAvatar(
+              backgroundColor: Colors.deepOrange,
             ),
-            onPressed: () {
-              print('Accept');
-            },
-          ),
-        ],
-      ),
-    );
+            // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
+            //     '${contractCondition.proposedBy}'),
+            // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
+            //     '${contractCondition.proposedBy}'),
+            onTap: () => _showConditionDialog(widget.contractCondition),
+            trailing: Row(
+              //The currently logged in user created the condition
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Other Party Response: '),
+                    Text(
+                      widget.contractCondition.status,
+                      style: TextStyle(
+                          color: (widget.contractCondition.status == 'ACCEPTED')
+                              ? Colors.green
+                              : (widget.contractCondition.status == 'REJECTED')
+                                  ? Colors.red
+                                  : Colors.amber //PENDING
+
+                          ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+        : ListTile(
+            title: Text(
+              widget.contractCondition.title == null
+                  ? 'Couldn\'t load title'
+                  : widget.contractCondition.title,
+            ),
+            leading: CircleAvatar(
+              backgroundColor: Colors.cyan,
+            ),
+            // subtitle: Text(
+            //   'Status: ${contractCondition.status}\nProposed by: '
+            //   '${contractCondition.proposedBy}',
+            // ),
+            onTap: () => _showConditionDialog(widget.contractCondition),
+            trailing: Row(
+              //The currently logged in user did not create the condition
+              mainAxisSize: MainAxisSize.min,
+              children: widget.contractCondition.status != 'PENDING'
+                  ? widget.contractCondition.status == 'ACCEPTED'
+                      ? [
+                          //ACCEPTED
+                          Text(
+                            'ACCEPTED',
+                            style: TextStyle(
+                              color: Colors.cyan,
+                            ),
+                          ),
+                        ]
+                      : [
+                          //REJECTED
+                          Text(
+                            'REJECTED',
+                            style: TextStyle(
+                              color: Colors.deepOrangeAccent,
+                            ),
+                          ),
+                        ]
+                  : [
+                      //PENDING
+                      // Text('Status: ${contractCondition}'),
+                      IconButton(
+                        icon: Icon(
+                          Icons.thumb_down_outlined,
+                          color: Colors.deepOrangeAccent,
+                        ),
+                        onPressed: () async {
+                          print('Accept');
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          try {
+                            await widget.negotiationService.rejectCondition(
+                                widget.contractCondition.conditionId);
+                            print('rejected: ' +
+                                widget.contractCondition.conditionId);
+                          } catch (error) {
+                            await showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text('An error occurred!'),
+                                content: Text('Something went wrong.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Okay'),
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                          setState(() {
+                            _isLoading = false;
+                            Provider.of<Contracts>(context, listen: false)
+                                .fetchAndSetContracts();
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.thumb_up_outlined,
+                          color: Colors.cyan,
+                        ),
+                        onPressed: () async {
+                          print('Accept');
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          try {
+                            await widget.negotiationService.acceptCondition(
+                                widget.contractCondition.conditionId);
+                            print('accepted: ' +
+                                widget.contractCondition.conditionId);
+                          } catch (error) {
+                            await showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text('An error occurred!'),
+                                content: Text('Something went wrong.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Okay'),
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                          setState(() {
+                            _isLoading = false;
+                            Provider.of<Contracts>(context, listen: false)
+                                .fetchAndSetContracts();
+                          });
+                        },
+                      ),
+                    ],
+            ),
+          );
   }
 }

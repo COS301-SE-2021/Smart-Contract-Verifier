@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../providers/contract.dart';
+import 'package:unison/models/global.dart';
+
+import '../models/contract.dart';
 
 class ContractDetailInfoPanel extends StatelessWidget {
   final Contract _contract;
@@ -20,8 +22,9 @@ class ContractDetailInfoPanel extends StatelessWidget {
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Created: Todo'),
-                  Text('Status: Todo'),
+                  Text('Created: ${_contract.createdDate}'),
+                  Text(
+                      'Moved to Blockchain: ${_contract.movedToBlockchain.toString() == 'null' ? 'false' : _contract.movedToBlockchain.toString()}'),
                   SizedBox(
                     width: 15,
                   ),
@@ -38,9 +41,23 @@ class ContractDetailInfoPanel extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Agreement ID: Todo'),
-                  Text('Party A: Todo'),
-                  Text('Party B: Todo'),
+                  Text('Agreement ID: ${_contract.contractId}'),
+                  Text(
+                    'Party A: ${_contract.partyA}',
+                    style: TextStyle(
+                      color: _contract.partyA == Global.userAddress
+                          ? Colors.deepOrange
+                          : Colors.cyan,
+                    ),
+                  ),
+                  Text(
+                    'Party B: ${_contract.partyB}',
+                    style: TextStyle(
+                      color: _contract.partyB == Global.userAddress
+                          ? Colors.deepOrange
+                          : Colors.cyan,
+                    ),
+                  ),
                 ],
               ),
             ),

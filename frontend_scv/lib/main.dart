@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// import 'package:unison/screens/MessageTest.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
+import 'package:unison/screens/messaging_screen.dart';
 
-import './screens/contracts_overview_screen.dart';
+import './providers/auth.dart';
 import './screens/auth_screen.dart';
-import './screens/splash_screen.dart';
+import './screens/contracts_overview_screen.dart';
 import './screens/edit_contract_screen.dart';
 import './screens/view_contract_screen.dart';
 //
-import './providers/contracts.dart';
-import './providers/auth.dart';
+import 'models/contracts.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,13 +24,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<Auth, Contracts>(
           update: (ctx, auth, previousProducts) => Contracts(
-              auth.token,
-              auth.userId,
+              auth.userWalletAddress,
               previousProducts == null ? [] : previousProducts.items),
           create: null,
         ),
-
-        // TODO: Add Notification Provider Here
       ],
       child: Consumer<Auth>(
         builder: ((ctx, auth, _) => MaterialApp(
@@ -43,21 +41,13 @@ class MyApp extends StatelessWidget {
                 fontFamily: 'Lato',
               ),
               // themeMode: ThemeMode.dark,
-              home: auth.isAuth
-                  ? ContractsOverviewScreen()
-                  : FutureBuilder(
-                      future: auth.tryAutoLogin(),
-                      builder: (ctx, authResultSnapshot) =>
-                          authResultSnapshot.connectionState ==
-                                  ConnectionState.waiting
-                              ? SplashScreen()
-                              : AuthScreen(),
-                    ),
+              home: auth.isAuth ? ContractsOverviewScreen() : AuthScreen(),
               routes: {
                 // ContractDetailScreen.routeName: (ctx) => ContractDetailScreen(),
                 ViewContractScreen.routeName: (ctx) => ViewContractScreen(),
                 EditContractScreen.routeName: (ctx) => EditContractScreen(),
                 JudgeDutyScreen.routeName: (ctx) => JudgeDutyScreen(),
+                MessagingScreen.routeName: (ctx) => MessagingScreen(),
               },
             )),
       ),

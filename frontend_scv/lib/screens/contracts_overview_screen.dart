@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/contracts.dart';
+import '../models/contracts.dart';
 import '../screens/edit_contract_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/contracts_grid.dart';
@@ -48,41 +48,43 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
-        actions: <Widget>[
-          PopupMenuButton(
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.Favourites) {
-                  _showOnlyFavorites = true;
-                } else {
-                  _showOnlyFavorites = false;
-                }
-              });
-            },
-            icon: Icon(
-              Icons.more_vert,
-            ),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text('Only Favourites'),
-                value: FilterOptions.Favourites,
-              ),
-              PopupMenuItem(
-                child: Text('Show All'),
-                value: FilterOptions.All,
-              ),
-            ],
-          ),
-          //TODO: Add notification button with badge
-        ],
+        // title: Text(Global.userAddress),
+        title: Text('Agreements Dashboard'),
+        // actions: <Widget>[
+        //   PopupMenuButton(
+        //     onSelected: (FilterOptions selectedValue) {
+        //       setState(() {
+        //         if (selectedValue == FilterOptions.Favourites) {
+        //           _showOnlyFavorites = true;
+        //         } else {
+        //           _showOnlyFavorites = false;
+        //         }
+        //       });
+        //     },
+        //     icon: Icon(
+        //       Icons.more_vert,
+        //     ),
+        //     itemBuilder: (_) => [
+        //       PopupMenuItem(
+        //         child: Text('Only Favourites'),
+        //         value: FilterOptions.Favourites,
+        //       ),
+        //       PopupMenuItem(
+        //         child: Text('Show All'),
+        //         value: FilterOptions.All,
+        //       ),
+        //     ],
+        //   ),
+        //   //TODO: Add notification button with badge
+        // ],
       ),
       drawer: AppDrawer(),
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ContractsGrid(_showOnlyFavorites),
+          // : ContractsGrid(_showOnlyFavorites),
+          : ContractsGrid(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () =>

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/widgets/judge_active_contract_item.dart';
-import '../providers/contracts.dart';
+
+import '../models/contracts.dart';
 
 class JudgeActiveCasesGrid extends StatelessWidget {
   JudgeActiveCasesGrid();
