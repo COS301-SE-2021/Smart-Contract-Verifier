@@ -1,5 +1,6 @@
-package com.savannasolutions.SmartContractVerifierServer.negotiation.services
+package com.savannasolutions.SmartContractVerifierServer.UnitTests.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -8,8 +9,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.*
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
