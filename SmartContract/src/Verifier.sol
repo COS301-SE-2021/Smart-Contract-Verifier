@@ -330,6 +330,10 @@ contract Verifier{
         emit CloseAgreement(agreeID);
     }
 
+    function isJuror(address a) public view returns(bool){
+        return jurorStore.isJuror(a);
+    }
+
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
         // Yes means pay out as normal, no means refund all payments
 
