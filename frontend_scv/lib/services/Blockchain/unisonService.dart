@@ -34,7 +34,6 @@ class UnisonService { //For the Verfier smart contract
     final ev = await _smC.getCreationSubscription();
     await ev.asFuture(); //Wait for the block to be added
     await ev.cancel();
-    //print ('Done');
 
     print (res);
 
