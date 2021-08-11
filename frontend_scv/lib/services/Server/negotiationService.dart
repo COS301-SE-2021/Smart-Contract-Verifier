@@ -81,24 +81,24 @@ class NegotiationService {
     }
   }
 
-  Future<void> setPayment(Contract con, double price) async {
+  Future<void> setPayment(String con, double price) async {
     //Set the payment condition of an agreement.
 
     await _handlePayDuration(con, price, true);
   }
 
-  Future<void> setDuration(Contract con, double dur) async {
+  Future<void> setDuration(String con, double dur) async {
     //Set the duration condition of an agreement.
 
     await _handlePayDuration(con, dur, false);
   }
 
-  Future<void> _handlePayDuration(Contract con, double val, bool price) async {
+  Future<void> _handlePayDuration(String con, double val, bool price) async {
     //Handles both price and duration
 
     Map<String, dynamic> body = {
       'ProposedUser': Global.userAddress,
-      'AgreementID': con.contractId,
+      'AgreementID': con,
       (price ? 'Payment' : 'Duration'): val
     };
     Map<String, dynamic> response;
