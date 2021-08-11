@@ -26,7 +26,7 @@ class Condition with ChangeNotifier {
         description = jsn['ConditionDescription'],
         status = jsn['ConditionStatus'];
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => { //For saving a condition to the server
         //Convert instance to JSON
         'AgreementID': agreementId,
         'ConditionTitle': title,

@@ -11,19 +11,13 @@ class Message {
   String agreement;
 
   //TODO: add time to allow for ordering of messages
-  Message(String text) {
+  Message(String text, agreementId) {
     //Constructor used when a message is newly created;
     sender = Global.userAddress;
     messageText = text;
+    agreement = agreementId;
   }
 
-  // Message.fromJSON(Map<String, dynamic> jsn) {
-  //   this.sender = jsn['sender'];
-  //   this.messageText = jsn['messageText'];
-  //   //timestamp/send time?
-  // }
-
-  //Below is the final implementation
   Message.fromJSON(Map<String, dynamic> jsn) { //Generate from backend api response
     this.sender = jsn['sendingUser']['publicWalletID'];
     print (this.sender);
@@ -35,9 +29,17 @@ class Message {
 
   Map<String, dynamic> toJSONSend() { //ToJSON when sending a message
     return {
-      'SendingUser' : Global.userAddress,
+      'SendingUser' : sender,
       'AgreementID' : agreement,
       'Message' : messageText,
+    };
+  }
+
+
+  Map<String, dynamic> toJSONSetRead() { //ToJSON when setting a message as read
+    return {
+      'MessageID' : messageID,
+      'RecipientID' : Global.userAddress,
     };
   }
 

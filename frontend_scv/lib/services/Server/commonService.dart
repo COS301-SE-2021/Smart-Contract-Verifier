@@ -16,12 +16,11 @@ class CommonService {
           'An error was encountered, and the agreement could not be retrieved');
   //Error object to return on exception.
 
-  Future<List<Contract>> getInvolvedAgreements(String party) async {
-    Map<String, String> body = {'UserID': party};
+  Future<List<Contract>> getInvolvedAgreements(String party) async { //Get all agreements where a user is involved
     var response;
 
     try {
-      response = await _api.postData('/user/retrieve-user-agreements', body);
+      response = await _api.postData('/user/retrieve-user-agreements', {'UserID': party});
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Retrieval of agreements failed');
@@ -46,11 +45,10 @@ class CommonService {
   Future<Contract> getAgreement(String id) async {
     //Get agreement with specified id
 
-    Map<String, String> body = {'AgreementID': id};
     var response;
 
     try {
-      response = await _api.postData('/negotiation/get-agreement-details', body);
+      response = await _api.postData('/negotiation/get-agreement-details', {'AgreementID': id});
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be retrieved');
@@ -66,12 +64,10 @@ class CommonService {
     //Get a list of conditions for an agreement
 
     List<Condition> res = [];
-
     Map<String, dynamic> response;
-    Map<String, dynamic> body = {'AgreementID': id};
 
     try {
-      response = await _api.postData('', body);
+      response = await _api.postData('', {'AgreementID': id});
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Conditions could not be retrieved');

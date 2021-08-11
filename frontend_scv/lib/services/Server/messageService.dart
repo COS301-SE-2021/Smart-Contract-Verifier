@@ -38,7 +38,6 @@ class MessageService {
         String path = byAgreement? 'agreement' : 'user';
         response = await _api.postData(_reqPath + 'get-all-messages-by-$path', body);
 
-        print ('Gotten response');
         if (response['Status'] != "SUCCESSFUL")
           throw Exception('Messages could not be retrieved');
       } catch (err) {
@@ -57,11 +56,10 @@ class MessageService {
 
   Future<void> setMessageRead(Message mes) async { //Let the backend know that a message has been read
 
-    Map<String, dynamic> body = {'MessageID' : mes.messageID, 'RecipientID' : Global.userAddress};
     var response;
 
     try {
-      response = await _api.postData(_reqPath + 'set-message-as-read', body);
+      response = await _api.postData(_reqPath + 'set-message-as-read', mes.toJSONSetRead());
 
       //RFC: Is error checking even necessary for an 'unimportant' operation?
       if (response['Status'] != "SUCCESSFUL")
