@@ -62,8 +62,8 @@
 *
 * Wednesday Night:
 * - Special Conditions:
-*   - Payment Condition (both can set) (there can be multiple)
-*   - Duration Condition ()
+*   -x Payment Condition (both can set) (there can be multiple) -> DONE
+*   -x Duration Condition () -> DONE
 *
 * - Seal Agreement /
 *   Migrate to blockchain, once mined enough, on blockchain == true
