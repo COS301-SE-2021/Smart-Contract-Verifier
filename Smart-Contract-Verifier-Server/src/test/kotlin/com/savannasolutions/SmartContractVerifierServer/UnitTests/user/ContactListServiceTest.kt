@@ -1,7 +1,6 @@
-package com.savannasolutions.SmartContractVerifierServer.user.services
+package com.savannasolutions.SmartContractVerifierServer.UnitTests.user
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -9,6 +8,7 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.Contac
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.*
+import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
