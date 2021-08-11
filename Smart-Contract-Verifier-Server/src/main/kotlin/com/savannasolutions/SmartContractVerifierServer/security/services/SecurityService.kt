@@ -90,7 +90,7 @@ class SecurityService(val userRepository: UserRepository) {
             if(match){
                 val secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)//create from properties file
                 val jwtToken = Jwts.builder().setSubject(loginRequest.userId).signWith(secretKey).compact()
-                return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)
+                return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken) //add token expiry
             }
         }
         return LoginResponse(ResponseStatus.FAILED, "")
