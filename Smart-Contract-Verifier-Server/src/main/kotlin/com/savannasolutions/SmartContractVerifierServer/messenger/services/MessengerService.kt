@@ -148,8 +148,6 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
 
         message.messageStatuses = messageStatusList
 
-        message = messagesRepository.save(message)
-
         return SendMessageResponse(message.messageID, ResponseStatus.SUCCESSFUL)
     }
 
