@@ -6,8 +6,9 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
-import 'wallet.dart';
+
 import '../../models/global.dart';
+import 'wallet.dart';
 
 class SmartContract {
   static final Web3Client _smC =
@@ -20,7 +21,8 @@ class SmartContract {
   DeployedContract _contract;
   bool _loaded = false;
 
-  SmartContract(String ab, String name) { //Create an instance for a specific abi
+  SmartContract(String ab, String name) {
+    //Create an instance for a specific abi
     conAbi = ab;
     contractName = name;
   }
@@ -28,10 +30,10 @@ class SmartContract {
   //Should this be called every time? Or should it only be loaded once....
   //Metamask will automatically detect multiple requests, but I am not certain about loading the abi.
   Future<DeployedContract> _getContract() async {
-
-    if (!_loaded) { //Only load contract once
+    if (!_loaded) {
+      //Only load contract once
       String abi = await rootBundle.loadString(conAbi);
-     // await _wallet.metamaskConnect(); //Request metamask connection (May not be necessary at this stage)
+      // await _wallet.metamaskConnect(); //Request metamask connection (May not be necessary at this stage)
 
       _contract = DeployedContract(ContractAbi.fromJson(abi, "SCV"),
           EthereumAddress.fromHex(await Global.getContractId(contractName)));
@@ -42,7 +44,8 @@ class SmartContract {
     return _contract;
   }
 
-  Future<List<dynamic>> makeReadCall(String function, List<dynamic> args) async {
+  Future<List<dynamic>> makeReadCall(
+      String function, List<dynamic> args) async {
     //Read from contract
     final theContract = await _getContract();
     final fun = theContract.function(function);
@@ -62,11 +65,12 @@ class SmartContract {
         Transaction.callContract(
             contract: theContract, function: fun, parameters: args));
 
-    print (theResult); //Debug
+    print(theResult); //Debug
     return theResult;
   }
 
-  Future<ContractEvent> getEvent(String ev) async { //Get an event from the contract
+  Future<ContractEvent> getEvent(String ev) async {
+    //Get an event from the contract
     final con = await _getContract();
     final event = con.event(ev);
     return event;
@@ -74,7 +78,6 @@ class SmartContract {
 
   //This is used to detect the event emitted by creating a contract. This can be made more general, more thought is needed.
   Future<StreamSubscription> getCreationSubscription() async {
-
     final con = await _getContract();
     final ev = con.event('CreateAgreement'); //Revise
 
@@ -94,7 +97,5 @@ class SmartContract {
     });
 
     return res;
-
   }
-
 }
