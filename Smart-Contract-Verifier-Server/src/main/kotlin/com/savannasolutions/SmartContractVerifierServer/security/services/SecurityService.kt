@@ -1,7 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.security.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.security.SecurityConfig
+import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.security.requests.LoginRequest
 import com.savannasolutions.SmartContractVerifierServer.security.requests.UserExistsRequest
@@ -12,9 +12,7 @@ import com.savannasolutions.SmartContractVerifierServer.security.responses.Login
 import com.savannasolutions.SmartContractVerifierServer.security.responses.UserExistsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.web3j.crypto.ECDSASignature
 import org.web3j.crypto.Sign
@@ -24,7 +22,8 @@ import java.util.concurrent.ThreadLocalRandom
 
 @Service
 class SecurityService(val userRepository: UserRepository,
-                      val securityConfig: SecurityConfig) {
+                      val securityConfig: SecurityConfig
+) {
 
     fun getNonce(userId: String): GetNonceResponse {
         if (userRepository.existsById(userId)) {
@@ -93,7 +92,7 @@ class SecurityService(val userRepository: UserRepository,
 
             if(match){
                 val secretKey = Keys.hmacShaKeyFor(securityConfig.secretKey.encodeToByteArray())
-                val jwtToken = Jwts.builder().setSubject(loginRequest.userId).setExpiration(Date(System.currentTimeMillis() + securityConfig.timeout)).signWith(secretKey).compact()
+                val jwtToken = Jwts.builder().setSubject(loginRequest.userId).setExpiration(Date(System.currentTimeMillis() + securityConfig.timeout.toLong())).signWith(secretKey).compact()
                 return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)
             }
         }

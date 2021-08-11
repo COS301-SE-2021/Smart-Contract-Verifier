@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.security
+package com.savannasolutions.SmartContractVerifierServer.security.configuration
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
@@ -11,5 +11,5 @@ class SecurityConfig {
     var secretKey: String = ""
 
     @Value("com.unison.timeout")
-    var timeout: Long = 0
+    var timeout: String = "0"
 }

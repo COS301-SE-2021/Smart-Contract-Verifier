@@ -4,5 +4,10 @@
       "name": "com.unison.SecretKey",
       "type": "java.lang.String",
       "description": "Description for com.unison.SecretKey."
-  }
-] }
+    },
+    {
+      "name": "com.unison.timeout",
+      "type": "java.lang.Long",
+      "description": "Description for com.unison.timeout."
+    }
+  ] }
