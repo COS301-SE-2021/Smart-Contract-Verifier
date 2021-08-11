@@ -27,7 +27,7 @@ class Message {
   // Message.fromJSON(Map<String, dynamic> jsn) { //Generate from backend api response
   //   this.sender = jsn['sender'];
   //   this.messageText = jsn['message'];
-  //   this.dateSent = DateTime.fromMicrosecondsSinceEpoch(jsn['sendDate']);
+     //this.dateSent = DateTime.tryParse(jsn['sendDate']));
   //   this.messageID = jsn['messageID'];
   // }
 
