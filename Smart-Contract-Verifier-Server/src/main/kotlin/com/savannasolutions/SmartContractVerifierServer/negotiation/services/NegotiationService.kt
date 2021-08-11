@@ -345,11 +345,11 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun getJudgingAgreements(getJudgingAgreementsRequest: GetJudgingAgreementsRequest): GetJudgingAgreementsResponse
     {
-        if(!agreementsRepository.existsById(getJudgingAgreementsRequest.agreementID))
+        if(!userRepository.existsById(getJudgingAgreementsRequest.walletID))
             return GetJudgingAgreementsResponse(status = ResponseStatus.FAILED)
 
-        val agreement = agreementsRepository.getById(getJudgingAgreementsRequest.agreementID)
-        val judgeList = judgesRepository.getAllByAgreement(agreement) ?:
+        val user = userRepository.getById(getJudgingAgreementsRequest.walletID)
+        val judgeList = judgesRepository.getAllByJudge(user) ?:
             return GetJudgingAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
 
         val agreementsResponseList = ArrayList<AgreementResponse>()
