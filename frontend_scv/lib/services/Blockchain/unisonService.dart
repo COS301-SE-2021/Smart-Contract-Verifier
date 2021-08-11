@@ -6,9 +6,9 @@ import '../../models/contract.dart';
 import 'smartContract.dart';
 import '../../models/global.dart';
 
-class UnisonService {
+class UnisonService { //For the Verfier smart contract
 
-  SmartContract _smC = SmartContract();
+  SmartContract _smC = SmartContract("JSON/_src_Verifier_sol_Verifier.abi", 'Verifier');
 
   Future<void> saveAgreement(Contract con) async {
     //Todo list:

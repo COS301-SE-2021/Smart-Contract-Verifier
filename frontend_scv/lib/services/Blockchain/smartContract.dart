@@ -10,21 +10,36 @@ import 'wallet.dart';
 import '../../models/global.dart';
 
 class SmartContract {
-  final Web3Client _smC =
+  static final Web3Client _smC =
       Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
-  WalletInteraction _wallet = WalletInteraction();
+  static final WalletInteraction _wallet = WalletInteraction();
+
+  String conAbi;
+  String contractName;
+
+  DeployedContract _contract;
+  bool _loaded = false;
+
+  SmartContract(String ab, String name) { //Create an instance for a specific abi
+    conAbi = ab;
+    contractName = name;
+  }
 
   //Should this be called every time? Or should it only be loaded once....
   //Metamask will automatically detect multiple requests, but I am not certain about loading the abi.
   Future<DeployedContract> _getContract() async {
 
-    String abi = await rootBundle
-         .loadString("JSON/_src_Verifier_sol_Verifier.abi");
-    await _wallet.metamaskConnect(); //Request metamask connection
+    if (!_loaded) { //Only load contract once
+      String abi = await rootBundle.loadString(conAbi);
+     // await _wallet.metamaskConnect(); //Request metamask connection (May not be necessary at this stage)
 
-    final theContract = DeployedContract(ContractAbi.fromJson(abi, "SCV"),
-        EthereumAddress.fromHex(await Global.getContractId()));
-    return theContract;
+      _contract = DeployedContract(ContractAbi.fromJson(abi, "SCV"),
+          EthereumAddress.fromHex(await Global.getContractId(contractName)));
+
+      _loaded = true;
+    }
+
+    return _contract;
   }
 
   Future<List<dynamic>> makeReadCall(String function, List<dynamic> args) async {
