@@ -46,36 +46,6 @@ class _MessagingScreenState extends State<MessagingScreen> {
     _isLoading = false;
     print(messages);
 
-    // final List<Message> messages = [];
-    // messages.add(
-    //   Message.fromJSON(
-    //     {
-    //       'sender': '0xf808ee4efb1b80ebd803f02b8f99fcc4a5a65709',
-    //       'timeSent': '1111111111111',
-    //       'messageText': 'This message was sent first.\nSent by PartyA.',
-    //     },
-    //   ),
-    // );
-    // messages.add(
-    //   Message.fromJSON(
-    //     {
-    //       'sender': '0xf999ee4efb1b80ebd803f02b8f99fcc4a5a65709',
-    //       'timeSent': '1111111111112',
-    //       'messageText': 'This message was the second one sent.\nSent by '
-    //           'PartyB.',
-    //     },
-    //   ),
-    // );
-    // messages.add(
-    //   Message.fromJSON(
-    //     {
-    //       'sender': '0xf999ee4efb1b80ebd803f02b8f99fcc4a5a65709',
-    //       'timeSent': '1111111111122',
-    //       'messageText': 'This message was the third one sent.\nSent by '
-    //           'PartyB.',
-    //     },
-    //   ),
-    // );
     return Scaffold(
       appBar: AppBar(
         title: Text('Chat for agreement: ' + agreementId),
