@@ -78,7 +78,7 @@ contract('Verifier', (accounts) =>{
             assert.equal(agree.party2Vote, 2)
         })
 
-        if("isJuror function", async() =>{
+        it("isJuror function", async() =>{
             var isJ = await verifier.isJuror(accounts[3]);
             assert(isJ == false, "non-juror seen as juror");
 
