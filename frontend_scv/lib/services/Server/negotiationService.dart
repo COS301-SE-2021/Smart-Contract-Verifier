@@ -3,9 +3,9 @@
 
 import 'dart:async';
 import 'backendAPI.dart';
-import '../../providers/contract.dart';
-import '../../providers/condition.dart';
-import '../../providers/global.dart';
+import '../../models/contract.dart';
+import '../../models/condition.dart';
+import '../../models/global.dart';
 
 class NegotiationService {
 

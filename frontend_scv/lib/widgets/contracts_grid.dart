@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/contracts.dart';
+import '../models/contracts.dart';
 import './contract_item.dart';
 
 class ContractsGrid extends StatelessWidget {

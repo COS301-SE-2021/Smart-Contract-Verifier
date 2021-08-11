@@ -2,9 +2,9 @@
 
 import 'package:web3dart/credentials.dart';
 
-import '../../providers/contract.dart';
+import '../../models/contract.dart';
 import 'smartContract.dart';
-import '../../providers/global.dart';
+import '../../models/global.dart';
 
 class UnisonService {
 
@@ -30,6 +30,12 @@ class UnisonService {
 
     final res = await _smC.makeWriteCall("createAgreement", [partyBA, con.duration, data]); //Soon, this will be replaced bu a spinner in the UI
     // It will have to check for an event.
+
+    final ev = await _smC.getCreationSubscription();
+    await ev.asFuture(); //Wait for the block to be added
+    await ev.cancel();
+    //print ('Done');
+
     print (res);
 
   }
@@ -53,6 +59,17 @@ class UnisonService {
     print (res);
 
   }
+
+  //For testing
+ Future<void> setEvent() async {
+    final res = await _smC.getCreationSubscription();
+    print ('Starting await');
+    await res.asFuture();
+    print ('Starting cancel');
+    await res.cancel();
+    print ('Done');
+
+ }
 
 
 }

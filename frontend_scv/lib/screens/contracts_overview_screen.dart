@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/providers/global.dart';
+import 'package:unison/models/global.dart';
 
-import '../providers/contracts.dart';
+import '../models/contracts.dart';
 import '../screens/edit_contract_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/contracts_grid.dart';

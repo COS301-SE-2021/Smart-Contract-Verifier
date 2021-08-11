@@ -4,8 +4,8 @@
 
 import 'dart:async';
 import 'backendAPI.dart';
-import '../../providers/contract.dart';
-import '../../providers/condition.dart';
+import '../../models/contract.dart';
+import '../../models/condition.dart';
 
 class CommonService {
   ApiInteraction _api = ApiInteraction();

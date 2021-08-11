@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:unison/providers/condition.dart';
-import '../models/http_exception.dart';
+import 'package:unison/models/condition.dart';
+import 'http_exception.dart';
 import 'package:flutter/material.dart';
 
 class Contract with ChangeNotifier {

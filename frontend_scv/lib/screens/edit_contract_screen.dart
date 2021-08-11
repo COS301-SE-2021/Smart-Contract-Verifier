@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/contract.dart';
-import '../providers/contracts.dart';
+import '../models/contract.dart';
+import '../models/contracts.dart';
 
 class EditContractScreen extends StatefulWidget {
   static const routeName = '/edit-contract';

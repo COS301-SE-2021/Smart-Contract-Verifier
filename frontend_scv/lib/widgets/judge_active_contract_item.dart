@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // import '../providers/auth.dart';
-import '../providers/contract.dart';
+import '../models/contract.dart';
 // TODO: import '../screens/view_case_contract_screen.dart';
 
 class JudgeActiveContractItem extends StatelessWidget {

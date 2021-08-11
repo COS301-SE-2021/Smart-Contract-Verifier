@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:unison/providers/message.dart';
+import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 import 'package:unison/widgets/condition_item.dart';
-import '../providers/contract.dart';
+import '../models/contract.dart';
 import 'message_item.dart';
 
 class AgreementMessagesPanel extends StatelessWidget {

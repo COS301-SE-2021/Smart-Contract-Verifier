@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 import 'wallet.dart';
-import '../../providers/global.dart';
+import '../../models/global.dart';
 
 class SmartContract {
   final Web3Client _smC =
@@ -63,6 +63,8 @@ class SmartContract {
     final con = await _getContract();
     final ev = con.event('CreateAgreement'); //Revise
 
+    //Function thing = Function(void Function);
+
     final res = _smC
         .events(FilterOptions.events(contract: con, event: ev))
         .take(1)
@@ -71,9 +73,9 @@ class SmartContract {
 
       final partyA = decoded[0] as EthereumAddress;
       final partyB = decoded[1] as EthereumAddress;
-      final name = decoded[2] as BigInt;
+      final id = decoded[2] as BigInt;
 
-      print('Contract $name between $partyA and $partyB');
+      print('Contract $id between $partyA and $partyB');
     });
 
     return res;

@@ -1,9 +1,9 @@
 //This class will be a service to be used by the messaging interface.
 
 import 'dart:convert';
-import 'package:unison/providers/global.dart';
+import 'package:unison/models/global.dart';
 import 'backendAPI.dart';
-import '../../providers/message.dart';
+import '../../models/message.dart';
 
 class MessageService {
 

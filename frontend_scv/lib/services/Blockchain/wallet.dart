@@ -4,7 +4,7 @@
 import 'dart:html';
 import 'package:web3dart/browser.dart';
 import 'package:web3dart/credentials.dart';
-import '../../providers/global.dart';
+import '../../models/global.dart';
 
 class WalletInteraction {
   CredentialsWithKnownAddress metaCred;

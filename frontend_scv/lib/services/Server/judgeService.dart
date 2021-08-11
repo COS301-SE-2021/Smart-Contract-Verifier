@@ -3,7 +3,7 @@
 
 import 'dart:async';
 import 'backendAPI.dart';
-import '../../providers/contract.dart';
+import '../../models/contract.dart';
 
 class JudgeService {
 

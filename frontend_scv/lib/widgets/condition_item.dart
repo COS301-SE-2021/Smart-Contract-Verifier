@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/providers/condition.dart';
-import 'package:unison/providers/contracts.dart';
-import 'package:unison/providers/global.dart';
+import 'package:unison/models/condition.dart';
+import 'package:unison/models/contracts.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 
 class ConditionItem extends StatefulWidget {

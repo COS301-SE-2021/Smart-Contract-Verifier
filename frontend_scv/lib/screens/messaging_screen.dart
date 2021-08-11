@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/providers/global.dart';
-import 'package:unison/providers/message.dart';
+import 'package:unison/models/global.dart';
+import 'package:unison/models/message.dart';
 import 'package:unison/widgets/agreement_messages_panel.dart';
 
 class MessagingScreen extends StatefulWidget {

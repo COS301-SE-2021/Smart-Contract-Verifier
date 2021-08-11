@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/providers/global.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
 import '../providers/auth.dart';
 

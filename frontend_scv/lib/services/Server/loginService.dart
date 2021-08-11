@@ -1,6 +1,6 @@
 //This class is for the initial login, and the flow that will come with it.
 
-import '../../providers/global.dart';
+import '../../models/global.dart';
 import 'backendAPI.dart';
 
 class LoginService {
