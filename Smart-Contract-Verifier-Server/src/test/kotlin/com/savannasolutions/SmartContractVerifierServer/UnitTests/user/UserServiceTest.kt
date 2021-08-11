@@ -64,10 +64,15 @@ internal class UserServiceTest {
         val agreementList = ArrayList<Agreements>()
         agreementList.add(agreement)
 
+        val userList = ArrayList<User>()
+        userList.add(userA)
+        userList.add(userB)
+
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(agreementsRepository.getAllByUsersContaining(userA)).thenReturn(list)
         whenever(conditionsRepository.getAllByContract(agreement)).thenReturn(agreement.conditions)
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
 
 
         //When
