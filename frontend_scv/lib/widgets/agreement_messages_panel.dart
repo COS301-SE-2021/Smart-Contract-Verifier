@@ -5,7 +5,6 @@ import 'package:unison/services/Server/messageService.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 import 'package:unison/widgets/condition_item.dart';
 import '../models/contract.dart';
-import 'message_item.dart';
 
 class AgreementMessagesPanel extends StatelessWidget {
   final List<Message> _messages;
