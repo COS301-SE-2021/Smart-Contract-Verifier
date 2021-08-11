@@ -26,12 +26,14 @@ contract JurorStore{
         jurors.push(address(0));
     }
 
-    function addJuror(address j) public onlyOwner(){
+    function addJuror(address j) public onlyOwner() returns(uint256){
+        require(jurorIndex[j] == 0, "You are already a juror");
+
         uint256 index = jurors.length;
         jurors.push(j);
         numJurors++;
         jurorIndex[j] = index;
-        emit AddJuror(j, index);
+        return index;
     }
 
     function removeJuror(address j) public onlyOwner(){
@@ -50,8 +52,6 @@ contract JurorStore{
         jurors.pop();
         numJurors--;
         jurorIndex[j] = 0;
-
-        emit RemoveJuror(j);
     }
 
     // Cleared after every execution of assignJury
@@ -110,8 +110,5 @@ contract JurorStore{
 
         return result;
     }
-
-    event AddJuror(address juror, uint256 index);
-    event RemoveJuror(address juror);
 
 }

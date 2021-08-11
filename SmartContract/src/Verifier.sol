@@ -240,12 +240,14 @@ contract Verifier{
         unisonToken.transferFrom(j, address(this), stakingAmount);
 
         jurorStore.addJuror(j);
+        emit AddJuror(j);
     }
 
     // remove yourself from available jurors list
     function removeJuror() public{
         jurorStore.removeJuror(msg.sender);
         unisonToken.transfer(msg.sender, stakingAmount);
+        emit RemoveJuror(msg.sender);
     }
 
     function _jurorIndex(uint agreeID) internal view returns(int){
@@ -355,5 +357,8 @@ contract Verifier{
     event CloseAgreement(uint agreeID);
 
     event JuryAssigned(uint agreeID, address[] jury);
+
+    event AddJuror(address juror);
+    event RemoveJuror(address juror);
 
 }
