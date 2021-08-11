@@ -64,7 +64,7 @@ contract Verifier{
         }
     }
 
-    function createAgreement(address party2, uint resolutionTime, string calldata text) public{
+    function createAgreement(address party2, uint resolutionTime, string calldata text, string memory uuid) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
 
         agreements[nextAgreeID].party1 = msg.sender;
@@ -73,8 +73,9 @@ contract Verifier{
         agreements[nextAgreeID].text = text;
         agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
         agreements[nextAgreeID].platformFee = 1000000000;
+        agreements[nextAgreeID].uuid = uuid;
 
-        emit CreateAgreement(msg.sender, party2, nextAgreeID);
+        emit CreateAgreement(msg.sender, party2, nextAgreeID, uuid);
         nextAgreeID++;
     }
 
@@ -240,12 +241,14 @@ contract Verifier{
         unisonToken.transferFrom(j, address(this), stakingAmount);
 
         jurorStore.addJuror(j);
+        emit AddJuror(j);
     }
 
     // remove yourself from available jurors list
     function removeJuror() public{
         jurorStore.removeJuror(msg.sender);
         unisonToken.transfer(msg.sender, stakingAmount);
+        emit RemoveJuror(msg.sender);
     }
 
     function _jurorIndex(uint agreeID) internal view returns(int){
@@ -328,6 +331,10 @@ contract Verifier{
         emit CloseAgreement(agreeID);
     }
 
+    function isJuror(address a) public view returns(bool){
+        return jurorStore.isJuror(a);
+    }
+
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
         // Yes means pay out as normal, no means refund all payments
 
@@ -349,11 +356,14 @@ contract Verifier{
 
     }
 
-    event CreateAgreement(address party1, address party2, uint agreeID);
+    event CreateAgreement(address party1, address party2, uint agreeID, string uuid);
     event AcceptAgreement(uint agreeID);
     event ActiveAgreement(uint agreeID);
     event CloseAgreement(uint agreeID);
 
     event JuryAssigned(uint agreeID, address[] jury);
+
+    event AddJuror(address juror);
+    event RemoveJuror(address juror);
 
 }

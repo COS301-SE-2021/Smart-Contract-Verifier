@@ -30,7 +30,7 @@ contract('Verifier', (accounts) =>{
 
         it("Can create agreement", async () =>{
 
-            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement");
+            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
 
             var agree = await verifier.getAgreement(0)
 
@@ -78,6 +78,23 @@ contract('Verifier', (accounts) =>{
             assert.equal(agree.party2Vote, 2)
         })
 
+        it("isJuror function", async() =>{
+            var isJ = await verifier.isJuror(accounts[3]);
+            assert(isJ == false, "non-juror seen as juror");
+
+            token.approve(verifier.address, 10000, {from: accounts[3]});
+            verifier.addJuror({from: accounts[3]});
+
+            isJ = await verifier.isJuror(accounts[3]);
+            assert(isJ == true, "juror seen as non-juror");
+
+            verifier.removeJuror({from: accounts[3]});
+            
+            isJ = await verifier.isJuror(accounts[3]);
+            assert(isJ == false, "removed juror still seen as juror");
+
+        })
+
         it("Add jurors ", async()=>{
             // Add enough potential members to jury
             for(var i=3; i<9; i++){
@@ -88,7 +105,7 @@ contract('Verifier', (accounts) =>{
 
         it("Create 2nd agreement ", async()=>{
             // Create new agreement
-            verifier.createAgreement(accounts[1], 0, "For jury test");
+            verifier.createAgreement(accounts[1], 0, "For jury test", "");
             verifier.acceptAgreement(1, {from: accounts[1]})
 
             var agree = await verifier.getAgreement(1);
@@ -148,7 +165,7 @@ contract('Verifier', (accounts) =>{
             verifier = await Verifier.new(token.address, r.address);
 
             // Create agreement
-            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement");
+            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
             verifier.acceptAgreement(0, {from: accounts[1]})
 
             // Pay platofrm fee

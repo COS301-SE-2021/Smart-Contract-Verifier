@@ -29,9 +29,6 @@ contract('JurorStore', (accounts) =>{
             catch(e){}
 
             assert(passedRequire == true, "Could not add juror");
-            truffleAssert.eventEmitted(result, "AddJuror", (ev)=>{
-                return ev.juror == accounts[1]
-            });
         })
 
         it("Can't add a juror as non-owner", async() =>{
@@ -47,8 +44,9 @@ contract('JurorStore', (accounts) =>{
 
 
         it("AssignJury assigns a jury", async() =>{
-            for(var i=1; i<10; i++){
-                await jurorStore.addJuror(accounts[1], {from: accounts[0]});
+            // accounts[1] already added as a juror in a previous test
+            for(var i=2; i<10; i++){
+                await jurorStore.addJuror(accounts[i], {from: accounts[0]});
 
             }
   

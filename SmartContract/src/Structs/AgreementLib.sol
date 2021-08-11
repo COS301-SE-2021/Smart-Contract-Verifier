@@ -29,6 +29,7 @@ library AgreementLib{
     }
 
     struct Agreement{
+        string uuid;
         address party1;
         address party2;
         uint resolutionTime;
@@ -59,6 +60,7 @@ library AgreementLib{
     // Agreement can't be returned by a function since it contains a mapping, but ReturnAgreement can't
     // be in storage since it contains a dynamic array of structs
     struct ReturnAgreement{
+        string uuid;
         address party1;
         address party2;
         uint resolutionTime;
@@ -85,6 +87,8 @@ library AgreementLib{
 
     function makeReturnAgreement(Agreement storage agreement) view internal returns(ReturnAgreement memory){
         ReturnAgreement memory result;
+
+        result.uuid = agreement.uuid;
 
         result.party1 = agreement.party1;
         result.party2 = agreement.party2;
