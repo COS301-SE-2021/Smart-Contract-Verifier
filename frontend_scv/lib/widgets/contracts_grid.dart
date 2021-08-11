@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/contracts.dart';
+
 import './contract_item.dart';
+import '../models/contracts.dart';
 
 class ContractsGrid extends StatelessWidget {
   // final bool showFavs;
