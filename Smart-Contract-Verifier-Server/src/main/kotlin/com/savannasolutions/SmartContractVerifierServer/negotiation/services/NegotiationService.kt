@@ -4,6 +4,7 @@ import com.savannasolutions.SmartContractVerifierServer.common.AgreementResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.judges.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -11,9 +12,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.*
-import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.springframework.stereotype.Service
 import java.util.*
@@ -24,6 +22,7 @@ import kotlin.collections.ArrayList
 class NegotiationService constructor(val agreementsRepository: AgreementsRepository,
                                      val conditionsRepository: ConditionsRepository,
                                      val userRepository: UserRepository,
+                                     val judgesRepository: JudgesRepository,
                                      ){
 
     fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionResponse{
@@ -342,6 +341,63 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         agreementsRepository.save(agreement)
 
         return SetDurationConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
+    }
+
+    fun getJudgingAgreements(getJudgingAgreementsRequest: GetJudgingAgreementsRequest): GetJudgingAgreementsResponse
+    {
+        if(!agreementsRepository.existsById(getJudgingAgreementsRequest.agreementID))
+            return GetJudgingAgreementsResponse(status = ResponseStatus.FAILED)
+
+        val agreement = agreementsRepository.getById(getJudgingAgreementsRequest.agreementID)
+        val judgeList = judgesRepository.getAllByAgreement(agreement) ?:
+            return GetJudgingAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+
+        val agreementsResponseList = ArrayList<AgreementResponse>()
+
+        for(judge in judgeList)
+        {
+            agreementsResponseList.add(generateAgreementResponse(judge.agreement))
+        }
+
+        return GetJudgingAgreementsResponse(agreementsResponseList, ResponseStatus.SUCCESSFUL)
+    }
+
+    private fun generateAgreementResponse(agreement: Agreements): AgreementResponse {
+        val conditionList = conditionsRepository.getAllByContract(agreement)
+        val conditions = ArrayList<ConditionResponse>()
+        if (conditionList != null) {
+            for (cond in conditionList) {
+                val tempCond = ConditionResponse(
+                    cond.conditionID,
+                    cond.conditionDescription,
+                    UserResponse(cond.proposingUser.publicWalletID),
+                    cond.proposalDate,
+                    agreement.ContractID,
+                    cond.conditionStatus,
+                    cond.conditionTitle
+                )
+                conditions.add(tempCond)
+            }
+        }
+
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+        val partyA = UserResponse(userList[0].publicWalletID)
+        val partyB = UserResponse(userList[1].publicWalletID)
+
+        return AgreementResponse(
+            agreement.ContractID,
+            agreement.AgreementTitle,
+            agreement.AgreementDescription,
+            agreement.DurationConditionUUID,
+            agreement.PaymentConditionUUID,
+            partyA,
+            partyB,
+            agreement.CreatedDate,
+            agreement.SealedDate,
+            agreement.MovedToBlockChain,
+            conditions,
+            agreement.AgreementImageURL
+        )
     }
 
 }
