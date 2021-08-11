@@ -13,10 +13,11 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties
 import org.springframework.stereotype.Service
+import org.web3j.crypto.ECDSASignature
+import org.web3j.crypto.Sign
+import java.math.BigInteger
 import java.util.concurrent.ThreadLocalRandom
-import javax.crypto.SecretKey
 
 @Service
 class SecurityService(val userRepository: UserRepository) {
@@ -55,14 +56,39 @@ class SecurityService(val userRepository: UserRepository) {
     }
 
     fun login(loginRequest: LoginRequest): LoginResponse {
-        val match = false
+        var match = false
         val prefix = "\u0019Ethereum Signed Message:\n10"
         if(userRepository.existsById(loginRequest.userId)){
             val nonce = userRepository.getById(loginRequest.userId).nonce
-            val message = prefix + nonce.toString()
+            val message = (prefix + nonce.toString()).encodeToByteArray()
+            val signatureBytes = loginRequest.signedNonce.encodeToByteArray()
             //web3J magic here
+            val v = signatureBytes[64]
+            if(v < 27)
+                v.plus(27)
+            val signatureData = Sign.SignatureData(v,
+                signatureBytes.copyOfRange(0, 32),
+                signatureBytes.copyOfRange(0, 64),)
+            var recoveredAddress = ""
+            for(i in 0..4){
+                var publicKey = Sign.recoverFromSignature(
+                    i,
+                    ECDSASignature(
+                        BigInteger(1, signatureData.r),
+                        BigInteger(1, signatureData.s)),
+                    message)
+
+                if(publicKey != null){
+                    recoveredAddress = "0x" + org.web3j.crypto.Keys.getAddress(publicKey)
+                    if(recoveredAddress == loginRequest.userId){
+                        match = true
+                        break
+                    }
+                }
+            }
+
             if(match){
-                val secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+                val secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)//create from properties file
                 val jwtToken = Jwts.builder().setSubject(loginRequest.userId).signWith(secretKey).compact()
                 return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)
             }
