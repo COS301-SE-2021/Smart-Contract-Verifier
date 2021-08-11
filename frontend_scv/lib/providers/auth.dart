@@ -2,7 +2,7 @@ import 'dart:async'; //for timer
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:unison/providers/global.dart';
+import 'package:unison/models/global.dart';
 import '../services/Blockchain/wallet.dart';
 
 class Auth with ChangeNotifier {
