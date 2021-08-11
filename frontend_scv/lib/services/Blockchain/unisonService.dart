@@ -62,6 +62,17 @@ class UnisonService {
     print(res);
   }
 
+  Future<void> addJuror() async {
+    await _smC.makeWriteCall('addJuror', []);
+  }
+
+  Future<void> removeJuror() async {
+
+    await _smC.makeWriteCall('removeJuror', []);
+
+  }
+
+
   //For testing
   Future<void> setEvent() async {
     final res = await _smC.getCreationSubscription();
