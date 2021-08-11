@@ -4,14 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
 import 'package:unison/screens/messaging_screen.dart';
 
-import './screens/contracts_overview_screen.dart';
+import './providers/auth.dart';
 import './screens/auth_screen.dart';
-import './screens/splash_screen.dart';
+import './screens/contracts_overview_screen.dart';
 import './screens/edit_contract_screen.dart';
 import './screens/view_contract_screen.dart';
 //
 import 'models/contracts.dart';
-import './providers/auth.dart';
 
 void main() => runApp(MyApp());
 
