@@ -62,7 +62,7 @@ class SecurityService(val userRepository: UserRepository) {
             val nonce = userRepository.getById(loginRequest.userId).nonce
             val message = (prefix + nonce.toString()).encodeToByteArray()
             val signatureBytes = loginRequest.signedNonce.encodeToByteArray()
-            //web3J magic here
+
             val v = signatureBytes[64]
             if(v < 27)
                 v.plus(27)
