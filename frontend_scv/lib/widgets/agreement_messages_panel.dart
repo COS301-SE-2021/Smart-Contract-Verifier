@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';
 import 'package:unison/services/Server/negotiationService.dart';
@@ -13,27 +14,18 @@ class AgreementMessagesPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MessageService mesS = MessageService();
-
     print(_messages);
     return Container(
       // padding: EdgeInsets.all(8),
       child: _messages.isEmpty //handle no messages
-          ? Text('No Messages Have Been Sent.')
+          ? Text('No Messages Have Been Sent.') //TODO: Make neater
           : ListView.builder(
               itemCount: _messages.length,
-              itemBuilder: (_, i) => Column(
-                children: [
-                  Text('Sender: ${_messages[i].sender}'
-                      '\nMessage:${_messages[i].messageText}'),
-                  MessageItem(
-                    message: _messages[i],
-                    messageService: mesS,
-                  ),
-                  Divider(),
-                ],
-              ),
-            ),
+              itemBuilder: (_, index) {
+                final message = _messages[index];
+                bool isCurrentUser = message.sender == Global.userAddress;
+                return Container();
+              }),
     );
   }
 }

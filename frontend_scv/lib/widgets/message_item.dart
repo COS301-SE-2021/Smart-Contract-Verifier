@@ -9,11 +9,10 @@ import 'package:unison/services/Server/negotiationService.dart';
 
 class MessageItem extends StatefulWidget {
   final Message message;
-  final MessageService messageService;
+  // final MessageService messageService;
 
   MessageItem({
     @required this.message,
-    @required this.messageService,
   });
 
   @override
