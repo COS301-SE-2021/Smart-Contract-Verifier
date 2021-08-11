@@ -2,14 +2,15 @@
 //This one deals with judge-related issues.
 
 import 'dart:async';
-import 'backendAPI.dart';
+
 import '../../models/contract.dart';
+import 'backendAPI.dart';
 
 class JudgeService {
-
   ApiInteraction api = ApiInteraction();
 
-  Future<List<Contract>> getInvolvedAgreements(String party) async { //Get all agreements where a user is the judge
+  Future<List<Contract>> getInvolvedAgreements(String party) async {
+    //Get all agreements where a user is the judge
 
     //TODO list:
     //Handle judge functionality later
@@ -19,11 +20,11 @@ class JudgeService {
     return [];
   }
 
-  Future<List<dynamic>> getNotifications(String party) async { //Get all notifications for a judge
+  Future<List<dynamic>> getNotifications(String party) async {
+    //Get all notifications for a judge
     //TODO list:
     //Handle this later
 
     return [];
   }
-
 }
