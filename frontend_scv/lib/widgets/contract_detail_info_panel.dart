@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/global.dart';
+
 import '../models/contract.dart';
 
 class ContractDetailInfoPanel extends StatelessWidget {
