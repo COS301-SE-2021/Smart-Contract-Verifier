@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "com.unison.SecretKey",
+      "type": "java.lang.String",
+      "description": "Description for com.unison.SecretKey."
+  }
+] }
