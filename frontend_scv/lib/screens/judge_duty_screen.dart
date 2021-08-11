@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:unison/widgets/judge_active_cases_grid.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/widgets/judge_active_cases_grid.dart';
+
 import '../providers/auth.dart';
 import '../widgets/app_drawer.dart';
 
