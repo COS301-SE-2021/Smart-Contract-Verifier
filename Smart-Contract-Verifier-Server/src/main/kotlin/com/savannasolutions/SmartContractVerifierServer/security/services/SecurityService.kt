@@ -49,7 +49,18 @@ class SecurityService(val userRepository: UserRepository) {
         return  AddUserResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun login(loginRequest: LoginRequest): LoginResponse{
+    fun login(loginRequest: LoginRequest): LoginResponse {
+        val match = false
+        val prefix = "\u0019Ethereum Signed Message:\n10"
+        if(userRepository.existsById(loginRequest.userId)){
+            val nonce = userRepository.getById(loginRequest.userId).nonce
+            val message = prefix + nonce.toString()
+            //web3J magic here
+            if(match){
+                //generate and return jwt
+                return LoginResponse(ResponseStatus.FAILED, "")
+            }
+        }
         return LoginResponse(ResponseStatus.FAILED, "")
     }
 }
