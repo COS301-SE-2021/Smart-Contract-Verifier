@@ -60,5 +60,12 @@
 * 0x351277a110948cb5be266c53ea85737e28ac35bf (Secondary Account)
 *
 *
+* Wednesday Night:
+* - Special Conditions:
+*   - Payment Condition (both can set) (there can be multiple)
+*   - Duration Condition ()
+* - Seal Agreement
+*
+* - Judge Screen
 *
 * */
