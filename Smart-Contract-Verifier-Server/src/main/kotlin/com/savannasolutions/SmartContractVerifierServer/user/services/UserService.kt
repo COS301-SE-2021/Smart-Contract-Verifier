@@ -26,7 +26,7 @@ class UserService(  val userRepository: UserRepository,
                     val conditionsRepository: ConditionsRepository) {
 
     fun addUser(addUserRequest: AddUserRequest): AddUserResponse {
-        val wID = addUserRequest.WalletID;
+        val wID = addUserRequest.WalletID
         if(userRepository.existsById(wID))
             return AddUserResponse(status = ResponseStatus.FAILED)
 
@@ -47,51 +47,50 @@ class UserService(  val userRepository: UserRepository,
 
         val user = userRepository.getById(retrieveUserAgreementsRequest.UserID)
 
-        if(user.agreements.isEmpty())
-            return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
+        //if(user.agreements.isEmpty())
+        //    return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
 
         val agreementList = agreementsRepository.getAllByUsersContaining(user)
+            ?: return RetrieveUserAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+
         val list = ArrayList<AgreementResponse>()
 
-        if(agreementList != null)
+        for(agreement in agreementList)
         {
-            for(agreement in agreementList)
+            val conditions = conditionsRepository.getAllByContract(agreement)
+            val conditionList = ArrayList<ConditionResponse>()
+            if(conditions != null)
             {
-                val conditions = conditionsRepository.getAllByContract(agreement)
-                val conditionList = ArrayList<ConditionResponse>()
-                if(conditions != null)
+                for (cond in conditions)
                 {
-                    for (cond in conditions)
-                    {
-                        conditionList.add(
-                            ConditionResponse(cond.conditionID,
-                                cond.conditionDescription,
-                                UserResponse(cond.proposingUser.publicWalletID),
-                                cond.proposalDate,
-                                agreement.ContractID,
-                                cond.conditionStatus
-                            )
+                    conditionList.add(
+                        ConditionResponse(cond.conditionID,
+                            cond.conditionDescription,
+                            UserResponse(cond.proposingUser.publicWalletID),
+                            cond.proposalDate,
+                            agreement.ContractID,
+                            cond.conditionStatus,
+                            cond.conditionTitle
                         )
-                    }
+                    )
                 }
-
-
-
-                val tempArg = AgreementResponse(agreement.ContractID,
-                    agreement.AgreementTitle,
-                    agreement.AgreementDescription,
-                    agreement.DurationConditionUUID,
-                    agreement.PaymentConditionUUID,
-                    UserResponse(agreement.users.elementAt(0).publicWalletID),
-                    UserResponse(agreement.users.elementAt(1).publicWalletID),
-                    agreement.CreatedDate,
-                    agreement.SealedDate,
-                    agreement.MovedToBlockChain,
-                    conditionList,
-                    agreement.AgreementImageURL,)
-
-                list.add(tempArg)
             }
+            val usersList = userRepository.getUsersByAgreementsContaining(agreement)
+
+            val tempArg = AgreementResponse(agreement.ContractID,
+                agreement.AgreementTitle,
+                agreement.AgreementDescription,
+                agreement.DurationConditionUUID,
+                agreement.PaymentConditionUUID,
+                UserResponse(usersList.elementAt(0).publicWalletID),
+                UserResponse(usersList.elementAt(1).publicWalletID),
+                agreement.CreatedDate,
+                agreement.SealedDate,
+                agreement.MovedToBlockChain,
+                conditionList,
+                agreement.AgreementImageURL,)
+
+            list.add(tempArg)
         }
 
 
