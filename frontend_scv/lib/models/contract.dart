@@ -1,9 +1,11 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:unison/models/condition.dart';
+
 import 'http_exception.dart';
-import 'package:flutter/material.dart';
 
 class Contract with ChangeNotifier {
   String contractId; //agreementID
@@ -42,7 +44,8 @@ class Contract with ChangeNotifier {
   });
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
-  Contract.fromJson(Map jsn) { //TODO: publicWalletID will be upper case soon
+  Contract.fromJson(Map jsn) {
+    //TODO: publicWalletID will be upper case soon
     contractId = jsn['AgreementID'];
     partyA = jsn['PartyA']['publicWalletID'];
     partyB = jsn['PartyB']['publicWalletID'];
