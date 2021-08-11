@@ -37,9 +37,6 @@ class NegotiationService {
 
  Future<void> saveCondition(Condition cond) async { //Save a condition associated with a contract
 
-    //TODO list:
-   //Review return type and error handling (for special cases)
-
    Map<String, dynamic> response;
    try {
      response = await _api.postData(_reqPath + 'create-condition', cond.toJson());
@@ -66,12 +63,11 @@ class NegotiationService {
 
   Future<void> _handleCondition(String id, bool acc) async { //Either accept or reject condition
 
-   Map<String, String> body = {'ConditionID' : id};
    String path = acc ? 'accept-condition' : 'reject-condition';
 
    Map<String, dynamic> response;
    try {
-     response = await _api.postData(_reqPath + path, body);
+     response = await _api.postData(_reqPath + path, {'ConditionID' : id});
 
      if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Condition could not be ' + (acc ? 'accepted' : 'rejected'));
@@ -115,11 +111,9 @@ class NegotiationService {
  Future<void> sealAgreement(Contract con) async { //Or pass in Contract?
    //RFC: Should the blockchain be called immediately after the backend?
 
-   Map<String, String> body = {'AgreementID' : con.contractId};
-
    Map<String, dynamic> response;
    try {
-     response = await _api.postData(_reqPath + 'seal-agreement', body);
+     response = await _api.postData(_reqPath + 'seal-agreement', {'AgreementID' : con.contractId});
 
      if (response['Status'] != 'SUCCESSFUL')
        throw Exception('Agreement could not be sealed');
