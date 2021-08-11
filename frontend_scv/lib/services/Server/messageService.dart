@@ -1,6 +1,5 @@
 //This class will be a service to be used by the messaging interface.
 
-
 import 'package:unison/models/global.dart';
 
 import '../../models/message.dart';
