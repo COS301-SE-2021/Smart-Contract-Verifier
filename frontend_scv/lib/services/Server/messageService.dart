@@ -31,7 +31,6 @@ class MessageService {
   //Get messages either by agreement, or user id
   Future<List<Message>> _getMessageHandler(String id, bool byAgreement) async { //Used by two other methods
 
-     Global.userAddress = '0x743Fb032c0bE976e1178d8157f911a9e825d9E23'; //Debug
       Map<String, dynamic> body = byAgreement? {'AgreementID' : id, 'RequestingUser' : Global.userAddress} : {'RequestingUser' : id};
       var response;
 
