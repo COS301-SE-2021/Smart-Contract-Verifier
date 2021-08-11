@@ -22,19 +22,16 @@ class Message with ChangeNotifier {
   }
 
   Message.fromJSON(Map<String, dynamic> jsn) {
-    print('b4 - from');
     //Generate from backend api response
     this.sender = jsn['sendingUser']['publicWalletID'];
     print(this.sender);
     this.messageText = jsn['message'];
     this.dateSent = DateTime.tryParse(jsn['sendingDate']);
     this.messageID = jsn['messageID'];
-    print('after - from');
   }
 
   Map<String, dynamic> toJSONSend() {
     //ToJSON when sending a message
-    print('b4 - to');
 
     return {
       'SendingUser': sender,

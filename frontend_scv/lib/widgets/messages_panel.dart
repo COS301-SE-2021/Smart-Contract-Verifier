@@ -1,22 +1,42 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/messageService.dart';
 
 class MessagesPanel extends StatefulWidget {
   final String agreementId;
-  MessagesPanel(this.agreementId);
+  final bool isInit;
+  MessagesPanel(this.agreementId, this.isInit);
 
   @override
   _MessagesPanelState createState() => _MessagesPanelState();
 }
 
 class _MessagesPanelState extends State<MessagesPanel> {
+  final _controller = ScrollController();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     MessageService messageService = MessageService();
-    // print(messages);
+    print('isInit: ' + widget.isInit.toString());
     // return Text(messages.toString());
+    Timer(
+      Duration(seconds: widget.isInit ? 1 : 0),
+      () => _controller.animateTo(
+        _controller.position.maxScrollExtent,
+        duration: Duration(seconds: widget.isInit ? 1 : 0),
+        curve: Curves.fastOutSlowIn,
+      ),
+    );
+
     return FutureBuilder(
         future: messageService.getMessages(widget.agreementId),
         builder: (context, messagesSnapshot) {
@@ -25,8 +45,11 @@ class _MessagesPanelState extends State<MessagesPanel> {
               : //Text(messagesSnapshot.data);
 
               ListView.builder(
+                  controller: _controller,
                   padding: const EdgeInsets.all(10.0),
                   itemCount: messagesSnapshot.data.length,
+                  // reverse: true,
+                  // shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
                     final message = messagesSnapshot.data[index];
                     bool isCurrentUser = message.sender == Global.userAddress;

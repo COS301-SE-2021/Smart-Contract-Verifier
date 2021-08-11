@@ -61,6 +61,7 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
       _isLoading = false;
       // Provider.of<Contracts>(context, listen: false).fetchAndSetContracts();
       //TODO: assuming this rebuilds
+      super.setState(() {});
     });
   }
 
