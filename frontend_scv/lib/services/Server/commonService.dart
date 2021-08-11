@@ -3,24 +3,27 @@
 //like getting a list of agreements involving a user.
 
 import 'dart:async';
-import 'backendAPI.dart';
-import '../../models/contract.dart';
+
 import '../../models/condition.dart';
+import '../../models/contract.dart';
+import 'backendAPI.dart';
 
 class CommonService {
   ApiInteraction _api = ApiInteraction();
-  
+
   Contract errorContract = new Contract(
       title: 'Error',
       description:
           'An error was encountered, and the agreement could not be retrieved');
   //Error object to return on exception.
 
-  Future<List<Contract>> getInvolvedAgreements(String party) async { //Get all agreements where a user is involved
+  Future<List<Contract>> getInvolvedAgreements(String party) async {
+    //Get all agreements where a user is involved
     var response;
 
     try {
-      response = await _api.postData('/user/retrieve-user-agreements', {'UserID': party});
+      response = await _api
+          .postData('/user/retrieve-user-agreements', {'UserID': party});
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Retrieval of agreements failed');
@@ -48,7 +51,8 @@ class CommonService {
     var response;
 
     try {
-      response = await _api.postData('/negotiation/get-agreement-details', {'AgreementID': id});
+      response = await _api
+          .postData('/negotiation/get-agreement-details', {'AgreementID': id});
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be retrieved');
