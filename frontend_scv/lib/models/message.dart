@@ -17,19 +17,21 @@ class Message {
     messageText = text;
   }
 
-  Message.fromJSON(Map<String, dynamic> jsn) {
-    this.sender = jsn['sender'];
-    this.messageText = jsn['messageText'];
-    //timestamp/send time?
-  }
+  // Message.fromJSON(Map<String, dynamic> jsn) {
+  //   this.sender = jsn['sender'];
+  //   this.messageText = jsn['messageText'];
+  //   //timestamp/send time?
+  // }
 
   //Below is the final implementation
-  // Message.fromJSON(Map<String, dynamic> jsn) { //Generate from backend api response
-  //   this.sender = jsn['sender'];
-  //   this.messageText = jsn['message'];
-     //this.dateSent = DateTime.tryParse(jsn['sendDate']));
-  //   this.messageID = jsn['messageID'];
-  // }
+  Message.fromJSON(Map<String, dynamic> jsn) { //Generate from backend api response
+    this.sender = jsn['sendingUser']['publicWalletID'];
+    print (this.sender);
+    this.messageText = jsn['message'];
+    this.dateSent = DateTime.tryParse(jsn['sendingDate']);
+    this.messageID = jsn['messageID'];
+
+  }
 
   Map<String, dynamic> toJSONSend() { //ToJSON when sending a message
     return {
@@ -37,6 +39,14 @@ class Message {
       'AgreementID' : agreement,
       'Message' : messageText,
     };
+  }
+
+  String toString() {
+
+    String ret = 'Sender: '+ sender + '\n';
+    ret += 'Text: ' + messageText + '\n';
+    ret += 'Date Sent: ' + dateSent.toString();
+    return ret;
   }
 
 
