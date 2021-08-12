@@ -1,0 +1,4 @@
+package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
+
+class CreateAgreementDatabaseTest {
+}
