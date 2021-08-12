@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'package:unison/services/Blockchain/jurorService.dart';
+import 'package:unison/services/Blockchain/tokenService.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:web3dart/credentials.dart';
 
@@ -15,6 +16,7 @@ class JudgeService {
   ApiInteraction _api = ApiInteraction();
   //JurorService _jurServ = JurorService();
   UnisonService _uniServ = UnisonService();
+  TokenService _tokServ = TokenService();
 
 
   Future<List<Contract>> getInvolvedAgreements(String party) async { //Get all agreements where a user is the judge
@@ -51,6 +53,17 @@ class JudgeService {
   Future<bool> isJudge(String add) async {
 
     return await _uniServ.isJuror(EthereumAddress.fromHex(add));
+  }
+
+  //This method is mostly for testing.
+  //It sets the UNT allowances of all addresses passed in, granted by the addresses responsible for the minting of the token.
+  //All of the addresses will then be able to sign up to the jury.
+  Future<void> setAllowances(List<String> add, BigInt amount) async {
+
+    for (String a in add) {
+      await _tokServ.setAllowance(a, BigInt.from(10000)); //User stakes 10 000 gwei
+    }
+
   }
 
 }
