@@ -18,10 +18,11 @@ class JudgesService constructor(val judgesRepository: JudgesRepository,
                                 val userRepository: UserRepository,
                                 private val contractConfig: ContractConfig,){
 
-    private val web3j: Web3j = Web3j.build(HttpService(contractConfig.nodeAddress))
+    private lateinit var web3j: Web3j
 
     @PostConstruct
     fun initEventListener(){
+        web3j = Web3j.build(HttpService(contractConfig.nodeAddress))
         var filter = EthFilter(DefaultBlockParameterName.EARLIEST,
                                DefaultBlockParameterName.LATEST,
                                contractConfig.contractId)
