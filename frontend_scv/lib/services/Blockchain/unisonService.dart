@@ -14,12 +14,6 @@ class UnisonService {
 
   Future<void> saveAgreement(Contract con) async {
     //Todo list:
-    //Use relevant function name to call smart contract
-    //Use con to construct parameters
-    //In a real deployed contract, what will the delay be?
-    //When will a result be returned?
-    //How should it be handled in the UI?
-
     //Sort out events, and detecting them.
 
     var jsn = con.toJsonChain();
@@ -34,7 +28,7 @@ class UnisonService {
       partyBA,
       con.duration,
       data
-    ]); //Soon, this will be replaced bu a spinner in the UI
+    ]); //Soon, this will be replaced by a spinner in the UI
     // It will have to check for an event.
 
     final ev = await _smC.getCreationSubscription();
@@ -62,20 +56,27 @@ class UnisonService {
     print(res);
   }
 
-  Future<void> addJuror() async {
+  Future<void> addJuror() async { //The smart contract automatically removes the necessary funds from the user.
     await _smC.makeWriteCall('addJuror', []);
   }
 
   Future<void> removeJuror() async {
-
     await _smC.makeWriteCall('removeJuror', []);
+  }
+
+  Future<void> jurorVote(BigInt id, int v) async { //Vote yes/no on an agreement
+    await _smC.makeWriteCall('jurorVote', [id, BigInt.from(v)]);
+  }
+
+  Future<bool> isJuror(EthereumAddress add) async {
+
+    final res = await _smC.makeReadCall('isJuror', [add]);
+    return false; //Temporary
 
   }
 
-
-  Future<void> jurorVote(int v) async {
-    
-    await _smC.makeWriteCall('jurorVote', [BigInt.from(0), BigInt.from(v)]);
+  Future <void> getJury(BigInt id) async {
+    final res = await _smC.makeWriteCall('getJury', [id]);
   }
 
   //For testing
