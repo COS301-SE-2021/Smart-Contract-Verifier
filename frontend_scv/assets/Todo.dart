@@ -71,6 +71,8 @@
 * - Check if user exists
 *    -> PartyB in create agreement screen
 *    -> First Time Login (check user is in db)
+* - Show no Agreements message if no agreements
+*
 *
 * - Judge Screen
 *
