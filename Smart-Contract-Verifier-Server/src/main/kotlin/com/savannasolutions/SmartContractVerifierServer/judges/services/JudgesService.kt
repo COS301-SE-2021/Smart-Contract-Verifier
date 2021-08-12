@@ -4,6 +4,7 @@ import com.savannasolutions.SmartContractVerifierServer.judges.configurations.Co
 import com.savannasolutions.SmartContractVerifierServer.judges.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
@@ -13,6 +14,7 @@ import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServlet
 
 @Service
+@EnableConfigurationProperties(ContractConfig::class)
 class JudgesService constructor(val judgesRepository: JudgesRepository,
                                 val agreementsRepository: AgreementsRepository,
                                 val userRepository: UserRepository,
