@@ -47,7 +47,7 @@ class JudgeService {
   }
 
   Future<void> vote(BigInt id, bool vote) async { //True for yes, false for no
-    await _uniServ.jurorVote(id, vote? 2 : 1);
+    await _uniServ.jurorVote(id, vote? 2 : 1); //Smart contract uses enum types for votes.
   }
 
   Future<bool> isJudge(String add) async {

@@ -28,7 +28,8 @@ class UnisonService {
     final res = await _smC.makeWriteCall("createAgreement", [
       partyBA,
       con.duration,
-      data
+      data,
+      con.contractId,
     ]); //Soon, this will be replaced by a spinner in the UI
     // It will have to check for an event.
 
