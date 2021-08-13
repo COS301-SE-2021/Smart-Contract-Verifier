@@ -42,7 +42,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
         val creationEvent = Event("CreateAgreement", contractConfig.creationList)
         createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
         web3j.ethLogFlowable(createFilter).subscribe { event ->
-            var creationData = FunctionReturnDecoder.decode(event.data,
+            val creationData = FunctionReturnDecoder.decode(event.data,
             contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?)
             //describe how to use data to seal an agreement
             negotiationService.sealAgreement(SealAgreementRequest(UUID.fromString(creationData[3].toString()), creationData[3].value as Int))
@@ -54,7 +54,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
         val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
         juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
         web3j.ethLogFlowable(juryFilter).subscribe { event ->
-            var juryData = FunctionReturnDecoder.decode(event.data,
+            val juryData = FunctionReturnDecoder.decode(event.data,
                 contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?)
             //use data to assign a jury
             assignJury(juryData[0].value as Int, juryData[1] as List<TypeReference<Address>>)
@@ -62,10 +62,10 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
 
     }
     fun assignJury(agreementIndex: Int, jurors: List<TypeReference<Address>>){
-        var agreement = agreementsRepository.getAgreementsByBlockchainID(agreementIndex)
+        val agreement = agreementsRepository.getAgreementsByBlockchainID(agreementIndex)
         if(agreement != null){
             jurors.forEach { address ->
-                var juror = Judges()
+                val juror = Judges()
                 juror.agreement = agreement
                 juror.judge = userRepository.getById(address.toString())
             }
