@@ -62,6 +62,7 @@ class AddUserToContactListDatabaseTest {
         contactListProfileRepository.delete(contactListProfile)
         contactListRepository.delete(contactList)
         userRepository.delete(user)
+        userRepository.delete(ownerUser)
     }
 
     @Test
