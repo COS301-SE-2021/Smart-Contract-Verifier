@@ -63,14 +63,32 @@ class Contract with ChangeNotifier {
         .toList();
   }
 
-  Map<String, String> toJson() => {
-        //This is used in the initial save to the backend, hence not all fields being present.
-        'PartyA': partyA,
-        'PartyB': partyB,
-        'AgreementTitle': title,
-        'AgreementDescription': description,
-        'AgreementImageURL': imageUrl,
-      };
+
+  Map<String, String> toJson() {
+
+    print (partyA);
+    print (partyB);
+    print (title);
+    print (description);
+    print (imageUrl);
+    return {
+      //This is used in the initial save to the backend, hence not all fields being present.
+      'PartyA': partyA,
+      'PartyB': partyB,
+      'AgreementTitle': title,
+      'AgreementDescription': description,
+      'AgreementImageURL': imageUrl,
+    };
+  }
+
+  // Map<String, String> toJson() => {
+  //       //This is used in the initial save to the backend, hence not all fields being present.
+  //       'PartyA': partyA,
+  //       'PartyB': partyB,
+  //       'AgreementTitle': title,
+  //       'AgreementDescription': description,
+  //       'AgreementImageURL': imageUrl,
+  //     };
 
   Map<String, String> toJsonChain() => {
         //This is used in the save to the blockchain.
