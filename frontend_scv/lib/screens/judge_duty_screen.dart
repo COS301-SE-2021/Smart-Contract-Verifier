@@ -11,29 +11,6 @@ class JudgeDutyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userAddress = Provider.of<Auth>(context).userWalletAddress;
 
-    Future<void> _print(String message) async {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Debug'),
-            content: Text(message),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Approve'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    _print(userAddress);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Judge Duty'),
