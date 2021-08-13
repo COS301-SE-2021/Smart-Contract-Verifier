@@ -6,6 +6,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
+import org.web3j.abi.EventEncoder
+import org.web3j.abi.datatypes.Event
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.EthFilter
@@ -25,9 +27,20 @@ class JudgesService constructor(val judgesRepository: JudgesRepository,
     @PostConstruct
     fun initEventListener(){
         web3j = Web3j.build(HttpService(contractConfig.nodeAddress))
-        var filter = EthFilter(DefaultBlockParameterName.EARLIEST,
+
+        val createFilter = EthFilter(DefaultBlockParameterName.EARLIEST,
                                DefaultBlockParameterName.LATEST,
                                contractConfig.contractId)
+        val creationEvent = Event("CreateAgreement", contractConfig.creationList)
+        createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
+        web3j.ethLogFlowable(createFilter).subscribe { event -> println("New agreement Created: $event") }
+
+        val juryFilter = EthFilter(DefaultBlockParameterName.EARLIEST,
+            DefaultBlockParameterName.LATEST,
+            contractConfig.contractId)
+        val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
+        juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
+        web3j.ethLogFlowable(juryFilter).subscribe { event -> println("New jury assigned: $event") }
 
     }
 
