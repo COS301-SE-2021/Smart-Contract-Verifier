@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -11,12 +12,14 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
+import kotlin.test.assertEquals
 
 @SpringBootTest
-@DataJpaTest
+@AutoConfigureDataJpa
 class AcceptConditionDatabaseTest {
     @Autowired
     lateinit var agreementsRepository: AgreementsRepository
@@ -44,7 +47,7 @@ class AcceptConditionDatabaseTest {
                                         ConditionStatus.PENDING,
                                         Date())
 
-        conditionsRepository.save(pendingCondition)
+        pendingCondition = conditionsRepository.save(pendingCondition)
 
         acceptedCondition = Conditions(UUID.fromString("b0cc41a5-bd56-4687-ae7f-e6f48c7ed972"),
             "Accept Condition",
@@ -52,7 +55,7 @@ class AcceptConditionDatabaseTest {
             ConditionStatus.ACCEPTED,
             Date())
 
-        conditionsRepository.save(acceptedCondition)
+        acceptedCondition = conditionsRepository.save(acceptedCondition)
 
         rejectedCondition = Conditions(UUID.fromString("b0cc41a5-bd56-4687-ae7f-e6f48c7ed972"),
             "Rejected Condition",
@@ -60,7 +63,7 @@ class AcceptConditionDatabaseTest {
             ConditionStatus.REJECTED,
             Date())
 
-        conditionsRepository.save(rejectedCondition)
+        rejectedCondition = conditionsRepository.save(rejectedCondition)
     }
 
     @AfterEach
@@ -74,7 +77,37 @@ class AcceptConditionDatabaseTest {
     @Test
     fun `AcceptCondition successful`()
     {
-        //val request = AcceptConditionRequest()
+        val request = AcceptConditionRequest(pendingCondition.conditionID)
+
+        val response = negotiationService.acceptCondition(request)
+
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        val condition = conditionsRepository.getById(pendingCondition.conditionID)
+        assertEquals(condition.conditionStatus, ConditionStatus.ACCEPTED)
+    }
+
+    @Test
+    fun `AcceptCondition failed due to already being accepted`()
+    {
+        val request = AcceptConditionRequest(acceptedCondition.conditionID)
+
+        val response = negotiationService.acceptCondition(request)
+
+        assertEquals(response.status, ResponseStatus.FAILED)
+        val condition = conditionsRepository.getById(acceptedCondition.conditionID)
+        assertEquals(condition.conditionStatus, ConditionStatus.ACCEPTED)
+    }
+
+    @Test
+    fun `AcceptCondition failed due to already being rejected`()
+    {
+        val request = AcceptConditionRequest(rejectedCondition.conditionID)
+
+        val response = negotiationService.acceptCondition(request)
+
+        assertEquals(response.status, ResponseStatus.FAILED)
+        val condition = conditionsRepository.getById(rejectedCondition.conditionID)
+        assertEquals(condition.conditionStatus, ConditionStatus.REJECTED)
     }
 
 
