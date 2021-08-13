@@ -1,7 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.models
 
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
-import com.savannasolutions.SmartContractVerifierServer.judges.models.Judges
+import com.savannasolutions.SmartContractVerifierServer.contracts.models.Judges
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import java.util.*
 import javax.persistence.*

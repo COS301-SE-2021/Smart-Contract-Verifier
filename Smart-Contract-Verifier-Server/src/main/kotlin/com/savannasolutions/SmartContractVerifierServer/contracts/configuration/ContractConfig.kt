@@ -1,11 +1,9 @@
-package com.savannasolutions.SmartContractVerifierServer.judges.configurations
+package com.savannasolutions.SmartContractVerifierServer.contracts.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 @ConfigurationProperties("com.unison")

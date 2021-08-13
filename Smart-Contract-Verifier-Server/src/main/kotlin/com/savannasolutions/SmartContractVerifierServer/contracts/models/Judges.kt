@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.judges.models
+package com.savannasolutions.SmartContractVerifierServer.contracts.models
 
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
