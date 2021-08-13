@@ -73,4 +73,11 @@ class JudgeService {
 
   }
 
+  //Let's Verifier use UNT
+  Future<void> setContractAllowance() async {
+
+    await _tokServ.setAllowance(await Global.getContractId('Verifier'), BigInt.from(100000));
+
+  }
+
 }
