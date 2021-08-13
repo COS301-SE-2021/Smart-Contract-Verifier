@@ -2,7 +2,7 @@
 //This one deals with negotiation-related issues.
 
 import 'dart:async';
-
+import 'package:unison/services/Blockchain/unisonService.dart';
 import '../../models/condition.dart';
 import '../../models/contract.dart';
 import '../../models/global.dart';
@@ -11,6 +11,7 @@ import 'backendAPI.dart';
 class NegotiationService {
   ApiInteraction _api = ApiInteraction();
   final String _reqPath = '/negotiation/';
+  UnisonService _uniServ = UnisonService();
 
   Future<dynamic> getNotifications(String party) async {
     return;
@@ -117,9 +118,9 @@ class NegotiationService {
     }
   }
 
+  //This method is bound to change soon.
+  //The api will be updated with a new 'seal flow'
   Future<void> sealAgreement(Contract con) async {
-    //Or pass in Contract?
-    //RFC: Should the blockchain be called immediately after the backend?
 
     Map<String, dynamic> response;
     try {
@@ -128,6 +129,10 @@ class NegotiationService {
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be sealed');
+
+      //Save the agreement on the blockchain
+      await _uniServ.saveAgreement(con);
+
     } on Exception catch (e) {
       //Handle exception
       print(e);
