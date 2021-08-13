@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.contracts.services
 
 import com.savannasolutions.SmartContractVerifierServer.contracts.configuration.ContractConfig
+import com.savannasolutions.SmartContractVerifierServer.contracts.models.Judges
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SealAgreementRequest
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service
 import org.web3j.abi.EventEncoder
 import org.web3j.abi.FunctionReturnDecoder
 import org.web3j.abi.TypeReference
+import org.web3j.abi.datatypes.Address
 import org.web3j.abi.datatypes.Event
 import org.web3j.abi.datatypes.Type
 import org.web3j.protocol.Web3j
@@ -55,12 +57,18 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
             var juryData = FunctionReturnDecoder.decode(event.data,
                 contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?)
             //use data to assign a jury
-        }
-
-        fun assignJury(){
-
+            assignJury(juryData[0].value as Int, juryData[1] as List<TypeReference<Address>>)
         }
 
     }
-
+    fun assignJury(agreementIndex: Int, jurors: List<TypeReference<Address>>){
+        var agreement = agreementsRepository.getAgreementsByBlockchainID(agreementIndex)
+        if(agreement != null){
+            jurors.forEach { address ->
+                var juror = Judges()
+                juror.agreement = agreement
+                juror.judge = userRepository.getById(address.toString())
+            }
+        }
+    }
 }
