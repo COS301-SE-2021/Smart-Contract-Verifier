@@ -7,7 +7,10 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRe
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.web3j.abi.EventEncoder
+import org.web3j.abi.FunctionReturnDecoder
+import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.Event
+import org.web3j.abi.datatypes.Type
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.EthFilter
@@ -33,14 +36,22 @@ class JudgesService constructor(val judgesRepository: JudgesRepository,
                                contractConfig.contractId)
         val creationEvent = Event("CreateAgreement", contractConfig.creationList)
         createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
-        web3j.ethLogFlowable(createFilter).subscribe { event -> println("New agreement Created: $event") }
+        web3j.ethLogFlowable(createFilter).subscribe { event ->
+            var creationData = FunctionReturnDecoder.decode(event.data,
+            contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?)
+            //describe how to use data to seal an agreement
+        }
 
         val juryFilter = EthFilter(DefaultBlockParameterName.EARLIEST,
             DefaultBlockParameterName.LATEST,
             contractConfig.contractId)
         val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
         juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
-        web3j.ethLogFlowable(juryFilter).subscribe { event -> println("New jury assigned: $event") }
+        web3j.ethLogFlowable(juryFilter).subscribe { event ->
+            var juryData = FunctionReturnDecoder.decode(event.data,
+                contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?)
+            //use data to assign a jury
+        }
 
     }
 
