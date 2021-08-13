@@ -3,6 +3,8 @@ package com.savannasolutions.SmartContractVerifierServer.contracts.services
 import com.savannasolutions.SmartContractVerifierServer.contracts.configuration.ContractConfig
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
+import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SealAgreementRequest
+import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
@@ -15,6 +17,7 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.EthFilter
 import org.web3j.protocol.http.HttpService
+import java.util.*
 import javax.annotation.PostConstruct
 
 @Service
@@ -22,6 +25,7 @@ import javax.annotation.PostConstruct
 class ContractService constructor(val judgesRepository: JudgesRepository,
                                   val agreementsRepository: AgreementsRepository,
                                   val userRepository: UserRepository,
+                                  val negotiationService: NegotiationService,
                                   private val contractConfig: ContractConfig,){
 
     private lateinit var web3j: Web3j
@@ -39,6 +43,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
             var creationData = FunctionReturnDecoder.decode(event.data,
             contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?)
             //describe how to use data to seal an agreement
+            negotiationService.sealAgreement(SealAgreementRequest(UUID.fromString(creationData[3].toString()), creationData[3].value as Int))
         }
 
         val juryFilter = EthFilter(DefaultBlockParameterName.EARLIEST,
