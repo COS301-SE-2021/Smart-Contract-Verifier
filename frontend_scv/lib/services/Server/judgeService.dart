@@ -41,10 +41,13 @@ class JudgeService {
   //Adding it would make the class-hierarchy seem less strange
   Future<void> makeUserJudge() async { //Let's the current user act as a judge
       await _uniServ.addJuror();
+      Global.isJudge = true;
+      //Global.isJudge = await isJudge(); //In stead of setting to true, an alternative.
   }
 
   Future<void> unMakeJudge() async { //Let's the user opt-out of being a judge
       await _uniServ.removeJuror();
+      Global.isJudge = false;
   }
 
   Future<void> vote(BigInt id, bool vote) async { //True for yes, false for no
@@ -54,7 +57,9 @@ class JudgeService {
   //Checks if the current user is a juror
   Future<bool> isJudge() async {
 
-    return await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
+    bool res = await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
+    Global.isJudge = res;
+    return res;
   }
 
   //This method is mostly for testing.
