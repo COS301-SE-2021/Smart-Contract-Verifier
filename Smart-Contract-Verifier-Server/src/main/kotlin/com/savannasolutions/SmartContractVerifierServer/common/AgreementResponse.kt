@@ -14,4 +14,5 @@ data class AgreementResponse(@JsonProperty("AgreementID") val agreementID: UUID,
                              @JsonProperty("SealedDate") val sealedDate: Date? = null,
                              @JsonProperty("MovedToBlockchain") val movedToBlockchain: Boolean? = false,
                              @JsonProperty("Conditions") val conditions: List<ConditionResponse>? = null,
-                             @JsonProperty("AgreementImageURL") val agreementImageURL: String? = null)
+                             @JsonProperty("AgreementImageURL") val agreementImageURL: String? = null,
+                             @JsonProperty("BlockChainID") val blockChainID: String? = null,)
