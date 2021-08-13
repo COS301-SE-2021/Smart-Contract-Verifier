@@ -54,7 +54,9 @@ class JudgeService {
   //Checks if the current user is a juror
   Future<bool> isJudge() async {
 
-    return await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
+    bool res = await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
+    Global.isJudge = res;
+    return res;
   }
 
   //This method is mostly for testing.
