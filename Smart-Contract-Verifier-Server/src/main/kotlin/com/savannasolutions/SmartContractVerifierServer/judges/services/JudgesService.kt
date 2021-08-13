@@ -53,6 +53,10 @@ class JudgesService constructor(val judgesRepository: JudgesRepository,
             //use data to assign a jury
         }
 
+        fun assignJury(){
+
+        }
+
     }
 
 }
