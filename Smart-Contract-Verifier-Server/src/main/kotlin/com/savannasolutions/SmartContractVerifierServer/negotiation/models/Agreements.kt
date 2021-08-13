@@ -10,7 +10,7 @@ import javax.persistence.*
 data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       var AgreementTitle: String = "Un-named Agreement",
                       var AgreementDescription: String = "",
-                      var blockchainID: String? = null,
+                      var blockchainID: Int? = null,
                       val CreatedDate:Date,
                       var SealedDate:Date? = null,
                       var DurationConditionUUID: UUID? = null,
