@@ -45,9 +45,9 @@ class JudgeDutyScreen extends StatelessWidget {
                   Text('You are currently not a judge.'),
                   TextButton(
                       onPressed: () async {
-                        // JudgeService jS = JudgeService();
-                        // await jS.makeUserJudge();
-                        Global.isJudge = true;
+                        JudgeService jS = JudgeService();
+                        await jS.makeUserJudge();
+                        // Global.isJudge = true;
                         Navigator.of(context).pushNamed(
                           JudgeDutyScreen.routeName,
                         );
