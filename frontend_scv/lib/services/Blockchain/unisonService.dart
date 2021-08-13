@@ -79,6 +79,7 @@ class UnisonService {
     final res = await _smC.makeWriteCall('getJury', [id]);
   }
 
+
   //For testing
   Future<void> setEvent() async {
     final res = await _smC.getCreationSubscription();

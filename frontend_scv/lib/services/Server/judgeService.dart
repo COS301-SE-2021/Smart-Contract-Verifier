@@ -2,6 +2,7 @@
 //This one deals with judge-related issues.
 
 import 'dart:async';
+import 'package:unison/models/global.dart';
 import 'package:unison/services/Blockchain/jurorService.dart';
 import 'package:unison/services/Blockchain/tokenService.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
@@ -50,9 +51,10 @@ class JudgeService {
     await _uniServ.jurorVote(id, vote? 2 : 1); //Smart contract uses enum types for votes.
   }
 
-  Future<bool> isJudge(String add) async {
+  //Checks if the current user is a juror
+  Future<bool> isJudge() async {
 
-    return await _uniServ.isJuror(EthereumAddress.fromHex(add));
+    return await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
   }
 
   //This method is mostly for testing.
