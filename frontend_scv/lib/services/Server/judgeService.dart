@@ -13,14 +13,13 @@ import '../../models/contract.dart';
 import '../Blockchain/jurorService.dart';
 
 class JudgeService {
-
   ApiInteraction _api = ApiInteraction();
   //JurorService _jurServ = JurorService();
   UnisonService _uniServ = UnisonService();
   TokenService _tokServ = TokenService();
 
-
-  Future<List<Contract>> getInvolvedAgreements(String party) async { //Get all agreements where a user is the judge
+  Future<List<Contract>> getInvolvedAgreements(String party) async {
+    //Get all agreements where a user is the judge
 
     //TODO list:
     //Handle judge functionality later
@@ -30,7 +29,8 @@ class JudgeService {
     return [];
   }
 
-  Future<List<dynamic>> getNotifications(String party) async { //Get all notifications for a judge
+  Future<List<dynamic>> getNotifications(String party) async {
+    //Get all notifications for a judge
     //TODO list:
     //Handle this later
 
@@ -39,25 +39,29 @@ class JudgeService {
 
   //Additional logic may be added to the below functions to enable functionality elsewhere
   //Adding it would make the class-hierarchy seem less strange
-  Future<void> makeUserJudge() async { //Let's the current user act as a judge
-      await _uniServ.addJuror();
-      Global.isJudge = true;
-      //Global.isJudge = await isJudge(); //In stead of setting to true, an alternative.
+  Future<void> makeUserJudge() async {
+    //Let's the current user act as a judge
+    await _uniServ.addJuror();
+    Global.isJudge = true;
+    //Global.isJudge = await isJudge(); //In stead of setting to true, an alternative.
   }
 
-  Future<void> unMakeJudge() async { //Let's the user opt-out of being a judge
-      await _uniServ.removeJuror();
-      Global.isJudge = false;
+  Future<void> unMakeJudge() async {
+    //Let's the user opt-out of being a judge
+    await _uniServ.removeJuror();
+    Global.isJudge = false;
   }
 
-  Future<void> vote(BigInt id, bool vote) async { //True for yes, false for no
-    await _uniServ.jurorVote(id, vote? 2 : 1); //Smart contract uses enum types for votes.
+  Future<void> vote(BigInt id, bool vote) async {
+    //True for yes, false for no
+    await _uniServ.jurorVote(
+        id, vote ? 2 : 1); //Smart contract uses enum types for votes.
   }
 
   //Checks if the current user is a juror
   Future<bool> isJudge() async {
-
-    bool res = await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
+    bool res =
+        await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
     Global.isJudge = res;
     return res;
   }
@@ -66,18 +70,15 @@ class JudgeService {
   //It sets the UNT allowances of all addresses passed in, granted by the addresses responsible for the minting of the token.
   //All of the addresses will then be able to sign up to the jury.
   Future<void> setAllowances(List<String> add, BigInt amount) async {
-
     for (String a in add) {
-      await _tokServ.setAllowance(a, BigInt.from(10000)); //User stakes 10 000 gwei
+      await _tokServ.setAllowance(
+          a, BigInt.from(10000)); //User stakes 10 000 gwei
     }
-
   }
 
   //Let's Verifier use UNT
   Future<void> setContractAllowance() async {
-
-    await _tokServ.setAllowance(await Global.getContractId('Verifier'), BigInt.from(100000));
-
+    await _tokServ.setAllowance(
+        await Global.getContractId('Verifier'), BigInt.from(100000));
   }
-
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/services/Server/loginService.dart';
 
 import '../providers/auth.dart';
@@ -112,8 +113,10 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       //First check if user exists:
-      LoginService loginService = LoginService();
+      JudgeService judicious = JudgeService();
       await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+      // await judicious.setContractAllowance();
+      await judicious.isJudge();
       // await loginService.tryAddUser();
       //Success -> go to home screen - because the MaterialApp is a consumer
       // of the Auth Provider, we do not need to push/navigate to the
