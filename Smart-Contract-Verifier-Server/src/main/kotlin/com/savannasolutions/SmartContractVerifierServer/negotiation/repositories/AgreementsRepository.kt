@@ -9,4 +9,5 @@ import java.util.*
 @Repository
 interface AgreementsRepository : JpaRepository<Agreements, UUID>{
     fun getAllByUsersContaining(user: User): MutableSet<Agreements>?
+    fun getAgreementsByBlockchainID(index: Int): Agreements?
 }
