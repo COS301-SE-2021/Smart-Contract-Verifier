@@ -1,4 +1,5 @@
 //This class will be used to interact with the Unison smart Contract to save and get contracts from the blockchain
+//The jury is also handled by Verifier, so those functions are here as well.
 
 import 'package:web3dart/credentials.dart';
 
@@ -7,7 +8,7 @@ import '../../models/global.dart';
 import 'smartContract.dart';
 
 class UnisonService {
-  //For the Verfier smart contract
+  //For the Verifier smart contract
 
   SmartContract _smC =
       SmartContract("JSON/_src_Verifier_sol_Verifier.abi", 'Verifier');
@@ -40,9 +41,6 @@ class UnisonService {
 
   Future<void> acceptAgreement(Contract con) async {
     //This should probably be called immediately after the contract is sealed on backend.
-    //TODO list:
-    //Use function name acceptAgreement
-    //Create parameter list. Only Agreement id. From where?
 
     if (!con.movedToBlockchain) {
       throw Exception('Agreement is not on blockchain yet');
@@ -71,7 +69,8 @@ class UnisonService {
   Future<bool> isJuror(EthereumAddress add) async {
 
     final res = await _smC.makeReadCall('isJuror', [add]);
-    return false; //Temporary
+    print ('Actual res: ' + res.toString());
+    return res[0]; //Temporary
 
   }
 
