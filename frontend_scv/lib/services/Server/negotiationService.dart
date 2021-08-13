@@ -26,7 +26,7 @@ class NegotiationService {
     try {
       response =
           await _api.postData(_reqPath + 'create-agreement', agr.toJson());
-
+      print(response.toString());
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be saved');
     } on Exception catch (e) {
@@ -121,7 +121,6 @@ class NegotiationService {
   //This method is bound to change soon.
   //The api will be updated with a new 'seal flow'
   Future<void> sealAgreement(Contract con) async {
-
     Map<String, dynamic> response;
     try {
       response = await _api.postData(
@@ -132,7 +131,6 @@ class NegotiationService {
 
       //Save the agreement on the blockchain
       await _uniServ.saveAgreement(con);
-
     } on Exception catch (e) {
       //Handle exception
       print(e);
