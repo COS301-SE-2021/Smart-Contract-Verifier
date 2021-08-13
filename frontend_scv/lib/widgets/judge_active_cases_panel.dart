@@ -1,16 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:intl/intl.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/judgeService.dart';
 
 class JudgeActiveCasesPanel extends StatefulWidget {
-  final String agreementId;
-  final bool isInit;
-  JudgeActiveCasesPanel(this.agreementId, this.isInit);
-
   @override
   _JudgeActiveCasesPanelState createState() => _JudgeActiveCasesPanelState();
 }
@@ -26,14 +18,15 @@ class _JudgeActiveCasesPanelState extends State<JudgeActiveCasesPanel> {
   @override
   Widget build(BuildContext context) {
     JudgeService judgeService = JudgeService();
-    print('isInit: ' + widget.isInit.toString());
 
     return FutureBuilder(
         future: judgeService.getInvolvedAgreements(Global.userAddress),
         builder: (context, agreementsSnapshot) {
           return agreementsSnapshot.connectionState != ConnectionState.done
               ? CircularProgressIndicator()
-              : Text(agreementsSnapshot.data.toString());
+              : agreementsSnapshot.data.length == 0
+                  ? Text('No Assignments')
+                  : Text(agreementsSnapshot.data.toString());
 
           // ListView.builder(
           //     controller: _controller,

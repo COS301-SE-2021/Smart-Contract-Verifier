@@ -68,6 +68,23 @@
 * - Seal Agreement /
 *   Migrate to blockchain, once mined enough, on blockchain == true
 *
+*   If no conditions are {PENDING}
+*   - enable the seal agreement button
+*   If both parties 'Seal' -> move to blockchain
+*
+*   {
+*
+*     ''
+*   }
+*
+*   If one party requests seal and another
+*
+*
+*
+*
+*
+*
+*
 * - Check if user exists
 *    -> PartyB in create agreement screen
 *    -> First Time Login (check user is in db)
@@ -75,5 +92,7 @@
 *
 *
 * - Judge Screen
+*
+*
 *
 * */

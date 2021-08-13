@@ -35,7 +35,7 @@ class JudgeDutyScreen extends StatelessWidget {
               ),
             ],
           ),
-          Expanded(child: JudgeActiveCasesPanel(Global.userAddress, true)),
+          Expanded(child: JudgeActiveCasesPanel()),
         ],
       ),
     );

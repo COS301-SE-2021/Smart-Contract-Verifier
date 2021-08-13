@@ -110,7 +110,8 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
     try {
-      await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+      //First check if user exists:
+      await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
       //Success -> go to home screen - because the MaterialApp is a consumer
       // of the Auth Provider, we do not need to push/navigate to the
       // dashboard, it will simply re-render/rebuild the materialApp and set
