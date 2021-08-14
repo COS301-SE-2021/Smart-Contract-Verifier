@@ -51,12 +51,12 @@ class Contract with ChangeNotifier {
       sealedDate = DateTime.parse(jsn['SealedDate']);
     } catch(_) {}
     //status = json['status'],
-    duration = jsn['Duration'];
+    duration = BigInt.from(100);//jsn['Duration'];
     movedToBlockchain = jsn['MovedToBlockChain'];
     description = jsn['AgreementDescription'];
     imageUrl = jsn['AgreementImageURL'];
     partyBId = '';
-    price = 0;
+    price = 10;
     title = jsn['AgreementTitle'];
     conditions = (jsn['Conditions'])
         .map<Condition>((i) => Condition.fromJson(i))
