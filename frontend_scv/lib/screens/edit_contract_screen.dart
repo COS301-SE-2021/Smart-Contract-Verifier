@@ -18,8 +18,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
   final _priceFocusNode = FocusNode();
   final _partyBIdFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
-  final _imageUrlFocusNode = FocusNode();
-  final _imageUrlController = TextEditingController();
+  // final _imageUrlFocusNode = FocusNode();
+  // final _imageUrlController = TextEditingController();
   //Global Key - used to interact with a widget within your code - very rare
   //Normally used for forms:
   final _form = GlobalKey<FormState>(); //essentially 'hooks' into forms state
@@ -47,7 +47,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
   };
   @override
   void initState() {
-    _imageUrlFocusNode.addListener(_updateImageUrl);
+    // _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
 
@@ -64,25 +64,25 @@ class _EditContractScreenState extends State<EditContractScreen> {
           'price': _editedContract.price.toString(),
           'partyBId': _editedContract.partyB,
         };
-        _imageUrlController.text = _editedContract.imageUrl;
+        // _imageUrlController.text = _editedContract.imageUrl;
       }
     } //
     _isInit = false;
     super.didChangeDependencies();
   }
 
-  void _updateImageUrl() {
-    if (!_imageUrlFocusNode.hasFocus) {
-      if ((!_imageUrlController.text.startsWith('http') &&
-              !_imageUrlController.text.startsWith('https')) ||
-          (!_imageUrlController.text.endsWith('.png') &&
-              !_imageUrlController.text.endsWith('.jpg') &&
-              !_imageUrlController.text.endsWith('.jpeg'))) {
-        return;
-      }
-      setState(() {});
-    }
-  }
+  // void _updateImageUrl() {
+  //   if (!_imageUrlFocusNode.hasFocus) {
+  //     if ((!_imageUrlController.text.startsWith('http') &&
+  //             !_imageUrlController.text.startsWith('https')) ||
+  //         (!_imageUrlController.text.endsWith('.png') &&
+  //             !_imageUrlController.text.endsWith('.jpg') &&
+  //             !_imageUrlController.text.endsWith('.jpeg'))) {
+  //       return;
+  //     }
+  //     setState(() {});
+  //   }
+  // }
 
   Future<void> _saveForm() async {
     //validates inputs on the form -> executes the 'validator' of each input:
@@ -130,12 +130,12 @@ class _EditContractScreenState extends State<EditContractScreen> {
 
   @override
   void dispose() {
-    _imageUrlFocusNode.removeListener(_updateImageUrl);
+    // _imageUrlFocusNode.removeListener(_updateImageUrl);
     _priceFocusNode.dispose();
     _partyBIdFocusNode.dispose();
     _descriptionFocusNode.dispose();
-    _imageUrlController.dispose();
-    _imageUrlFocusNode.dispose();
+    // _imageUrlController.dispose();
+    // _imageUrlFocusNode.dispose();
     super.dispose();
   }
 
@@ -217,7 +217,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
                             description: _editedContract.description,
                             price: _editedContract.price,
                             imageUrl: _editedContract.imageUrl,
-                            partyB: value,
+                            partyB: value.toLowerCase(),
                             partyA: _editedContract.partyA,
                             conditions: []);
                       },
