@@ -44,8 +44,12 @@ class Contract with ChangeNotifier {
     contractId = jsn['AgreementID'];
     partyA = jsn['PartyA']['publicWalletID'];
     partyB = jsn['PartyB']['publicWalletID'];
-    // createdDate = DateTime.tryParse(jsn['CreatedDate']);
-    // sealedDate = DateTime.tryParse(jsn['SealedDate']);
+    // createdDate = null;
+    // sealedDate = null;
+    try {
+      createdDate = DateTime.parse(jsn['CreatedDate']);
+      sealedDate = DateTime.parse(jsn['SealedDate']);
+    } catch(_) {}
     //status = json['status'],
     movedToBlockchain = jsn['MovedToBlockChain'];
     description = jsn['AgreementDescription'];
