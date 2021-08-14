@@ -33,7 +33,7 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                 children: [
                   Text('Created: ${widget._contract.createdDate}'),
                   Text(
-                      'Moved to Blockchain: ${widget._contract.movedToBlockchain.toString() == 'null' ? 'false' : widget._contract.movedToBlockchain.toString()}'),
+                      'Moved to Blockchain: ${widget._contract.movedToBlockchain.toString()}'),
                   SizedBox(
                     width: 15,
                   ),
@@ -85,15 +85,30 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
       }
     });
 
-    return stillPending
-        ? Text('Waiting for PENDING conditions')
-        : ElevatedButton(
-            onPressed: () async {
-              await widget.negotiationService.sealAgreement(widget._contract);
-              //TODO setState
-              print('SEAL THAT DEAL');
-            },
-            child: Text('Seal Agreement'),
-          );
+    return widget._contract.sealedDate != null
+        ? Text('Agreement Sealed')
+        :
+        // /TRUE
+        // Text('Agreement Sealed')
+        // FALSE
+        stillPending
+            ? Text('Waiting for PENDING conditions')
+            : ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await widget.negotiationService
+                        .sealAgreement(widget._contract);
+                    print('SEAL THAT DEAL');
+                    setState(() {
+                      stillPending = false;
+                      widget._contract.sealedDate = DateTime.now();
+                    });
+                  } catch (error) {
+                    print(error);
+                    setState(() {});
+                  }
+                },
+                child: Text('Seal Agreement'),
+              );
   }
 }
