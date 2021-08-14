@@ -66,8 +66,9 @@
 * ---------------
 * TOMORROW:
 * ---------------
-* Jury chat
-* Jury Voting
+* Jury chat --> Kevin
+* Jury Voting --> complete, do touch ups
+* Get agreements where user is judge
 * Seal the deal
 * ---------------
 * LATER:
