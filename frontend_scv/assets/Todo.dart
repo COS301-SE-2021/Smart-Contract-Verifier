@@ -73,6 +73,7 @@
 * Add payment condition blockchain?
 * Create Agreement (who pays)
 * LOWERCASEPARTY - DONE
+* Clear chat
 * ---------------
 * LATER:
 * ---------------

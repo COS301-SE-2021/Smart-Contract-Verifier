@@ -34,6 +34,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
     partyA: Global.userAddress,
     conditions: [],
   );
+
   var _isInit = true;
   var _isLoading = false;
 

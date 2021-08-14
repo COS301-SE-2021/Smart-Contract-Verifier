@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/condition.dart';
 import 'package:unison/models/global.dart';
+import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 
 import '../models/contract.dart';
@@ -9,6 +11,7 @@ class ContractDetailInfoPanel extends StatefulWidget {
   final Contract _contract;
   ContractDetailInfoPanel(this._contract);
   NegotiationService negotiationService = NegotiationService();
+  UnisonService unisonService = UnisonService();
 
   @override
   _ContractDetailInfoPanelState createState() =>
@@ -86,7 +89,44 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
     });
 
     return widget._contract.sealedDate != null
-        ? Text('Agreement Sealed')
+        ? Column(
+            children: [
+              Text('Agreement Sealed'),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    print('Happiness');
+                    await widget.unisonService.agreementFulfilled(
+                      widget._contract,
+                      true,
+                    );
+                  } catch (error) {
+                    print(error);
+                    setState(() {});
+                  }
+                },
+                child: Text('Conclude Agreement'),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    print('Not happiness');
+                    await widget.unisonService.agreementFulfilled(
+                      widget._contract,
+                      false,
+                    );
+                  } catch (error) {
+                    print(error);
+                    setState(() {});
+                  }
+                },
+                child: Text('Dispute Agreement'),
+              ),
+            ],
+          )
         :
         // /TRUE
         // Text('Agreement Sealed')
@@ -98,10 +138,12 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                   try {
                     await widget.negotiationService
                         .sealAgreement(widget._contract);
+
                     print('SEAL THAT DEAL');
                     setState(() {
                       stillPending = false;
                       widget._contract.sealedDate = DateTime.now();
+                      widget._contract.movedToBlockchain = true;
                     });
                   } catch (error) {
                     print(error);

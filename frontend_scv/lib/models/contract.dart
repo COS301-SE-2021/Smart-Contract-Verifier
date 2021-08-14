@@ -9,7 +9,7 @@ import 'http_exception.dart';
 
 class Contract with ChangeNotifier {
   String contractId; //agreementID
-  BigInt blockchainId;
+  BigInt blockchainId = BigInt.from(0);
   String partyA;
   String partyB;
   DateTime createdDate;
@@ -51,14 +51,16 @@ class Contract with ChangeNotifier {
     //Try to get items that may not exist yet
     try {
       duration = jsn['DurationCondition']['Amount'];
-    } catch (_) {}
+    } catch (e) {
+      print('DURATIONPARSE: ' + e.toString());
+    }
     try {
       price = jsn['PaymentCondition']['Amount'];
     } catch (_) {}
     try {
       createdDate = DateTime.parse(jsn['CreatedDate']);
       sealedDate = DateTime.parse(jsn['SealedDate']);
-    } catch(_) {}
+    } catch (_) {}
 
     movedToBlockchain = jsn['MovedToBlockChain'];
     description = jsn['AgreementDescription'];
