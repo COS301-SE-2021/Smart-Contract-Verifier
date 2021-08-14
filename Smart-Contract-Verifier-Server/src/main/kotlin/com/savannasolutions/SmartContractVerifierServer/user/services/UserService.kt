@@ -4,17 +4,20 @@ import com.savannasolutions.SmartContractVerifierServer.common.AgreementResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
+import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
-import com.savannasolutions.SmartContractVerifierServer.security.requests.UserExistsRequest
-import com.savannasolutions.SmartContractVerifierServer.security.responses.AddUserResponse
+import com.savannasolutions.SmartContractVerifierServer.user.requests.UserExistsRequest
+import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
-import com.savannasolutions.SmartContractVerifierServer.security.responses.UserExistsResponse
+import com.savannasolutions.SmartContractVerifierServer.user.responses.UserExistsResponse
 import org.springframework.stereotype.Service
+import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.collections.ArrayList
 
 @Service
@@ -36,50 +39,81 @@ class UserService(  val userRepository: UserRepository,
             return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
 
         val agreementList = agreementsRepository.getAllByUsersContaining(user)
+            ?: return RetrieveUserAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+
         val list = ArrayList<AgreementResponse>()
 
-        if(agreementList != null)
+        for(agreement in agreementList)
         {
-            for(agreement in agreementList)
+            val conditions = conditionsRepository.getAllByContract(agreement)
+            val conditionList = ArrayList<ConditionResponse>()
+            if(conditions != null)
             {
-                val conditions = conditionsRepository.getAllByContract(agreement)
-                val conditionList = ArrayList<ConditionResponse>()
-                if(conditions != null)
+                for (cond in conditions)
                 {
-                    for (cond in conditions)
-                    {
-                        conditionList.add(
-                            ConditionResponse(cond.conditionID,
-                                cond.conditionDescription,
-                                UserResponse(cond.proposingUser.publicWalletID),
-                                cond.proposalDate,
-                                agreement.ContractID,
-                                cond.conditionStatus
-                            )
+                    conditionList.add(
+                        ConditionResponse(cond.conditionID,
+                            cond.conditionDescription,
+                            UserResponse(cond.proposingUser.publicWalletID),
+                            cond.proposalDate,
+                            agreement.ContractID,
+                            cond.conditionStatus,
+                            cond.conditionTitle
                         )
-                    }
+                    )
                 }
-
-
-
-                val tempArg = AgreementResponse(agreement.ContractID,
-                    agreement.AgreementTitle,
-                    agreement.AgreementDescription,
-                    agreement.DurationConditionUUID,
-                    agreement.PaymentConditionUUID,
-                    UserResponse(agreement.users.elementAt(0).publicWalletID),
-                    UserResponse(agreement.users.elementAt(1).publicWalletID),
-                    agreement.CreatedDate,
-                    agreement.SealedDate,
-                    agreement.MovedToBlockChain,
-                    conditionList,
-                    agreement.AgreementImageURL,)
-
-                list.add(tempArg)
             }
+            val usersList = userRepository.getUsersByAgreementsContaining(agreement)
+
+            val paymentCondition : Conditions? = if(agreement.PaymentConditionUUID != null)
+                conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+            else null
+
+            val durationCondition : Conditions? = if(agreement.DurationConditionUUID != null)
+                conditionsRepository.getById(agreement.DurationConditionUUID!!)
+            else null
+
+            val paymentConditionResponse : PaymentConditionResponse?
+            if(paymentCondition != null)
+            {
+                var amountStr = paymentCondition.conditionDescription
+                amountStr = amountStr.replace("Payment of ", "")
+                val amount = amountStr.toDouble()
+                paymentConditionResponse = PaymentConditionResponse(paymentCondition.conditionID,
+                    amount,
+                    agreement.PayingParty!!,
+                    paymentCondition.conditionStatus)
+            } else
+                paymentConditionResponse = null
+
+            val durationConditionResponse : DurationConditionResponse?
+            if(durationCondition != null)
+            {
+                var amountStr = durationCondition.conditionDescription
+                amountStr = amountStr.replace("Duration of ", "")
+                val amount  = amountStr.toDouble()
+                durationConditionResponse = DurationConditionResponse(durationCondition.conditionID,
+                    amount,
+                    durationCondition.conditionStatus)
+            } else
+                durationConditionResponse = null
+
+
+            val tempArg = AgreementResponse(agreement.ContractID,
+                agreement.AgreementTitle,
+                agreement.AgreementDescription,
+                durationConditionResponse,
+                paymentConditionResponse,
+                UserResponse(usersList.elementAt(0).publicWalletID),
+                UserResponse(usersList.elementAt(1).publicWalletID),
+                agreement.CreatedDate,
+                agreement.SealedDate,
+                agreement.MovedToBlockChain,
+                conditionList,
+                agreement.AgreementImageURL,)
+
+            list.add(tempArg)
         }
-
-
 
         return RetrieveUserAgreementsResponse(list,ResponseStatus.SUCCESSFUL)
     }

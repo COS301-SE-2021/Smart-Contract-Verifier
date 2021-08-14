@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.negotiation
+package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.user.user
 
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
@@ -9,7 +9,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -25,7 +24,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SetPaymentConditionTest {
+class GetAgreementDetail {
     @Autowired
     lateinit var mockMvc : MockMvc
 
@@ -40,9 +39,10 @@ class SetPaymentConditionTest {
 
     private lateinit var userA : User
     private lateinit var userB : User
-    private lateinit var userC : User
-    private lateinit var agreement : Agreements
-    private lateinit var conditionUUID : UUID
+    private lateinit var acceptedConditionID: UUID
+    private lateinit var rejectedConditionID: UUID
+    private lateinit var pendingConditionID: UUID
+    private lateinit var agreementUUID : UUID
 
     @BeforeEach
     fun beforeEach()
@@ -50,68 +50,91 @@ class SetPaymentConditionTest {
 
         userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
         userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
-        userC = User("0x69Ec9a8aBFa094b24054422564e68B08aF311400")
 
-
-        agreement = Agreements(
+        val agreement = Agreements(
             UUID.fromString("3c5657d6-e302-48d3-b9df-dcfccec97503"),
             "test agreement",
             "test description",
             CreatedDate = Date(),
             MovedToBlockChain = false)
+        agreementUUID = agreement.ContractID
 
-        val condition = Conditions(
+        val pendingCondition = Conditions(
             UUID.fromString("967ee13c-dd5d-4de5-adb5-7dd4907fb2cf"),
             "Test conditions pending",
             "Test condition description",
             ConditionStatus.PENDING,
             Date()
         )
-        conditionUUID = condition.conditionID
+        pendingConditionID = pendingCondition.conditionID
+        pendingCondition.proposingUser = userB
+
+        val acceptedCondition = Conditions(
+            UUID.fromString("d20088ad-6e94-426f-84f8-bf01b9e9bf6e"),
+            "Test condition accepted",
+            "Test condition description",
+            ConditionStatus.ACCEPTED,
+            Date()
+        )
+        acceptedConditionID = acceptedCondition.conditionID
+        acceptedCondition.proposingUser = userA
+
+        val rejectedCondition = Conditions(
+            UUID.fromString("e2526862-6282-4fc9-9ea7-f6dbc6064c48"),
+            "Test condition rejected",
+            "Test condition description",
+            ConditionStatus.REJECTED,
+            Date()
+        )
+        rejectedConditionID = rejectedCondition.conditionID
+        rejectedCondition.proposingUser = userA
+
+        val conditionList = ArrayList<Conditions>()
+        conditionList.add(pendingCondition)
+        conditionList.add(acceptedCondition)
+        conditionList.add(rejectedCondition)
 
         val userList = ArrayList<User>()
         userList.add(userA)
         userList.add(userB)
 
-        agreement.users.add(userA)
-        agreement.users.add(userB)
+        val agreementsList = mutableSetOf<Agreements>()
+        agreementsList.add(agreement)
 
 
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
-        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
-        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(agreementsRepository.getAllByUsersContaining(userA)).thenReturn(agreementsList)
+        whenever(conditionsRepository.getAllByContract(agreement)).thenReturn(conditionList)
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
-        whenever(agreementsRepository.existsById(agreement.ContractID)).thenReturn(true)
-        whenever(agreementsRepository.getById(agreement.ContractID)).thenReturn(agreement)
-        whenever(conditionsRepository.save(any<Conditions>())).thenReturn(condition)
     }
 
     private fun requestSender(rjson: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/set-payment-condition")
+            MockMvcRequestBuilders.post("/user/retrieve-user-agreements")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rjson)).andReturn().response
     }
 
     @Test
-    fun `SetPaymentCondition successful`()
+    fun `RetrieveUserAgreementsTests successful`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0," +
-                "\"PayingUser\" : \"${userA.publicWalletID}\" }"
+        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\"}"
 
         val response = requestSender(rjson)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
-        assertContains(response.contentAsString, conditionUUID.toString())
+        assertContains(response.contentAsString, agreementUUID.toString())
+        assertContains(response.contentAsString, pendingConditionID.toString())
+        assertContains(response.contentAsString, acceptedConditionID.toString())
+        assertContains(response.contentAsString, rejectedConditionID.toString())
     }
 
     @Test
-    fun `SetPaymentCondition failed due to proposing user being empty`()
+    fun `RetrieveUserAgreementsTests failed due to userid being empty in request`()
     {
-        val rjson = "{\"ProposedUser\" : \"\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0," +
-        "\"PayingUser\" : \"${userA.publicWalletID}\" }"
+        val rjson = "{\"UserID\" : \"\"}"
 
         val response = requestSender(rjson)
 
@@ -119,39 +142,12 @@ class SetPaymentConditionTest {
     }
 
     @Test
-    fun `SetPaymentCondition failed due to amount being below 0`()
+    fun `RetrieveUserAgreementsTests failed due to user not existing`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : -500.0," +
-        "\"PayingUser\" : \"${userA.publicWalletID}\" }"
+        val rjson = "{\"UserID\" : \"wrong user\"}"
 
         val response = requestSender(rjson)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
-
-    @Test
-    fun `SetPaymentCondition failed agreement does not exist`()
-    {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"12a292bd-43e1-4690-8bdb-6d6cc20c1bb9\",\"Payment\" : 500.0," +
-        "\"PayingUser\" : \"${userA.publicWalletID}\" }"
-
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
-    fun `SetPaymentCondition proposing user not part of agreement`()
-    {
-        val rjson = "{\"ProposedUser\" : \"${userC.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0," +
-        "\"PayingUser\" : \"${userA.publicWalletID}\" }"
-
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-
 }

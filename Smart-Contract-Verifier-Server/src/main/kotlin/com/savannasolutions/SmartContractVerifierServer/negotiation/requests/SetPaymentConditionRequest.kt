@@ -5,4 +5,5 @@ import java.util.*
 
 data class SetPaymentConditionRequest(@JsonProperty("ProposedUser") val PreposedUser: String,
                                       @JsonProperty("AgreementID") val AgreementID: UUID,
-                                      @JsonProperty("Payment") val Payment: Double,)
+                                      @JsonProperty("Payment") val Payment: Double,
+                                      @JsonProperty("PayingUser") val PayingUser: String,)

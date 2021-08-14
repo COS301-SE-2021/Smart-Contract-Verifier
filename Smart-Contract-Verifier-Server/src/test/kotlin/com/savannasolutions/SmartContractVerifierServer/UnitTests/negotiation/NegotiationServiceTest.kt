@@ -1232,7 +1232,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0, mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
@@ -1267,7 +1267,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0,mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1303,7 +1303,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                -500.0))
+                -500.0,mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1320,6 +1320,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Unit test",
@@ -1337,7 +1338,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("",
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0,userA.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1357,6 +1358,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Payment of 500.0",
@@ -1377,7 +1379,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("Invalid user",
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0, mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1398,6 +1400,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Duration of " + Duration.ofSeconds(500).seconds,
@@ -1436,6 +1439,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Duration of " + Duration.ofSeconds(500).seconds,
@@ -1472,6 +1476,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Duration of " + Duration.ofSeconds(-500).seconds,
