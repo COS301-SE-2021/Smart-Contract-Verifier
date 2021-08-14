@@ -1,7 +1,7 @@
 drop table if exists public.user cascade;
 create table public.user (public_walletid varchar(255) not null, alias varchar(255), nonce int8 not null, primary key (public_walletid));
 drop table if exists agreements cascade;
-create table agreements (contractid uuid not null, agreement_description varchar(255), agreement_imageurl varchar(255), agreement_title varchar(255), created_date timestamp, duration_conditionuuid uuid, moved_to_block_chain boolean not null, payment_conditionuuid uuid, sealed_date timestamp, blockchainid numeric(19, 2), primary key (contractid));
+create table agreements (contractid uuid not null, agreement_description varchar(255), agreement_imageurl varchar(255), agreement_title varchar(255), created_date timestamp, duration_conditionuuid uuid, moved_to_block_chain boolean not null, paying_party varchar(255), payment_conditionuuid uuid, sealed_date timestamp, blockchainid varchar(255), primary key (contractid));
 drop table if exists conditions cascade;
 create table conditions (conditionid uuid not null, condition_description varchar(255), condition_status bytea, condition_title varchar(255), proposal_date timestamp, contract_contractid uuid, proposing_user_public_walletid varchar(255), primary key (conditionid));
 drop table if exists contact_list cascade;

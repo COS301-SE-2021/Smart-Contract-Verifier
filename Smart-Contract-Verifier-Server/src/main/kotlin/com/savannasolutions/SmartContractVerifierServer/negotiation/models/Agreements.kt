@@ -17,7 +17,8 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       var DurationConditionUUID: UUID? = null,
                       var MovedToBlockChain:Boolean = false,
                       var PaymentConditionUUID: UUID? = null,
-                      var AgreementImageURL: String? = null)
+                      var AgreementImageURL: String? = null,
+                      var PayingParty: String? = null)
 {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "contract", orphanRemoval = true, cascade = [CascadeType.PERSIST])
     var conditions: List<Conditions>? = emptyList()
