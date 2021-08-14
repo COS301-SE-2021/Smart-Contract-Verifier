@@ -106,4 +106,10 @@ class UnisonService {
     await res.cancel();
     print('Done');
   }
+
+  //A party can pay into the agreement, after it has been moved to the blockchain
+  Future<void> addPaymentConditions(BigInt id, EthereumAddress address, BigInt amount) async {
+
+    final res = await _smC.makeWriteCall('addPaymentConditions', [id, [address], [amount]]);
+  }
 }
