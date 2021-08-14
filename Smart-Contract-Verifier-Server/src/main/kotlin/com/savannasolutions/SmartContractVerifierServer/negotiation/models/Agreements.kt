@@ -1,7 +1,9 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.models
 
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
+import com.savannasolutions.SmartContractVerifierServer.contracts.models.Judges
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
+import java.math.BigInteger
 import java.util.*
 import javax.persistence.*
 
@@ -9,7 +11,7 @@ import javax.persistence.*
 data class Agreements(@Id @GeneratedValue val ContractID:UUID,
                       var AgreementTitle: String = "Un-named Agreement",
                       var AgreementDescription: String = "",
-                      var blockchainID: String? = null,
+                      var blockchainID: BigInteger? = null,
                       val CreatedDate:Date,
                       var SealedDate:Date? = null,
                       var DurationConditionUUID: UUID? = null,
@@ -26,4 +28,7 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
 
     @ManyToMany(mappedBy = "agreements", cascade = [CascadeType.PERSIST])
     val users: MutableSet<User> = mutableSetOf()
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "agreement", orphanRemoval = true, cascade = [CascadeType.ALL])
+    var judges: List<Judges>?= emptyList()
 }

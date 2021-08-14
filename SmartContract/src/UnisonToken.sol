@@ -30,7 +30,7 @@ import "./Token/Context.sol";
  * functions have been added to mitigate the well-known issues around setting
  * allowances. See {IERC20-approve}.
  */
-contract AgreeToken is Context, IERC20, IERC20Metadata {
+contract UnisonToken is Context, IERC20, IERC20Metadata {
     mapping(address => uint256) private _balances;
 
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -50,8 +50,8 @@ contract AgreeToken is Context, IERC20, IERC20Metadata {
      * construction.
      */
     constructor() {
-        _name = "AgreeChain";
-        _symbol = "AGC";
+        _name = "UnisonToken";
+        _symbol = "UNT";
 
         _mint(_msgSender(), 1000000 * 10**decimals()); //1 coin
     }

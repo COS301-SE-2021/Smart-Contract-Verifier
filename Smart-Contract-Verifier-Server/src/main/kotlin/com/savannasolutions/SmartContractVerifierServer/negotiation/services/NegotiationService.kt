@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.*
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -18,7 +19,7 @@ import kotlin.collections.ArrayList
 class NegotiationService constructor(val agreementsRepository: AgreementsRepository,
                                      val conditionsRepository: ConditionsRepository,
                                      val userRepository: UserRepository,
-                                     ){
+                                     val judgesRepository: JudgesRepository){
 
     fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionResponse{
         if(conditionsRepository.existsById(acceptConditionRequest.conditionID)){
@@ -197,7 +198,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                                     agreement.MovedToBlockChain,
                                                     conditions,
                                                     agreement.AgreementImageURL,
-                                                    agreement.blockchainID)
+                                                    agreement.blockchainID.toString())
 
         return GetAgreementDetailsResponse(agreementResponse,ResponseStatus.SUCCESSFUL)
     }
@@ -265,6 +266,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                     return SealAgreementResponse(ResponseStatus.FAILED)
 
         agreement.SealedDate = Date()
+        agreement.blockchainID = sealAgreementRequest.index
+        agreement.MovedToBlockChain = true
         agreementsRepository.save(agreement)
         return SealAgreementResponse(ResponseStatus.SUCCESSFUL)
     }
@@ -377,6 +380,95 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         agreementsRepository.save(agreement)
 
         return SetDurationConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
+    }
+
+    fun getJudgingAgreements(getJudgingAgreementsRequest: GetJudgingAgreementsRequest): GetJudgingAgreementsResponse
+    {
+        if(!userRepository.existsById(getJudgingAgreementsRequest.walletID))
+            return GetJudgingAgreementsResponse(status = ResponseStatus.FAILED)
+
+        val user = userRepository.getById(getJudgingAgreementsRequest.walletID)
+        val judgeList = judgesRepository.getAllByJudge(user) ?:
+            return GetJudgingAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+
+        val agreementsResponseList = ArrayList<AgreementResponse>()
+
+        for(judge in judgeList)
+        {
+            agreementsResponseList.add(generateAgreementResponse(judge.agreement))
+        }
+
+        return GetJudgingAgreementsResponse(agreementsResponseList, ResponseStatus.SUCCESSFUL)
+    }
+
+    private fun generateAgreementResponse(agreement: Agreements): AgreementResponse {
+        val conditionList = conditionsRepository.getAllByContract(agreement)
+        val conditions = ArrayList<ConditionResponse>()
+        if (conditionList != null) {
+            for (cond in conditionList) {
+                val tempCond = ConditionResponse(
+                    cond.conditionID,
+                    cond.conditionDescription,
+                    UserResponse(cond.proposingUser.publicWalletID),
+                    cond.proposalDate,
+                    agreement.ContractID,
+                    cond.conditionStatus,
+                    cond.conditionTitle
+                )
+                conditions.add(tempCond)
+            }
+        }
+
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+        val partyA = UserResponse(userList[0].publicWalletID)
+        val partyB = UserResponse(userList[1].publicWalletID)
+        val paymentCondition : Conditions? = if(agreement.PaymentConditionUUID != null)
+            conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+        else null
+
+        val durationCondition : Conditions? = if(agreement.DurationConditionUUID != null)
+            conditionsRepository.getById(agreement.DurationConditionUUID!!)
+        else null
+
+        val paymentConditionResponse : PaymentConditionResponse?
+        if(paymentCondition != null)
+        {
+            var amountStr = paymentCondition.conditionDescription
+            amountStr = amountStr.replace("Payment of ", "")
+            val amount = amountStr.toDouble()
+            paymentConditionResponse = PaymentConditionResponse(paymentCondition.conditionID,
+                amount,
+                agreement.PayingParty!!,
+                paymentCondition.conditionStatus)
+        } else
+            paymentConditionResponse = null
+
+        val durationConditionResponse : DurationConditionResponse?
+        if(durationCondition != null)
+        {
+            var amountStr = durationCondition.conditionDescription
+            amountStr = amountStr.replace("Duration of ", "")
+            val amount  = amountStr.toDouble()
+            durationConditionResponse = DurationConditionResponse(durationCondition.conditionID,
+                amount,
+                durationCondition.conditionStatus)
+        } else
+            durationConditionResponse = null
+
+        return AgreementResponse(
+            agreement.ContractID,
+            agreement.AgreementTitle,
+            agreement.AgreementDescription,
+            durationConditionResponse,
+            paymentConditionResponse,
+            partyA,
+            partyB,
+            agreement.CreatedDate,
+            agreement.SealedDate,
+            agreement.MovedToBlockChain,
+            conditions,
+            agreement.AgreementImageURL
+        )
     }
 
 }

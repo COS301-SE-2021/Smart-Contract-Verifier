@@ -1,7 +1,7 @@
 drop table if exists public.user cascade;
-create table public.user (public_walletid varchar(255) not null, alias varchar(255), nonce int4 not null, primary key (public_walletid));
+create table public.user (public_walletid varchar(255) not null, alias varchar(255), nonce int8 not null, primary key (public_walletid));
 drop table if exists agreements cascade;
-create table agreements (contractid uuid not null, agreement_description varchar(255), agreement_imageurl varchar(255), agreement_title varchar(255), created_date timestamp, duration_conditionuuid uuid, moved_to_block_chain boolean not null, paying_party varchar(255), payment_conditionuuid uuid, sealed_date timestamp, blockchainid varchar(255), primary key (contractid));
+create table agreements (contractid uuid not null, agreement_description varchar(255), agreement_imageurl varchar(255), agreement_title varchar(255), created_date timestamp, duration_conditionuuid uuid, moved_to_block_chain boolean not null, paying_party varchar(255), payment_conditionuuid uuid, sealed_date timestamp, blockchainid numeric(19, 2), primary key (contractid));
 drop table if exists conditions cascade;
 create table conditions (conditionid uuid not null, condition_description varchar(255), condition_status bytea, condition_title varchar(255), proposal_date timestamp, contract_contractid uuid, proposing_user_public_walletid varchar(255), primary key (conditionid));
 drop table if exists contact_list cascade;
@@ -10,6 +10,8 @@ drop table if exists contact_list_profile cascade;
 create table contact_list_profile (profileid uuid not null, contact_alias varchar(255), contact_list_contact_listid uuid, user_public_walletid varchar(255), primary key (profileid));
 drop table if exists evidence cascade;
 create table evidence (evidence_hash varchar(255) not null, evidence_type bytea, contract_contractid uuid, evidence_url_evidenceid uuid, uploaded_url_evidenceid uuid, user_public_walletid varchar(255), primary key (evidence_hash));
+drop table if exists judges cascade;
+create table judges (judge_agreementid uuid not null, agreement_contractid uuid, judge_public_walletid varchar(255), primary key (judge_agreementid));
 drop table if exists linked_evidence cascade;
 create table linked_evidence (evidenceid uuid not null, evidence_url varchar(255), evidence_evidence_hash varchar(255), primary key (evidenceid));
 drop table if exists messages cascade;
@@ -29,6 +31,8 @@ alter table evidence add constraint FKlpioqqatotxodcjc4rw9es0oc foreign key (con
 alter table evidence add constraint FKajyqwe4nut3a9nlsnrg5jkdp6 foreign key (evidence_url_evidenceid) references linked_evidence;
 alter table evidence add constraint FKkeqst2mm0d8ikev3y3oc5ov6o foreign key (uploaded_url_evidenceid) references uploaded_evidence;
 alter table evidence add constraint FK98ib2d8e7lq8d96jwrup8u8qf foreign key (user_public_walletid) references public.user;
+alter table judges add constraint FK45ou5j98s4pvyp2aoid0fxmt1 foreign key (agreement_contractid) references agreements;
+alter table judges add constraint FKrs0xin46m7dds86a4uxwafqnf foreign key (judge_public_walletid) references public.user;
 alter table linked_evidence add constraint FKc3qd7g9wvw4gaxf16fuk3b47h foreign key (evidence_evidence_hash) references evidence;
 alter table messages add constraint FK2uxxv8vyqrtmhpge7hoqek05d foreign key (agreements_contractid) references agreements;
 alter table messages add constraint FKpogdllq7macivuimwivkatgaq foreign key (sender_public_walletid) references public.user;

@@ -1,12 +1,11 @@
-package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.user.user
+package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.security
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
+import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserRequest
-import com.savannasolutions.SmartContractVerifierServer.user.services.UserService
+import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
+import com.savannasolutions.SmartContractVerifierServer.security.services.SecurityService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,21 +22,17 @@ class AddUserDatabaseTest {
     lateinit var userRepository: UserRepository
 
     @Autowired
-    lateinit var agreementsRepository: AgreementsRepository
+    lateinit var securityConfig: SecurityConfig
 
-    @Autowired
-    lateinit var conditionsRepository: ConditionsRepository
-
-    lateinit var userService: UserService
+    lateinit var securityService: SecurityService
 
     lateinit var user : User
 
     @BeforeEach
     fun beforeEach()
     {
-        userService = UserService(userRepository,
-                                    agreementsRepository,
-                                    conditionsRepository)
+        securityService = SecurityService(userRepository,
+                                            securityConfig)
         user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
     }
 
@@ -52,7 +47,7 @@ class AddUserDatabaseTest {
     {
         val request = AddUserRequest(user.publicWalletID, "test")
 
-        val response = userService.addUser(request)
+        val response = securityService.addUser(request)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(userRepository.getById(user.publicWalletID))

@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -30,6 +31,9 @@ class AcceptConditionDatabaseTest {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    @Autowired
+    lateinit var judgesRepository: JudgesRepository
+
     private lateinit var negotiationService: NegotiationService
     private lateinit var pendingCondition : Conditions
     private lateinit var acceptedCondition : Conditions
@@ -40,7 +44,8 @@ class AcceptConditionDatabaseTest {
     {
         negotiationService = NegotiationService(agreementsRepository,
                                                 conditionsRepository,
-                                                userRepository)
+                                                userRepository,
+                                                judgesRepository)
         pendingCondition = Conditions(UUID.fromString("b0cc41a5-bd56-4687-ae7f-e6f48c7ed972"),
                                         "Pending Condition",
                                         "This is a pending condition",
