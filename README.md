@@ -1,5 +1,5 @@
 # Savanna Solutions
-## Smart-Contract-Verifier
+## Unison - Smart-Contract-Verifier
 
 
 ### Project Description
@@ -18,12 +18,23 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 | Ronan van de Vyver | 3rd Year Computer Science| [LinkedIn](https://linkedin.com/in/ronan-van-de-vyver-98bb7820b  "Ronan's LinkedIn Profile") \| [Github](https://github.com/Ronan-UP  "Ronan's Github Profile") |
 
 
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=bugs)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=code_smells)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=ncloc)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=alert_status)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=security_rating)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=sqale_index)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Smart-Contract-Verifier&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Smart-Contract-Verifier)
+### SRS Document
+[SRS Document](https://drive.google.com/file/d/1IvI10wJO8FSv1APeL5g9D8WualTDp7nY/view?usp=sharing "SRS Document - Demo 2 Update")
+
+### Architectural Design Specification 
+[Architectural Design Specification](https://drive.google.com/file/d/1ApvMXOMRkjy6tudNY2TkfpmoYoe4coBI/view?usp=sharing "Architectural Design Specification Document")
+
+### Project Management Tool Link
+[Space](https://savannasolutions.jetbrains.space/p/scv  "JetBrains Space SCV") 
+
+### Demo Videos
+[Demo 1](https://youtu.be/Cp3SrhVhpx8 "Demo 1 Pre-Recorded")
+
+[Demo 2](https://drive.google.com/file/d/1cDZbwf62NDgF4b06BWYo1-K27CnWazlp/view "Demo 2 Pre-Recorded")
+
+### Coding Standards
+[Coding Standards](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
+
+### User Manual
+[Unison User Manual](https://drive.google.com/file/d/1shscD5YW5OfNZLZ7aP523m4GYGqFGw9g/view?usp=sharing "User Manual Document")
+
