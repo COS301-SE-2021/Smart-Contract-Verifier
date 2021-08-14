@@ -106,13 +106,19 @@ contract('Verifier', (accounts) =>{
         it("Create 2nd agreement ", async()=>{
             // Create new agreement
             verifier.createAgreement(accounts[1], 0, "For jury test", "");
+
+            var amount = 100
+            await token.approve(verifier.address, amount);
+            await verifier.addPaymentConditions(1, [token.address], [amount]);
+
             verifier.acceptAgreement(1, {from: accounts[1]})
 
             var agree = await verifier.getAgreement(1);
             var mustPay = agree.platformFee;
 
             token.approve(verifier.address, mustPay);
-            verifier.payPlatformFee(1);      
+            verifier.payPlatformFee(1);
+
         })
 
         it("Vote no on agreement ", async()=>{
@@ -153,9 +159,14 @@ contract('Verifier', (accounts) =>{
             }
         })
 
-        it("Jury voting", async()=>{
+        it("Jury voting Yes", async()=>{
             var juryStart = await verifier.getJury(1);
             var vote = 2;
+
+            agree = await verifier.getAgreement(1);
+            var to = agree.payments[0].to;
+            var balPre = await token.balanceOf(to);
+            balPre = BigInt(balPre);
 
             // Each juror votes
             for(var i=0; i<juryStart.jurors.length; i++){
@@ -170,8 +181,16 @@ contract('Verifier', (accounts) =>{
 
 
             agree = await verifier.getAgreement(1);
+            // console.log(agree);
             // agree.state 9 means CLOSED
             assert(agree.state == 9, "Agreement wasn't closed on unanimous YES vote") 
+
+            var balPost = await token.balanceOf(to);
+            balPost = BigInt(balPost);
+
+            console.log("Pre: ", balPre);
+            console.log("Post: ", balPost);
+            assert(balPost - balPre == agree.payments[0].amount, "Agreement didn't pay out")
 
         })
 
