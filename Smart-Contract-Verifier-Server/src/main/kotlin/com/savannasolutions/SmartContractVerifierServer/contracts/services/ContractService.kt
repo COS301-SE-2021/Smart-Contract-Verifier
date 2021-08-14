@@ -7,6 +7,7 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SealAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.web3j.abi.EventEncoder
@@ -36,51 +37,52 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
     private lateinit var web3j: Web3j
 
     @PostConstruct
-    fun initEventListener(){
-        try {
-            web3j = Web3j.build(HttpService(contractConfig.nodeAddress))
+    fun initEventListener() {
+            try {
+                web3j = Web3j.build(HttpService(contractConfig.nodeAddress))
 
-            val createFilter = EthFilter(
-                DefaultBlockParameterName.EARLIEST,
-                DefaultBlockParameterName.LATEST,
-                contractConfig.contractId
-            )
-            val creationEvent = Event("CreateAgreement", contractConfig.creationList)
-            createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
-            web3j.ethLogFlowable(createFilter).subscribe { event ->
-                val creationData = FunctionReturnDecoder.decode(
-                    event.data,
-                    contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?
+                val createFilter = EthFilter(
+                    DefaultBlockParameterName.EARLIEST,
+                    DefaultBlockParameterName.LATEST,
+                    contractConfig.contractId
                 )
-                //describe how to use data to seal an agreement
-                println(event.data)
-                negotiationService.sealAgreement(
-                    SealAgreementRequest(
-                        UUID.fromString(creationData[3].toString()),
-                        creationData[2].value as BigInteger
+                val creationEvent = Event("CreateAgreement", contractConfig.creationList)
+                createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
+                web3j.ethLogFlowable(createFilter).subscribe { event ->
+                    val creationData = FunctionReturnDecoder.decode(
+                        event.data,
+                        contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?
                     )
-                )
-            }
+                    //describe how to use data to seal an agreement
+                    println(event.data)
+                    negotiationService.sealAgreement(
+                        SealAgreementRequest(
+                            UUID.fromString(creationData[3].toString()),
+                            creationData[2].value as BigInteger
+                        )
+                    )
+                }
 
-            val juryFilter = EthFilter(
-                DefaultBlockParameterName.EARLIEST,
-                DefaultBlockParameterName.LATEST,
-                contractConfig.contractId
-            )
-            val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
-            juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
-            web3j.ethLogFlowable(juryFilter).subscribe { event ->
-                val juryData = FunctionReturnDecoder.decode(
-                    event.data,
-                    contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?
+                val juryFilter = EthFilter(
+                    DefaultBlockParameterName.EARLIEST,
+                    DefaultBlockParameterName.LATEST,
+                    contractConfig.contractId
                 )
-                //use data to assign a jury
-                assignJury(juryData[0].value as BigInteger, juryData[1] as List<TypeReference<Address>>)
+                val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
+                juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
+                web3j.ethLogFlowable(juryFilter).subscribe { event ->
+                    val juryData = FunctionReturnDecoder.decode(
+                        event.data,
+                        contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?
+                    )
+                    //use data to assign a jury
+                    assignJury(juryData[0].value as BigInteger, juryData[1] as List<TypeReference<Address>>)
+                }
+            } catch (e: Exception) {
+                throw RuntimeException(e)
             }
-        }catch (e: Exception){
-            throw RuntimeException(e)
-        }
     }
+
     fun assignJury(agreementIndex: BigInteger, jurors: List<TypeReference<Address>>){
         val agreement = agreementsRepository.getAgreementsByBlockchainID(agreementIndex)
         if(agreement != null){
