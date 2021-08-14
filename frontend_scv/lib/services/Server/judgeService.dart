@@ -15,7 +15,7 @@ class JudgeService {
   UnisonService _uniServ = UnisonService();
   TokenService _tokServ = TokenService();
 
-  Future<List<Contract>> getInvolvedAgreements(String party) async {
+  Future<List<Contract>> getInvolvedAgreements() async {
     //Get all agreements where a user is the judge
 
     //TODO list:
@@ -23,7 +23,25 @@ class JudgeService {
     //Post api to request all contracts the party is judging
     //Convert to contract objects
 
-    return [];
+    var response;
+    try {
+      response = await _api.postData('/negotiation/get-judging-agreement', {'WalletID' : Global.userAddress});
+
+      if (response['Status'] != 'SUCCESSFUL')
+        throw Exception('Agreements for judge could not be retrieved');
+    } catch (e) {
+      print (e);
+      throw (e);
+    }
+
+    List<dynamic> jsonList = ((response['Agreements']));
+    List<Contract> ret = [];
+
+    for (int i = 0; i < jsonList.length; i++) {
+      ret.add(Contract.fromJson(jsonList[i]));
+    }
+
+    return ret;
   }
 
   Future<List<dynamic>> getNotifications(String party) async {
