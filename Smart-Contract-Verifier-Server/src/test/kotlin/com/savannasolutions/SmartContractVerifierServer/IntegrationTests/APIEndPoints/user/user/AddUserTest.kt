@@ -47,7 +47,7 @@ class AddUserToContactListTest {
 
     private fun requestSender(rjson: String): MockHttpServletResponse {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/user/add-user")
+            MockMvcRequestBuilders.post("/add-user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rjson)
         ).andReturn().response
