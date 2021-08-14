@@ -123,7 +123,8 @@ contract Verifier{
         // Anyone can pay the platform fee, it does not even have to be one of the
         // parties involved in the agreement
 
-        // BUG: If payment is split up over multiple accounts, the last account will receive the entire refund
+        // Was first intended to be payable by multiple people, but for now it can only be paid by one person.
+        // Front-end doesn't use split platform fees yet, but fixing a bug it had would require an api-change
 
         require(agreements[agreeID].state == AgreementLib.AgreementState.ACCEPTED);
 
@@ -132,10 +133,6 @@ contract Verifier{
 
         uint256 allowed = unisonToken.allowance(msg.sender, address(this));
         require(allowed >= payment, "insufficient allowance to pay platform fee");
-
-        if(allowed < payment)
-            payment = allowed;
-
 
         if(unisonToken.transferFrom(msg.sender, address(this), payment)){
             agreements[agreeID].feePaid += payment;
@@ -168,6 +165,9 @@ contract Verifier{
         for(uint i=0; i<jury.length; i++){
             juries[agreeID].jurors[i] = jury[i];
         }
+        // Deadline is 10 minutes from now
+        juries[agreeID].deadline = block.timestamp + 60000;
+
         juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;
@@ -275,7 +275,7 @@ contract Verifier{
 
         // False if anyone hasn't voted yet
         for(uint i=0; i < juries[agreeID].numJurors; i++){
-            if(juries[agreeID].votes[i] == AgreementLib.Vote.NO)
+            if(juries[agreeID].votes[i] == AgreementLib.Vote.NONE)
                 return false;
         }
 
@@ -343,8 +343,8 @@ contract Verifier{
         int index = _jurorIndex(agreeID);
 
         require(index >= 0, "You are not on this jury");
-        // If the following two conditions hold, then the agreement can't be closed. So that doesn't need to be checked
-        require(juries[agreeID].deadline > block.timestamp);
+        // If the following two conditions hold, then the agreement also can't be closed.
+        require(juries[agreeID].deadline > block.timestamp, "Deadline for voting has passed");
         require(juries[agreeID].votes[uint(index)] == AgreementLib.Vote.NONE, "You already voted");
 
         // Set vote
@@ -353,6 +353,18 @@ contract Verifier{
         if(_decisionTime(agreeID)){
             _juryMakeDecision(agreeID);
         }
+
+    }
+
+    function triggerPayout(uint agreeID) public{
+        // If not all jury members voted, this will be needed to finish the agreement
+        // (since code execution must come from someone)
+
+        require(juries[agreeID].assigned, "There is no jury for this agreement");
+        require(juries[agreeID].deadline <= block.timestamp, "Jurors still have time to vote");
+        require(agreements[agreeID].state != AgreementLib.AgreementState.CLOSED, "Agreement is already paid out");
+
+        _juryMakeDecision(agreeID);
 
     }
 
