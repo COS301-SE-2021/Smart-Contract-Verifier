@@ -26,9 +26,6 @@ class UserService(  val userRepository: UserRepository,
 
         val user = userRepository.getById(retrieveUserAgreementsRequest.UserID)
 
-        if(user.agreements.isEmpty())
-            return RetrieveUserAgreementsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
-
         val agreementList = agreementsRepository.getAllByUsersContaining(user)
             ?: return RetrieveUserAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
 
