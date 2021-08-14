@@ -154,20 +154,28 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Jury voting", async()=>{
-            var vote = 2;
-            await verifier.jurorVote(1, vote, {from : accounts[3]});
-
             var jury = await verifier.getJury(1);
+            var accIndex = -1
+            for(var i=0; i<10; i++){
+                if(accounts[i] == jury.jurors[0]){
+                    accIndex = i;
+                    break;
+                }
+            }
+            assert(accIndex != -1, "Juror couldn't be found")
+
+            var vote = 2;
+            await verifier.jurorVote(1, vote, {from : accounts[accIndex]});
+
+            jury = await verifier.getJury(1);
 
             for(var i=0; i < jury.jurors.length; i++){
                 //accounts 3 to 8 (included) are signed up as jurors
-                if(jury.jurors[i] == accounts[3]){
+                if(jury.jurors[i] == accounts[accIndex]){
                     assert(jury.votes[i] == vote, "Vote wasn't properly updated");
                     break;
                 }
             } 
-
-
         })
 
     })
