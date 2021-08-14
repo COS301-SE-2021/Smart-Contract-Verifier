@@ -126,10 +126,10 @@ class _AuthCardState extends State<AuthCard> {
       const errorMessage = 'Authenticate Failed.\nPlease ensure you '
           'have the metamask extension installed.';
       _showErrorDialog(errorMessage + '\nAdditional information:\n' + error);
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override

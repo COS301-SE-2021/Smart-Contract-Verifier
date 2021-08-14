@@ -63,7 +63,7 @@
 *    -> First Time Login (check user is in db)
 * - Show no Agreements message if no agreements
 
-*
+* ---------------
 * TOMORROW:
 * ---------------
 * Jury chat
@@ -71,10 +71,9 @@
 * Seal the deal
 * ---------------
 * LATER:
+* ---------------
 * Evidence
 * Notifications
 * ---------------
-*
-*
 *
 * */
