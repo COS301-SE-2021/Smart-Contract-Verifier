@@ -307,7 +307,37 @@ contract('Verifier', (accounts) =>{
             assert(jury.jurors.length > 0, "Jury wasn't assigned");
         })
 
+        it("Jury votes NO", async ()=>{
+            var juryStart = await verifier.getJury(0);
+            var vote = 1;
 
+            agree = await verifier.getAgreement(0);
+            var from = agree.payments[0].from;
+            var balPre = await token.balanceOf(from);
+            balPre = BigInt(balPre);
+            
+            // Each juror votes
+            for(var i=0; i<juryStart.jurors.length; i++){
+                await verifier.jurorVote(0, vote, {from : juryStart.jurors[i]});
+
+            }
+
+            // Check that all votes were recorded properly
+            jury = await verifier.getJury(0);
+            for(var i=0; i<juryStart.jurors.length; i++)
+                assert(jury.votes[i] == vote, "Vote wasn't properly updated");
+
+
+            agree = await verifier.getAgreement(0);
+            // console.log(agree);
+            // agree.state 9 means CLOSED
+            assert(agree.state == 9, "Agreement wasn't closed on unanimous NO vote") 
+
+            var balPost = await token.balanceOf(from);
+            balPost = BigInt(balPost);
+
+            assert(balPost - balPre == agree.payments[0].amount, "Agreement didn't refund")     
+        })
 
     })
 
