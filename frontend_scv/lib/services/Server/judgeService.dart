@@ -18,11 +18,6 @@ class JudgeService {
   Future<List<Contract>> getInvolvedAgreements() async {
     //Get all agreements where a user is the judge
 
-    //TODO list:
-    //Handle judge functionality later
-    //Post api to request all contracts the party is judging
-    //Convert to contract objects
-
     var response;
     try {
       response = await _api.postData('/negotiation/get-judging-agreement', {'WalletID' : Global.userAddress});
