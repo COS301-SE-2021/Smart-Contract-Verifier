@@ -1,6 +1,8 @@
-language: java
+language: node_js
 jdk:
   - oraclejdk13
 script:
-  - cd Smart-Contract-Verifier-Server
-  - mvn clean install
+  # other script steps might be done before running the actual analysis
+    - cd Smart-Contract-Verifier-Server
+    - mvn clean install
+
