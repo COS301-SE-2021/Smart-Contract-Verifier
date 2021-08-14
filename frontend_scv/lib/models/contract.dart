@@ -51,6 +51,7 @@ class Contract with ChangeNotifier {
       sealedDate = DateTime.parse(jsn['SealedDate']);
     } catch(_) {}
     //status = json['status'],
+    duration = jsn['Duration'];
     movedToBlockchain = jsn['MovedToBlockChain'];
     description = jsn['AgreementDescription'];
     imageUrl = jsn['AgreementImageURL'];
