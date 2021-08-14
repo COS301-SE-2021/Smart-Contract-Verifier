@@ -80,9 +80,9 @@ class UnisonService {
   Future<void> agreementFulfilled(Contract con, bool vote) async {
 
     //If contract has not reached resolution date yet.
-    if (con.sealedDate.millisecondsSinceEpoch + con.duration.toInt()*1000< DateTime.now().millisecondsSinceEpoch) {
-      throw Exception('Contract has not reached resolution date');
-    }
+    // if (con.sealedDate.millisecondsSinceEpoch + con.duration.toInt()*1000< DateTime.now().millisecondsSinceEpoch) {
+    //   throw Exception('Contract has not reached resolution date');
+    // }
 
     await _voteResolution(con.blockchainId, vote ? 2 : 1);
 

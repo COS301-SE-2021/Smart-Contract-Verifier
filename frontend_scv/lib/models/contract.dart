@@ -50,17 +50,15 @@ class Contract with ChangeNotifier {
 
     //Try to get items that may not exist yet
     try {
-      duration = jsn['DurationCondition']['Amount'];
-    } catch (e) {
-      print('DURATIONPARSE: ' + e.toString());
-    }
+      duration = BigInt.from(jsn['DurationCondition']['Amount']);
+    } catch (_) {}
     try {
       price = jsn['PaymentCondition']['Amount'];
     } catch (_) {}
     try {
       createdDate = DateTime.parse(jsn['CreatedDate']);
       sealedDate = DateTime.parse(jsn['SealedDate']);
-    } catch (_) {}
+    } catch(_) {}
 
     movedToBlockchain = jsn['MovedToBlockChain'];
     description = jsn['AgreementDescription'];
