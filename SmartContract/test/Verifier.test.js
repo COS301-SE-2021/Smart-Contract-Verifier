@@ -153,29 +153,51 @@ contract('Verifier', (accounts) =>{
             }
         })
 
+        // it("Jury voting", async()=>{
+        //     var jury = await verifier.getJury(1);
+        //     var accIndex = -1
+        //     for(var i=0; i<10; i++){
+        //         if(accounts[i] == jury.jurors[0]){
+        //             accIndex = i;
+        //             break;
+        //         }
+        //     }
+        //     assert(accIndex != -1, "Juror couldn't be found")
+
+        //     var vote = 2;
+        //     await verifier.jurorVote(1, vote, {from : accounts[accIndex]});
+
+        //     jury = await verifier.getJury(1);
+
+        //     for(var i=0; i < jury.jurors.length; i++){
+        //         //accounts 3 to 8 (included) are signed up as jurors
+        //         if(jury.jurors[i] == accounts[accIndex]){
+        //             assert(jury.votes[i] == vote, "Vote wasn't properly updated");
+        //             break;
+        //         }
+        //     } 
+        // })
+
         it("Jury voting", async()=>{
-            var jury = await verifier.getJury(1);
-            var accIndex = -1
-            for(var i=0; i<10; i++){
-                if(accounts[i] == jury.jurors[0]){
-                    accIndex = i;
-                    break;
-                }
-            }
-            assert(accIndex != -1, "Juror couldn't be found")
-
+            var juryStart = await verifier.getJury(1);
             var vote = 2;
-            await verifier.jurorVote(1, vote, {from : accounts[accIndex]});
 
+            // Each juror votes
+            for(var i=0; i<juryStart.jurors.length; i++){
+                await verifier.jurorVote(1, vote, {from : juryStart.jurors[i]});
+
+            }
+
+            // Check that all votes were recorded properly
             jury = await verifier.getJury(1);
+            for(var i=0; i<juryStart.jurors.length; i++)
+                assert(jury.votes[i] == vote, "Vote wasn't properly updated");
 
-            for(var i=0; i < jury.jurors.length; i++){
-                //accounts 3 to 8 (included) are signed up as jurors
-                if(jury.jurors[i] == accounts[accIndex]){
-                    assert(jury.votes[i] == vote, "Vote wasn't properly updated");
-                    break;
-                }
-            } 
+
+            agree = await verifier.getAgreement(1);
+            // agree.state 9 means CLOSED
+            assert(agree.state == 9, "Agreement wasn't closed on unanimous YES vote") 
+
         })
 
     })
