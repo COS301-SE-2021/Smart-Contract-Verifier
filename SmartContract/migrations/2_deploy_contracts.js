@@ -9,11 +9,6 @@ module.exports = async (deployer) => {
   await deployer.deploy(UnisonToken);
   await deployer.deploy(Verifier, UnisonToken.address, RandomSource.address);
 
-
-  // var obj =  [];
-  // obj.push({name : "Verifier", address : Verifier.address});
-  // obj.push({name : "UnisonToken", address : UnisonToken.address});
-
   var obj = {
     Verifier : "",
     UnisonToken : ""
