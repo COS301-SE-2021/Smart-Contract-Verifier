@@ -12,8 +12,8 @@ class Contract with ChangeNotifier {
   BigInt blockchainId;
   String partyA;
   String partyB;
-  String createdDate;
-  String sealedDate;
+  DateTime createdDate;
+  DateTime sealedDate;
   bool movedToBlockchain;
   List<Condition> conditions; //TODO Handle empty/initial conditions
   String title;
@@ -44,8 +44,8 @@ class Contract with ChangeNotifier {
     contractId = jsn['AgreementID'];
     partyA = jsn['PartyA']['publicWalletID'];
     partyB = jsn['PartyB']['publicWalletID'];
-    createdDate = jsn['CreatedDate'];
-    sealedDate = jsn['SealedDate'];
+    createdDate = DateTime.parse(jsn['CreatedDate']);
+    sealedDate = DateTime.parse(jsn['SealedDate']);
     //status = json['status'],
     movedToBlockchain = jsn['MovedToBlockChain'];
     description = jsn['AgreementDescription'];
@@ -59,11 +59,7 @@ class Contract with ChangeNotifier {
   }
 
   Map<String, String> toJson() {
-    print(partyA);
-    print(partyB);
-    print(title);
-    print(description);
-    print(imageUrl);
+
     return {
       //This is used in the initial save to the backend, hence not all fields being present.
       'PartyA': partyA,
