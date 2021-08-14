@@ -7,6 +7,7 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SealAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
@@ -39,6 +40,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
 
     @PostConstruct
     fun initEventListener() {
+        if(contractConfig.useblockchain == "true") {
             try {
                 web3j = Web3j.build(HttpService(contractConfig.nodeAddress))
 
@@ -79,6 +81,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
             } catch (e: Exception) {
                 throw RuntimeException(e)
             }
+        }
     }
 
     fun assignJury(agreementIndex: BigInteger, jurors: ArrayList<Address>){
