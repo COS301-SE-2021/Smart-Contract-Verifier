@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:jdenticon_dart/jdenticon_dart.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../models/contract.dart';
 import '../providers/auth.dart';
@@ -9,7 +11,7 @@ class ContractItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final contract = Provider.of<Contract>(context);
-    final authData = Provider.of<Auth>(context, listen: false);
+    final String rawSvg = Jdenticon.toSvg(contract.contractId);
 
     return GestureDetector(
       onTap: () {
@@ -20,9 +22,16 @@ class ContractItem extends StatelessWidget {
       },
       child: ListTile(
         title: Text(contract.title),
-        leading: CircleAvatar(
-            // backgroundImage: NetworkImage(contract.imageUrl),
-            ),
+        leading:
+            // CircleAvatar(
+            //   backgroundImage: SvgPicture.
+            SvgPicture.string(
+          rawSvg,
+          fit: BoxFit.fill,
+          height: 32,
+          width: 32,
+        ),
+        // ),
         trailing: Container(
           width: 50,
           child: Row(
