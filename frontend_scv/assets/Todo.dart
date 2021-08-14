@@ -64,12 +64,14 @@
 * - Show no Agreements message if no agreements
 
 * ---------------
-* TOMORROW:
+* TODO:
 * ---------------
 * Jury chat --> Kevin
 * Jury Voting --> complete, do touch ups
 * Get agreements where user is judge
 * Seal the deal
+* Add payment condition blockchain?
+* Create Agreement (who pays)
 * ---------------
 * LATER:
 * ---------------

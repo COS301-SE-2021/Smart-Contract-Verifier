@@ -44,8 +44,8 @@ class Contract with ChangeNotifier {
     contractId = jsn['AgreementID'];
     partyA = jsn['PartyA']['publicWalletID'];
     partyB = jsn['PartyB']['publicWalletID'];
-    createdDate = DateTime.parse(jsn['CreatedDate']);
-    sealedDate = DateTime.parse(jsn['SealedDate']);
+    // createdDate = DateTime.tryParse(jsn['CreatedDate']);
+    // sealedDate = DateTime.tryParse(jsn['SealedDate']);
     //status = json['status'],
     movedToBlockchain = jsn['MovedToBlockChain'];
     description = jsn['AgreementDescription'];
@@ -59,7 +59,6 @@ class Contract with ChangeNotifier {
   }
 
   Map<String, String> toJson() {
-
     return {
       //This is used in the initial save to the backend, hence not all fields being present.
       'PartyA': partyA,

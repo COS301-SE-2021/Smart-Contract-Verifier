@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:unison/models/condition.dart';
 import 'package:unison/models/global.dart';
 
 import '../models/contract.dart';
 
-class ContractDetailInfoPanel extends StatelessWidget {
+class ContractDetailInfoPanel extends StatefulWidget {
   final Contract _contract;
-
   ContractDetailInfoPanel(this._contract);
 
+  @override
+  _ContractDetailInfoPanelState createState() =>
+      _ContractDetailInfoPanelState();
+}
+
+class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
+  bool disableSealButton;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -18,16 +25,17 @@ class ContractDetailInfoPanel extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: Icon(Icons.info),
-              title: Text(_contract.contractId),
+              title: Text(widget._contract.contractId),
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Created: ${_contract.createdDate}'),
+                  Text('Created: ${widget._contract.createdDate}'),
                   Text(
-                      'Moved to Blockchain: ${_contract.movedToBlockchain.toString() == 'null' ? 'false' : _contract.movedToBlockchain.toString()}'),
+                      'Moved to Blockchain: ${widget._contract.movedToBlockchain.toString() == 'null' ? 'false' : widget._contract.movedToBlockchain.toString()}'),
                   SizedBox(
                     width: 15,
                   ),
+                  _buildSealButton(),
                 ],
               ),
             ),
@@ -41,19 +49,19 @@ class ContractDetailInfoPanel extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Agreement ID: ${_contract.contractId}'),
+                  Text('Agreement ID: ${widget._contract.contractId}'),
                   Text(
-                    'Party A: ${_contract.partyA}',
+                    'Party A: ${widget._contract.partyA}',
                     style: TextStyle(
-                      color: _contract.partyA == Global.userAddress
+                      color: widget._contract.partyA == Global.userAddress
                           ? Colors.deepOrange
                           : Colors.cyan,
                     ),
                   ),
                   Text(
-                    'Party B: ${_contract.partyB}',
+                    'Party B: ${widget._contract.partyB}',
                     style: TextStyle(
-                      color: _contract.partyB == Global.userAddress
+                      color: widget._contract.partyB == Global.userAddress
                           ? Colors.deepOrange
                           : Colors.cyan,
                     ),
@@ -65,5 +73,22 @@ class ContractDetailInfoPanel extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildSealButton() {
+    bool stillPending = false;
+    widget._contract.conditions.forEach((condition) {
+      if (condition.status == 'PENDING') {
+        stillPending = true;
+      }
+    });
+    return stillPending
+        ? Text('Waiting for PENDING conditions')
+        : ElevatedButton(
+            onPressed: () {
+              print('SEAL THAT DEAL');
+            },
+            child: Text('Seal Agreement'),
+          );
   }
 }
