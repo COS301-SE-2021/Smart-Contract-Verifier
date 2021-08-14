@@ -274,7 +274,7 @@ contract Verifier{
 
         // False if anyone hasn't voted yet
         for(uint i=0; i < juries[agreeID].numJurors; i++){
-            if(juries[agreeID].votes[i] == AgreementLib.Vote.NO)
+            if(juries[agreeID].votes[i] == AgreementLib.Vote.NONE)
                 return false;
         }
 
