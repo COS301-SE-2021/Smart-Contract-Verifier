@@ -1,23 +1,14 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.AgreementResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.common.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
-import com.savannasolutions.SmartContractVerifierServer.user.requests.UserExistsRequest
-import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
-import com.savannasolutions.SmartContractVerifierServer.user.responses.UserExistsResponse
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.concurrent.ThreadLocalRandom
 import kotlin.collections.ArrayList
 
 @Service
