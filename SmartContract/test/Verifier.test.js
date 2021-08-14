@@ -257,17 +257,58 @@ contract('Verifier', (accounts) =>{
 
     })
 
-    // describe("Verifier unit tests 3", async () =>{
+    describe("Verifier unit tests 3", async () =>{
 
-    //     var verifier
+        var verifier
 
-    //     before(async () =>{
+        before(async () =>{
+            token = await UnisonToken.new()
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
 
-    //     })
+            // Create agreement
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "");
+        
+            // Add payment condition
+            var amount = 100
+            await token.approve(verifier.address, amount);
+            await verifier.addPaymentConditions(0, [token.address], [amount]);
 
-    //     it("Add payment condition", async()=>{
-    //         console.log("Hello")
-    //     })
+            // Accept
+            await verifier.acceptAgreement(0, {from: accounts[1]})
 
-    // })
+            // Pay platofrm fee
+            var agree = await verifier.getAgreement(0);
+            var mustPay = agree.platformFee
+
+            await token.approve(verifier.address, mustPay);
+            await verifier.payPlatformFee(0);
+
+            // Prepare jurors
+            needCoins = [];
+            for(var i = 1; i<9; i++){
+                needCoins.push(accounts[i]);
+            }
+            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+
+            for(var i=3; i<9; i++){
+                token.approve(verifier.address, 10000, {from: accounts[i]});
+                verifier.addJuror({from: accounts[i]});
+            }
+
+            // Contest agreement
+            result = await verifier.voteResolution(0, 1, {from: accounts[1]});
+
+
+        })
+
+        it("Agreement is contested", async()=>{
+            var jury = await verifier.getJury(0);
+            assert(jury.jurors.length > 0, "Jury wasn't assigned");
+        })
+
+
+
+    })
+
 })
