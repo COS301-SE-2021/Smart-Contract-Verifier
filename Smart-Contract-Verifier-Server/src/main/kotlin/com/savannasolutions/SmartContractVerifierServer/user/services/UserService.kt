@@ -79,7 +79,7 @@ class UserService(  val userRepository: UserRepository,
             else null
 
             val durationCondition : Conditions? = if(agreement.DurationConditionUUID != null)
-                conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+                conditionsRepository.getById(agreement.DurationConditionUUID!!)
             else null
 
             val paymentConditionResponse : PaymentConditionResponse?
