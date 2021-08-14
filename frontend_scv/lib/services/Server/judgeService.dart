@@ -20,12 +20,13 @@ class JudgeService {
 
     var response;
     try {
-      response = await _api.postData('/negotiation/get-judging-agreement', {'WalletID' : Global.userAddress});
+      response = await _api.postData('/negotiation/get-judging-agreement',
+          {'WalletID': Global.userAddress});
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreements for judge could not be retrieved');
     } catch (e) {
-      print (e);
+      print(e);
       throw (e);
     }
 
@@ -70,7 +71,8 @@ class JudgeService {
 
   //Checks if the current user is a juror
   Future<bool> isJudge() async {
-    bool res = await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
+    bool res =
+        await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
     Global.isJudge = res;
     return res;
   }
@@ -88,6 +90,6 @@ class JudgeService {
   //Lets Verifier use UNT
   Future<void> setContractAllowance() async {
     await _tokServ.setAllowance(
-        await Global.getContractId('Verifier'), BigInt.from(100000));
+        await Global.getContractId('Verifier'), BigInt.from(10000000000));
   }
 }

@@ -33,6 +33,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
     partyB: '',
     partyA: Global.userAddress,
     conditions: [],
+    movedToBlockchain: true,
   );
 
   var _isInit = true;

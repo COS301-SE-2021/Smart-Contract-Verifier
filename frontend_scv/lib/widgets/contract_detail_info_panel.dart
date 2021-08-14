@@ -125,6 +125,34 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                 },
                 child: Text('Dispute Agreement'),
               ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    print('Accept Blockchain Agreement');
+                    await widget.unisonService.acceptAgreement(
+                      widget._contract,
+                    );
+                  } catch (error) {
+                    print(error);
+                    setState(() {});
+                  }
+                },
+                child: Text('Accept Blockchain Agreement'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    print('Pay Platform Fee');
+                    await widget.unisonService.payPlatformFee(
+                      widget._contract.blockchainId,
+                    );
+                  } catch (error) {
+                    print(error);
+                    setState(() {});
+                  }
+                },
+                child: Text('Pay Platform Fee'),
+              ),
             ],
           )
         :

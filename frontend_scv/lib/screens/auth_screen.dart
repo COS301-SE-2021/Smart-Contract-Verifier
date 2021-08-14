@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/services/Server/loginService.dart';
 
@@ -107,6 +108,16 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   Future<void> _submit() async {
+    //imposter
+    JudgeService judgeService = JudgeService();
+    UnisonService unisonService = UnisonService();
+    await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+    await unisonService.getAgreement(BigInt.from(0));
+
+    await judgeService.setContractAllowance();
+  }
+
+  Future<void> _submit2() async {
     _formKey.currentState.save();
     setState(() {
       _isLoading = true;

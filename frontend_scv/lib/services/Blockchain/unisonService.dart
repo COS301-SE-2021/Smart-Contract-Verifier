@@ -42,10 +42,10 @@ class UnisonService {
 
   Future<void> acceptAgreement(Contract con) async {
     //This should probably be called immediately after the contract is sealed on backend.
-
-    if (!con.movedToBlockchain) {
-      throw Exception('Agreement is not on blockchain yet');
-    }
+    print(con.movedToBlockchain);
+    // if (!con.movedToBlockchain) {
+    //   throw Exception('Agreement is not on blockchain yet');
+    // }TODO
 
     final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
   }
@@ -55,7 +55,8 @@ class UnisonService {
     print(res);
   }
 
-  Future<void> addJuror() async { //The smart contract automatically removes the necessary funds from the user.
+  Future<void> addJuror() async {
+    //The smart contract automatically removes the necessary funds from the user.
     await _smC.makeWriteCall('addJuror', []);
   }
 
@@ -63,39 +64,35 @@ class UnisonService {
     await _smC.makeWriteCall('removeJuror', []);
   }
 
-  Future<void> jurorVote(BigInt id, int v) async { //Vote yes/no on an agreement
+  Future<void> jurorVote(BigInt id, int v) async {
+    //Vote yes/no on an agreement
     await _smC.makeWriteCall('jurorVote', [id, BigInt.from(v)]);
   }
 
   Future<bool> isJuror(EthereumAddress add) async {
-
     final res = await _smC.makeReadCall('isJuror', [add]);
-    print ('Actual res: ' + res.toString());
+    print('Actual res: ' + res.toString());
     return res[0]; //Temporary
-
   }
 
   //Does the party believe the agreement was fulfilled.
   //Must happen after contract expiration
   Future<void> agreementFulfilled(Contract con, bool vote) async {
-
     //If contract has not reached resolution date yet.
     // if (con.sealedDate.millisecondsSinceEpoch + con.duration.toInt()*1000< DateTime.now().millisecondsSinceEpoch) {
     //   throw Exception('Contract has not reached resolution date');
     // }
 
     await _voteResolution(con.blockchainId, vote ? 2 : 1);
-
   }
 
   Future<void> _voteResolution(BigInt id, int v) async {
     await _smC.makeWriteCall('voteResolution', [id, BigInt.from(v)]);
   }
 
-  Future <void> getJury(BigInt id) async {
+  Future<void> getJury(BigInt id) async {
     final res = await _smC.makeWriteCall('getJury', [id]);
   }
-
 
   //For testing
   Future<void> setEvent() async {
@@ -108,16 +105,18 @@ class UnisonService {
   }
 
   //A party can pay into the agreement, after it has been moved to the blockchain
-  Future<void> addPaymentConditions(BigInt id, EthereumAddress address, BigInt amount) async {
-
-    final res = await _smC.makeWriteCall('addPaymentConditions', [id, [address], [amount]]);
+  Future<void> addPaymentConditions(
+      BigInt id, EthereumAddress address, BigInt amount) async {
+    final res = await _smC.makeWriteCall('addPaymentConditions', [
+      id,
+      [address],
+      [amount]
+    ]);
   }
 
   //Pay the platform fee for an agreement
   //Someone (anyone) has to pay the platform fee after the agreement is accepted, and that will make it active.
   Future<void> payPlatformFee(BigInt id) async {
-
     await _smC.makeWriteCall('payPlatformFee', [id]);
   }
-
 }
