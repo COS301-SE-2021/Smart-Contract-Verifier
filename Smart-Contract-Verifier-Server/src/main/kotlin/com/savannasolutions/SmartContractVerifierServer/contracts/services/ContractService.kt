@@ -65,9 +65,12 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
         val agreement = agreementsRepository.getAgreementsByBlockchainID(agreementIndex)
         if(agreement != null){
             jurors.forEach { address ->
-                val juror = Judges()
-                juror.agreement = agreement
-                juror.judge = userRepository.getById(address.toString())
+                if(userRepository.existsById(address.toString())) {
+                    val juror = Judges()
+                    juror.agreement = agreement
+                    juror.judge = userRepository.getById(address.toString())
+                    judgesRepository.save(juror)
+                }
             }
         }
     }
