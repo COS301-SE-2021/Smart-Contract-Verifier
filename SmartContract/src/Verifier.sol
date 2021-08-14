@@ -165,6 +165,8 @@ contract Verifier{
         for(uint i=0; i<jury.length; i++){
             juries[agreeID].jurors[i] = jury[i];
         }
+        // Deadline is 10 minutes from now
+        juries[agreeID].deadline = block.timestamp + 600;
         juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;
@@ -340,8 +342,8 @@ contract Verifier{
         int index = _jurorIndex(agreeID);
 
         require(index >= 0, "You are not on this jury");
-        // If the following two conditions hold, then the agreement can't be closed. So that doesn't need to be checked
-        require(juries[agreeID].deadline > block.timestamp);
+        // If the following two conditions hold, then the agreement also can't be closed.
+        require(juries[agreeID].deadline > block.timestamp, "Deadline for voting has passed");
         require(juries[agreeID].votes[uint(index)] == AgreementLib.Vote.NONE, "You already voted");
 
         // Set vote
