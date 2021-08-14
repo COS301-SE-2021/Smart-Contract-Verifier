@@ -1230,7 +1230,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0, mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
@@ -1265,7 +1265,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0,mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1301,7 +1301,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                -500.0))
+                -500.0,mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1335,7 +1335,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("",
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0,mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1375,7 +1375,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("Invalid user",
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0, mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
