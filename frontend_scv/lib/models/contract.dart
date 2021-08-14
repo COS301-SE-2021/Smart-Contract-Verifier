@@ -46,17 +46,24 @@ class Contract with ChangeNotifier {
     partyB = jsn['PartyB']['publicWalletID'];
     // createdDate = null;
     // sealedDate = null;
+    //status = json['status'],
+
+    //Try to get items that may not exist yet
+    try {
+      duration = jsn['DurationCondition']['Amount'];
+    } catch (_) {}
+    try {
+      price = jsn['PaymentCondition']['Amount'];
+    } catch (_) {}
     try {
       createdDate = DateTime.parse(jsn['CreatedDate']);
       sealedDate = DateTime.parse(jsn['SealedDate']);
     } catch(_) {}
-    //status = json['status'],
-    duration = jsn['DurationCondition']['Amount'];
+
     movedToBlockchain = jsn['MovedToBlockChain'];
     description = jsn['AgreementDescription'];
     imageUrl = jsn['AgreementImageURL'];
     partyBId = '';
-    price = jsn['PaymentCondition']['Amount'];
     title = jsn['AgreementTitle'];
     conditions = (jsn['Conditions'])
         .map<Condition>((i) => Condition.fromJson(i))
