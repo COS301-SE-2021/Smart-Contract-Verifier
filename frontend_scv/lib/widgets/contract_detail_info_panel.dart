@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/condition.dart';
 import 'package:unison/models/global.dart';
+import 'package:unison/services/Server/negotiationService.dart';
 
 import '../models/contract.dart';
 
 class ContractDetailInfoPanel extends StatefulWidget {
   final Contract _contract;
   ContractDetailInfoPanel(this._contract);
+  NegotiationService negotiationService = NegotiationService();
 
   @override
   _ContractDetailInfoPanelState createState() =>
@@ -82,10 +84,13 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
         stillPending = true;
       }
     });
+
     return stillPending
         ? Text('Waiting for PENDING conditions')
         : ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              await widget.negotiationService.sealAgreement(widget._contract);
+              //TODO setState
               print('SEAL THAT DEAL');
             },
             child: Text('Seal Agreement'),
