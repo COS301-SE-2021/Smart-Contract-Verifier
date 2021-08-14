@@ -72,6 +72,7 @@
 * Seal the deal
 * Add payment condition blockchain?
 * Create Agreement (who pays)
+* LOWERCASEPARTY - DONE
 * ---------------
 * LATER:
 * ---------------
