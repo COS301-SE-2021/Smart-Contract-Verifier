@@ -360,7 +360,7 @@ contract Verifier{
         // (since code execution must come from someone)
 
         require(juries[agreeID].assigned, "There is no jury for this agreement");
-        require(juries[agreeID].deadline < block.timestamp, "Jurors still have time to vote");
+        require(juries[agreeID].deadline <= block.timestamp, "Jurors still have time to vote");
         require(agreements[agreeID].state != AgreementLib.AgreementState.CLOSED, "Agreement is already paid out");
 
         _juryMakeDecision(agreeID);
