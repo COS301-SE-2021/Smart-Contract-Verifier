@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.messenger
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
@@ -37,6 +38,9 @@ class GetAllMessagesByUserDatabaseTest {
     @Autowired
     lateinit var agreementsRepository: AgreementsRepository
 
+    @Autowired
+    lateinit var judgesRepository: JudgesRepository
+
     lateinit var messagesService: MessengerService
     private lateinit var userA : User
     private lateinit var userB : User
@@ -52,7 +56,7 @@ class GetAllMessagesByUserDatabaseTest {
         messagesService = MessengerService(messagesRepository,
             messagesStatusRepository,
             userRepository,
-            agreementsRepository)
+            agreementsRepository, judgesRepository)
 
         userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
         userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
