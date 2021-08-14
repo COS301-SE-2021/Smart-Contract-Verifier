@@ -14,7 +14,7 @@ contract('Verifier', (accounts) =>{
 
     describe("Verifier unit tests", async () =>{
 
-        let verifier
+        var verifier
 
         before(async () =>{
             token = await UnisonToken.new()
@@ -188,8 +188,6 @@ contract('Verifier', (accounts) =>{
             var balPost = await token.balanceOf(to);
             balPost = BigInt(balPost);
 
-            console.log("Pre: ", balPre);
-            console.log("Post: ", balPost);
             assert(balPost - balPre == agree.payments[0].amount, "Agreement didn't pay out")
 
         })
@@ -198,7 +196,7 @@ contract('Verifier', (accounts) =>{
 
     describe("Verifier unit tests 2", async () =>{
 
-        let verifier
+        var verifier
 
         before(async () =>{
             token = await UnisonToken.new()
@@ -206,15 +204,15 @@ contract('Verifier', (accounts) =>{
             verifier = await Verifier.new(token.address, r.address);
 
             // Create agreement
-            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
-            verifier.acceptAgreement(0, {from: accounts[1]})
+            await verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
+            await verifier.acceptAgreement(0, {from: accounts[1]})
 
             // Pay platofrm fee
             var agree = await verifier.getAgreement(0);
             var mustPay = agree.platformFee
 
-            token.approve(verifier.address, mustPay);
-            verifier.payPlatformFee(0);
+            await token.approve(verifier.address, mustPay);
+            await verifier.payPlatformFee(0);
         })
 
         it("Add payment condition", async()=>{
@@ -222,8 +220,8 @@ contract('Verifier', (accounts) =>{
             var numPaymentsAlready = agree.payments.length;
 
             var amount = 100
-            token.approve(verifier.address, amount);
-            verifier.addPaymentConditions(0, [token.address], [amount]);
+            await token.approve(verifier.address, amount);
+            await verifier.addPaymentConditions(0, [token.address], [amount]);
 
             agree = await verifier.getAgreement(0);
             assert(agree.payments.length == numPaymentsAlready + 1);
@@ -234,8 +232,8 @@ contract('Verifier', (accounts) =>{
             var numPaymentsAlready = agree.payments.length;
 
             var amount = 100
-            token.approve(verifier.address, amount*2);
-            verifier.addPaymentConditions(0, [token.address, token.address], [amount, amount]);
+            await token.approve(verifier.address, amount*2);
+            await verifier.addPaymentConditions(0, [token.address, token.address], [amount, amount]);
 
             agree = await verifier.getAgreement(0);
             assert(agree.payments.length == numPaymentsAlready + 2);
@@ -246,11 +244,30 @@ contract('Verifier', (accounts) =>{
             var numPaymentsAlready = agree.payments.length;
 
             var amount = 100
-            verifier.addPaymentConditions(0, [token.address], [amount]);
+
+            // This should throw an error
+            try{
+            await verifier.addPaymentConditions(0, [token.address], [amount]);
+            }
+            catch{}
 
             agree = await verifier.getAgreement(0);
             assert(agree.payments.length == numPaymentsAlready);
         })        
 
     })
+
+    // describe("Verifier unit tests 3", async () =>{
+
+    //     var verifier
+
+    //     before(async () =>{
+
+    //     })
+
+    //     it("Add payment condition", async()=>{
+    //         console.log("Hello")
+    //     })
+
+    // })
 })
