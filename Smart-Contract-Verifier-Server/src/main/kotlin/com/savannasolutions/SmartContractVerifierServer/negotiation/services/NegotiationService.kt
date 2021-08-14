@@ -267,6 +267,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                     return SealAgreementResponse(ResponseStatus.FAILED)
 
         agreement.SealedDate = Date()
+        agreement.blockchainID = sealAgreementRequest.index
+        agreement.MovedToBlockChain = true
         agreementsRepository.save(agreement)
         return SealAgreementResponse(ResponseStatus.SUCCESSFUL)
     }

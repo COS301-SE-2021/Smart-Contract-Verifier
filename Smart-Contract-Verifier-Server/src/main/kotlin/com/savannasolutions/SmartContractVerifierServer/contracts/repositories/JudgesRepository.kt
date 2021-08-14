@@ -1,6 +1,6 @@
-package com.savannasolutions.SmartContractVerifierServer.judges.repositories
+package com.savannasolutions.SmartContractVerifierServer.contracts.repositories
 
-import com.savannasolutions.SmartContractVerifierServer.judges.models.Judges
+import com.savannasolutions.SmartContractVerifierServer.contracts.models.Judges
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import org.springframework.data.jpa.repository.JpaRepository

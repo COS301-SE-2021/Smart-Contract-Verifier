@@ -8,7 +8,7 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.*
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.judges.repositories.JudgesRepository
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.Assertions.*
