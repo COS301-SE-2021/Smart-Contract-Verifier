@@ -1,7 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.*
-import com.savannasolutions.SmartContractVerifierServer.judges.repositories.JudgesRepository
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -19,8 +19,7 @@ import kotlin.collections.ArrayList
 class NegotiationService constructor(val agreementsRepository: AgreementsRepository,
                                      val conditionsRepository: ConditionsRepository,
                                      val userRepository: UserRepository,
-                                     val judgesRepository: JudgesRepository,
-                                     ){
+                                     val judgesRepository: JudgesRepository){
 
     fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionResponse{
         if(conditionsRepository.existsById(acceptConditionRequest.conditionID)){
@@ -199,7 +198,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                                     agreement.MovedToBlockChain,
                                                     conditions,
                                                     agreement.AgreementImageURL,
-                                                    agreement.blockchainID)
+                                                    agreement.blockchainID.toString())
 
         return GetAgreementDetailsResponse(agreementResponse,ResponseStatus.SUCCESSFUL)
     }
