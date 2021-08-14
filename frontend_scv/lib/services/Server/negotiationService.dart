@@ -63,6 +63,8 @@ class NegotiationService {
     await _handleCondition(id, false);
   }
 
+  //This class was made to handle both payment and duration.
+  //The api requests bodies for the two are now different.
   Future<void> _handleCondition(String id, bool acc) async {
     //Either accept or reject condition
 
@@ -82,16 +84,50 @@ class NegotiationService {
     }
   }
 
-  Future<void> setPayment(String con, double price) async {
+  Future<void> setPayment(String con, String payingUser, double price) async {
     //Set the payment condition of an agreement.
 
-    await _handlePayDuration(con, price, true);
+    Map<String, dynamic> body = {
+      'ProposedUser': Global.userAddress,
+      'AgreementID': con,
+      'Payment' : price,
+      'PayingUser' : payingUser,
+    };
+    var response;
+
+    try {
+      response = await _api.postData(_reqPath + 'set-payment-condition', body);
+
+      if (response['Status'] != 'SUCCESSFUL')
+        throw Exception('Payment info could not be saved');
+    } on Exception catch (e) {
+      //Handle exception
+      print(e);
+      throw e;
+    }
+
   }
 
   Future<void> setDuration(String con, double dur) async {
     //Set the duration condition of an agreement.
 
-    await _handlePayDuration(con, dur, false);
+    Map<String, dynamic> body = {
+      'ProposedUser': Global.userAddress,
+      'AgreementID': con,
+      'Duration': dur,
+    };
+    var response;
+
+    try {
+      response = await _api.postData(_reqPath + 'set-duration-condition', body);
+
+      if (response['Status'] != 'SUCCESSFUL')
+        throw Exception('Duration info could not be saved');
+    } on Exception catch (e) {
+      //Handle exception
+      print(e);
+      throw e;
+    }
   }
 
   Future<void> _handlePayDuration(String con, double val, bool price) async {
