@@ -134,7 +134,7 @@ class NegotiationService {
     } on Exception catch (e) {
       //Handle exception
       print(e);
-      return;
+      throw (e);
     }
   }
 }
