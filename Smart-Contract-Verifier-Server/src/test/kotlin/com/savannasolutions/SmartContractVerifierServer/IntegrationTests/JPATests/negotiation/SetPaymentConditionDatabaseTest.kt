@@ -83,7 +83,8 @@ class SetPaymentConditionDatabaseTest {
     {
        val request = SetPaymentConditionRequest(userA.publicWalletID,
                                                 agreement.ContractID,
-                                                500.0)
+                                                500.0,
+                                                userA.publicWalletID)
 
        val response = negotiationService.setPaymentCondition(request)
 

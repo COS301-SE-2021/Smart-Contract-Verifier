@@ -1,9 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.AgreementResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.common.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
@@ -77,11 +74,45 @@ class UserService(  val userRepository: UserRepository,
             }
             val usersList = userRepository.getUsersByAgreementsContaining(agreement)
 
+            val paymentCondition : Conditions? = if(agreement.PaymentConditionUUID != null)
+                conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+            else null
+
+            val durationCondition : Conditions? = if(agreement.DurationConditionUUID != null)
+                conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+            else null
+
+            val paymentConditionResponse : PaymentConditionResponse?
+            if(paymentCondition != null)
+            {
+                var amountStr = paymentCondition.conditionDescription
+                amountStr = amountStr.replace("Payment of ", "")
+                val amount = amountStr.toDouble()
+                paymentConditionResponse = PaymentConditionResponse(paymentCondition.conditionID,
+                    amount,
+                    agreement.PayingParty!!,
+                    paymentCondition.conditionStatus)
+            } else
+                paymentConditionResponse = null
+
+            val durationConditionResponse : DurationConditionResponse?
+            if(durationCondition != null)
+            {
+                var amountStr = durationCondition.conditionDescription
+                amountStr = amountStr.replace("Duration of ", "")
+                val amount  = amountStr.toDouble()
+                durationConditionResponse = DurationConditionResponse(durationCondition.conditionID,
+                    amount,
+                    durationCondition.conditionStatus)
+            } else
+                durationConditionResponse = null
+
+
             val tempArg = AgreementResponse(agreement.ContractID,
                 agreement.AgreementTitle,
                 agreement.AgreementDescription,
-                agreement.DurationConditionUUID,
-                agreement.PaymentConditionUUID,
+                durationConditionResponse,
+                paymentConditionResponse,
                 UserResponse(usersList.elementAt(0).publicWalletID),
                 UserResponse(usersList.elementAt(1).publicWalletID),
                 agreement.CreatedDate,
@@ -92,8 +123,6 @@ class UserService(  val userRepository: UserRepository,
 
             list.add(tempArg)
         }
-
-
 
         return RetrieveUserAgreementsResponse(list,ResponseStatus.SUCCESSFUL)
     }
