@@ -166,7 +166,8 @@ contract Verifier{
             juries[agreeID].jurors[i] = jury[i];
         }
         // Deadline is 10 minutes from now
-        juries[agreeID].deadline = block.timestamp + 600;
+        juries[agreeID].deadline = block.timestamp + 60000;
+
         juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;
@@ -274,7 +275,7 @@ contract Verifier{
 
         // False if anyone hasn't voted yet
         for(uint i=0; i < juries[agreeID].numJurors; i++){
-            if(juries[agreeID].votes[i] == AgreementLib.Vote.NO)
+            if(juries[agreeID].votes[i] == AgreementLib.Vote.NONE)
                 return false;
         }
 
@@ -352,6 +353,18 @@ contract Verifier{
         if(_decisionTime(agreeID)){
             _juryMakeDecision(agreeID);
         }
+
+    }
+
+    function triggerPayout(uint agreeID) public{
+        // If not all jury members voted, this will be needed to finish the agreement
+        // (since code execution must come from someone)
+
+        require(juries[agreeID].assigned, "There is no jury for this agreement");
+        require(juries[agreeID].deadline <= block.timestamp, "Jurors still have time to vote");
+        require(agreements[agreeID].state != AgreementLib.AgreementState.CLOSED, "Agreement is already paid out");
+
+        _juryMakeDecision(agreeID);
 
     }
 
