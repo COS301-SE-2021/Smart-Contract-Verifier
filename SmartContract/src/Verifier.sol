@@ -123,7 +123,8 @@ contract Verifier{
         // Anyone can pay the platform fee, it does not even have to be one of the
         // parties involved in the agreement
 
-        // BUG: If payment is split up over multiple accounts, the last account will receive the entire refund
+        // Was first intended to be payable by multiple people, but for now it can only be paid by one person.
+        // Front-end doesn't use split platform fees yet, but fixing a bug it had would require an api-change
 
         require(agreements[agreeID].state == AgreementLib.AgreementState.ACCEPTED);
 
@@ -132,10 +133,6 @@ contract Verifier{
 
         uint256 allowed = unisonToken.allowance(msg.sender, address(this));
         require(allowed >= payment, "insufficient allowance to pay platform fee");
-
-        if(allowed < payment)
-            payment = allowed;
-
 
         if(unisonToken.transferFrom(msg.sender, address(this), payment)){
             agreements[agreeID].feePaid += payment;
