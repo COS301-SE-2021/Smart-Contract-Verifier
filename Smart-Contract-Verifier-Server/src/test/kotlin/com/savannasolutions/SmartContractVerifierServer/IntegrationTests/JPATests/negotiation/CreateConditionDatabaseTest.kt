@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -32,6 +33,9 @@ class CreateConditionDatabaseTest {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    @Autowired
+    lateinit var judgesRepository: JudgesRepository
+
     private lateinit var userA : User
     private lateinit var userB : User
     private lateinit var agreement : Agreements
@@ -43,7 +47,8 @@ class CreateConditionDatabaseTest {
     {
         negotiationService = NegotiationService(agreementsRepository,
             conditionsRepository,
-            userRepository)
+            userRepository,
+            judgesRepository)
 
         userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
         userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
