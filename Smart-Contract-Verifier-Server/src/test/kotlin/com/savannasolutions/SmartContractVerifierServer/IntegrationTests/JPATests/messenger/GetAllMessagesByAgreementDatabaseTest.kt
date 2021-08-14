@@ -23,7 +23,7 @@ import kotlin.test.assertNotNull
 
 @SpringBootTest
 @AutoConfigureDataJpa
-class GetAllMessagesByAgreement {
+class GetAllMessagesByAgreementDatabaseTest {
     @Autowired
     lateinit var messagesRepository: MessagesRepository
 
