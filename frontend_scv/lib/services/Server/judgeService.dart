@@ -3,14 +3,11 @@
 
 import 'dart:async';
 import 'package:unison/models/global.dart';
-import 'package:unison/services/Blockchain/jurorService.dart';
 import 'package:unison/services/Blockchain/tokenService.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:web3dart/credentials.dart';
-
 import 'backendAPI.dart';
 import '../../models/contract.dart';
-import '../Blockchain/jurorService.dart';
 
 class JudgeService {
   ApiInteraction _api = ApiInteraction();
@@ -60,8 +57,7 @@ class JudgeService {
 
   //Checks if the current user is a juror
   Future<bool> isJudge() async {
-    bool res =
-        await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
+    bool res = await _uniServ.isJuror(EthereumAddress.fromHex(Global.userAddress));
     Global.isJudge = res;
     return res;
   }
@@ -76,7 +72,7 @@ class JudgeService {
     }
   }
 
-  //Let's Verifier use UNT
+  //Lets Verifier use UNT
   Future<void> setContractAllowance() async {
     await _tokServ.setAllowance(
         await Global.getContractId('Verifier'), BigInt.from(100000));
