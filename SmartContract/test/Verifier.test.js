@@ -190,6 +190,7 @@ contract('Verifier', (accounts) =>{
 
             assert(balPost - balPre == agree.payments[0].amount, "Agreement didn't pay out")
 
+
         })
 
     })
