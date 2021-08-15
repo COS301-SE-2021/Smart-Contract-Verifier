@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:unison/services/Server/judgeService.dart';
+import 'package:unison/services/Server/loginService.dart';
 
 import '../providers/auth.dart';
 
@@ -105,12 +108,28 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   Future<void> _submit() async {
+    //imposter
+    JudgeService judgeService = JudgeService();
+    UnisonService unisonService = UnisonService();
+    await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+    await unisonService.getAgreement(BigInt.from(0));
+    await judgeService.isJudge();
+
+    await judgeService.setContractAllowance();
+  }
+
+  Future<void> _submit2() async {
     _formKey.currentState.save();
     setState(() {
       _isLoading = true;
     });
     try {
-      await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+      //First check if user exists:
+      JudgeService judicious = JudgeService();
+      await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+      // await judicious.setContractAllowance();
+      await judicious.isJudge();
+      // await loginService.tryAddUser();
       //Success -> go to home screen - because the MaterialApp is a consumer
       // of the Auth Provider, we do not need to push/navigate to the
       // dashboard, it will simply re-render/rebuild the materialApp and set
@@ -119,10 +138,10 @@ class _AuthCardState extends State<AuthCard> {
       const errorMessage = 'Authenticate Failed.\nPlease ensure you '
           'have the metamask extension installed.';
       _showErrorDialog(errorMessage + '\nAdditional information:\n' + error);
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override

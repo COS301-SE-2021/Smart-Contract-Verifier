@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/models/global.dart';
 
 import '../models/contract.dart';
 import '../models/contracts.dart';
@@ -17,8 +18,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
   final _priceFocusNode = FocusNode();
   final _partyBIdFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
-  final _imageUrlFocusNode = FocusNode();
-  final _imageUrlController = TextEditingController();
+  // final _imageUrlFocusNode = FocusNode();
+  // final _imageUrlController = TextEditingController();
   //Global Key - used to interact with a widget within your code - very rare
   //Normally used for forms:
   final _form = GlobalKey<FormState>(); //essentially 'hooks' into forms state
@@ -29,9 +30,12 @@ class _EditContractScreenState extends State<EditContractScreen> {
     description: '',
     price: 0,
     imageUrl: '',
-    partyBId: '',
+    partyB: '',
+    partyA: Global.userAddress,
     conditions: [],
+    movedToBlockchain: true,
   );
+
   var _isInit = true;
   var _isLoading = false;
 
@@ -45,7 +49,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
   };
   @override
   void initState() {
-    _imageUrlFocusNode.addListener(_updateImageUrl);
+    // _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
 
@@ -60,28 +64,27 @@ class _EditContractScreenState extends State<EditContractScreen> {
           'title': _editedContract.title,
           'description': _editedContract.description,
           'price': _editedContract.price.toString(),
-          'imageUrl': '',
-          'partyBId': '',
+          'partyBId': _editedContract.partyB,
         };
-        _imageUrlController.text = _editedContract.imageUrl;
+        // _imageUrlController.text = _editedContract.imageUrl;
       }
     } //
     _isInit = false;
     super.didChangeDependencies();
   }
 
-  void _updateImageUrl() {
-    if (!_imageUrlFocusNode.hasFocus) {
-      if ((!_imageUrlController.text.startsWith('http') &&
-              !_imageUrlController.text.startsWith('https')) ||
-          (!_imageUrlController.text.endsWith('.png') &&
-              !_imageUrlController.text.endsWith('.jpg') &&
-              !_imageUrlController.text.endsWith('.jpeg'))) {
-        return;
-      }
-      setState(() {});
-    }
-  }
+  // void _updateImageUrl() {
+  //   if (!_imageUrlFocusNode.hasFocus) {
+  //     if ((!_imageUrlController.text.startsWith('http') &&
+  //             !_imageUrlController.text.startsWith('https')) ||
+  //         (!_imageUrlController.text.endsWith('.png') &&
+  //             !_imageUrlController.text.endsWith('.jpg') &&
+  //             !_imageUrlController.text.endsWith('.jpeg'))) {
+  //       return;
+  //     }
+  //     setState(() {});
+  //   }
+  // }
 
   Future<void> _saveForm() async {
     //validates inputs on the form -> executes the 'validator' of each input:
@@ -110,7 +113,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
             title: Text('An error occurred!'),
             content: Text('Something went wrong.'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('Okay'),
                 onPressed: () {
                   Navigator.of(ctx).pop();
@@ -129,12 +132,12 @@ class _EditContractScreenState extends State<EditContractScreen> {
 
   @override
   void dispose() {
-    _imageUrlFocusNode.removeListener(_updateImageUrl);
+    // _imageUrlFocusNode.removeListener(_updateImageUrl);
     _priceFocusNode.dispose();
     _partyBIdFocusNode.dispose();
     _descriptionFocusNode.dispose();
-    _imageUrlController.dispose();
-    _imageUrlFocusNode.dispose();
+    // _imageUrlController.dispose();
+    // _imageUrlFocusNode.dispose();
     super.dispose();
   }
 
@@ -164,26 +167,20 @@ class _EditContractScreenState extends State<EditContractScreen> {
                       initialValue: _initValues['title'],
                       decoration: InputDecoration(
                         labelText: 'Title',
-                        // errorText:
                       ),
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) {
-                        //not neccessary
                         FocusScope.of(context).requestFocus(_partyBIdFocusNode);
                       },
                       onSaved: (value) {
                         _editedContract = Contract(
-                          //because the values of a Product
-                          // are final - we need to create a new Product (we cannot
-                          // simply edit them) and then replace the existing one
                           contractId: _editedContract.contractId,
-                          title: value, //This is the value that needs to be
-                          // updated
+                          title: value,
                           description: _editedContract.description,
                           price: _editedContract.price,
                           imageUrl: _editedContract.imageUrl,
-                          partyBId: _editedContract.partyBId,
-                          isFavorite: _editedContract.isFavorite,
+                          partyB: _editedContract.partyB,
+                          partyA: _editedContract.partyA,
                           conditions: [],
                         );
                       },
@@ -222,8 +219,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
                             description: _editedContract.description,
                             price: _editedContract.price,
                             imageUrl: _editedContract.imageUrl,
-                            partyBId: value,
-                            isFavorite: _editedContract.isFavorite,
+                            partyB: value.toLowerCase(),
+                            partyA: _editedContract.partyA,
                             conditions: []);
                       },
                       validator: (value) {
@@ -248,8 +245,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
                             description: value,
                             price: _editedContract.price,
                             imageUrl: _editedContract.imageUrl,
-                            partyBId: _editedContract.partyBId,
-                            isFavorite: _editedContract.isFavorite,
+                            partyB: _editedContract.partyB,
+                            partyA: _editedContract.partyA,
                             conditions: []);
                       },
                       validator: (value) {
@@ -260,65 +257,64 @@ class _EditContractScreenState extends State<EditContractScreen> {
                         return null;
                       },
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 100,
-                          margin: EdgeInsets.only(top: 8, right: 10),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                            color: Colors.grey,
-                          )),
-                          child: _imageUrlController.text.isEmpty
-                              ? Center(child: Text('Enter a URL'))
-                              : FittedBox(
-                                  fit: BoxFit.cover,
-                                  child:
-                                      Image.network(_imageUrlController.text),
-                                ),
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            decoration: InputDecoration(labelText: 'Image URL'),
-                            keyboardType: TextInputType.url,
-                            textInputAction: TextInputAction.done,
-                            controller: _imageUrlController,
-                            focusNode: _imageUrlFocusNode,
-                            onFieldSubmitted: (_) {
-                              _saveForm();
-                            },
-                            onSaved: (value) {
-                              _editedContract = Contract(
-                                  contractId: _editedContract.contractId,
-                                  title: _editedContract.title,
-                                  description: _editedContract.description,
-                                  price: _editedContract.price,
-                                  imageUrl: value,
-                                  partyBId: _editedContract.partyBId,
-                                  isFavorite: _editedContract.isFavorite,
-                                  conditions: []);
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter an image URL.';
-                              }
-                              if (!value.startsWith('http') &&
-                                  !value.startsWith('https')) {
-                                return 'Please enter a valid URL.';
-                              }
-                              if (!value.endsWith('.png') &&
-                                  !value.endsWith('.jpg') &&
-                                  !value.endsWith('.jpeg')) {
-                                return 'Please enter a valid image URL.';
-                              }
-                              return null;
-                            },
-                          ),
-                        )
-                      ],
-                    ),
+                    // Row(
+                    //   crossAxisAlignment: CrossAxisAlignment.end,
+                    //   children: [
+                    //     Container(
+                    //       width: 100,
+                    //       height: 100,
+                    //       margin: EdgeInsets.only(top: 8, right: 10),
+                    //       decoration: BoxDecoration(
+                    //           border: Border.all(
+                    //         color: Colors.grey,
+                    //       )),
+                    //       child: _imageUrlController.text.isEmpty
+                    //           ? Center(child: Text('Enter a URL'))
+                    //           : FittedBox(
+                    //               fit: BoxFit.cover,
+                    //               child:
+                    //                   Image.network(_imageUrlController.text),
+                    //             ),
+                    //     ),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         decoration: InputDecoration(labelText: 'Image URL'),
+                    //         keyboardType: TextInputType.url,
+                    //         textInputAction: TextInputAction.done,
+                    //         controller: _imageUrlController,
+                    //         focusNode: _imageUrlFocusNode,
+                    //         onFieldSubmitted: (_) {
+                    //           _saveForm();
+                    //         },
+                    //         onSaved: (value) {
+                    //           _editedContract = Contract(
+                    //               contractId: _editedContract.contractId,
+                    //               title: _editedContract.title,
+                    //               description: _editedContract.description,
+                    //               price: _editedContract.price,
+                    //               imageUrl: value,
+                    //               partyB: _editedContract.partyBId,
+                    //               conditions: []);
+                    //         },
+                    //         validator: (value) {
+                    //           // if (value.isEmpty) {
+                    //           //   return 'Please enter an image URL.';
+                    //           // }
+                    //           // if (!value.startsWith('http') &&
+                    //           //     !value.startsWith('https')) {
+                    //           //   return 'Please enter a valid URL.';
+                    //           // }
+                    //           // if (!value.endsWith('.png') &&
+                    //           //     !value.endsWith('.jpg') &&
+                    //           //     !value.endsWith('.jpeg')) {
+                    //           //   return 'Please enter a valid image URL.';
+                    //           // }
+                    //           return null;
+                    //         },
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
