@@ -74,6 +74,7 @@
 * Create Agreement (who pays)
 * LOWERCASEPARTY - DONE
 * Clear chat
+* Ask Kaleb about Jury things
 * ---------------
 * LATER:
 * ---------------
