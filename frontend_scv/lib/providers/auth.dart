@@ -2,6 +2,7 @@ import 'dart:async'; //for timer
 
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/loginService.dart';
 
 import '../services/Blockchain/wallet.dart';
@@ -40,6 +41,7 @@ class Auth with ChangeNotifier {
   Future<void> logout() async {
     _userWalletAddress = null;
     _isAuth = false;
+    Global.isJudge = false;
     walletInteraction.metamaskDisconnect();
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();

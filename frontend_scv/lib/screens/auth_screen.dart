@@ -113,6 +113,7 @@ class _AuthCardState extends State<AuthCard> {
     UnisonService unisonService = UnisonService();
     await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
     await unisonService.getAgreement(BigInt.from(0));
+    await judgeService.isJudge();
 
     await judgeService.setContractAllowance();
   }
