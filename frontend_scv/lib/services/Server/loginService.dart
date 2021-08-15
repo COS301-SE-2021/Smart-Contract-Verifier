@@ -19,7 +19,7 @@ class LoginService {
   Future<void> tryAddUser() async { //This attempts to add a new user to the DB. Failure means the user already exists
 
     try {
-      await _api.postData('/user/add-user', {'WalletID': Global.userAddress, 'Alias' : 'Nothing'});
+      await _api.postData('/add-user', {'WalletID': Global.userAddress, 'Alias' : 'Nothing'});
 
     } on Exception catch (e) {
       print(e);

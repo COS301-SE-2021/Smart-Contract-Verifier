@@ -18,11 +18,11 @@ class _JudgeActiveCasesPanelState extends State<JudgeActiveCasesPanel> {
 
   @override
   Widget build(BuildContext context) {
-    // JudgeService judgeService = JudgeService();
+     JudgeService judgeService = JudgeService();
     CommonService commonMock = CommonService();
     return FutureBuilder(
-        // future: judgeService.getInvolvedAgreements(Global.userAddress),
-        future: commonMock.getInvolvedAgreements(Global.userAddress),
+         future: judgeService.getInvolvedAgreements(),
+        //future: commonMock.getInvolvedAgreements(Global.userAddress),
         builder: (context, agreementsSnapshot) {
           return agreementsSnapshot.connectionState != ConnectionState.done
               ? CircularProgressIndicator()

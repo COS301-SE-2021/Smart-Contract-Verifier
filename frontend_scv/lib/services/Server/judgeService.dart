@@ -30,7 +30,7 @@ class JudgeService {
       throw (e);
     }
 
-    List<dynamic> jsonList = ((response['Agreements']));
+    List<dynamic> jsonList = ((response['AgreementList']));
     List<Contract> ret = [];
 
     for (int i = 0; i < jsonList.length; i++) {
