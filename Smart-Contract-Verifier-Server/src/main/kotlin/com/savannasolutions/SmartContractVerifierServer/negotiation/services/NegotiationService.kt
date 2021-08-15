@@ -467,7 +467,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             agreement.SealedDate,
             agreement.MovedToBlockChain,
             conditions,
-            agreement.AgreementImageURL
+            agreement.AgreementImageURL,
+            agreement.blockchainID
         )
     }
 

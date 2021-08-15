@@ -98,7 +98,8 @@ class UserService(  val userRepository: UserRepository,
                 agreement.SealedDate,
                 agreement.MovedToBlockChain,
                 conditionList,
-                agreement.AgreementImageURL,)
+                agreement.AgreementImageURL,
+                agreement.blockchainID)
 
             list.add(tempArg)
         }
