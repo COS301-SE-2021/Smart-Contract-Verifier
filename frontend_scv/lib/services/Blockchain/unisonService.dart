@@ -117,6 +117,9 @@ class UnisonService {
   //Pay the platform fee for an agreement
   //Someone (anyone) has to pay the platform fee after the agreement is accepted, and that will make it active.
   Future<void> payPlatformFee(BigInt id) async {
+
+
+    print ('Paying fee for ' + id.toString());
     await _smC.makeWriteCall('payPlatformFee', [id]);
   }
 }

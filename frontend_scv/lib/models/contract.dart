@@ -9,7 +9,7 @@ import 'http_exception.dart';
 
 class Contract with ChangeNotifier {
   String contractId; //agreementID
-  BigInt blockchainId = BigInt.from(0); //TODO: remove ples
+  BigInt blockchainId;// = BigInt.from(0); //TODO: remove ples
   String partyA;
   String partyB;
   DateTime createdDate;
@@ -60,6 +60,7 @@ class Contract with ChangeNotifier {
       sealedDate = DateTime.parse(jsn['SealedDate']);
     } catch (_) {}
 
+    blockchainId = jsn['BlockChainID'];
     movedToBlockchain = jsn['MovedToBlockchain'];
     description = jsn['AgreementDescription'];
     imageUrl = jsn['AgreementImageURL'];
