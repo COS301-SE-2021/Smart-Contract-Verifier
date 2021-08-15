@@ -58,6 +58,8 @@ class ApiInteraction {
             .timeout(Duration(seconds: 1)),
         retryIf: (e) => e is SocketException || e is TimeoutException,
       );
+      print (response.body.toString());
+
     } on Exception catch (e) {
       print('Error: ' + e.toString());
       throw Exception(

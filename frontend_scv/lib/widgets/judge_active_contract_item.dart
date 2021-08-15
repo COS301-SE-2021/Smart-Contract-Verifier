@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/screens/view_assignment_screen.dart';
+import 'package:unison/screens/view_contract_screen.dart';
 
 // import '../providers/auth.dart';
 import '../models/contract.dart';
 // TODO: import '../screens/view_case_contract_screen.dart';
 
 class JudgeActiveContractItem extends StatelessWidget {
+  final Contract agreement;
+
+  JudgeActiveContractItem(this.agreement);
+
   @override
   Widget build(BuildContext context) {
-    final contract = Provider.of<Contract>(context);
-    // final authData = Provider.of<Auth>(context, listen: false);
-
     return GestureDetector(
       onTap: () {
-        // Navigator.of(context).pushNamed(
-        // TODO: ViewCaseScreen.routeName,
-        // arguments: contract.contractId,
-        // );
+        Navigator.of(context).pushNamed(
+          ViewAssignmentScreen.routeName,
+          arguments: agreement.contractId,
+        );
       },
       child: ListTile(
-        title: Text(contract.title),
+        title: Text(agreement.title),
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(contract.imageUrl),
-        ),
+            // backgroundImage: NetworkImage(contract.imageUrl),
+            ),
         trailing: Container(
           width: 50,
           child: Row(
@@ -35,10 +38,9 @@ class JudgeActiveContractItem extends StatelessWidget {
               //     ),
               //     // label: child,
               //     onPressed: () => {
-              //       product.toggleFavoriteStatus(
-              //         authData.token,
-              //         authData.userId,
-              //       ),
+              //       // product.toggleFavoriteStatus(
+              //       //   authData.userWalletAddress,
+              //       // ),
               //     },
               //     color: Theme.of(context).accentColor,
               //   ),

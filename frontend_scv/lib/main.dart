@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 // import 'package:unison/screens/MessageTest.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
 import 'package:unison/screens/messaging_screen.dart';
+import 'package:unison/screens/view_assignment_screen.dart';
 
 import './providers/auth.dart';
 import './screens/auth_screen.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
               routes: {
                 // ContractDetailScreen.routeName: (ctx) => ContractDetailScreen(),
                 ViewContractScreen.routeName: (ctx) => ViewContractScreen(),
+                ViewAssignmentScreen.routeName: (ctx) => ViewAssignmentScreen(),
                 EditContractScreen.routeName: (ctx) => EditContractScreen(),
                 JudgeDutyScreen.routeName: (ctx) => JudgeDutyScreen(),
                 MessagingScreen.routeName: (ctx) => MessagingScreen(),
