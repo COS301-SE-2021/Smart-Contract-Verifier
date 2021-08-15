@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.common
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.math.BigInteger
 import java.util.*
 
 data class AgreementResponse(@JsonProperty("AgreementID") val agreementID: UUID,
@@ -15,4 +16,4 @@ data class AgreementResponse(@JsonProperty("AgreementID") val agreementID: UUID,
                              @JsonProperty("MovedToBlockchain") val movedToBlockchain: Boolean? = false,
                              @JsonProperty("Conditions") val conditions: List<ConditionResponse>? = null,
                              @JsonProperty("AgreementImageURL") val agreementImageURL: String? = null,
-                             @JsonProperty("BlockChainID") val blockChainID: String? = null,)
+                             @JsonProperty("BlockChainID") val blockChainID: BigInteger? = null,)
