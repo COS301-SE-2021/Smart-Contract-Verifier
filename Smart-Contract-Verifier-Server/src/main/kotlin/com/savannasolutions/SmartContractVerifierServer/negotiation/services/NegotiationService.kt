@@ -198,7 +198,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                                     agreement.MovedToBlockChain,
                                                     conditions,
                                                     agreement.AgreementImageURL,
-                                                    agreement.blockchainID.toString())
+                                                    agreement.blockchainID)
 
         return GetAgreementDetailsResponse(agreementResponse,ResponseStatus.SUCCESSFUL)
     }
