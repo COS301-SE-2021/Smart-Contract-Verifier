@@ -1,1 +1,426 @@
-[{"inputs":[{"internalType":"contract UnisonToken","name":"token","type":"address"},{"internalType":"contract RandomSource","name":"randomSource","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"agreeID","type":"uint256"}],"name":"AcceptAgreement","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"agreeID","type":"uint256"}],"name":"ActiveAgreement","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"agreeID","type":"uint256"}],"name":"CloseAgreement","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"party1","type":"address"},{"indexed":false,"internalType":"address","name":"party2","type":"address"},{"indexed":false,"internalType":"uint256","name":"agreeID","type":"uint256"}],"name":"CreateAgreement","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"agreeID","type":"uint256"},{"indexed":false,"internalType":"address[]","name":"jury","type":"address[]"}],"name":"JuryAssigned","type":"event"},{"inputs":[{"internalType":"uint256","name":"agreeID","type":"uint256"}],"name":"acceptAgreement","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"addJuror","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"agreeID","type":"uint256"},{"internalType":"contract IERC20[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amount","type":"uint256[]"}],"name":"addPaymentConditions","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"party2","type":"address"},{"internalType":"uint256","name":"resolutionTime","type":"uint256"},{"internalType":"string","name":"text","type":"string"}],"name":"createAgreement","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"agreeID","type":"uint256"}],"name":"getAgreement","outputs":[{"components":[{"internalType":"address","name":"party1","type":"address"},{"internalType":"address","name":"party2","type":"address"},{"internalType":"uint256","name":"resolutionTime","type":"uint256"},{"internalType":"string","name":"text","type":"string"},{"internalType":"uint256","name":"platformFee","type":"uint256"},{"internalType":"uint256","name":"feePaid","type":"uint256"},{"internalType":"address","name":"feePayer","type":"address"},{"internalType":"enum AgreementLib.AgreementState","name":"state","type":"uint8"},{"internalType":"enum AgreementLib.Vote","name":"party1Vote","type":"uint8"},{"internalType":"enum AgreementLib.Vote","name":"party2Vote","type":"uint8"},{"components":[{"internalType":"contract IERC20","name":"token","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"}],"internalType":"struct PaymentInfoLib.PaymentInfo[]","name":"payments","type":"tuple[]"}],"internalType":"struct AgreementLib.ReturnAgreement","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"agreeID","type":"uint256"}],"name":"getJury","outputs":[{"components":[{"internalType":"bool","name":"assigned","type":"bool"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"address[]","name":"jurors","type":"address[]"},{"internalType":"enum AgreementLib.Vote[]","name":"votes","type":"uint8[]"}],"internalType":"struct AgreementLib.ReturnJury","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"agreeID","type":"uint256"},{"internalType":"enum AgreementLib.Vote","name":"vote","type":"uint8"}],"name":"jurorVote","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"agreeID","type":"uint256"}],"name":"payPlatformFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"removeJuror","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"agreeID","type":"uint256"},{"internalType":"enum AgreementLib.Vote","name":"vote","type":"uint8"}],"name":"voteResolution","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+[
+    {
+      "inputs": [
+        {
+          "internalType": "contract UnisonToken",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "contract RandomSource",
+          "name": "randomSource",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "AcceptAgreement",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "ActiveAgreement",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "juror",
+          "type": "address"
+        }
+      ],
+      "name": "AddJuror",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "CloseAgreement",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "party1",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "party2",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "uuid",
+          "type": "string"
+        }
+      ],
+      "name": "CreateAgreement",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "jury",
+          "type": "address[]"
+        }
+      ],
+      "name": "JuryAssigned",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "juror",
+          "type": "address"
+        }
+      ],
+      "name": "RemoveJuror",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "party2",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "resolutionTime",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "text",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "uuid",
+          "type": "string"
+        }
+      ],
+      "name": "createAgreement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "acceptAgreement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "contract IERC20[]",
+          "name": "tokens",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "amount",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "addPaymentConditions",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "payPlatformFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAgreement",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "uuid",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "party1",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "party2",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "resolutionTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "text",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "platformFee",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "feePaid",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "feePayer",
+              "type": "address"
+            },
+            {
+              "internalType": "enum AgreementLib.AgreementState",
+              "name": "state",
+              "type": "uint8"
+            },
+            {
+              "internalType": "enum AgreementLib.Vote",
+              "name": "party1Vote",
+              "type": "uint8"
+            },
+            {
+              "internalType": "enum AgreementLib.Vote",
+              "name": "party2Vote",
+              "type": "uint8"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "contract IERC20",
+                  "name": "token",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "from",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                }
+              ],
+              "internalType": "struct PaymentInfoLib.PaymentInfo[]",
+              "name": "payments",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct AgreementLib.ReturnAgreement",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getJury",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "assigned",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "deadline",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address[]",
+              "name": "jurors",
+              "type": "address[]"
+            },
+            {
+              "internalType": "enum AgreementLib.Vote[]",
+              "name": "votes",
+              "type": "uint8[]"
+            }
+          ],
+          "internalType": "struct AgreementLib.ReturnJury",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum AgreementLib.Vote",
+          "name": "vote",
+          "type": "uint8"
+        }
+      ],
+      "name": "voteResolution",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "addJuror",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "removeJuror",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "a",
+          "type": "address"
+        }
+      ],
+      "name": "isJuror",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum AgreementLib.Vote",
+          "name": "vote",
+          "type": "uint8"
+        }
+      ],
+      "name": "jurorVote",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]

@@ -11,6 +11,8 @@ class Global {
   static String _contractId = '';
   //'0x35A4ccf302fb171e18B584e26cd3c0fB777F5Ca6'; //The identifier of the deployed contract. It is final, since it is basically hard-coded.
 
+  static bool isJudge = false;
+
   static Future<String> getContractId(String id) async {
     String jsn = await rootBundle.loadString('JSON/address.json');
     try {
