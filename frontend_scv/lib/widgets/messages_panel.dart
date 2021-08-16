@@ -26,8 +26,6 @@ class _MessagesPanelState extends State<MessagesPanel> {
   @override
   Widget build(BuildContext context) {
     MessageService messageService = MessageService();
-    print('isInit: ' + widget.isInit.toString());
-    // return Text(messages.toString());
     Timer(
       Duration(seconds: widget.isInit ? 1 : 0),
       () => _controller.animateTo(
@@ -89,10 +87,22 @@ class _MessagesPanelState extends State<MessagesPanel> {
                                       bottomRight: Radius.circular(
                                           isCurrentUser ? 0 : 12),
                                     )),
-                                child: Text(
-                                  messagesSnapshot.data[index].messageText,
-                                  // style: MyTheme.bodyTextMessage.copyWith(
-                                  //     color: isCurrentUser ? Colors.white : Colors.grey[800]),
+                                child: Column(
+                                  children: [
+                                    if (!isCurrentUser)
+                                      Text(
+                                        messagesSnapshot.data[index].sender,
+                                        style: TextStyle(
+                                          fontSize: 5,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    Text(
+                                      messagesSnapshot.data[index].messageText,
+                                      // style: MyTheme.bodyTextMessage.copyWith(
+                                      //     color: isCurrentUser ? Colors.white : Colors.grey[800]),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
