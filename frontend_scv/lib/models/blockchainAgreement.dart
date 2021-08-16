@@ -25,7 +25,7 @@ class BlockchainAgreement {
   //Return whether or not the current user should make an accept request to an existing agreement
   bool shouldAccept() {
 
-    if (state == 3) { //Proposed state
+    if (state == 1) { //Proposed state
         if (partyB == Global.userAddress) { //Current user did not put on blockchain
 
           return true;
