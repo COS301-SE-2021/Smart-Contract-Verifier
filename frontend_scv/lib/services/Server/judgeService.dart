@@ -92,4 +92,12 @@ class JudgeService {
     await _tokServ.setAllowance(
         await Global.getContractId('Verifier'), BigInt.from(10000000000));
   }
+
+  //Get the jury for an agreement from the blockchain
+  Future<void> getJury(BigInt id) async {
+
+    final res = await _uniServ.getJury(id);
+    print('Jury res: ' + res[0][0].toString());
+
+  }
 }

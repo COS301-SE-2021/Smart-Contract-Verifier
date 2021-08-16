@@ -91,8 +91,11 @@ class UnisonService {
     await _smC.makeWriteCall('voteResolution', [BigInt.from(0), BigInt.from(v)]);
   }
 
-  Future<void> getJury(BigInt id) async {
-    final res = await _smC.makeWriteCall('getJury', [id]);
+  Future<dynamic> getJury(BigInt id) async {
+    final res =  await _smC.makeReadCall('getJury', [id]);
+
+    print(res);
+    return res;
   }
 
   //For testing
