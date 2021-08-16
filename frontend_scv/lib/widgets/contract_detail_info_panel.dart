@@ -82,11 +82,19 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
 
   Widget _buildSealButton() {
     bool stillPending = false;
+    String pendingMessage = 'Awaiting PENDING Conditions';
     widget._contract.conditions.forEach((condition) {
       if (condition.status == 'PENDING') {
         stillPending = true;
       }
+
+      //TODO: Add a check for if a payment/duration condition have been set
     });
+    if (widget._contract.conditions.isEmpty) {
+      stillPending = true;
+      pendingMessage = 'Please Add Conditions';
+    }
+    ;
 
     return widget._contract.sealedDate != null
         ? Column(
@@ -160,7 +168,7 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
         // Text('Agreement Sealed')
         // FALSE
         stillPending
-            ? Text('Waiting for PENDING conditions')
+            ? Text(pendingMessage)
             : ElevatedButton(
                 onPressed: () async {
                   try {
