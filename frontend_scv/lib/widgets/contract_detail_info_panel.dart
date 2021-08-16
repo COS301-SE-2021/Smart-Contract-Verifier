@@ -94,45 +94,78 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
       stillPending = true;
       pendingMessage = 'Please Add Conditions';
     }
+    if (widget._contract.price == null) {
+      stillPending = true;
+      pendingMessage = 'Please Add a Payment Condition';
+    }
+    if (widget._contract.duration == null) {
+      stillPending = true;
+      pendingMessage = 'Please Add a Duration Condition';
+    }
     ;
 
     return widget._contract.sealedDate != null
         ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Agreement Sealed'),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    print('Happiness');
-                    await widget.unisonService.agreementFulfilled(
-                      widget._contract,
-                      true,
-                    );
-                  } catch (error) {
-                    print(error);
-                    setState(() {});
-                  }
-                },
-                child: Text('Conclude Agreement'),
-              ),
               SizedBox(
-                height: 20,
+                height: 2,
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    print('Not happiness');
-                    await widget.unisonService.agreementFulfilled(
-                      widget._contract,
-                      false,
-                    );
-                  } catch (error) {
-                    print(error);
-                    setState(() {});
-                  }
-                },
-                child: Text('Dispute Agreement'),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        print('Happiness');
+                        await widget.unisonService.agreementFulfilled(
+                          widget._contract,
+                          true,
+                        );
+                      } catch (error) {
+                        print(error);
+                        setState(() {});
+                      }
+                    },
+                    child: Text('Conclude Agreement'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        print('Not happiness');
+                        await widget.unisonService.agreementFulfilled(
+                          widget._contract,
+                          false,
+                        );
+                      } catch (error) {
+                        print(error);
+                        setState(() {});
+                      }
+                    },
+                    child: Text('Dispute Agreement'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    ),
+                  ),
+                ],
               ),
+
+              //Only the user who did not 'Seal Agreement' Should see this
+              // button:
+              SizedBox(
+                height: 5,
+              ),
+
               ElevatedButton(
                 onPressed: () async {
                   try {
@@ -146,6 +179,9 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                   }
                 },
                 child: Text('Accept Blockchain Agreement'),
+              ),
+              SizedBox(
+                height: 5,
               ),
               ElevatedButton(
                 onPressed: () async {
