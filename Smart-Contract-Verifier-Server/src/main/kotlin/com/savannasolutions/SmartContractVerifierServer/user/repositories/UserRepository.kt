@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserRepository: JpaRepository<User, String>{
     fun getUsersByAgreementsContaining(agreements: Agreements): List<User>
+    fun getUserByPublicWalletIDAllIgnoreCase(id: String): User?
+    fun existsByPublicWalletIDAllIgnoreCase(id: String): Boolean
 }

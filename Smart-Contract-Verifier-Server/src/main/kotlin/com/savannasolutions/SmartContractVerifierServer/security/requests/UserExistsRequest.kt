@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.user.requests
+package com.savannasolutions.SmartContractVerifierServer.security.requests
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
