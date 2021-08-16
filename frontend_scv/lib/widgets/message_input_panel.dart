@@ -28,9 +28,9 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
       _messageTextController.text,
       agreementId,
     );
-
     if (!isValid) return;
     _formKey.currentState.save();
+    _formKey.currentState?.reset();
     //^^^^saves the form -> executes the 'onSaved' of each input
     setState(() {
       _isLoading = true;
@@ -40,6 +40,7 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
       //Save to DB:
       await messageService.sendMessage(newMessage);
       print('new message sent');
+      _messageTextController.clear();
     } catch (error) {
       await showDialog(
         context: context,
@@ -61,6 +62,7 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
       _isLoading = false;
       // Provider.of<Contracts>(context, listen: false).fetchAndSetContracts();
       //TODO: assuming this rebuilds
+      _messageTextController.clear();
       super.setState(() {});
     });
   }

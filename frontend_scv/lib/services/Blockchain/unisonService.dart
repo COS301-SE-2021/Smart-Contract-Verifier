@@ -2,7 +2,7 @@
 //The jury is also handled by Verifier, so those functions are here as well.
 
 import 'package:web3dart/credentials.dart';
-
+import '../../models/blockchainAgreement.dart';
 import '../../models/contract.dart';
 import '../../models/global.dart';
 import 'smartContract.dart';
@@ -51,9 +51,14 @@ class UnisonService {
      final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
   }
 
-  Future<void> getAgreement(BigInt id) async {
+  Future<BlockchainAgreement> getAgreement(BigInt id) async {
+
+    if (id == null)
+//      return null;
+        print('Was null');
+
     final res = await _smC.makeReadCall('getAgreement', [id]);
-    print(res);
+    return BlockchainAgreement.fromCHAIN(res[0]);
   }
 
   Future<void> addJuror() async {
@@ -91,8 +96,11 @@ class UnisonService {
     await _smC.makeWriteCall('voteResolution', [BigInt.from(0), BigInt.from(v)]);
   }
 
-  Future<void> getJury(BigInt id) async {
-    final res = await _smC.makeWriteCall('getJury', [id]);
+  Future<dynamic> getJury(BigInt id) async {
+    final res =  await _smC.makeReadCall('getJury', [id]);
+
+    print(res);
+    return res[0];
   }
 
   //For testing

@@ -66,20 +66,40 @@
 * ---------------
 * TODO:
 * ---------------
-* Jury chat --> Kevin
-* Jury Voting --> complete, do touch ups
-* Get agreements where user is judge
-* Seal the deal
+* Jury chat   --> Add
 * Add payment condition blockchain?
-* Create Agreement (who pays)
-* LOWERCASEPARTY - DONE
-* Clear chat
-* Ask Kaleb about Jury things
+* Sign up to be jury (button with description)
+*
+* CURRENT:
+* Party B: gets Accept Blockchain agreement button
+* Pay Platform once accepted on blockchain
+* Once vote has been cast - Remove Buttons (say what they voted)
+* Clear Input on submit
+*
 * ---------------
 * LATER:
 * ---------------
 * Evidence
 * Notifications
 * ---------------
+*
+* Running Everything:
+* 1) Update Server files (CORS)
+* 2) deploy SC
+*     - get address
+*     - set in application.properties
+* 3)
+*
+* (After Kaleb's Individual contribution)
+* Kevin (Frontend Development):
+*   - Learn Flutter framework (which uses Dart)
+*   - Design Screens & Widgets
+*   - Manage State within the Application
+*   - Input validation
+*   - Themes, coloring, and styling
+*   - Building Mock data to use in the Frontend before it was integrated with
+*  the backend
+*   - Working with Ronan to integrate with the server and smart-contract
+*   - Next up for individual contribution is Ronan.
 *
 * */
