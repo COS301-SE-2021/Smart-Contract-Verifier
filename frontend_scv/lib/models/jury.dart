@@ -15,8 +15,8 @@ class Jury {
     assigned = jury[0];
     deadline = jury[1];
 
-    List<EthereumAddress> addresses = jury[2];
-    List<int> votes = jury[3];
+    List<dynamic> addresses = jury[2];
+    List<dynamic> votes = jury[3];
 
     for (var i =0;i<votes.length;i++) {
 

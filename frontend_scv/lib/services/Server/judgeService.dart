@@ -98,7 +98,7 @@ class JudgeService {
   Future<Jury> getJury(BigInt id) async {
 
     final res = await _uniServ.getJury(id);
-    print('Jury res: ' + res[0][0].toString());
+    print('Jury res: ' + res[0].toString());
     return Jury.fromChain(res);
 
   }

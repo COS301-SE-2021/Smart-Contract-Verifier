@@ -95,7 +95,7 @@ class UnisonService {
     final res =  await _smC.makeReadCall('getJury', [id]);
 
     print(res);
-    return res;
+    return res[0];
   }
 
   //For testing
