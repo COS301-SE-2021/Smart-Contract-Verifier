@@ -15,8 +15,8 @@ class BlockchainAgreement {
   BlockchainAgreement.fromCHAIN(dynamic res) { //Generate from smartContract response
 
     serverID = res[0];
-    partyA = res[1].toString();
-    partyB = res[2].toString();
+    partyA = res[1].toString().toLowerCase();
+    partyB = res[2].toString().toLowerCase();
     resTime = res[3];
     state = res[9].toInt();
 
