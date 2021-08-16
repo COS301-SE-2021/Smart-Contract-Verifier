@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/models/condition.dart';
+import 'package:unison/models/contract.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/services/Server/negotiationService.dart';
@@ -34,14 +35,14 @@ class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
 
   @override
   void initState() {
-    // print('InitState()');
+     //print('InitState()');
     super.initState();
   }
 
   Widget build(BuildContext context) {
-    final contractId = ModalRoute.of(context).settings.arguments as String;
-    final loadedContract =
-        Provider.of<Contracts>(context, listen: true).findById(contractId);
+    //final contractId = ModalRoute.of(context).settings.arguments as String;
+    final testCon = ModalRoute.of(context).settings.arguments as Contract;
+    final loadedContract = testCon;
 
     return Scaffold(
       appBar: AppBar(

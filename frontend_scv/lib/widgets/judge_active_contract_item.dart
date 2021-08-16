@@ -18,7 +18,7 @@ class JudgeActiveContractItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           ViewAssignmentScreen.routeName,
-          arguments: agreement.contractId,
+          arguments: agreement,
         );
       },
       child: ListTile(
@@ -34,7 +34,7 @@ class JudgeActiveContractItem extends StatelessWidget {
               //   //consumer takes a builder:
               //   builder: (ctx, product, child) => IconButton(
               //     icon: Icon(
-              //       product.isFavorite ? Icons.favorite : Icons.favorite_border,
+              //     Icons.face//  product.isFavorite ? Icons.favorite : Icons.favorite_border,
               //     ),
               //     // label: child,
               //     onPressed: () => {
