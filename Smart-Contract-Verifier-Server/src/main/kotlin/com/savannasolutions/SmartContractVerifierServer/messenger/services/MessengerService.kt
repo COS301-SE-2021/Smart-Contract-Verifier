@@ -4,6 +4,7 @@ import com.savannasolutions.SmartContractVerifierServer.common.MessageResponse
 import com.savannasolutions.SmartContractVerifierServer.common.MessageStatusResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
@@ -20,7 +21,8 @@ import kotlin.collections.ArrayList
 class MessengerService constructor(val messagesRepository: MessagesRepository,
                                     val messageStatusRepository: MessageStatusRepository,
                                     val userRepository: UserRepository,
-                                    val agreementsRepository: AgreementsRepository){
+                                    val agreementsRepository: AgreementsRepository,
+                                    val judgesRepository: JudgesRepository){
 
     private fun generateMessageResponseList(messageList : List<Messages>): List<MessageResponse>{
         val messageResponseList = ArrayList<MessageResponse>()
@@ -122,6 +124,7 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
 
         val user = userRepository.getById(sendMessageRequest.SendingUser)
         val agreement = agreementsRepository.getById(sendMessageRequest.AgreementID)
+        val judges = judgesRepository.getAllByAgreement(agreement)
 
         var message = Messages(UUID.fromString("eebe3abc-b594-4a2f-a7dc-246bad26aaa5"),
                                 sendMessageRequest.Message,
@@ -143,6 +146,22 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
                 tempMessageStatus.message = message
                 tempMessageStatus = messageStatusRepository.save(tempMessageStatus)
                 messageStatusList.add(tempMessageStatus)
+            }
+        }
+
+        if(judges != null)
+        {
+            for(judge in judges)
+            {
+                val judgeUser = judge.judge
+                if(!(usersInAgreement.contains(judgeUser)))
+                {
+                    var tempMessageStatus = MessageStatus(UUID.fromString("eebe3abc-b594-4a2f-a7dc-246bad26aaa5"))
+                    tempMessageStatus.recipient = judgeUser
+                    tempMessageStatus.message = message
+                    tempMessageStatus = messageStatusRepository.save(tempMessageStatus)
+                    messageStatusList.add(tempMessageStatus)
+                }
             }
         }
 

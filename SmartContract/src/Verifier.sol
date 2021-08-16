@@ -167,6 +167,7 @@ contract Verifier{
         }
         // Deadline is 10 minutes from now
         juries[agreeID].deadline = block.timestamp + 60000;
+
         juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;

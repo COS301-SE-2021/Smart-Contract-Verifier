@@ -65,7 +65,7 @@ class SmartContract {
         Transaction.callContract(
             contract: theContract, function: fun, parameters: args));
 
-    print(theResult); //Debug
+    //print('First res: ' +theResult.toString()); //Debug
     return theResult;
   }
 
