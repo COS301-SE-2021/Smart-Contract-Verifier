@@ -97,7 +97,7 @@ contract('Verifier', (accounts) =>{
 
         it("Add jurors ", async()=>{
             // Add enough potential members to jury
-            for(var i=3; i<9; i++){
+            for(var i=2; i<7; i++){
                 token.approve(verifier.address, 10000, {from: accounts[i]});
                 verifier.addJuror({from: accounts[i]});
             }
@@ -147,7 +147,7 @@ contract('Verifier', (accounts) =>{
             for(var i=0; i<jury.jurors.length; i++){
                 var found = false;
 
-                for(var j=3; j<9; j++){
+                for(var j=2; j<7; j++){
                     //accounts 3 to 8 (included) are signed up as jurors
                     if(jury.jurors[i] == accounts[j]){
                         found = true;

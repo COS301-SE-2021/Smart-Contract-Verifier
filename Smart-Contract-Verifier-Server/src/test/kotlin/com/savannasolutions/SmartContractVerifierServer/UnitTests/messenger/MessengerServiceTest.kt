@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.messenger
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
@@ -28,10 +29,12 @@ internal class MessengerServiceTest {
     private val messageStatusRepository : MessageStatusRepository = mock()
     private val userRepository : UserRepository = mock()
     private val agreementsRepository: AgreementsRepository = mock()
+    private val judgesRepository : JudgesRepository = mock()
     private val messengerService = MessengerService(messagesRepository,
                                                     messageStatusRepository,
                                                     userRepository,
-                                                    agreementsRepository)
+                                                    agreementsRepository,
+                                                    judgesRepository)
 
     private fun parameterizeGetAllMessagesByAgreement(userAddress: String,
                                                                 agreementID: UUID,
