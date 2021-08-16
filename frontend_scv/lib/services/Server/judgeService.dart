@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'package:unison/models/global.dart';
+import 'package:unison/models/jury.dart';
 import 'package:unison/services/Blockchain/tokenService.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:web3dart/credentials.dart';
@@ -94,10 +95,11 @@ class JudgeService {
   }
 
   //Get the jury for an agreement from the blockchain
-  Future<void> getJury(BigInt id) async {
+  Future<Jury> getJury(BigInt id) async {
 
     final res = await _uniServ.getJury(id);
     print('Jury res: ' + res[0][0].toString());
+    return Jury.fromChain(res);
 
   }
 }

@@ -5,10 +5,16 @@ class Juror {
   String address;
   String vote;
 
-  //Temporary, may be replaced
-  Juror.fromJSON(Map<String, dynamic> jsn) {
+  Juror(this.address, int b) {
 
-
+    switch(b) {
+      case 0: vote = 'Not voted';
+            break;
+      case 1: vote = 'No';
+            break;
+      case 2: vote = 'Yes';
+            break;
+    }
   }
 
 }
