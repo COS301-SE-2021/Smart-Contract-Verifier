@@ -48,7 +48,7 @@ class UnisonService {
     //   throw Exception('Agreement is not on blockchain yet');
     // }TODO
 
-    final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
+     final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
   }
 
   Future<void> getAgreement(BigInt id) async {
@@ -88,7 +88,7 @@ class UnisonService {
   }
 
   Future<void> _voteResolution(BigInt id, int v) async {
-    await _smC.makeWriteCall('voteResolution', [id, BigInt.from(v)]);
+    await _smC.makeWriteCall('voteResolution', [BigInt.from(0), BigInt.from(v)]);
   }
 
   Future<void> getJury(BigInt id) async {
