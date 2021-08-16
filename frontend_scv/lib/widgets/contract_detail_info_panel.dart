@@ -166,20 +166,31 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                 height: 5,
               ),
 
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    print('Accept Blockchain Agreement');
-                    await widget.unisonService.acceptAgreement(
-                      widget._contract,
-                    );
-                  } catch (error) {
-                    print(error);
-                    setState(() {});
-                  }
-                },
-                child: Text('Accept Blockchain Agreement'),
-              ),
+              FutureBuilder(
+                  future: widget.unisonService
+                      .getAgreement(widget._contract.blockchainId),
+                  builder: (context, snapshot) {
+                    return snapshot.connectionState == ConnectionState.done
+                        // ? Text('DONE ' + snapshot.data.serverID.toString())
+                        ? snapshot.data.shouldAccept() == true
+                            ? ElevatedButton(
+                                onPressed: () async {
+                                  try {
+                                    print('Accept Blockchain Agreement');
+                                    await widget.unisonService.acceptAgreement(
+                                      widget._contract,
+                                    );
+                                  } catch (error) {
+                                    print(error);
+                                    setState(() {});
+                                  }
+                                },
+                                child: Text('Accept Blockchain Agreement'),
+                              )
+                            : Text('Awaiting other party confirmation')
+                        : CircularProgressIndicator();
+                  }),
+
               SizedBox(
                 height: 5,
               ),
