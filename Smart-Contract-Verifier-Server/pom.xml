@@ -62,28 +62,7 @@
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito.kotlin</groupId>
-			<artifactId>mockito-kotlin</artifactId>
-			<version>3.2.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.auth0</groupId>
-			<artifactId>java-jwt</artifactId>
-			<version>3.16.0</version>
-		</dependency>
-	</dependencies>
+    </dependencies>
 	<build>
 		<sourceDirectory>src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>src/test/kotlin</testSourceDirectory>
@@ -134,66 +113,6 @@
 						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
-			</plugin>
-			<!--<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<id>ktlint</id>
-						<phase>verify</phase>
-						<configuration>
-							<target name="ktlint">
-								<java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-									  classname="com.pinterest.ktlint.Main" classpathref="maven.plugin.classpath">
-									<arg value="src/**/*.kt"/>
-								</java>
-							</target>
-						</configuration>
-						<goals><goal>run</goal></goals>
-					</execution>
-					<execution>
-						<id>ktlint-format</id>
-						<configuration>
-							<target name="ktlint">
-								<java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-									  classname="com.pinterest.ktlint.Main" classpathref="maven.plugin.classpath">
-									<arg value="-F"/>
-									<arg value="src/**/*.kt"/>
-								</java>
-							</target>
-						</configuration>
-						<goals><goal>run</goal></goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.pinterest</groupId>
-						<artifactId>ktlint</artifactId>
-						<version>0.41.0</version>
-					</dependency>
-
-				</dependencies>
-			</plugin>-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unit-tests</id>
-						<phase>test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<skipTests>false</skipTests>
-							<includes>
-								<include>src/test/kotlin/com.savannasolutions.SmartContractVerifierServer/services/*.kt</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
