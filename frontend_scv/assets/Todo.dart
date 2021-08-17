@@ -64,18 +64,20 @@
 * - Show no Agreements message if no agreements
 
 * ---------------
-* TODO:
+* TODO After Demo:
 * ---------------
-* Jury chat   --> Add
-* Add payment condition blockchain?
-* Sign up to be jury (button with description)
-*
-* CURRENT:
-* Party B: gets Accept Blockchain agreement button
+* Jury chat   --> Change Colors
+* Payment condition must be more flexible (state which party pays)
+* Add payment condition to blockchain (Based on backend payment condition)
 * Pay Platform once accepted on blockchain
 * Once vote has been cast - Remove Buttons (say what they voted)
-* Clear Input on submit
+* Clear Input on submit --> messages
 *
+* ---------------
+* TODO Before Demo:
+* ---------------
+* Sign up to be jury (button with description) DONE
+* Duration input -> make hours and convert to seconds DONE
 * ---------------
 * LATER:
 * ---------------
