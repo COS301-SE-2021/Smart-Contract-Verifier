@@ -8,6 +8,7 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.*
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.Assertions.*
@@ -24,7 +25,8 @@ internal class NegotiationServiceTest
     private val conditionsRepository : ConditionsRepository = mock()
     private val agreementsRepository : AgreementsRepository = mock()
     private val userRepository : UserRepository = mock()
-    private val negotiationService = NegotiationService(agreementsRepository, conditionsRepository, userRepository,)
+    private val judgesRepository : JudgesRepository = mock()
+    private val negotiationService = NegotiationService(agreementsRepository, conditionsRepository, userRepository, judgesRepository)
 
     @Test
     fun `acceptCondition successful accept`() {
@@ -1230,7 +1232,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0, mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
@@ -1265,7 +1267,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0,mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1301,7 +1303,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest(mockCondition.proposingUser.publicWalletID,
                 mockCondition.contract.ContractID,
-                -500.0))
+                -500.0,mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1318,6 +1320,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         val mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Unit test",
@@ -1335,7 +1338,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("",
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0,userA.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1355,6 +1358,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Payment of 500.0",
@@ -1375,7 +1379,7 @@ internal class NegotiationServiceTest
         //when
         val response = negotiationService.setPaymentCondition(SetPaymentConditionRequest("Invalid user",
                 mockCondition.contract.ContractID,
-                500.0))
+                500.0, mockCondition.proposingUser.publicWalletID))
 
         //then
         assertEquals(response.status, ResponseStatus.FAILED)
@@ -1396,6 +1400,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Duration of " + Duration.ofSeconds(500).seconds,
@@ -1434,6 +1439,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Duration of " + Duration.ofSeconds(500).seconds,
@@ -1470,6 +1476,7 @@ internal class NegotiationServiceTest
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
+        mockAgreement = mockAgreement.apply { PayingParty = userA.publicWalletID }
 
         var mockCondition = Conditions(UUID.fromString("19cda645-d398-4b24-8a3b-ab7f67a9e8f8"),
             "title","Duration of " + Duration.ofSeconds(-500).seconds,

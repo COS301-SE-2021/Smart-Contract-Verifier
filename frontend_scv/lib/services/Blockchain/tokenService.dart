@@ -23,6 +23,19 @@ class TokenService {
 
   }
 
+  Future<void> setAllowance(String add, BigInt amount) async {
+
+    try {
+      await _smC.makeWriteCall(
+          'approve', [EthereumAddress.fromHex(add), amount]);
+    }
+    catch (e) {
+      print (e);
+      return;
+    }
+
+  }
+
   Future<dynamic> getAllowance() async {
 
     return (await _smC.makeReadCall('allowance', [EthereumAddress.fromHex(Global.userAddress), EthereumAddress.fromHex(await Global.getContractId('Verifier'))]))[0];

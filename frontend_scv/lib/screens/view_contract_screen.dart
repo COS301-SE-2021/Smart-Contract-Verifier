@@ -65,7 +65,10 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
       //Save to DB:
       if (type == ConditionType.Payment) {
         await negotiationService.setPayment(
-            cId, double.parse(_paymentConditionAmountController.text));
+          cId,
+          Global.userAddress, //TODO: change this to Party Input
+          double.parse(_paymentConditionAmountController.text),
+        );
       } else if (type == ConditionType.Duration) {
         await negotiationService.setDuration(
             cId, double.parse(_durationConditionAmountController.text));
