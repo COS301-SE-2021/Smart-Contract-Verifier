@@ -71,7 +71,9 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
         );
       } else if (type == ConditionType.Duration) {
         await negotiationService.setDuration(
-            cId, double.parse(_durationConditionAmountController.text));
+          cId,
+          (60 * 60 * double.parse(_durationConditionAmountController.text)),
+        ); //Updated to ask for hours, send through in seconds
       } else {
         await negotiationService.saveCondition(newCondition);
       }
@@ -185,7 +187,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                     decoration: type == ConditionType.Payment
                         ? InputDecoration(labelText: 'Enter UNT amount')
                         : InputDecoration(
-                            labelText: 'Enter Duration (in seconds)'
+                            labelText: 'Enter Duration (in hours)'
                                 ' from the seal time'),
                     keyboardType: TextInputType.number,
                     controller: type == ConditionType.Payment
