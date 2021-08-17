@@ -3,11 +3,9 @@ package com.savannasolutions.SmartContractVerifierServer.messenger.controllers
 import com.savannasolutions.SmartContractVerifierServer.messenger.requests.*
 import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByAgreementResponse
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
+@CrossOrigin
 @RestController
 @RequestMapping("/messenger")
 class MessengerController constructor(private val messengerService: MessengerService) {
