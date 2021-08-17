@@ -6,6 +6,7 @@ import com.savannasolutions.SmartContractVerifierServer.security.requests.UserEx
 import com.savannasolutions.SmartContractVerifierServer.security.services.SecurityService
 import org.springframework.web.bind.annotation.*
 
+@CrossOrigin
 @RestController
 class SecurityController(val securityService: SecurityService) {
 

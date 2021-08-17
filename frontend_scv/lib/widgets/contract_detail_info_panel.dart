@@ -170,7 +170,8 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                   future: widget.unisonService
                       .getAgreement(widget._contract.blockchainId),
                   builder: (context, snapshot) {
-                    return snapshot.connectionState == ConnectionState.done
+                    return snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData
                         // ? Text('DONE ' + snapshot.data.serverID.toString())
                         ? snapshot.data.shouldAccept() == true
                             ? ElevatedButton(

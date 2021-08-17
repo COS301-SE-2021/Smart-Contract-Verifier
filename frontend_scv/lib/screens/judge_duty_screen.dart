@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/widgets/judge_active_cases_panel.dart';
 
-import '../providers/auth.dart';
 import '../widgets/app_drawer.dart';
 
 class JudgeDutyScreen extends StatelessWidget {
@@ -40,20 +38,32 @@ class JudgeDutyScreen extends StatelessWidget {
                   Expanded(child: JudgeActiveCasesPanel()),
                 ],
               )
-            : Column(
-                children: [
-                  Text('You are currently not a judge.'),
-                  TextButton(
-                      onPressed: () async {
-                        JudgeService jS = JudgeService();
-                        await jS.makeUserJudge();
-                        // Global.isJudge = true;
-                        Navigator.of(context).pushNamed(
-                          JudgeDutyScreen.routeName,
-                        );
-                      },
-                      child: Text('Become a Judge'))
-                ],
+            : Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'You are currently not a judge. You can up to become'
+                      ' a judge with the button below:',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                          JudgeService jS = JudgeService();
+                          await jS.makeUserJudge();
+                          // Global.isJudge = true;
+                          Navigator.of(context).pushNamed(
+                            JudgeDutyScreen.routeName,
+                          );
+                        },
+                        child: Text('Become a Judge'))
+                  ],
+                ),
               ));
   }
 }
