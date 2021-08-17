@@ -43,7 +43,7 @@ class UnisonService {
   Future<void> acceptAgreement(Contract con) async {
     //This should probably be called immediately after the contract is sealed on backend.
     print(con.movedToBlockchain);
-    print('ACCEPTR AGREEMENT:' + con.blockchainId.toString());
+    print('ACCEPT AGREEMENT:' + con.blockchainId.toString());
     // if (!con.movedToBlockchain) {
     //   throw Exception('Agreement is not on blockchain yet');
     // }TODO
@@ -77,7 +77,7 @@ class UnisonService {
 
   Future<bool> isJuror(EthereumAddress add) async {
     final res = await _smC.makeReadCall('isJuror', [add]);
-    print('Actual res: ' + res.toString());
+    //print('Actual res: ' + res.toString());
     return res[0]; //Temporary
   }
 
@@ -93,7 +93,7 @@ class UnisonService {
   }
 
   Future<void> _voteResolution(BigInt id, int v) async {
-    await _smC.makeWriteCall('voteResolution', [BigInt.from(0), BigInt.from(v)]);
+    await _smC.makeWriteCall('voteResolution', [id, BigInt.from(v)]);
   }
 
   Future<dynamic> getJury(BigInt id) async {
@@ -126,7 +126,7 @@ class UnisonService {
   //Pay the platform fee for an agreement
   //Someone (anyone) has to pay the platform fee after the agreement is accepted, and that will make it active.
   Future<void> payPlatformFee(BigInt id) async {
-    print('Paying fee for ' + id.toString());
+    //print('Paying fee for ' + id.toString());
     await _smC.makeWriteCall('payPlatformFee', [id]);
   }
 }
