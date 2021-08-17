@@ -67,7 +67,8 @@
 * TODO After Demo:
 * ---------------
 * Jury chat   --> Change Colors
-* Add payment condition to blockchain
+* Payment condition must be more flexible (state which party pays)
+* Add payment condition to blockchain (Based on backend payment condition)
 * Pay Platform once accepted on blockchain
 * Once vote has been cast - Remove Buttons (say what they voted)
 * Clear Input on submit --> messages
