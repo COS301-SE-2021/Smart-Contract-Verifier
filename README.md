@@ -47,3 +47,5 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 ### User Manual
 [Unison User Manual](https://drive.google.com/file/d/1sNw70yxIga1BZSfhdbnCgj2IBF_MbHdE/view?usp=sharing "User Manual Document")
 
+### Technical Installation Guide
+[Unison Technical Installation Guide](https://drive.google.com/file/d/1FZTGVNUSmbhKs3D8sNz2AjNKBPJIuBz7/view?usp=sharing "Technical Installation Guide Document")
