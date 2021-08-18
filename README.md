@@ -43,5 +43,5 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 [Coding Standards](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
 
 ### User Manual
-[Unison User Manual](https://drive.google.com/file/d/1shscD5YW5OfNZLZ7aP523m4GYGqFGw9g/view?usp=sharing "User Manual Document")
+[Unison User Manual](https://drive.google.com/file/d/1sNw70yxIga1BZSfhdbnCgj2IBF_MbHdE/view?usp=sharing "User Manual Document")
 
