@@ -39,6 +39,8 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 [Demo 2](https://drive.google.com/file/d/1cDZbwf62NDgF4b06BWYo1-K27CnWazlp/view "Demo 2 Pre-Recorded")
 
+[Demo 3](https://drive.google.com/file/d/1vS_SaMyM0epwD7M5oAB1QdPp8GzLKYTC/view?usp=sharing "Demo 3 Pre-Recorded")
+
 ### Coding Standards
 [Coding Standards](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
 
