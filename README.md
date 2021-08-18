@@ -29,7 +29,7 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 [SRS Document](https://drive.google.com/file/d/1IvI10wJO8FSv1APeL5g9D8WualTDp7nY/view?usp=sharing "SRS Document - Demo 2 Update")
 
 ### Architectural Design Specification 
-[Architectural Design Specification](https://drive.google.com/file/d/1ApvMXOMRkjy6tudNY2TkfpmoYoe4coBI/view?usp=sharing "Architectural Design Specification Document")
+[Architectural Design Specification](https://drive.google.com/file/d/18z94rjaW_dUWHt3p9pNLBiwlxyeDT9Wl/view?usp=sharing "Architectural Design Specification Document")
 
 ### Project Management Tool Link
 [Space](https://savannasolutions.jetbrains.space/p/scv  "JetBrains Space SCV") 
