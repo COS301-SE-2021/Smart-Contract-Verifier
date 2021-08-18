@@ -41,11 +41,11 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 [Demo 3](https://drive.google.com/file/d/1vS_SaMyM0epwD7M5oAB1QdPp8GzLKYTC/view?usp=sharing "Demo 3 Pre-Recorded")
 
-### Coding Standards
-[Coding Standards](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
-
 ### User Manual
 [Unison User Manual](https://drive.google.com/file/d/1sNw70yxIga1BZSfhdbnCgj2IBF_MbHdE/view?usp=sharing "User Manual Document")
 
 ### Technical Installation Guide
 [Unison Technical Installation Guide](https://drive.google.com/file/d/1FZTGVNUSmbhKs3D8sNz2AjNKBPJIuBz7/view?usp=sharing "Technical Installation Guide Document")
+
+### Coding Standards
+[Coding Standards](https://drive.google.com/file/d/1ZY9B8_qNpj48cPnye7gBYitTgVsB55hW/view?usp=sharing "Coding Standards Document")
