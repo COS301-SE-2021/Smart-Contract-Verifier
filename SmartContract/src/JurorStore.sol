@@ -31,6 +31,7 @@ contract JurorStore{
 
     function addJuror(address j) public onlyOwner() returns(uint256){
         require(jurorIndex[j] == 0, "You are already a juror");
+        require(strikes[j] < maxStrikes, "You have been banned from being a juror");
 
         uint256 index = jurors.length;
         jurors.push(j);
@@ -62,7 +63,7 @@ contract JurorStore{
     }
 
 
-    // record strike against juror. If max strikes has been reached, remove juror from pool
+    // record strike against juror. If max strikes has been reached,zremove juror from pool
     function addStrike(address j) public onlyOwner() returns(bool){
         require(jurorIndex[j] > 0, "Specified juror is not currently in the system");
 
