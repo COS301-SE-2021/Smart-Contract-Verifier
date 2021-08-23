@@ -11,6 +11,9 @@ contract JurorStore{
     uint numJurors;
     address[] jurors;
     mapping(address => uint256) jurorIndex;
+    mapping(address => uint256) strikes;
+
+    uint constant maxStrikes = 3;
 
     // Restricts usage of any function with this modifier to the owner (the Verifier contract)
     modifier onlyOwner(){
@@ -56,6 +59,20 @@ contract JurorStore{
         jurors.pop();
         numJurors--;
         jurorIndex[j] = 0;
+    }
+
+
+    // record strike against juror. If max strikes has been reached,
+    // remove juror from pool
+    function addStrike(address j) public onlyOwner() returns(bool){
+        require(jurorIndex[j] > 0, "Specified juror is not currently in the system");
+
+        strikes[j]++;
+        if(strikes[j] <= maxStrikes){
+            removeJuror(j);
+            return true;
+        }
+        return false;
     }
 
     // Cleared after every execution of assignJury
