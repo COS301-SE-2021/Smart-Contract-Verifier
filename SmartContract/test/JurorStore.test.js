@@ -103,14 +103,11 @@ contract('JurorStore', (accounts) =>{
             r = await RandomSource.new(); 
 
             jurorStore = await JurorStore.new(accounts[0], r.address, {from: accounts[0]});
-            await jurorStore.addJuror(accounts[0], {from: accounts[0]});
-
         })
 
 
         it("Juror removed after 3 strikes", async() =>{
-            var isJuror = await jurorStore.isJuror(accounts[0]);
-            assert(isJuror == true, "Precondition not met, couldn't perform test");
+            await jurorStore.addJuror(accounts[0], {from: accounts[0]});
 
             for(var i=0; i<3; i++)
                 jurorStore.addStrike(accounts[0]);
@@ -118,6 +115,26 @@ contract('JurorStore', (accounts) =>{
             isJuror = await jurorStore.isJuror(accounts[0]);
             assert(isJuror == false, "Juror wasn't removed after strikes");
         })
+
+        it("Juror still active after less than 3 strikes", async() =>{
+            await jurorStore.addJuror(accounts[1], {from: accounts[0]});
+
+            for(var i=0; i<2; i++){
+                jurorStore.addStrike(accounts[1]);
+
+                isJuror = await jurorStore.isJuror(accounts[1]);
+                assert(isJuror == true, "Juror was removed too early");
+            }
+        })
+
+        it("Can't strike accounts that aren't jurors", async() =>{
+            try{
+                jurorStore.addStrike(accounts[2]);
+                assert(false, "Stuck an account that isn't a juror");
+            }
+            catch{}
+
+         })
 
     })
 
