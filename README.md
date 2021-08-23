@@ -44,7 +44,7 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 
 ### Project Management Tool Link
-[Space](https://savannasolutions.jetbrains.space/p/scv  "JetBrains Space SCV") 
+Savanna Solutions [Space](https://savannasolutions.jetbrains.space/oauth/auth/invite/43d3a67afaa6f3eb7485461147cc31a9  "JetBrains Space SCV") 
 
 
 ### Demo Videos
