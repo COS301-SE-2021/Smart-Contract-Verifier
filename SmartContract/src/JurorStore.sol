@@ -68,14 +68,23 @@ contract JurorStore{
     function assignJury(uint count, uint seed, address[] calldata noUse)
              public onlyOwner() returns(address[] memory jury){
         require(count > 0, "Jury size must be a positive value");
-        require(count <= numJurors, "Jury size is too big, not enough jurors available");
+
+        uint numAvailableJurors = numJurors;
+        uint noUseLen = noUse.length;
+
+        for(uint i=0; i<noUseLen; i++){
+            if(jurorIndex[noUse[i]] != 0)
+                numAvailableJurors--;
+        }
+
+        require(count <= numAvailableJurors, "Jury size is too big, not enough jurors available");
 
         uint[] memory indices = new uint[](count);
         address[] memory result = new address[](count);
 
         uint val = randomSource.getRandVal(seed);
 
-        uint noUseLen = noUse.length;
+
         for(uint i=0; i<count; i++){
             uint index = val % numJurors + 1;
             bool valid = false;
