@@ -116,6 +116,17 @@ contract('JurorStore', (accounts) =>{
             assert(isJuror == false, "Juror wasn't removed after strikes");
         })
 
+        it("Can't add Juror after ban", async() =>{
+            try{
+                await jurorStore.addJuror(accounts[0]);
+            }
+            catch{}
+
+            isJuror = await jurorStore.isJuror(accounts[0]);
+            assert(isJuror == false, "Banned user could become juror");
+
+         })
+
         it("Juror still active after less than 3 strikes", async() =>{
             await jurorStore.addJuror(accounts[1], {from: accounts[0]});
 
