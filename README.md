@@ -1,5 +1,10 @@
 # Savanna Solutions
-## Unison - Smart-Contract-Verifier
+<!-- ## Unison - Smart-Contract-Verifier -->
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/41339070/130430042-f3f7bc7a-eb38-40e5-a882-6f6647cc938b.png" alt="Unison Logo" />
+  <h2 align="center">Smart Contract Verifier</h2>
+</p>
+
 ![](https://img.shields.io/github/issues/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/forks/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/stars/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
@@ -8,6 +13,7 @@
 ![](https://img.shields.io/github/issues-pr-closed/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/last-commit/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/commit-activity/m/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
+
 
 ### Project Description
 This project is to create a system that uses DeFi technology to enforce contracts.
