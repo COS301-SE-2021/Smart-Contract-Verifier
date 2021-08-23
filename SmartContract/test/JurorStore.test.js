@@ -56,7 +56,7 @@ contract('JurorStore', (accounts) =>{
     })
 
 
-    describe("JurorStore unit tests 2", async () =>{
+    describe("assignJury detailed testing", async () =>{
         let jurorStore
 
         // In these unit tests, accounts[0] is the owner of JurorStore
@@ -67,7 +67,7 @@ contract('JurorStore', (accounts) =>{
         })
 
 
-        it("AssignJury assigns a jury", async() =>{
+        it("too few available jurors", async() =>{
             // Add one juror too few
 
             for(var i=2; i<5; i++){
@@ -80,8 +80,16 @@ contract('JurorStore', (accounts) =>{
                 assert(false, "Jury was assigned when it shouldn't have been possible");
             }
             catch{}
+        })
 
+        it("Enough jurors, but some are in noUse list", async()=>{
+            await jurorStore.addJuror(accounts[1], {from: accounts[0]});
 
+            try{
+                await jurorStore.assignJury(5, BigInt(12351),[accounts[1]], {from:accounts[0]});
+                assert(false, "Jury was assigned when it shouldn't have been possible");
+            }
+            catch{}
         })
 
     })
