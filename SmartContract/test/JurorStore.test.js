@@ -55,4 +55,35 @@ contract('JurorStore', (accounts) =>{
 
     })
 
+
+    describe("JurorStore unit tests 2", async () =>{
+        let jurorStore
+
+        // In these unit tests, accounts[0] is the owner of JurorStore
+        before(async () =>{
+            r = await RandomSource.new(); 
+
+            jurorStore = await JurorStore.new(accounts[0], r.address, {from: accounts[0]});
+        })
+
+
+        it("AssignJury assigns a jury", async() =>{
+            // Add one juror too few
+
+            for(var i=2; i<5; i++){
+                await jurorStore.addJuror(accounts[i], {from: accounts[0]});
+
+            }
+  
+            try{
+                await jurorStore.assignJury(5, BigInt(12351),[], {from:accounts[0]});
+                assert(false, "Jury was assigned when it shouldn't have been possible");
+            }
+            catch{}
+
+
+        })
+
+    })
+
 })
