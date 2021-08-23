@@ -62,8 +62,7 @@ contract JurorStore{
     }
 
 
-    // record strike against juror. If max strikes has been reached,
-    // remove juror from pool
+    // record strike against juror. If max strikes has been reached, remove juror from pool
     function addStrike(address j) public onlyOwner() returns(bool){
         require(jurorIndex[j] > 0, "Specified juror is not currently in the system");
 

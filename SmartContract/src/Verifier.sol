@@ -24,6 +24,9 @@ contract Verifier{
 
     uint stakingAmount = 10000;
 
+    // Fraction out of a thousand
+    uint constant controversyRatio = 300;
+
     constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
         jurorStore = new JurorStore(address(this), randomSource);
@@ -303,19 +306,21 @@ contract Verifier{
 
         AgreementLib.Vote decision;
         uint payPerJuror;
+        uint controversy;
 
         if(no > yes){
             // Jury voted no, do a refund
             decision = AgreementLib.Vote.NO;
             _refundAgreement(agreeID);
             payPerJuror = stakingAmount / no;
+            controversy = (1000 * yes) /(1000 * (no + yes));
         }
         else{
             // Jury voted yes (even result is counted as yes), pay out as normal
             decision = AgreementLib.Vote.YES;
             _payoutAgreement(agreeID);
             payPerJuror = stakingAmount / yes;
-
+            controversy = (1000 * no) /(1000 * (no + yes));
         }
 
         // Pay the jurors who voted correctly
@@ -325,6 +330,24 @@ contract Verifier{
             }
         }
 
+        // Currently, abstaining is not punished. You only miss out on your payment if you abstain
+
+        // Punish any malicious jurors
+        if(controversy != 0 && controversy <= controversyRatio){
+            // controversy used to avoid punishing jurors on difficult cases
+            // controversy of 0 means the decision was unanimous and this step isn't needed
+            AgreementLib.Vote wrongVote;
+            if(decision == AgreementLib.Vote.YES)
+                wrongVote = AgreementLib.Vote.NO;
+            else
+                wrongVote =  AgreementLib.Vote.YES;
+
+            for(uint i=0; i<juries[agreeID].numJurors; i++){
+                if(juries[agreeID].votes[i] == wrongVote)
+                    jurorStore.addStrike(juries[agreeID].jurors[i]);
+
+            }
+        }
 
 
         agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
