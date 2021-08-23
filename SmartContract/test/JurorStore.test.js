@@ -94,4 +94,31 @@ contract('JurorStore', (accounts) =>{
 
     })
 
+
+    describe("juror strikes", async () =>{
+        let jurorStore
+
+        // In these unit tests, accounts[0] is the owner of JurorStore
+        before(async () =>{
+            r = await RandomSource.new(); 
+
+            jurorStore = await JurorStore.new(accounts[0], r.address, {from: accounts[0]});
+            await jurorStore.addJuror(accounts[0], {from: accounts[0]});
+
+        })
+
+
+        it("Juror removed after 3 strikes", async() =>{
+            var isJuror = await jurorStore.isJuror(accounts[0]);
+            assert(isJuror == true, "Precondition not met, couldn't perform test");
+
+            for(var i=0; i<3; i++)
+                jurorStore.addStrike(accounts[0]);
+
+            isJuror = await jurorStore.isJuror(accounts[0]);
+            assert(isJuror == false, "Juror wasn't removed after strikes");
+        })
+
+    })
+
 })

@@ -68,7 +68,7 @@ contract JurorStore{
         require(jurorIndex[j] > 0, "Specified juror is not currently in the system");
 
         strikes[j]++;
-        if(strikes[j] <= maxStrikes){
+        if(strikes[j] >= maxStrikes){
             removeJuror(j);
             return true;
         }
