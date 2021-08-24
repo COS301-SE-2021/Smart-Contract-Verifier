@@ -96,6 +96,7 @@ contract Verifier{
     // Each payment must have the allowance ready, it will be transferred immediately
     function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
         require(tokens.length == amount.length, "mismatch between tokens and amounts");
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "Agreement state invalid for adding payments");
         uint numPayments = tokens.length;
 
         address otherParty;

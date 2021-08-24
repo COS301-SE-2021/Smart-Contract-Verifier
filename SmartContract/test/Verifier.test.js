@@ -206,14 +206,6 @@ contract('Verifier', (accounts) =>{
 
             // Create agreement
             await verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
-            await verifier.acceptAgreement(0, {from: accounts[1]})
-
-            // Pay platofrm fee
-            var agree = await verifier.getAgreement(0);
-            var mustPay = agree.platformFee
-
-            await token.approve(verifier.address, mustPay);
-            await verifier.payPlatformFee(0);
         })
 
         it("Add payment condition", async()=>{
@@ -341,5 +333,4 @@ contract('Verifier', (accounts) =>{
         })
 
     })
-
 })
