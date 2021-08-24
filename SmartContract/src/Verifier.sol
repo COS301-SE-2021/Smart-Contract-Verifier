@@ -102,7 +102,7 @@ contract Verifier{
         if(msg.sender == agreements[agreeID].party1)
             otherParty = agreements[agreeID].party2;
         else
-            agreements[agreeID].party1;
+            otherParty = agreements[agreeID].party1;
 
         for(uint i=0; i<numPayments; i++){
             uint256 allowed = tokens[i].allowance(msg.sender, address(this));
