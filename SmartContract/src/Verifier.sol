@@ -359,6 +359,10 @@ contract Verifier{
         return jurorStore.isJuror(a);
     }
 
+    function getStrikes(address a) public view returns(uint){
+        return jurorStore.getStrikes(a);
+    }
+
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
         // Yes means pay out as normal, no means refund all payments
 
