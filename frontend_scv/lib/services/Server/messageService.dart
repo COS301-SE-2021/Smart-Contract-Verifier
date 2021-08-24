@@ -81,4 +81,26 @@ class MessageService {
     //Get all messages for the current user, across all agreements.
     return await _getMessageHandler(Global.userAddress, false);
   }
+
+  //This method returns a stream which checks for unread messages every 3 seconds, and yields any unread messages.
+  Stream<Message> getNewMessageStream(String id) async* {
+    Duration interval = Duration(seconds: 3);
+    //Check every 3 seconds
+
+    Map<String, String> body = {};
+
+    while (true) {
+      await Future.delayed(interval);
+      final response = await _api.postData(_reqPath + 'getUnread', body);
+
+      if (response['Status'] != "SUCCESSFUL")
+        throw Exception('Messages could not be retrieved');
+
+      for (int i = 0; i < response['Messages'].length; i++) { //Yield any unread messages
+        yield Message.fromJSON((response['Messages'][i]));
+      }
+    }
+
+  }
+
 }
