@@ -314,14 +314,14 @@ contract Verifier{
             decision = AgreementLib.Vote.NO;
             _refundAgreement(agreeID);
             payPerJuror = stakingAmount / no;
-            controversy = (1000 * yes) /(1000 * (no + yes));
+            controversy = (1000 * yes) /(no + yes);
         }
         else{
             // Jury voted yes (even result is counted as yes), pay out as normal
             decision = AgreementLib.Vote.YES;
             _payoutAgreement(agreeID);
             payPerJuror = stakingAmount / yes;
-            controversy = (1000 * no) /(1000 * (no + yes));
+            controversy = (1000 * no) /(no + yes);
         }
 
         // Pay the jurors who voted correctly
