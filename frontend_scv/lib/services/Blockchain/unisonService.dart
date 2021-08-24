@@ -129,4 +129,12 @@ class UnisonService {
     //print('Paying fee for ' + id.toString());
     await _smC.makeWriteCall('payPlatformFee', [id]);
   }
+
+  //Gets the current allowance that the user has on the Unison smart contract
+  Future<int> getAllowance() async {
+
+    final res = await _smC.makeReadCall('allowance', [Global.userAddress]);
+    return res[0];
+
+  }
 }
