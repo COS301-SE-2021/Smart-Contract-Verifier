@@ -87,6 +87,7 @@ class MessageService {
     Duration interval = Duration(seconds: 3);
     //Check every 3 seconds
 
+    //This will change soon.
     Map<String, String> body = {};
 
     while (true) {
