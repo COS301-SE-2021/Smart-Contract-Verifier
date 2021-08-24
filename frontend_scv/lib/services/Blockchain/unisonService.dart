@@ -130,11 +130,11 @@ class UnisonService {
     await _smC.makeWriteCall('payPlatformFee', [id]);
   }
 
-  //Gets the current allowance that the user has on the Unison smart contract
-  Future<int> getAllowance() async {
 
-    final res = await _smC.makeReadCall('allowance', [Global.userAddress]);
-    return res[0];
+  //This method is called by the party that should make the payment in an agreement.
+  Future<void> payToBlockchain(BigInt id, BigInt amount) async {
 
+    await _smC.makeWriteCall('addPaymentConditions', [id, [Global.getContractId('Verifier')], [amount]]);
   }
+
 }
