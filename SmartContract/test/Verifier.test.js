@@ -261,6 +261,14 @@ contract('Verifier', (accounts) =>{
 
             agree = await verifier.getAgreement(0);
             assert(agree.payments.length == numPaymentsAlready + 2);
+
+            for(var i=numPaymentsAlready; i<numPaymentsAlready + 2; i++){
+                var payment = agree.payments[i];
+                assert(payment.token == token.address, "Invalid token in payment");
+                assert(payment.from == accounts[0], "Invalid from address in payment");
+                assert(payment.to == accounts[1], "Invalid to address in payment");
+                assert(payment.amount == amount, "Invalid amount in payment");
+            }
         })
 
         it("Need allowance for payment condition", async()=>{
