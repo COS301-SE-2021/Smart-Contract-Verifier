@@ -204,6 +204,13 @@ contract('Verifier', (accounts) =>{
             r = await RandomSource.new();
             verifier = await Verifier.new(token.address, r.address);
 
+            // Distribute UnisonToken
+            needCoins = [];
+            for(var i = 1; i<10; i++){
+                needCoins.push(accounts[i]);
+            }
+            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+
             // Create agreement
             await verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
         })
@@ -218,6 +225,30 @@ contract('Verifier', (accounts) =>{
 
             agree = await verifier.getAgreement(0);
             assert(agree.payments.length == numPaymentsAlready + 1);
+
+            var payment = agree.payments[numPaymentsAlready];
+            assert(payment.token == token.address, "Invalid token in payment");
+            assert(payment.from == accounts[0], "Invalid from address in payment");
+            assert(payment.to == accounts[1], "Invalid to address in payment");
+            assert(payment.amount == amount, "Invalid amount in payment");
+        })
+
+        it("Add payment condition from party2", async()=>{
+            var agree = await verifier.getAgreement(0);
+            var numPaymentsAlready = agree.payments.length;
+
+            var amount = 100
+            await token.approve(verifier.address, amount, {from : accounts[1]});
+            await verifier.addPaymentConditions(0, [token.address], [amount], {from : accounts[1]});
+
+            agree = await verifier.getAgreement(0);
+            assert(agree.payments.length == numPaymentsAlready + 1);
+
+            var payment = agree.payments[numPaymentsAlready];
+            assert(payment.token == token.address, "Invalid token in payment");
+            assert(payment.from == accounts[1], "Invalid from address in payment");
+            assert(payment.to == accounts[0], "Invalid to address in payment");
+            assert(payment.amount == amount, "Invalid amount in payment");
         })
 
         it("Add multiple payment conditions", async()=>{
