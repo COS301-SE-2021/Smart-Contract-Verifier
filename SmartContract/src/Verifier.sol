@@ -404,6 +404,10 @@ contract Verifier{
         return (1000*numActive) / jurorStore.getNumJurors();
     }
 
+    function getStakingAmount() public view returns(uint){
+        return stakingAmount;
+    }
+
     event CreateAgreement(address party1, address party2, uint agreeID, string uuid);
     event AcceptAgreement(uint agreeID);
     event ActiveAgreement(uint agreeID);
