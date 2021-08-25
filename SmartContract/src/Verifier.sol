@@ -411,6 +411,14 @@ contract Verifier{
         return stakingAmount;
     }
 
+    function _updatePlatformFee() internal{
+        // multiplied by 1000 so that the 1000's don't cancel out
+        uint error = (1000 *_totalRatio()) / targetRatio;
+
+        platformFee *= error;
+        platformFee /= 1000;
+
+    }
 
     event CreateAgreement(address party1, address party2, uint agreeID, string uuid);
     event AcceptAgreement(uint agreeID);
