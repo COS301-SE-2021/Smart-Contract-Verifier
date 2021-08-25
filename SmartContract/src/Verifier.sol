@@ -13,6 +13,7 @@ contract Verifier{
     using AgreementLib for AgreementLib.Agreement;
 
     uint private nextAgreeID = 0;
+    uint numActive = 0;
 
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => AgreementLib.Agreement) agreements;
@@ -143,6 +144,7 @@ contract Verifier{
             agreements[agreeID].feePayer = msg.sender;
             if(agreements[agreeID].feePaid == agreements[agreeID].platformFee){
                 agreements[agreeID].state = AgreementLib.AgreementState.ACTIVE;
+                numActive++;
                 emit ActiveAgreement(agreeID);
             }
         }
@@ -200,6 +202,7 @@ contract Verifier{
 
             // Close the agreement
             agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+            numActive--;
             emit CloseAgreement(agreeID);
         }
 
@@ -352,6 +355,7 @@ contract Verifier{
 
 
         agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+        numActive--;
         emit CloseAgreement(agreeID);
     }
 
