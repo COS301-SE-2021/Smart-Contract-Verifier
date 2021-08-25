@@ -25,6 +25,9 @@ contract Verifier{
 
     uint stakingAmount = 10000;
 
+    uint platformFee = 1000000000;
+    uint constant targetRatio = 5000; //ratio of agreements to jurors multiplied by 1000
+
     // Fraction out of a thousand
     uint constant controversyRatio = 300;
 
@@ -76,7 +79,7 @@ contract Verifier{
         agreements[nextAgreeID].resolutionTime = resolutionTime;
         agreements[nextAgreeID].text = text;
         agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
-        agreements[nextAgreeID].platformFee = 1000000000;
+        agreements[nextAgreeID].platformFee = platformFee;
         agreements[nextAgreeID].uuid = uuid;
 
         emit CreateAgreement(msg.sender, party2, nextAgreeID, uuid);
@@ -407,6 +410,7 @@ contract Verifier{
     function getStakingAmount() public view returns(uint){
         return stakingAmount;
     }
+
 
     event CreateAgreement(address party1, address party2, uint agreeID, string uuid);
     event AcceptAgreement(uint agreeID);
