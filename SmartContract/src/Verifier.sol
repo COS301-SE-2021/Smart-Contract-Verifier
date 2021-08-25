@@ -400,6 +400,10 @@ contract Verifier{
 
     }
 
+    function _totalRatio() internal view returns(uint){
+        return (1000*numActive) / jurorStore.getNumJurors();
+    }
+
     event CreateAgreement(address party1, address party2, uint agreeID, string uuid);
     event AcceptAgreement(uint agreeID);
     event ActiveAgreement(uint agreeID);
