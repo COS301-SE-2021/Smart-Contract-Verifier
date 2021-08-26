@@ -4,29 +4,32 @@ import com.savannasolutions.SmartContractVerifierServer.messenger.requests.*
 import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByAgreementResponse
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @CrossOrigin
 @RestController
 @RequestMapping("/messenger")
 class MessengerController constructor(private val messengerService: MessengerService) {
 
-    @PostMapping("/get-all-messages-by-agreement")
-    fun getAllMessagesByAgreement(@RequestBody getAllMessagesByAgreementRequest: GetAllMessagesByAgreementRequest) =
-        messengerService.getAllMessagesByAgreement(getAllMessagesByAgreementRequest)
+    @GetMapping("/user/{userId}/agreement/{agreementId}/message")
+    fun getAllMessagesByAgreement(@PathVariable userId: String, @PathVariable agreementId: UUID,) =
+        messengerService.getAllMessagesByAgreement(userId, agreementId)
 
-    @PostMapping("/get-all-messages-by-user")
-    fun getAllMessagesByUser(@RequestBody getAllMessagesByUserRequest: GetAllMessagesByUserRequest) =
-        messengerService.getAllMessagesByUser(getAllMessagesByUserRequest)
+    @GetMapping("/user/{userId}/message")
+    fun getAllMessagesByUser(@PathVariable userId: String) =
+        messengerService.getAllMessagesByUser(userId)
 
-    @PostMapping("/get-message-detail")
-    fun getMessageDetail(@RequestBody getMessageDetailRequest: GetMessageDetailRequest) =
-        messengerService.getMessageDetail(getMessageDetailRequest)
+    @GetMapping("/user/{userId}/message/{messageId}")
+    fun getMessageDetail(@PathVariable userId: String, @PathVariable messageId: UUID,) =
+        messengerService.getMessageDetail(userId, messageId)
 
-    @PostMapping("/send-message")
-    fun sendMessage(@RequestBody sendMessageRequest: SendMessageRequest) =
-        messengerService.sendMessage(sendMessageRequest)
+    @PostMapping("/user/{userId}/agreement/{agreementId}/message")
+    fun sendMessage(@PathVariable userId: String,
+                    @PathVariable agreementId: UUID,
+                    @RequestBody sendMessageRequest: SendMessageRequest,) =
+        messengerService.sendMessage(userId, agreementId, sendMessageRequest,)
 
-    @PostMapping("/set-message-as-read")
-    fun setMessageAsRead(@RequestBody setMessageAsReadRequest: SetMessageAsReadRequest) =
-        messengerService.setMessageAsRead(setMessageAsReadRequest)
+    @PutMapping("/user/{userId}/message/{messageId}")
+    fun setMessageAsRead(@PathVariable userId: String, @PathVariable messageId: UUID,) =
+        messengerService.setMessageAsRead(userId, messageId)
 }
