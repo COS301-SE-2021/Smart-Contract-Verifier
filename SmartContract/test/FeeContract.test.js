@@ -25,7 +25,6 @@ async function testRatio(feeC, users, jurors){
     platformFee = BigInt(platformFee);
 
     console.log(platformFee);
-
     var expectedFee = calcNewFee(oldPlatformFee, users,jurors);
     console.log(expectedFee);
 
@@ -66,4 +65,16 @@ contract('FeeContract', (accounts) =>{
         })
     })
 
+    describe("FeeContract unit tests 2", async () =>{
+        var feeC;
+
+        before(async ()=>{
+            // accounts[0] is owner
+            feeC = await FeeContract.new(accounts[0]);
+        })
+
+        it("Increased jurors", async() =>{
+            await testRatio(feeC, 25, 6);
+        })
+    })
 })
