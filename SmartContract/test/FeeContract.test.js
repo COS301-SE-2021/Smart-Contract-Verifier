@@ -5,6 +5,9 @@ const truffleAssert = require('truffle-assertions');
 require('chai').use(require('chai-as-promised')).should()
 
 function calcNewFee(oldFee, users, jurors){
+    if(jurors == 0)
+        jurors = 1;
+
     // oldFee * ratio / targetRatio
 
     result = oldFee;
@@ -24,7 +27,9 @@ async function testRatio(feeC, users, jurors){
     var platformFee = await feeC.getPlatformFee();
     platformFee = BigInt(platformFee);
 
+    console.log(platformFee);
     var expectedFee = calcNewFee(oldPlatformFee, users,jurors);
+    console.log(expectedFee);
 
     assert(platformFee == expectedFee, "Invalid Platform fee update");
 }
@@ -51,7 +56,6 @@ contract('FeeContract', (accounts) =>{
 
         it("users ratio is correct", async() =>{
             await testRatio(feeC, 25, 5);
-
         })
 
         it("users ratio is over", async() =>{
@@ -102,6 +106,19 @@ contract('FeeContract', (accounts) =>{
 
         it("Increased users", async() =>{
             await testRatio(feeC, 10005, 1001);
+        })
+    })
+
+    describe("FeeContract extreme values", async () =>{
+        var feeC;
+
+        before(async ()=>{
+            // accounts[0] is owner
+            feeC = await FeeContract.new(accounts[0]);
+        })
+
+        it("No jurors", async() =>{
+            await testRatio(feeC, 10, 0);
         })
     })
 
