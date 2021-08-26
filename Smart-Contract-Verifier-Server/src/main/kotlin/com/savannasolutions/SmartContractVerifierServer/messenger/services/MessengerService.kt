@@ -182,18 +182,15 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         return SendMessageResponse(message.messageID, ResponseStatus.SUCCESSFUL)
     }
 
-    fun setMessageAsRead(setMessageAsReadRequest: SetMessageAsReadRequest): SetMessageAsReadResponse{
-        if(setMessageAsReadRequest.RecipientID.isEmpty())
+    fun setMessageAsRead(userID: String, messageID: UUID): SetMessageAsReadResponse{
+        if(!userRepository.existsById(userID))
             return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
 
-        if(!userRepository.existsById(setMessageAsReadRequest.RecipientID))
+        if(!messagesRepository.existsById(messageID))
             return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
 
-        if(!messagesRepository.existsById(setMessageAsReadRequest.MessageID))
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
-
-        val user = userRepository.getById(setMessageAsReadRequest.RecipientID)
-        val message = messagesRepository.getById(setMessageAsReadRequest.MessageID)
+        val user = userRepository.getById(userID)
+        val message = messagesRepository.getById(messageID)
         val messageStatus = messageStatusRepository.getByRecipientAndMessage(user, message)?:
             return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
 
