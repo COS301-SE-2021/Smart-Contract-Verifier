@@ -99,12 +99,16 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         return RemoveUserFromContactListResponse(ResponseStatus.SUCCESSFUL)
     }
 
-    fun retrieveContactList(retrieveContactListRequest: RetrieveContactListRequest):RetrieveContactListResponse
+    fun retrieveContactList(userID: String, contactListID: UUID):RetrieveContactListResponse
     {
-        if(!contactListRepository.existsById(retrieveContactListRequest.ContactListID))
+        if(!contactListRepository.existsById(contactListID))
             return RetrieveContactListResponse(status = ResponseStatus.FAILED)
 
-        val contactList = contactListRepository.getById(retrieveContactListRequest.ContactListID)
+        val contactList = contactListRepository.getById(contactListID)
+
+        if(contactList.owner.publicWalletID != userID)
+            return RetrieveContactListResponse(status = ResponseStatus.FAILED)
+
         contactList.contactListProfiles?: return RetrieveContactListResponse(emptyList(), ResponseStatus.SUCCESSFUL)
 
         val list = ArrayList<ContactListAliasWalletResponse>()
