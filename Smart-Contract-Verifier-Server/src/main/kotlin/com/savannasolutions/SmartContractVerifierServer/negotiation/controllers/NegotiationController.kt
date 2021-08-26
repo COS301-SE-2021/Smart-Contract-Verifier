@@ -49,7 +49,7 @@ class NegotiationController constructor(private val negotiationService: Negotiat
         negotiationService.setPaymentCondition(userId, agreementId, setPaymentConditionRequest)
 
     @PostMapping("/user/{userId}/agreement/{agreementId}/condition/duration")
-    fun setPaymentCondition(@PathVariable userId: String,
+    fun setDurationCondition(@PathVariable userId: String,
                             @PathVariable agreementId: UUID,
                             @RequestBody setDurationConditionRequest: SetDurationConditionRequest,) =
         negotiationService.setDurationCondition(userId, agreementId, setDurationConditionRequest)

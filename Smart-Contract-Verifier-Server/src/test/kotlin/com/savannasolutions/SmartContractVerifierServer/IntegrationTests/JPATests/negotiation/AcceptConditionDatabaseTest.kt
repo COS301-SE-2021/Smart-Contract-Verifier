@@ -6,7 +6,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Condi
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.AcceptConditionRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.AfterEach
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
 import kotlin.test.assertEquals
