@@ -12,10 +12,10 @@ class EvidenceService constructor(@Qualifier("evidenceFileSystemJIMFSImplementat
 
     fun linkEvidence(linkEvidenceRequest: LinkEvidenceRequest): LinkEvidenceResponse? = null
 
-    fun fetchEvidence(fetchEvidenceRequest: FetchEvidenceRequest): FetchEvidenceResponse? = null
+    fun fetchEvidence(): FetchEvidenceResponse? = null
 
-    fun getAllEvidence(getAllEvidenceRequest: GetAllEvidenceRequest): GetAllEvidenceResponse? = null
+    fun getAllEvidence(): GetAllEvidenceResponse? = null
 
-    fun removeEvidence(removeEvidenceRequest: RemoveEvidenceRequest): RemoveEvidenceResponse? = null
+    fun removeEvidence(): RemoveEvidenceResponse? = null
 
 }
