@@ -21,17 +21,22 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                      val userRepository: UserRepository,
                                      val judgesRepository: JudgesRepository){
 
-    fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionResponse{
-        if(conditionsRepository.existsById(acceptConditionRequest.conditionID)){
-            val condition = conditionsRepository.getById(acceptConditionRequest.conditionID)
-            if(condition.conditionStatus == ConditionStatus.PENDING) {
+    fun acceptCondition(userID: String, agreementID: UUID, conditionID: UUID): AcceptConditionResponse{
+        if(!conditionsRepository.existsById(conditionID))
+            return AcceptConditionResponse(ResponseStatus.FAILED)
+
+        if(!agreementsRepository.existsById(agreementID))
+            return AcceptConditionResponse(ResponseStatus.FAILED)
+
+        val condition = conditionsRepository.getById(conditionID)
+            if(condition.conditionStatus == ConditionStatus.PENDING)
+            {
                 condition.conditionStatus = ConditionStatus.ACCEPTED
                 conditionsRepository.save(condition)
                 return AcceptConditionResponse(ResponseStatus.SUCCESSFUL)
-            }
-            return AcceptConditionResponse(ResponseStatus.FAILED)
-        }
-        return AcceptConditionResponse(ResponseStatus.FAILED)
+            } else if (condition.conditionStatus == ConditionStatus.REJECTED ||
+                        condition.conditionStatus == ConditionStatus.ACCEPTED)
+                return AcceptConditionResponse(ResponseStatus.FAILED)
     }
 
     fun createAgreement(createAgreementRequest: CreateAgreementRequest): CreateAgreementResponse{
@@ -127,12 +132,13 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return CreateConditionResponse(nCondition.conditionID, ResponseStatus.SUCCESSFUL)
     }
 
-    fun getAgreementDetails(getAgreementDetailsRequest: GetAgreementDetailsRequest): GetAgreementDetailsResponse{
-        if(!agreementsRepository.existsById(getAgreementDetailsRequest.AgreementID))
-        {
+    fun getAgreementDetails(userID: String, AgreementID: UUID): GetAgreementDetailsResponse{
+        if(!agreementsRepository.existsById(AgreementID))
             return GetAgreementDetailsResponse(status = ResponseStatus.FAILED)
-        }
-        val agreement = agreementsRepository.getById(getAgreementDetailsRequest.AgreementID)
+        if(!userRepository.existsById(userID))
+            return GetAgreementDetailsResponse(status = ResponseStatus.FAILED)
+
+        val agreement = agreementsRepository.getById(AgreementID)
         val conditionList = conditionsRepository.getAllByContract(agreement)
         val conditions = ArrayList<ConditionResponse>()
         if(conditionList != null)
@@ -153,6 +159,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
         val partyA = UserResponse(userList[0].publicWalletID)
         val partyB = UserResponse(userList[1].publicWalletID)
+
+        if(userID != partyA.PublicWalletID && userID != partyB.PublicWalletID)
+            return GetAgreementDetailsResponse(status = ResponseStatus.FAILED)
+
         val paymentCondition : Conditions? = if(agreement.PaymentConditionUUID != null)
             conditionsRepository.getById(agreement.PaymentConditionUUID!!)
         else null
@@ -216,11 +226,22 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return RejectConditionResponse(ResponseStatus.FAILED)
     }
 
-    fun getAllConditions(getAllConditionsRequest: GetAllConditionsRequest):GetAllConditionsResponse{
-        if(!agreementsRepository.existsById(getAllConditionsRequest.AgreementID))
-            return GetAllConditionsResponse(null, ResponseStatus.FAILED)
+    fun getAllConditions(userID:String, agreementID: UUID):GetAllConditionsResponse{
+        if(!agreementsRepository.existsById(agreementID))
+            return GetAllConditionsResponse(status = ResponseStatus.FAILED)
 
-        val conditions = conditionsRepository.getAllByContract(agreementsRepository.getById(getAllConditionsRequest.AgreementID))
+        val agreement = agreementsRepository.getById(agreementID)
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+
+        var found = false
+        for(user in userList)
+            if(user.publicWalletID == userID)
+                found = true;
+
+        if(!found)
+            return GetAllConditionsResponse(status = ResponseStatus.FAILED)
+
+        val conditions = conditionsRepository.getAllByContract(agreementsRepository.getById(agreementID))
         conditions?:return GetAllConditionsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
 
         val conditionList = ArrayList<ConditionResponse>()

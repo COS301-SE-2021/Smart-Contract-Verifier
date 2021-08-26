@@ -5,5 +5,5 @@ import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import java.util.*
 
-data class GetAllConditionsResponse(@JsonProperty("Conditions") val conditions: List<ConditionResponse>?,
+data class GetAllConditionsResponse(@JsonProperty("Conditions") val conditions: List<ConditionResponse>? = null,
                                     @JsonProperty("Status") val status: ResponseStatus,)
