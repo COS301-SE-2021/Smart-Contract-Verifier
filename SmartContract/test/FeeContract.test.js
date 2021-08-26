@@ -23,6 +23,19 @@ contract('FeeContract', (accounts) =>{
             stakingAmount = BigInt(stakingAmount);
             assert(stakingAmount == 10000, "issue with getStakingAmount");
         })
+
+        it("users to jurors ratio is correct", async() =>{
+            var oldPlatformFee = await feeC.getPlatformFee();
+            oldPlatformFee = BigInt(oldPlatformFee);
+
+            await feeC.updatePlatformFee(25, 5);
+
+            var platformFee = await feeC.getPlatformFee();
+            platformFee = BigInt(platformFee);
+
+            assert(platformFee == oldPlatformFee, "Platform fee changed when ratio was correct");
+
+        })
     })
 
 })
