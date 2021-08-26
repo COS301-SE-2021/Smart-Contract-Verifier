@@ -51,11 +51,11 @@ contract('Verifier', (accounts) =>{
             r = await RandomSource.new();
             verifier = await Verifier.new(token.address, r.address);
 
-            needCoins = [];
-            for(var i = 1; i<9; i++){
-                needCoins.push(accounts[i]);
-            }
-            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+                needCoins = [];
+                for(var i = 1; i<9; i++){
+                    needCoins.push(accounts[i]);
+                }
+                giveJurorsCoins(token, accounts[0], needCoins, 100000);
         })
 
         it("Can create agreement", async () =>{
@@ -234,12 +234,7 @@ contract('Verifier', (accounts) =>{
             r = await RandomSource.new();
             verifier = await Verifier.new(token.address, r.address);
 
-            // Distribute UnisonToken
-            needCoins = [];
-            for(var i = 1; i<10; i++){
-                needCoins.push(accounts[i]);
-            }
-            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+            prepareJurors(verifier, token, accounts, 1, 10);
 
             // Create agreement
             await verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
@@ -330,12 +325,7 @@ contract('Verifier', (accounts) =>{
 
             await createActiveAgreement(verifier, accounts);
 
-            // Prepare jurors
-            needCoins = [];
-            for(var i = 1; i<9; i++){
-                needCoins.push(accounts[i]);
-            }
-            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+            prepareJurors(verifier, token, accounts, 1, 10)
 
             for(var i=3; i<9; i++){
                 token.approve(verifier.address, 10000, {from: accounts[i]});
