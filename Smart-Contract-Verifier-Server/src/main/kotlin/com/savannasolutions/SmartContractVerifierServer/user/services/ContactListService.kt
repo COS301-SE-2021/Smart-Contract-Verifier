@@ -73,18 +73,18 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         return CreateContactListResponse(contactList.contactListID, ResponseStatus.SUCCESSFUL)
     }
 
-    fun removeUserFromContactList(removeUserFromContactListRequest: RemoveUserFromContactListRequest): RemoveUserFromContactListResponse{
-        if(removeUserFromContactListRequest.RemoveUserID.isEmpty())
+    fun removeUserFromContactList(userID: String, contactListID: UUID, removeUserID: String): RemoveUserFromContactListResponse{
+        if(removeUserID.isEmpty())
             return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
 
-        if(!userRepository.existsById(removeUserFromContactListRequest.RemoveUserID))
+        if(!userRepository.existsById(removeUserID))
             return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
 
-        if(!contactListRepository.existsById(removeUserFromContactListRequest.ContactListID))
+        if(!contactListRepository.existsById(contactListID))
             return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
 
-        val user = userRepository.getById(removeUserFromContactListRequest.RemoveUserID)
-        val contactList = contactListRepository.getById(removeUserFromContactListRequest.ContactListID)
+        val user = userRepository.getById(removeUserID)
+        val contactList = contactListRepository.getById(contactListID)
 
         if(!contactListProfileRepository.existsByContactListAndUser(contactList, user))
             return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
