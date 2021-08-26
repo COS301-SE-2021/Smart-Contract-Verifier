@@ -15,6 +15,23 @@ function calcNewFee(oldFee, users, jurors){
     return result;
 }
 
+async function testRatio(feeC, users, jurors){
+    var oldPlatformFee = await feeC.getPlatformFee();
+    oldPlatformFee = BigInt(oldPlatformFee);
+
+    await feeC.updatePlatformFee(users, jurors);
+
+    var platformFee = await feeC.getPlatformFee();
+    platformFee = BigInt(platformFee);
+
+    console.log(platformFee);
+
+    var expectedFee = calcNewFee(oldPlatformFee, users,jurors);
+    console.log(expectedFee);
+
+    assert(platformFee == expectedFee, "Invalid Platform fee update");
+}
+
 contract('FeeContract', (accounts) =>{
     describe("FeeContract unit tests", async () =>{
         var feeC;
@@ -36,33 +53,12 @@ contract('FeeContract', (accounts) =>{
         })
 
         it("users ratio is correct", async() =>{
-            var oldPlatformFee = await feeC.getPlatformFee();
-            oldPlatformFee = BigInt(oldPlatformFee);
-
-            await feeC.updatePlatformFee(25, 5);
-
-            var platformFee = await feeC.getPlatformFee();
-            platformFee = BigInt(platformFee);
-
-            assert(platformFee == oldPlatformFee, "Platform fee changed when ratio was correct");
+            await testRatio(feeC, 25, 5);
 
         })
 
         it("users ratio is over", async() =>{
-            var oldPlatformFee = await feeC.getPlatformFee();
-            oldPlatformFee = BigInt(oldPlatformFee);
-
-            await feeC.updatePlatformFee(26, 5);
-
-            var platformFee = await feeC.getPlatformFee();
-            platformFee = BigInt(platformFee);
-
-            console.log(platformFee);
-
-            var expectedFee = calcNewFee(oldPlatformFee, 26,5);
-            console.log(expectedFee);
-
-            assert(platformFee == expectedFee, "Platform fee changed when ratio was correct");
+            await testRatio(feeC, 27, 5);
         })
     })
 
