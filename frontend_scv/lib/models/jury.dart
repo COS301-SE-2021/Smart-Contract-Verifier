@@ -25,6 +25,16 @@ class Jury {
 
   }
 
+  int getMyVoteNumber() { //Get the raw vote
+
+    for (Juror i in _jurors) {
+      if (i.address == Global.userAddress)
+        return i.voteNumber;
+    }
+
+    return -1; //Invalid
+  }
+
   String getMyVote() { //Get the user's vote
 
     for (Juror i in _jurors) {

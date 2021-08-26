@@ -4,6 +4,7 @@ class Juror {
 
   String address;
   String vote;
+  int voteNumber;
 
   Juror(this.address, BigInt b) {
 
@@ -15,6 +16,8 @@ class Juror {
       case 2: vote = 'Yes';
             break;
       default: vote = 'Unavailable';
+
+      voteNumber = b.toInt();
     }
   }
 
