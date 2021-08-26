@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:web3dart/credentials.dart';
 import '../../models/condition.dart';
 import '../../models/contract.dart';
 import '../../models/global.dart';
@@ -167,6 +168,7 @@ class NegotiationService {
 
       //Save the agreement on the blockchain
       await _uniServ.saveAgreement(con);
+      //await _uniServ.addPaymentConditions(con.blockchainId, EthereumAddress.fromHex(con.payingUser), BigInt.from(con.price.toInt()));
     } on Exception catch (e) {
       //Handle exception
       print(e);

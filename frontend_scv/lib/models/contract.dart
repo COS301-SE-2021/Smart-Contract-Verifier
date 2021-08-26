@@ -19,6 +19,7 @@ class Contract with ChangeNotifier {
   String title;
 
   String description;
+  String payingUser;
   double price;
   String imageUrl;
   String partyBId;
