@@ -17,14 +17,11 @@ class UserService(  val userRepository: UserRepository,
                     val conditionsRepository: ConditionsRepository) {
 
 
-    fun retrieveUserAgreements(retrieveUserAgreementsRequest: RetrieveUserAgreementsRequest): RetrieveUserAgreementsResponse {
-        if(retrieveUserAgreementsRequest.UserID.isEmpty())
+    fun retrieveUserAgreements(userId: String): RetrieveUserAgreementsResponse {
+        if(!userRepository.existsById(userId))
             return RetrieveUserAgreementsResponse(status = ResponseStatus.FAILED)
 
-        if(!userRepository.existsById(retrieveUserAgreementsRequest.UserID))
-            return RetrieveUserAgreementsResponse(status = ResponseStatus.FAILED)
-
-        val user = userRepository.getById(retrieveUserAgreementsRequest.UserID)
+        val user = userRepository.getById(userId)
 
         val agreementList = agreementsRepository.getAllByUsersContaining(user)
             ?: return RetrieveUserAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
