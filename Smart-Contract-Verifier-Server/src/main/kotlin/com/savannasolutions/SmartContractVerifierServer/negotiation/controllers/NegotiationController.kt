@@ -45,7 +45,7 @@ class NegotiationController constructor(private val negotiationService: Negotiat
     @PostMapping("/user/{userId}/agreement/{agreementId}/condition/payment")
     fun setPaymentCondition(@PathVariable userId: String,
                             @PathVariable agreementId: UUID,
-                            @RequestBody setDurationConditionRequest: SetPaymentConditionRequest,) =
+                            @RequestBody setPaymentConditionRequest: SetPaymentConditionRequest,) =
         negotiationService.setPaymentCondition(userId, agreementId, setPaymentConditionRequest)
 
     @PostMapping("/user/{userId}/agreement/{agreementId}/condition/duration")
