@@ -34,15 +34,11 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 condition.conditionStatus = ConditionStatus.ACCEPTED
                 conditionsRepository.save(condition)
                 return AcceptConditionResponse(ResponseStatus.SUCCESSFUL)
-            } else if (condition.conditionStatus == ConditionStatus.REJECTED ||
-                        condition.conditionStatus == ConditionStatus.ACCEPTED)
-                return AcceptConditionResponse(ResponseStatus.FAILED)
+            }
+        return AcceptConditionResponse(ResponseStatus.FAILED)
     }
 
-    fun createAgreement(createAgreementRequest: CreateAgreementRequest): CreateAgreementResponse{
-        if(createAgreementRequest.PartyA.isEmpty())
-            return CreateAgreementResponse(status = ResponseStatus.FAILED)
-
+    fun createAgreement(userID: String, createAgreementRequest: CreateAgreementRequest): CreateAgreementResponse{
         if(createAgreementRequest.PartyB.isEmpty())
             return CreateAgreementResponse(status = ResponseStatus.FAILED)
 
@@ -52,16 +48,16 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         if(createAgreementRequest.Description.isEmpty())
             return CreateAgreementResponse(status = ResponseStatus.FAILED)
 
-        if(createAgreementRequest.PartyB == createAgreementRequest.PartyA)
+        if(createAgreementRequest.PartyB == userID)
             return CreateAgreementResponse(status = ResponseStatus.FAILED)
 
-        if(!userRepository.existsById(createAgreementRequest.PartyA))
+        if(!userRepository.existsById(userID))
             return CreateAgreementResponse(status = ResponseStatus.FAILED)
 
         if(!userRepository.existsById(createAgreementRequest.PartyB))
             return CreateAgreementResponse(status = ResponseStatus.FAILED)
 
-        val userA = userRepository.getById(createAgreementRequest.PartyA)
+        val userA = userRepository.getById(userID)
         val userB = userRepository.getById(createAgreementRequest.PartyB)
 
         var nAgreement = Agreements(UUID.randomUUID(),
@@ -79,7 +75,6 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         val tempB = agreementsRepository.getAllByUsersContaining(userB) ?:
         mutableSetOf()
-
 
         nAgreement = agreementsRepository.save(nAgreement)
 
@@ -213,15 +208,33 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return GetAgreementDetailsResponse(agreementResponse,ResponseStatus.SUCCESSFUL)
     }
 
-    fun rejectCondition(rejectConditionRequest: RejectConditionRequest): RejectConditionResponse {
-        if(conditionsRepository.existsById(rejectConditionRequest.conditionID)){
-            val condition = conditionsRepository.getById(rejectConditionRequest.conditionID)
-            if(condition.conditionStatus == ConditionStatus.PENDING) {
-                condition.conditionStatus = ConditionStatus.REJECTED
-                conditionsRepository.save(condition)
-                return RejectConditionResponse(ResponseStatus.SUCCESSFUL)
-            }
+    fun rejectCondition(userID: String, agreementID: UUID, conditionID: UUID): RejectConditionResponse {
+        if(!conditionsRepository.existsById(conditionID))
             return RejectConditionResponse(ResponseStatus.FAILED)
+
+        if(!agreementsRepository.existsById(agreementID))
+            return RejectConditionResponse(ResponseStatus.FAILED)
+
+        val condition = conditionsRepository.getById(conditionID)
+
+        if(condition.contract.ContractID != agreementID)
+            return RejectConditionResponse(ResponseStatus.FAILED)
+
+        val agreement = agreementsRepository.getById(agreementID)
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+
+        var found = false
+        for(user in userList)
+            if(user.publicWalletID == userID)
+                found = true
+
+        if(!found)
+            return RejectConditionResponse(ResponseStatus.FAILED)
+
+        if(condition.conditionStatus == ConditionStatus.PENDING) {
+            condition.conditionStatus = ConditionStatus.REJECTED
+            conditionsRepository.save(condition)
+            return RejectConditionResponse(ResponseStatus.SUCCESSFUL)
         }
         return RejectConditionResponse(ResponseStatus.FAILED)
     }
