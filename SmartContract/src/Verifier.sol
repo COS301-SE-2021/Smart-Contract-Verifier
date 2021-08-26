@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "./UnisonToken.sol";
 import "./Structs/AgreementLib.sol";
 import "./JurorStore.sol";
-
+import "./FeeContract.sol";
 
 // pragma experimental ABIEncoderV2;
 
@@ -22,17 +22,14 @@ contract Verifier{
     JurorStore jurorStore;
     uint jurySeed = 10;
     UnisonToken unisonToken;
-
-    uint stakingAmount = 10000;
-
-    uint platformFee = 1000000000;
-    uint constant targetRatio = 5000; //ratio of agreements to jurors multiplied by 1000
+    FeeContract feeContract;
 
     // Fraction out of a thousand
     uint constant controversyRatio = 300;
 
     constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
+        feeContract = new FeeContract(address(this));
         jurorStore = new JurorStore(address(this), randomSource);
     }
 
@@ -79,7 +76,7 @@ contract Verifier{
         agreements[nextAgreeID].resolutionTime = resolutionTime;
         agreements[nextAgreeID].text = text;
         agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
-        agreements[nextAgreeID].platformFee = platformFee;
+        agreements[nextAgreeID].platformFee = getPlatformFee();
         agreements[nextAgreeID].uuid = uuid;
 
         emit CreateAgreement(msg.sender, party2, nextAgreeID, uuid);
@@ -247,8 +244,8 @@ contract Verifier{
         address j = msg.sender;
 
         uint allowed = unisonToken.allowance(j, address(this));
-        require(allowed >= stakingAmount);
-        unisonToken.transferFrom(j, address(this), stakingAmount);
+        require(allowed >= getStakingAmount());
+        unisonToken.transferFrom(j, address(this), getStakingAmount());
 
         jurorStore.addJuror(j);
         emit AddJuror(j);
@@ -257,7 +254,7 @@ contract Verifier{
     // remove yourself from available jurors list
     function removeJuror() public{
         jurorStore.removeJuror(msg.sender);
-        unisonToken.transfer(msg.sender, stakingAmount);
+        unisonToken.transfer(msg.sender, getStakingAmount());
         emit RemoveJuror(msg.sender);
     }
 
@@ -319,14 +316,14 @@ contract Verifier{
             // Jury voted no, do a refund
             decision = AgreementLib.Vote.NO;
             _refundAgreement(agreeID);
-            payPerJuror = stakingAmount / no;
+            payPerJuror = agreements[agreeID].feePaid / no;
             controversy = (1000 * yes) /(no + yes);
         }
         else{
             // Jury voted yes (even result is counted as yes), pay out as normal
             decision = AgreementLib.Vote.YES;
             _payoutAgreement(agreeID);
-            payPerJuror = stakingAmount / yes;
+            payPerJuror = agreements[agreeID].feePaid / yes;
             controversy = (1000 * no) /(no + yes);
         }
 
@@ -407,19 +404,12 @@ contract Verifier{
         return (1000*numActive) / jurorStore.getNumJurors();
     }
 
-    function getStakingAmount() public view returns(uint){
-        return stakingAmount;
+    function getPlatformFee() public view returns(uint){
+        return feeContract.getPlatformFee();
     }
 
-    function _updatePlatformFee() internal{
-        // multiplied by 1000 so that the 1000's don't cancel out
-        uint error = (1000 *_totalRatio()) / targetRatio;
-
-        // error is now a fraction where 1000 represents 1, so platform fee must be divided by 1000
-        // to correct for that
-        platformFee *= error;
-        platformFee /= 1000;
-
+    function getStakingAmount() public view returns(uint){
+        return feeContract.getStakingAmount();
     }
 
     event CreateAgreement(address party1, address party2, uint agreeID, string uuid);
