@@ -71,14 +71,11 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         return GetAllMessagesByAgreementResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
     }
 
-    fun getAllMessagesByUser(getAllMessagesByUserRequest: GetAllMessagesByUserRequest): GetAllMessagesByUserResponse{
-        if(getAllMessagesByUserRequest.RequestingUser.isEmpty())
+    fun getAllMessagesByUser(userID: String): GetAllMessagesByUserResponse{
+        if(!userRepository.existsById(userID))
             return GetAllMessagesByUserResponse(status = ResponseStatus.FAILED)
 
-        if(!userRepository.existsById(getAllMessagesByUserRequest.RequestingUser))
-            return GetAllMessagesByUserResponse(status = ResponseStatus.FAILED)
-
-        val user = userRepository.getById(getAllMessagesByUserRequest.RequestingUser)
+        val user = userRepository.getById(userID)
         val sentMessageList = messagesRepository.getAllBySender(user)
         val receivedMessageList = messageStatusRepository.getAllByRecipient(user)
         val messageList = ArrayList<Messages>()
