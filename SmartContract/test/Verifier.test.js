@@ -29,6 +29,15 @@ async function createActiveAgreement(verifier, accounts){
     await verifier.payPlatformFee(0);  
 } 
 
+async function prepareJurors(verifier, token, accounts, start, stop){
+    // Distribute UnisonToken
+    needCoins = [];
+    for(var i = start; i<stop; i++){
+        needCoins.push(accounts[i]);
+    }
+    giveJurorsCoins(token, accounts[0], needCoins, 1000000);
+}
+
 
 contract('Verifier', (accounts) =>{
     // Unit tests for smart contract go here
