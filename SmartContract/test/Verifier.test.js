@@ -319,23 +319,7 @@ contract('Verifier', (accounts) =>{
             r = await RandomSource.new();
             verifier = await Verifier.new(token.address, r.address);
 
-            // Create agreement
-            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "");
-        
-            // Add payment condition
-            var amount = 100
-            await token.approve(verifier.address, amount);
-            await verifier.addPaymentConditions(0, [token.address], [amount]);
-
-            // Accept
-            await verifier.acceptAgreement(0, {from: accounts[1]})
-
-            // Pay platofrm fee
-            var agree = await verifier.getAgreement(0);
-            var mustPay = agree.platformFee
-
-            await token.approve(verifier.address, mustPay);
-            await verifier.payPlatformFee(0);
+            await createActiveAgreement(verifier, accounts);
 
             // Prepare jurors
             needCoins = [];
