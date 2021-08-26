@@ -35,16 +35,6 @@ class SecurityService(val userRepository: UserRepository,
         return GetNonceResponse(0, ResponseStatus.FAILED)
     }
 
-    fun userExists(userExistsRequest: UserExistsRequest): UserExistsResponse {
-        if(userExistsRequest.walletID.isEmpty())
-            return UserExistsResponse(status = ResponseStatus.FAILED)
-
-        return if(userRepository.existsById(userExistsRequest.walletID))
-            UserExistsResponse(true, ResponseStatus.SUCCESSFUL)
-        else
-            UserExistsResponse(status = ResponseStatus.SUCCESSFUL)
-    }
-
     fun addUser(addUserRequest: AddUserRequest): AddUserResponse {
         val wID = addUserRequest.WalletID
         if(userRepository.existsById(wID))
