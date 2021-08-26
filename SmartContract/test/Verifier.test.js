@@ -9,6 +9,27 @@ const RandomSource = artifacts.require("Randomness/RandomSource")
 const truffleAssert = require('truffle-assertions');
 require('chai').use(require('chai-as-promised')).should()
 
+async function createActiveAgreement(verifier, accounts){
+    // Create agreement
+    await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "");
+
+    // Add payment condition
+    var amount = 100
+    await token.approve(verifier.address, amount);
+    await verifier.addPaymentConditions(0, [token.address], [amount]);
+
+    // Accept
+    await verifier.acceptAgreement(0, {from: accounts[1]})
+
+    // Pay platofrm fee
+    var agree = await verifier.getAgreement(0);
+    var mustPay = agree.platformFee
+
+    await token.approve(verifier.address, mustPay);
+    await verifier.payPlatformFee(0);  
+} 
+
+
 contract('Verifier', (accounts) =>{
     // Unit tests for smart contract go here
 
