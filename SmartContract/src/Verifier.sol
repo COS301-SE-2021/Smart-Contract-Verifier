@@ -415,6 +415,8 @@ contract Verifier{
         // multiplied by 1000 so that the 1000's don't cancel out
         uint error = (1000 *_totalRatio()) / targetRatio;
 
+        // error is now a fraction where 1000 represents 1, so platform fee must be divided by 1000
+        // to correct for that
         platformFee *= error;
         platformFee /= 1000;
 
