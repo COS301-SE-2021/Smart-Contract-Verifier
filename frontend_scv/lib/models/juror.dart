@@ -17,8 +17,8 @@ class Juror {
             break;
       default: vote = 'Unavailable';
 
-      voteNumber = b.toInt();
     }
+    voteNumber = b.toInt();
   }
 
 }
