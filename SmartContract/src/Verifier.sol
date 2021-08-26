@@ -24,6 +24,9 @@ contract Verifier{
 
     uint stakingAmount = 10000;
 
+    // Fraction out of a thousand
+    uint constant controversyRatio = 300;
+
     constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
         jurorStore = new JurorStore(address(this), randomSource);
@@ -93,13 +96,14 @@ contract Verifier{
     // Each payment must have the allowance ready, it will be transferred immediately
     function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
         require(tokens.length == amount.length, "mismatch between tokens and amounts");
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "Agreement state invalid for adding payments");
         uint numPayments = tokens.length;
 
         address otherParty;
         if(msg.sender == agreements[agreeID].party1)
             otherParty = agreements[agreeID].party2;
         else
-            agreements[agreeID].party2;
+            otherParty = agreements[agreeID].party1;
 
         for(uint i=0; i<numPayments; i++){
             uint256 allowed = tokens[i].allowance(msg.sender, address(this));
@@ -303,19 +307,21 @@ contract Verifier{
 
         AgreementLib.Vote decision;
         uint payPerJuror;
+        uint controversy;
 
         if(no > yes){
             // Jury voted no, do a refund
             decision = AgreementLib.Vote.NO;
             _refundAgreement(agreeID);
             payPerJuror = stakingAmount / no;
+            controversy = (1000 * yes) /(no + yes);
         }
         else{
             // Jury voted yes (even result is counted as yes), pay out as normal
             decision = AgreementLib.Vote.YES;
             _payoutAgreement(agreeID);
             payPerJuror = stakingAmount / yes;
-
+            controversy = (1000 * no) /(no + yes);
         }
 
         // Pay the jurors who voted correctly
@@ -325,6 +331,24 @@ contract Verifier{
             }
         }
 
+        // Currently, abstaining is not punished. You only miss out on your payment if you abstain
+
+        // Punish any malicious jurors
+        if(controversy != 0 && controversy <= controversyRatio){
+            // controversy used to avoid punishing jurors on difficult cases
+            // controversy of 0 means the decision was unanimous and this step isn't needed
+            AgreementLib.Vote wrongVote;
+            if(decision == AgreementLib.Vote.YES)
+                wrongVote = AgreementLib.Vote.NO;
+            else
+                wrongVote =  AgreementLib.Vote.YES;
+
+            for(uint i=0; i<juries[agreeID].numJurors; i++){
+                if(juries[agreeID].votes[i] == wrongVote)
+                    jurorStore.addStrike(juries[agreeID].jurors[i]);
+
+            }
+        }
 
 
         agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
@@ -333,6 +357,10 @@ contract Verifier{
 
     function isJuror(address a) public view returns(bool){
         return jurorStore.isJuror(a);
+    }
+
+    function getStrikes(address a) public view returns(uint){
+        return jurorStore.getStrikes(a);
     }
 
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
