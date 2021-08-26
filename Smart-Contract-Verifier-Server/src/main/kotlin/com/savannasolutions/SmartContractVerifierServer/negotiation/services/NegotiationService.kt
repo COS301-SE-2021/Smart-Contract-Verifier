@@ -334,32 +334,29 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                             ResponseStatus.SUCCESSFUL)
     }
 
-    fun setPaymentCondition(setPaymentConditionRequest: SetPaymentConditionRequest): SetPaymentConditionResponse
+    fun setPaymentCondition(userID: String, agreementID: UUID, setPaymentConditionRequest: SetPaymentConditionRequest): SetPaymentConditionResponse
     {
-        if(setPaymentConditionRequest.PreposedUser.isEmpty())
-            return SetPaymentConditionResponse(null, status = ResponseStatus.FAILED)
-
         if(setPaymentConditionRequest.PayingUser.isEmpty())
             return SetPaymentConditionResponse(null, status = ResponseStatus.FAILED)
 
-        if(!agreementsRepository.existsById(setPaymentConditionRequest.AgreementID))
+        if(!agreementsRepository.existsById(agreementID))
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
         if(setPaymentConditionRequest.Payment < 0)
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
-        val agreement = agreementsRepository.getById(setPaymentConditionRequest.AgreementID)
+        val agreement = agreementsRepository.getById(agreementID)
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(setPaymentConditionRequest.PreposedUser != userList.elementAt(0).publicWalletID
-            && setPaymentConditionRequest.PreposedUser != userList.elementAt(1).publicWalletID)
+        if(userID != userList.elementAt(0).publicWalletID
+            && userID != userList.elementAt(1).publicWalletID)
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
         if(setPaymentConditionRequest.PayingUser != userList.elementAt(0).publicWalletID
             && setPaymentConditionRequest.PayingUser != userList.elementAt(1).publicWalletID)
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
-        val user = userRepository.getById(setPaymentConditionRequest.PreposedUser)
+        val user = userRepository.getById(userID)
 
         var condition = Conditions(UUID.randomUUID(),
                      "Payment condition",
