@@ -5,10 +5,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Condi
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
 import org.springframework.stereotype.Service
-import java.util.*
 import kotlin.collections.ArrayList
 
 @Service
