@@ -6,7 +6,6 @@ import com.savannasolutions.SmartContractVerifierServer.messenger.models.Message
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.SetMessageAsReadRequest
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -102,9 +101,7 @@ class SetMessageAsReadDatabaseTest {
     @Test
     fun `SetMessageAsRead successful`()
     {
-        val request = SetMessageAsReadRequest(messageA.messageID, userB.publicWalletID)
-
-        val response = messagesService.setMessageAsRead(request)
+        val response = messagesService.setMessageAsRead(userB.publicWalletID, messageA.messageID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         messageStatus = messagesStatusRepository.getById(messageStatus.MessageStatusID)
