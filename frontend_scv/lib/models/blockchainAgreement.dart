@@ -36,4 +36,37 @@ class BlockchainAgreement {
 
     return false;
   }
+
+  String agreementState() {
+
+    String ret = 'No state';
+    switch (state) {
+
+      case 0 : ret = 'Pending';
+              break;
+      case 1: ret = 'Proposed';
+              break;
+      case 2: ret = 'Rejected';
+              break;
+      case 3 : ret = 'Accepted';
+              break;
+      case 4: ret = 'Active'; //Has been accepted
+              break;
+      case 5: ret = 'Completed';
+              break;
+      case 6: ret = 'Settled';
+              break;
+      case 7: ret = 'Contested';
+              break;
+      case 8: ret = 'Decided';
+              break;
+      case 9: ret = 'Closed';
+              break;
+
+    }
+
+    return 'The agreement is: ' + ret;
+
+  }
+
 }
