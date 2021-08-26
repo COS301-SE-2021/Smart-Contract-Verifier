@@ -9,11 +9,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/user")
 class UserController constructor(private val userService: UserService) {
 
-
-
-    @PostMapping("/retrieve-user-agreements")
-    fun retrieveUserAgreements(@RequestBody retrieveUserAgreementsRequest: RetrieveUserAgreementsRequest) =
-        userService.retrieveUserAgreements(retrieveUserAgreementsRequest)
-
-
+    @GetMapping("/user/{userId}/agreement")
+    fun retrieveUserAgreements(@PathVariable userId: String,) =
+        userService.retrieveUserAgreements(userId)
 }
