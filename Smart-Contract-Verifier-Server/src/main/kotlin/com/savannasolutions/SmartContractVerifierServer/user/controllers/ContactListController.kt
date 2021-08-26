@@ -31,7 +31,7 @@ class ContactListController constructor(private val contactListService: ContactL
     }
 
     @PostMapping("/user/{userId}/contactList/{contactListId}")
-    fun retrieveContactList(@PathVariable userId: String, contactListId: UUID): RetrieveContactListResponse{
+    fun retrieveContactList(@PathVariable userId: String, @PathVariable contactListId: UUID): RetrieveContactListResponse{
         return contactListService.retrieveContactList(userId, contactListId)
     }
 
