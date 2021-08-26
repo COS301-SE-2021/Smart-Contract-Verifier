@@ -96,11 +96,27 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         return GetAllMessagesByUserResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
     }
 
-    fun getMessageDetail(getMessageDetailRequest: GetMessageDetailRequest): GetMessageDetailResponse{
-        if(!messagesRepository.existsById(getMessageDetailRequest.MessageID))
+    fun getMessageDetail(userID: String, messageID: UUID): GetMessageDetailResponse{
+        if(!messagesRepository.existsById(messageID))
             return GetMessageDetailResponse(status = ResponseStatus.FAILED)
 
-        val message = messagesRepository.getById(getMessageDetailRequest.MessageID)
+        val message = messagesRepository.getById(messageID)
+        var found = false
+        if(message.sender.publicWalletID == userID)
+            found = true
+
+        val messageStatus = messageStatusRepository.getAllByMessage(message)
+        if(messageStatus != null) {
+            for (msgStatus in messageStatus)
+            {
+                if(msgStatus.recipient.publicWalletID == userID)
+                    found = true
+            }
+        }
+
+        if(!found)
+            return GetMessageDetailResponse(status = ResponseStatus.FAILED)
+
         val messageList = ArrayList<Messages>()
         messageList.add(message)
         val messageResponseList = generateMessageResponseList(messageList)
@@ -108,19 +124,18 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         return GetMessageDetailResponse(messageResponseList[0], status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun sendMessage(sendMessageRequest: SendMessageRequest): SendMessageResponse{
-        //TODO Implement setting jury as recipients as well
-        if(!userRepository.existsById(sendMessageRequest.SendingUser))
+    fun sendMessage(userID:String, agreementID:UUID, sendMessageRequest: SendMessageRequest): SendMessageResponse{
+        if(!userRepository.existsById(userID))
             return SendMessageResponse(status = ResponseStatus.FAILED)
 
-        if(!agreementsRepository.existsById(sendMessageRequest.AgreementID))
+        if(!agreementsRepository.existsById(agreementID))
             return SendMessageResponse(status = ResponseStatus.FAILED)
 
         if(sendMessageRequest.Message.isEmpty())
             return SendMessageResponse(status = ResponseStatus.FAILED)
 
-        val user = userRepository.getById(sendMessageRequest.SendingUser)
-        val agreement = agreementsRepository.getById(sendMessageRequest.AgreementID)
+        val user = userRepository.getById(userID)
+        val agreement = agreementsRepository.getById(agreementID)
         val judges = judgesRepository.getAllByAgreement(agreement)
 
         var message = Messages(UUID.fromString("eebe3abc-b594-4a2f-a7dc-246bad26aaa5"),
