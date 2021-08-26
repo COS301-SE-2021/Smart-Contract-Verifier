@@ -122,7 +122,7 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         return RetrieveContactListResponse(list,ResponseStatus.SUCCESSFUL)
     }
 
-    fun retrieveUserContactLists(userID: String,): RetrieveUserContactListResponse{
+    fun retrieveUserContactLists(userID: String): RetrieveUserContactListResponse{
         if(!userRepository.existsById(userID))
             return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
 
@@ -133,9 +133,9 @@ class ContactListService(   val contactListRepository: ContactListRepository,
 
         val resultList = ArrayList<ContactListIDContactListNameResponse>()
 
-        for(list in contactLists!!)
+        for(list in contactLists)
         {
-            resultList.add(ContactListIDContactListNameResponse(list.contactListName, list.contactListID!!,))
+            resultList.add(ContactListIDContactListNameResponse(list.contactListName, list.contactListID!!))
         }
 
         return RetrieveUserContactListResponse(resultList, ResponseStatus.SUCCESSFUL)
