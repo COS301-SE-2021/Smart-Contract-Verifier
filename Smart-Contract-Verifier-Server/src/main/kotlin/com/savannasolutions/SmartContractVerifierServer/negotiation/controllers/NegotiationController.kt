@@ -39,7 +39,7 @@ class NegotiationController constructor(private val negotiationService: Negotiat
         negotiationService.createAgreement(userId, createAgreementRequest)
 
     @GetMapping("/user/{userId}/agreement/{agreementId}/condition/{conditionId}")
-    fun getConditionDetails(@PathVariable userId: String, agreementId: UUID, conditionId: UUID,) =
+    fun getConditionDetails(@PathVariable userId: String, @PathVariable agreementId: UUID, @PathVariable conditionId: UUID,) =
         negotiationService.getConditionDetails(userId, agreementId, conditionId)
 
     @PostMapping("/user/{userId}/agreement/{agreementId}/condition/payment")
