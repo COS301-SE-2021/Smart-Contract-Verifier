@@ -381,25 +381,25 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return SetPaymentConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
     }
 
-    fun setDurationCondition(setDurationConditionRequest: SetDurationConditionRequest): SetDurationConditionResponse
+    fun setDurationCondition(userID: String, agreementID: UUID,setDurationConditionRequest: SetDurationConditionRequest): SetDurationConditionResponse
     {
-        if(!agreementsRepository.existsById(setDurationConditionRequest.AgreementID))
+        if(!agreementsRepository.existsById(agreementID))
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
         if(setDurationConditionRequest.Duration.isNegative || setDurationConditionRequest.Duration.isZero)
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
-        if(!userRepository.existsById(setDurationConditionRequest.PreposedUser))
+        if(!userRepository.existsById(userID))
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
-        val agreement = agreementsRepository.getById(setDurationConditionRequest.AgreementID)
+        val agreement = agreementsRepository.getById(agreementID)
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(userList.elementAt(0).publicWalletID != setDurationConditionRequest.PreposedUser &&
-            userList.elementAt(1).publicWalletID != setDurationConditionRequest.PreposedUser)
+        if(userList.elementAt(0).publicWalletID != userID &&
+            userList.elementAt(1).publicWalletID != userID)
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
-        val user = userRepository.getById(setDurationConditionRequest.PreposedUser)
+        val user = userRepository.getById(userID)
 
         var condition = Conditions(UUID.randomUUID(),
                 "Duration condition",
@@ -425,12 +425,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return SetDurationConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
     }
 
-    fun getJudgingAgreements(getJudgingAgreementsRequest: GetJudgingAgreementsRequest): GetJudgingAgreementsResponse
+    fun getJudgingAgreements(userID: String): GetJudgingAgreementsResponse
     {
-        if(!userRepository.existsById(getJudgingAgreementsRequest.walletID))
+        if(!userRepository.existsById(userID))
             return GetJudgingAgreementsResponse(status = ResponseStatus.FAILED)
 
-        val user = userRepository.getById(getJudgingAgreementsRequest.walletID)
+        val user = userRepository.getById(userID)
         val judgeList = judgesRepository.getAllByJudge(user) ?:
             return GetJudgingAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
 
