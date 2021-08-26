@@ -41,7 +41,7 @@ class ContactListService(   val contactListRepository: ContactListRepository,
                 return AddUserToContactListResponse(ResponseStatus.FAILED)
         }
 
-        if(contactListProfileRepository.existsByContactAliasAndContactListAndUser(addUserToContactListRequest.UserAlias,vcontactList,vuser))
+        if(contactListProfileRepository.existsByContactAliasAndContactListAndUser(addUserToContactListRequest.UserAlias,tempContactList,tempUser))
             return AddUserToContactListResponse(ResponseStatus.FAILED)
 
         var contactListProfile = ContactListProfile(contactAlias = addUserToContactListRequest.UserAlias)
@@ -53,22 +53,19 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         return AddUserToContactListResponse(ResponseStatus.SUCCESSFUL)
     }
 
-    fun createContactList(createContactListRequest: CreateContactListRequest): CreateContactListResponse{
-        if(createContactListRequest.ContactListName.isEmpty())
+    fun createContactList(userID: String, contactListName: String): CreateContactListResponse{
+        if(contactListName.isEmpty())
             return CreateContactListResponse(status = ResponseStatus.FAILED)
 
-        if(createContactListRequest.UserID.isEmpty())
+        if(!userRepository.existsById(userID))
             return CreateContactListResponse(status = ResponseStatus.FAILED)
 
-        if(!userRepository.existsById(createContactListRequest.UserID))
+        val user = userRepository.getById(userID)
+
+        if(contactListRepository.existsByOwnerAndContactListName(user,contactListName))
             return CreateContactListResponse(status = ResponseStatus.FAILED)
 
-        val user = userRepository.getById(createContactListRequest.UserID)
-
-        if(contactListRepository.existsByOwnerAndContactListName(user,createContactListRequest.ContactListName))
-            return CreateContactListResponse(status = ResponseStatus.FAILED)
-
-        var contactList = ContactList(contactListName = createContactListRequest.ContactListName)
+        var contactList = ContactList(contactListName = contactListName)
         contactList = contactList.apply { owner = user }
 
         contactList = contactListRepository.save(contactList)
