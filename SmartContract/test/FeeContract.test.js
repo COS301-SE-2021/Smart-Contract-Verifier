@@ -130,6 +130,10 @@ contract('FeeContract', (accounts) =>{
         it("Not nobody", async() =>{
             await testRatio(feeC, 100, 1);
         })
+
+        it("No users", async() =>{
+            await testRatio(feeC, 0, 5);
+        })
     })
 
 })
