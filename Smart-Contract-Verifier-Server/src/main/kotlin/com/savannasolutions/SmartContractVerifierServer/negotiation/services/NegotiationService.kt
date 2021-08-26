@@ -309,7 +309,21 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         val condition = conditionsRepository.getById(conditionID)
 
-        if(condition.contract == )
+        if(condition.contract.ContractID != agreementID)
+            return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
+
+        val agreement = agreementsRepository.getById(agreementID)
+
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+
+        var found = false
+        for(user in userList)
+            if(user.publicWalletID == userID)
+                found = true
+
+        if(!found)
+            return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
+
         return GetConditionDetailsResponse(ConditionResponse(condition.conditionID,
                                             condition.conditionDescription,
                                             UserResponse(condition.proposingUser.publicWalletID),
