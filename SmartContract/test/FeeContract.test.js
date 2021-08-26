@@ -29,9 +29,7 @@ async function testRatio(feeC, users, jurors){
     var platformFee = await feeC.getPlatformFee();
     platformFee = BigInt(platformFee);
 
-    console.log(platformFee);
     var expectedFee = calcNewFee(oldPlatformFee, users,jurors);
-    console.log(expectedFee);
 
     assert(platformFee == expectedFee, "Invalid Platform fee update");
 }
