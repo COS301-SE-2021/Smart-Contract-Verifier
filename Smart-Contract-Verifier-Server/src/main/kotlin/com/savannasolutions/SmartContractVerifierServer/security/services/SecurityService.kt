@@ -4,7 +4,6 @@ import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.security.requests.LoginRequest
-import com.savannasolutions.SmartContractVerifierServer.security.requests.UserExistsRequest
 import com.savannasolutions.SmartContractVerifierServer.security.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.security.responses.GetNonceResponse
@@ -58,11 +57,11 @@ class SecurityService(val userRepository: UserRepository,
         return  AddUserResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun login(loginRequest: LoginRequest): LoginResponse {
+    fun login(userId: String, loginRequest: LoginRequest): LoginResponse {
         var match = false
         val prefix = "\u0019Ethereum Signed Message:\n10"
-        if(userRepository.existsById(loginRequest.userId)){
-            val nonce = userRepository.getById(loginRequest.userId).nonce
+        if(userRepository.existsById(userId)){
+            val nonce = userRepository.getById(userId).nonce
             val message = (prefix + nonce.toString()).encodeToByteArray()
             val signatureBytes = loginRequest.signedNonce.encodeToByteArray()
 
@@ -83,7 +82,7 @@ class SecurityService(val userRepository: UserRepository,
 
                 if(publicKey != null){
                     recoveredAddress = "0x" + org.web3j.crypto.Keys.getAddress(publicKey)
-                    if(recoveredAddress == loginRequest.userId){
+                    if(recoveredAddress == userId){
                         match = true
                         break
                     }
@@ -92,7 +91,7 @@ class SecurityService(val userRepository: UserRepository,
 
             if(match){
                 val secretKey = Keys.hmacShaKeyFor(securityConfig.secretKey.encodeToByteArray())
-                val jwtToken = Jwts.builder().setSubject(loginRequest.userId).setExpiration(Date(System.currentTimeMillis() + securityConfig.timeout.toLong())).signWith(secretKey).compact()
+                val jwtToken = Jwts.builder().setSubject(userId).setExpiration(Date(System.currentTimeMillis() + securityConfig.timeout.toLong())).signWith(secretKey).compact()
                 return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)
             }
         }
