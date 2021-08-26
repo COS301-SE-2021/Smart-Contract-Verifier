@@ -29,16 +29,11 @@ contract FeeContract{
 
     function updatePlatformFee(uint numActive, uint numJurors) public onlyOwner(){
 
-        // multiplied by 1000 an extra time so that the 1000's don't cancel out
+        uint divider = numJurors * targetRatio;
+        // The 1000 * is to cancel out the fact that the divider is a fraction out of 1000
+        platformFee *= 1000 * numActive;
+        platformFee /= divider;
 
-        uint totalRatio = (1000 * 1000 * numActive) / numJurors;
-
-        uint error = totalRatio / targetRatio;
-
-        // error is now a fraction where 1000 represents 1, so platform fee must be divided by 1000
-        // to correct for that
-        platformFee *= error;
-        platformFee /= 1000;
 
     }
 
