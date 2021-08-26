@@ -30,15 +30,14 @@ class ContactListController constructor(private val contactListService: ContactL
         return contactListService.removeUserFromContactList(userId, contactListId, removedUserId)
     }
 
-    @PostMapping("/user/{userId}/contactList/{contactListId}")
+    @GetMapping("/user/{userId}/contactList/{contactListId}")
     fun retrieveContactList(@PathVariable userId: String, @PathVariable contactListId: UUID): RetrieveContactListResponse{
         return contactListService.retrieveContactList(userId, contactListId)
     }
 
-    @PostMapping("/user/{userId}/contactList/{contactListId}")
-    fun retrieveUserContactList(@PathVariable userId: String,
-                                @PathVariable contactListId: UUID): RetrieveUserContactListResponse{
-        return contactListService.retrieveUserContactLists(userId, contactListId)
+    @GetMapping("/user/{userId}/contactList")
+    fun retrieveUserContactList(@PathVariable userId: String,): RetrieveUserContactListResponse{
+        return contactListService.retrieveUserContactLists(userId)
     }
 
 }
