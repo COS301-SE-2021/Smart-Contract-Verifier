@@ -6,53 +6,52 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin
 @RestController
-@RequestMapping("/negotiation")
 class NegotiationController constructor(private val negotiationService: NegotiationService) {
 
-    @PostMapping("/get-agreement-details")
+    @GetMapping("/user/{userId}/agreement/{agreementId}")
     fun getAgreementDetails(@RequestBody getAgreementDetailsRequest: GetAgreementDetailsRequest) =
         negotiationService.getAgreementDetails(getAgreementDetailsRequest)
 
-    @PostMapping("/get-all-conditions")
+    @GetMapping("/user/{userId}/agreement/{agreementId}/condition")
     fun getAllConditions(@RequestBody getAllConditionsRequest: GetAllConditionsRequest) =
         negotiationService.getAllConditions(getAllConditionsRequest)
 
-    @PostMapping("/accept-condition")
+    @PutMapping("/user/{userId}/agreement/{agreementId}/condition/{conditionId}/accept")
     fun acceptCondition(@RequestBody acceptConditionRequest: AcceptConditionRequest) =
         negotiationService.acceptCondition(acceptConditionRequest)
 
-    @PostMapping("/reject-condition")
+    @PostMapping("/user/{userId}/agreement/{agreementId}/condition/{conditionId}/reject")
     fun rejectCondition(@RequestBody rejectConditionRequest: RejectConditionRequest) =
         negotiationService.rejectCondition(rejectConditionRequest)
 
     @GetMapping("/hello")
     fun hello() = "HELLO!"
 
-    @PostMapping("/create-condition")
+    @PostMapping("/user/{userId}/agreement/{agreementId}/condition")
     fun createCondition(@RequestBody createConditionRequest: CreateConditionRequest) =
-            negotiationService.createCondition(createConditionRequest)
+        negotiationService.createCondition(createConditionRequest)
 
-    @PostMapping("/create-agreement")
+    @PostMapping("/user/{userId}/agreement")
     fun createAgreement(@RequestBody createAgreementRequest: CreateAgreementRequest) =
-            negotiationService.createAgreement(createAgreementRequest)
+        negotiationService.createAgreement(createAgreementRequest)
 
-    @PostMapping("/seal-agreement")
+    @PutMapping("/user/{userId}/agreement/{agreementId}")
     fun sealAgreement(@RequestBody sealAgreementRequest: SealAgreementRequest) =
-            negotiationService.sealAgreement(sealAgreementRequest)
+        negotiationService.sealAgreement(sealAgreementRequest)
 
-    @PostMapping("/get-condition-details")
+    @GetMapping("/user/{userId}/agreement/{agreementId}/condition/{conditionId}")
     fun getConditionDetails(@RequestBody getConditionDetailsRequest: GetConditionDetailsRequest) =
-            negotiationService.getConditionDetails(getConditionDetailsRequest)
+        negotiationService.getConditionDetails(getConditionDetailsRequest)
 
-    @PostMapping("/set-payment-condition")
+    @PostMapping("/user/{userId}/agreement/{agreementId}/condition/payment")
     fun setPaymentCondition(@RequestBody setPaymentConditionRequest: SetPaymentConditionRequest) =
-            negotiationService.setPaymentCondition(setPaymentConditionRequest)
+        negotiationService.setPaymentCondition(setPaymentConditionRequest)
 
-    @PostMapping("/set-duration-condition")
+    @PostMapping("/user/{userId}/agreement/{agreementId}/condition/duration")
     fun setPaymentCondition(@RequestBody setDurationConditionRequest: SetDurationConditionRequest) =
-            negotiationService.setDurationCondition(setDurationConditionRequest)
+        negotiationService.setDurationCondition(setDurationConditionRequest)
 
-    @PostMapping("/get-judging-agreement")
+    @GetMapping("/judge/{userId}/agreement")
     fun getJudgingAgreements(@RequestBody getJudgingAgreementsRequest: GetJudgingAgreementsRequest) =
         negotiationService.getJudgingAgreements(getJudgingAgreementsRequest)
 }
