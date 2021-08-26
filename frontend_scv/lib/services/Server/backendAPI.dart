@@ -73,4 +73,32 @@ class ApiInteraction {
 
     return json.decode(response.body);
   }
+
+
+  Future</*Map<String, dynamic>*/void> putData(String url) async {
+
+    var response;
+    try {
+      response = await RetryOptions(maxAttempts: 5).retry(
+            () => put(Uri.parse(baseUrl + url),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            }, )
+            .timeout(Duration(seconds: 1)),
+        retryIf: (e) => e is SocketException || e is TimeoutException,
+      );
+      print (response.body.toString());
+
+    } on Exception catch (e) {
+      print('Error: ' + e.toString());
+      throw Exception(
+          'Could not connect to backend'); //Could be expanded in the future
+    }
+
+    if (response.statusCode != 200)
+      throw Exception(
+          'An error occurred while making the request. The server responded with status code ' +
+              response.statusCode.toString()); //Failed http request
+  }
+
 }
