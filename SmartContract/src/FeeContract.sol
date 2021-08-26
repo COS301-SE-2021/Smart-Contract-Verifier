@@ -28,6 +28,8 @@ contract FeeContract{
     }
 
     function updatePlatformFee(uint numActive, uint numJurors) public onlyOwner(){
+        if(numJurors == 0)
+            numJurors = 1;
 
         uint divider = numJurors * targetRatio;
         // The 1000 * is to cancel out the fact that the divider is a fraction out of 1000
