@@ -4,33 +4,39 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.Evid
 import com.savannasolutions.SmartContractVerifierServer.evidence.requests.*
 import com.savannasolutions.SmartContractVerifierServer.evidence.services.EvidenceService
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
-@RequestMapping("/evidence")
 class EvidenceController constructor(private val evidenceService: EvidenceService,) {
 
-    @PostMapping("/upload")
-    fun uploadEvidence(@RequestBody uploadEvidenceRequest: UploadEvidenceRequest) =
-        evidenceService.uploadEvidence(uploadEvidenceRequest)
+    @PostMapping("/user/{userId}/agreement/{agreementId}/evidence/upload")
+    fun uploadEvidence(@PathVariable userId: String,
+                       @PathVariable agreementId: UUID,
+                       @RequestBody uploadEvidenceRequest: UploadEvidenceRequest,) =
+        evidenceService.uploadEvidence(userId, agreementId, uploadEvidenceRequest)
 
-    @PostMapping("/link")
-    fun linkEvidence(@RequestBody linkEvidenceRequest: LinkEvidenceRequest) =
-        evidenceService.linkEvidence(linkEvidenceRequest)
+    @PostMapping("/user/{userId}/agreement/{agreementId}/evidence/link")
+    fun linkEvidence(@PathVariable userId: String,
+                     @PathVariable agreementId: UUID,
+                     @RequestBody linkEvidenceRequest: LinkEvidenceRequest,) =
+        evidenceService.linkEvidence(userId, agreementId, linkEvidenceRequest)
 
-    @PostMapping("/fetch")
-    fun uploadEvidence(@RequestBody fetchEvidenceRequest: FetchEvidenceRequest) =
-        evidenceService.fetchEvidence(fetchEvidenceRequest)
+    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}")
+    fun retrieveEvidence(@PathVariable userId: String,
+                         @PathVariable agreementId: UUID,
+                         @PathVariable evidenceHash: String,) =
+        evidenceService.fetchEvidence(userId, agreementId, evidenceHash)
 
-    @PostMapping("/get-agreement-evidence")
-    fun uploadEvidence(@RequestBody getAllEvidenceRequest: GetAllEvidenceRequest) =
-        evidenceService.getAllEvidence(getAllEvidenceRequest)
+    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/")
+    fun getAllEvidence(@PathVariable userId: String,
+                       @PathVariable agreementId: UUID,) =
+        evidenceService.getAllEvidence(userId, agreementId)
 
-    @PostMapping("/remove")
-    fun uploadEvidence(@RequestBody removeEvidenceRequest: RemoveEvidenceRequest) =
-        evidenceService.removeEvidence(removeEvidenceRequest)
+    @DeleteMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}")
+    fun removeEvidence(@PathVariable userId: String,
+                       @PathVariable agreementId: UUID,
+                       @PathVariable evidenceHash: String,) =
+        evidenceService.removeEvidence(userId, agreementId, evidenceHash)
 
 }
