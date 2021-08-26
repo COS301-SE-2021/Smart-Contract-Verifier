@@ -425,12 +425,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return SetDurationConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
     }
 
-    fun getJudgingAgreements(getJudgingAgreementsRequest: GetJudgingAgreementsRequest): GetJudgingAgreementsResponse
+    fun getJudgingAgreements(userID: String): GetJudgingAgreementsResponse
     {
-        if(!userRepository.existsById(getJudgingAgreementsRequest.walletID))
+        if(!userRepository.existsById(userID))
             return GetJudgingAgreementsResponse(status = ResponseStatus.FAILED)
 
-        val user = userRepository.getById(getJudgingAgreementsRequest.walletID)
+        val user = userRepository.getById(userID)
         val judgeList = judgesRepository.getAllByJudge(user) ?:
             return GetJudgingAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
 
