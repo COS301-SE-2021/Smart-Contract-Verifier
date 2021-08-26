@@ -60,6 +60,10 @@ contract('FeeContract', (accounts) =>{
         it("users ratio is over", async() =>{
             await testRatio(feeC, 27, 5);
         })
+
+        it("users ratio is under", async() =>{
+            await testRatio(feeC, 20, 5);
+        })
     })
 
 })
