@@ -70,7 +70,8 @@
 * Payment condition must be more flexible (state which party pays)
 * Add payment condition to blockchain (Based on backend payment condition)
 * Pay Platform once accepted on blockchain
-* Once vote has been cast - Remove Buttons (say what they voted)
+* Once vote has been cast - Remove Buttons (say what they voted) DONE/ make
+* pretty
 * Clear Input on submit --> messages
 *
 * ---------------
