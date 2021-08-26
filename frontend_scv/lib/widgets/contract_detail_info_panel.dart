@@ -187,7 +187,8 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                                 },
                                 child: Text('Accept Blockchain Agreement'),
                               )
-                            : Text('Awaiting other party confirmation')
+                            : Text(snapshot.data.agreementState())
+                        // : Text('Awaiting other party confirmation')
                         : CircularProgressIndicator();
                   }),
 
