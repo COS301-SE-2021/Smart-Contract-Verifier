@@ -1,6 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.user.controllers
 
-import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.services.UserService
 import org.springframework.web.bind.annotation.*
 
