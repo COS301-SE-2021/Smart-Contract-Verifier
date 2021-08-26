@@ -13,8 +13,15 @@ contract('FeeContract', (accounts) =>{
             feeC = await FeeContract.new(accounts[0]);
         })
 
-        it("Test 1", async ()=>{
-            
+        it("Test getters", async ()=>{
+            // Check initial values
+            var platformFee = await feeC.getPlatformFee();
+            platformFee = BigInt(platformFee);
+            assert(platformFee == 1000000000, "issue with getPlatformFee");
+
+            var stakingAmount = await feeC.getStakingAmount();
+            stakingAmount = BigInt(stakingAmount);
+            assert(stakingAmount == 10000, "issue with getStakingAmount");
         })
     })
 
