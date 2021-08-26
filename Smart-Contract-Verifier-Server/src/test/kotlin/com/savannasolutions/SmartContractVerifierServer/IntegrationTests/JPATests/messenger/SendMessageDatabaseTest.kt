@@ -94,19 +94,17 @@ class SendMessageDatabaseTest {
     @Test
     fun `SendMessage success`()
     {
-        val request = SendMessageRequest(userA.publicWalletID,
-                                        agreement.ContractID,
-                                        "Test this message")
+        val request = SendMessageRequest("Test this message")
 
-        val response = messagesService.sendMessage(request)
+        val response = messagesService.sendMessage(userA.publicWalletID, agreement.ContractID, request)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.MessageID)
         messageA = messagesRepository.getById(response.MessageID!!)
         assertNotNull(messageA)
         assertEquals(messageA.message, request.Message)
-        assertEquals(messageA.agreements.ContractID, request.AgreementID)
-        assertEquals(messageA.sender.publicWalletID, request.SendingUser)
+        assertEquals(messageA.agreements.ContractID, agreement.ContractID)
+        assertEquals(messageA.sender.publicWalletID, userA.publicWalletID)
         assertNotNull(messagesStatusRepository.getAllByMessage(messageA))
         messageStatus = messagesStatusRepository.getAllByMessage(messageA)!!
         for(msgStat in messageStatus)
