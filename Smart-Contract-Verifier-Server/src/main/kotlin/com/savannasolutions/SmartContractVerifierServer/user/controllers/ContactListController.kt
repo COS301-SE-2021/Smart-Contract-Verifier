@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin
 @RestController
-@RequestMapping("/contactlist")
 class ContactListController constructor(private val contactListService: ContactListService) {
 
     @PostMapping("/add-user-to-contact-list")

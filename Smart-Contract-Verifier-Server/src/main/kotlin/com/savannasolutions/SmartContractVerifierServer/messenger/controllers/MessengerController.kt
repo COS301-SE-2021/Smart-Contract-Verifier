@@ -8,7 +8,6 @@ import java.util.*
 
 @CrossOrigin
 @RestController
-@RequestMapping("/messenger")
 class MessengerController constructor(private val messengerService: MessengerService) {
 
     @GetMapping("/user/{userId}/agreement/{agreementId}/message")

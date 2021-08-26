@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin
 @RestController
-@RequestMapping("/user")
 class UserController constructor(private val userService: UserService) {
 
     @GetMapping("/user/{userId}/agreement")
