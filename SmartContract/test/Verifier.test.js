@@ -335,7 +335,6 @@ contract('Verifier', (accounts) =>{
             // Contest agreement
             result = await verifier.voteResolution(0, 1, {from: accounts[1]});
 
-
         })
 
         it("Agreement is contested", async()=>{
@@ -376,4 +375,82 @@ contract('Verifier', (accounts) =>{
         })
 
     })
+
+    describe("Verifier unit tests 4", async () =>{
+
+        var verifier
+
+        // Similar to previous test, except payment is going from part2 to party1
+
+        before(async () =>{
+            token = await UnisonToken.new()
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
+
+            prepareJurors(verifier, token, accounts, 1, 10);
+
+            // Create agreement
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "");
+
+            // Add payment condition
+            var amount = 100;
+            await token.approve(verifier.address, amount, {from : accounts[1]});
+            await verifier.addPaymentConditions(0, [token.address], [amount], {from : accounts[1]});
+
+            // Accept
+            await verifier.acceptAgreement(0, {from: accounts[1]})
+
+            // Pay platofrm fee
+            var agree = await verifier.getAgreement(0);
+            var mustPay = agree.platformFee
+
+            await token.approve(verifier.address, mustPay);
+            await verifier.payPlatformFee(0);  
+
+            for(var i=3; i<9; i++){
+                token.approve(verifier.address, 10000, {from: accounts[i]});
+                verifier.addJuror({from: accounts[i]});
+            }
+
+            // Contest agreement
+            result = await verifier.voteResolution(0, 1, {from: accounts[1]});
+
+            var jury = await verifier.getJury(0);
+            assert(jury.jurors.length > 0, "Jury wasn't assigned");
+        })
+
+        it("Jury votes NO", async ()=>{
+            var juryStart = await verifier.getJury(0);
+            var vote = 1;
+
+            agree = await verifier.getAgreement(0);
+            var from = agree.payments[0].from;
+            var balPre = await token.balanceOf(from);
+            balPre = BigInt(balPre);
+            
+            // Each juror votes
+            for(var i=0; i<juryStart.jurors.length; i++){
+                await verifier.jurorVote(0, vote, {from : juryStart.jurors[i]});
+
+            }
+
+            // Check that all votes were recorded properly
+            jury = await verifier.getJury(0);
+            for(var i=0; i<juryStart.jurors.length; i++)
+                assert(jury.votes[i] == vote, "Vote wasn't properly updated");
+
+
+            agree = await verifier.getAgreement(0);
+            // console.log(agree);
+            // agree.state 9 means CLOSED
+            assert(agree.state == 9, "Agreement wasn't closed on unanimous NO vote") 
+
+            var balPost = await token.balanceOf(from);
+            balPost = BigInt(balPost);
+
+            assert(balPost - balPre == agree.payments[0].amount, "Agreement didn't refund")     
+        })
+
+    })
+
 })
