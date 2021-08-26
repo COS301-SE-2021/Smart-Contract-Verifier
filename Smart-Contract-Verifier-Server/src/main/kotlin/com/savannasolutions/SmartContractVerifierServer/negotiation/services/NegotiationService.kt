@@ -89,31 +89,27 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return CreateAgreementResponse(nAgreement.ContractID, ResponseStatus.SUCCESSFUL)
     }
 
-    fun createCondition(createConditionRequest: CreateConditionRequest): CreateConditionResponse{
-        if(!agreementsRepository.existsById(createConditionRequest.AgreementID))
+    fun createCondition(userID: String, agreementID: UUID, createConditionRequest: CreateConditionRequest): CreateConditionResponse{
+        if(!agreementsRepository.existsById(agreementID))
             return CreateConditionResponse(status = ResponseStatus.FAILED)
 
         if(createConditionRequest.ConditionDescription.isEmpty())
             return CreateConditionResponse(status = ResponseStatus.FAILED)
 
-        if(createConditionRequest.PreposedUser.isEmpty())
-            return CreateConditionResponse(status = ResponseStatus.FAILED)
-
         if(createConditionRequest.Title.isEmpty())
             return CreateConditionResponse(status = ResponseStatus.FAILED)
 
-
-        if(!userRepository.existsById(createConditionRequest.PreposedUser))
+        if(!userRepository.existsById(userID))
             return CreateConditionResponse(status = ResponseStatus.FAILED)
 
-        val agreement = agreementsRepository.getById(createConditionRequest.AgreementID)
+        val agreement = agreementsRepository.getById(agreementID)
 
         val users = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(users.elementAt(0).publicWalletID != createConditionRequest.PreposedUser && users.elementAt(1).publicWalletID != createConditionRequest.PreposedUser)
+        if(users.elementAt(0).publicWalletID != userID && users.elementAt(1).publicWalletID != userID)
             return CreateConditionResponse(status = ResponseStatus.FAILED)
 
-        val user = userRepository.getById(createConditionRequest.PreposedUser)
+        val user = userRepository.getById(userID)
 
         var nCondition = Conditions(UUID.randomUUID(),
                                     createConditionRequest.Title,
