@@ -7,6 +7,8 @@ require('chai').use(require('chai-as-promised')).should()
 function calcNewFee(oldFee, users, jurors){
     if(jurors == 0)
         jurors = 1;
+    if(users == 0)
+        users = 1;
 
     // oldFee * ratio / targetRatio
 
@@ -119,6 +121,14 @@ contract('FeeContract', (accounts) =>{
 
         it("No jurors", async() =>{
             await testRatio(feeC, 10, 0);
+        })
+
+        it("Nobody", async() =>{
+            await testRatio(feeC, 0, 0);
+        })
+
+        it("Not nobody", async() =>{
+            await testRatio(feeC, 100, 1);
         })
     })
 
