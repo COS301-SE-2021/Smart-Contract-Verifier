@@ -302,12 +302,14 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return SealAgreementResponse(ResponseStatus.SUCCESSFUL)
     }
 
-    fun getConditionDetails(getConditionDetailsRequest: GetConditionDetailsRequest): GetConditionDetailsResponse
+    fun getConditionDetails(userID: String, agreementID: UUID, conditionID: UUID): GetConditionDetailsResponse
     {
-        if(!conditionsRepository.existsById(getConditionDetailsRequest.conditionID))
+        if(!conditionsRepository.existsById(conditionID))
             return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
 
-        val condition = conditionsRepository.getById(getConditionDetailsRequest.conditionID)
+        val condition = conditionsRepository.getById(conditionID)
+
+        if(condition.contract == )
         return GetConditionDetailsResponse(ConditionResponse(condition.conditionID,
                                             condition.conditionDescription,
                                             UserResponse(condition.proposingUser.publicWalletID),
