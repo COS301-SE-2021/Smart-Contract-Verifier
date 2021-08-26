@@ -6,7 +6,6 @@ import com.savannasolutions.SmartContractVerifierServer.messenger.models.Message
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetAllMessagesByAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -111,10 +110,7 @@ class GetAllMessagesByAgreementDatabaseTest {
     @Test
     fun `GetAllMessagesByAgreement successful`()
     {
-        val request = GetAllMessagesByAgreementRequest(agreement.ContractID,
-                                                        userA.publicWalletID)
-
-        val response = messagesService.getAllMessagesByAgreement(request)
+        val response = messagesService.getAllMessagesByAgreement(userA.publicWalletID, agreement.ContractID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.messages)
