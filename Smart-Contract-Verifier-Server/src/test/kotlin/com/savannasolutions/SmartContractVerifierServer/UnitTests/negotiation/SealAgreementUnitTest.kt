@@ -89,7 +89,7 @@ internal class SealAgreementUnitTest {
         whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
         whenever(conditionsRepository.getById(mockPaymentCondition.conditionID)).thenReturn(mockPaymentCondition)
         whenever(conditionsRepository.getById(mockDurationCondition.conditionID)).thenReturn(mockDurationCondition)
-        whenever(agreementsRepository.save(any())).thenReturn(mockAgreementA)
+        whenever(agreementsRepository.save(any<Agreements>())).thenReturn(mockAgreementA)
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
@@ -235,7 +235,7 @@ internal class SealAgreementUnitTest {
 
         //when
         val response = parameterizeSealAgreement(ConditionStatus.ACCEPTED,
-            ConditionStatus.ACCEPTED,
+            ConditionStatus.REJECTED,
             ConditionStatus.REJECTED,
             paymentSet = true,
             durationSet = true,
