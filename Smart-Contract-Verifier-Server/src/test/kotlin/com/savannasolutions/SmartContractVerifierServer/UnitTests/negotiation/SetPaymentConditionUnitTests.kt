@@ -61,7 +61,7 @@ internal class SetPaymentConditionUnitTests {
         //when
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(agreementExists)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
-        whenever(conditionsRepository.save(any())).thenReturn(mockCondition)
+        whenever(conditionsRepository.save(any<Conditions>())).thenReturn(mockCondition)
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
