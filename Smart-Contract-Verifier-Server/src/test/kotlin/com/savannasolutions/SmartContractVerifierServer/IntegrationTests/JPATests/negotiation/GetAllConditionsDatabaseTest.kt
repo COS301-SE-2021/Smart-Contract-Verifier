@@ -125,9 +125,10 @@ class GetAllConditionsDatabaseTest {
         val response = negotiationService.getAllConditions(userA.publicWalletID, agreement.ContractID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.conditions)
-        assertFalse(response.conditions!!.isEmpty())
-        for(cond in response.conditions!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.conditions)
+        assertFalse(response.responseObject!!.conditions!!.isEmpty())
+        for(cond in response.responseObject!!.conditions!!)
         {
             assertNotNull(cond.conditionTitle)
             assertFalse(cond.conditionTitle!!.isEmpty())
