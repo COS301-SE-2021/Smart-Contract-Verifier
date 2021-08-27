@@ -77,8 +77,9 @@ class RetrieveContactListDatabaseTest {
                                                                 testContactList.contactListID!!)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.WalletAndAlias)
-        for(usr in response.WalletAndAlias!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.WalletAndAlias)
+        for(usr in response.responseObject!!.WalletAndAlias!!)
         {
             assertEquals(usr.Alias, contactListProfile.contactAlias)
             assertEquals(usr.WalletID, otherUser.publicWalletID)
