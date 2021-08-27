@@ -10,5 +10,6 @@ class commonResponseErrorMessages {
         const val conditionIsNotPending = "Condition is not pending"
         const val titleIsEmpty = "Title is empty"
         const val descriptionEmpty = "Description is empty"
+        const val contactListDoesNotExist = "Contact List does not exist in database"
     }
 }
