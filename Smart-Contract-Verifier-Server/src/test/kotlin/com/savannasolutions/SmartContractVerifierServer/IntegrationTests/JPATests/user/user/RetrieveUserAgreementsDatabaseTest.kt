@@ -100,8 +100,9 @@ class RetrieveUserAgreementsDatabaseTest {
         val responses = userService.retrieveUserAgreements(userA.publicWalletID)
 
         assertEquals(responses.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(responses.Agreements)
-        for(agreementResponse in responses.Agreements!!)
+        assertNotNull(responses.responseObject)
+        assertNotNull(responses.responseObject!!.Agreements)
+        for(agreementResponse in responses.responseObject!!.Agreements!!)
         {
             assertNotNull(agreementResponse)
             assertEquals(agreementResponse.agreementID, agreement.ContractID)
