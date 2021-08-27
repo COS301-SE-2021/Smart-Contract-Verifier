@@ -30,9 +30,7 @@ class CommonService {
     } on Exception catch (e) {
       //Handle Exception
       print(e);
-      return [
-        Contract(title: 'Error', description: e.toString())
-      ]; //This should be revised
+      return []; //This should be revised
     }
 
     List<dynamic> jsonList = ((response['agreements']));
