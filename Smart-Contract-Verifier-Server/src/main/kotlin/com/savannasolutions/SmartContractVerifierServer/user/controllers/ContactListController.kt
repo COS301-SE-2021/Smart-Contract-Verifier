@@ -10,7 +10,7 @@ import java.util.*
 @RestController
 class ContactListController constructor(private val contactListService: ContactListService) {
 
-    @PostMapping("/user/{userId}/contactList/{contactListId}")
+    @PutMapping("/user/{userId}/contactList/{contactListId}")
     fun addUserToContactList(@PathVariable userId: String,
                              @PathVariable contactListId: UUID,
                              @RequestBody addUserToContactListRequest: AddUserToContactListRequest): AddUserToContactListResponse{
