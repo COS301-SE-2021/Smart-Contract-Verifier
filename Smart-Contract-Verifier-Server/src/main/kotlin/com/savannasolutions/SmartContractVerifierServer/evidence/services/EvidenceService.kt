@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.configuration.EvidenceConfig
 import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.EvidenceFileSystem
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
@@ -25,6 +26,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
                                   val evidenceRepository: EvidenceRepository,
                                   val linkedEvidenceRepository: LinkedEvidenceRepository,
                                   val uploadedEvidenceRepository: UploadedEvidenceRepository,
+                                  val judgesRepository: JudgesRepository,
                                   val evidenceConfig: EvidenceConfig,) {
     lateinit var fileSystem: EvidenceFileSystem
 
@@ -62,7 +64,29 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
 
     fun fetchEvidence(userId: String, agreementId: UUID, evidenceHash: String): FetchEvidenceResponse? = null
 
-    fun getAllEvidence(userId: String, agreementId: UUID): GetAllEvidenceResponse? = null
+    fun getAllEvidence(userId: String, agreementId: UUID): GetAllEvidenceResponse {
+        //agreement doesn't exist
+        if(!agreementsRepository.existsById(agreementId))
+            return GetAllEvidenceResponse(ResponseStatus.FAILED, emptyList())
+        val agreement = agreementsRepository.getById(agreementId)
+
+        //user doesn't exist
+        if(!userRepository.existsById(userId))
+            return GetAllEvidenceResponse(ResponseStatus.FAILED, emptyList())
+        val user = userRepository.getById(userId)
+
+        //user isn't party to the agreement
+        val judge = judgesRepository.getAllByJudge(user)?.get(0)
+        val judges = agreement.judges
+        if (!agreement.users.contains(user) && (judges != null && !judges.contains(judge)))
+            return GetAllEvidenceResponse(ResponseStatus.FAILED, emptyList())
+
+        //build list of evidenceHashes
+        val evidenceList: MutableList<String> = mutableListOf()
+        evidenceRepository.getAllByContract(agreement).forEach { evidence -> evidenceList.add(evidence.evidenceHash) }
+
+        return GetAllEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceList.toList())
+    }
 
     fun removeEvidence(userId: String, agreementId: UUID, evidenceHash: String): RemoveEvidenceResponse {
         //the agreement doesn't exist
