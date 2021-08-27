@@ -30,14 +30,14 @@ internal class CreateContactListUnitTests {
     {
         //Given
         val tUser = User(userID)
-        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+        var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), contactListName)
         contactList = contactList.apply { owner = user }
 
         //when
-        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(userExists)
-        whenever(userRepository.getById(user.publicWalletID)).thenReturn(tUser)
+        whenever(userRepository.existsById(tUser.publicWalletID)).thenReturn(userExists)
+        whenever(userRepository.getById(tUser.publicWalletID)).thenReturn(tUser)
         whenever(contactListRepository.existsByOwnerAndContactListName(tUser,contactList.contactListName)).thenReturn(existsByOwnerAndContactListName)
-        whenever(contactListRepository.save(any())).thenReturn(contactList)
+        whenever(contactListRepository.save(any<ContactList>())).thenReturn(contactList)
 
         //then
         return contactListService.createContactList(userID, contactListName)
@@ -64,20 +64,6 @@ internal class CreateContactListUnitTests {
         //When
         val response = parameterizedCreateContactList(user.publicWalletID,
             "",
-            userExists = true,
-            existsByOwnerAndContactListName = false)
-
-        //Then
-        assertEquals(response.status, ResponseStatus.FAILED)
-    }
-
-    @Test
-    fun `CreateContactList user id is empty`(){
-        //Given
-
-        //When
-        val response = parameterizedCreateContactList("",
-            "testContactList",
             userExists = true,
             existsByOwnerAndContactListName = false)
 
