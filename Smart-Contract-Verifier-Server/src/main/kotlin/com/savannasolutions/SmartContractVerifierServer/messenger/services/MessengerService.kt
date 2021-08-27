@@ -131,15 +131,17 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun sendMessage(userID:String, agreementID:UUID, sendMessageRequest: SendMessageRequest): SendMessageResponse{
+    fun sendMessage(userID:String, agreementID:UUID, sendMessageRequest: SendMessageRequest): ApiResponse<SendMessageResponse>{
         if(!userRepository.existsById(userID))
-            return SendMessageResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                        message = commonResponseErrorMessages.userDoesNotExist)
 
         if(!agreementsRepository.existsById(agreementID))
-            return SendMessageResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                        message = commonResponseErrorMessages.agreementDoesNotExist)
 
         if(sendMessageRequest.Message.isEmpty())
-            return SendMessageResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = "Message is empty")
 
         val user = userRepository.getById(userID)
         val agreement = agreementsRepository.getById(agreementID)
@@ -186,28 +188,33 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
 
         message.messageStatuses = messageStatusList
 
-        return SendMessageResponse(message.messageID, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = SendMessageResponse(message.messageID),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun setMessageAsRead(userID: String, messageID: UUID): SetMessageAsReadResponse{
+    fun setMessageAsRead(userID: String, messageID: UUID): ApiResponse<Objects>{
         if(!userRepository.existsById(userID))
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
         if(!messagesRepository.existsById(messageID))
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.messageDoesNotExist)
 
         val user = userRepository.getById(userID)
         val message = messagesRepository.getById(messageID)
         val messageStatus = messageStatusRepository.getByRecipientAndMessage(user, message)?:
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = "User is not a recipient of the provided message")
 
         if(messageStatus.ReadDate != null)
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                    message = "Message has already been read")
 
         messageStatus.ReadDate = Date()
 
         messageStatusRepository.save(messageStatus)
-        return SetMessageAsReadResponse(status = ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
 }

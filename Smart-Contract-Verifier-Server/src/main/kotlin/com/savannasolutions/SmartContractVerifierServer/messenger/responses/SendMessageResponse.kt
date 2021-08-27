@@ -5,5 +5,4 @@ import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects
 import java.util.*
 
 data class SendMessageResponse(@JsonProperty("MessageID") val MessageID: UUID? = null,
-                               @JsonProperty("Status") val status: ResponseStatus
 )
