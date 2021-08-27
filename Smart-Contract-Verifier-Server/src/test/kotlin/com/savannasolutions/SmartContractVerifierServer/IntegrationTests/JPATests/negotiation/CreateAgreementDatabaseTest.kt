@@ -71,8 +71,9 @@ class CreateAgreementDatabaseTest {
 
         val response = negotiationService.createAgreement(userA.publicWalletID, request)
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.agreementID)
-        agreement = agreementsRepository.getById(response.agreementID!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.agreementID)
+        agreement = agreementsRepository.getById(response.responseObject!!.agreementID!!)
         assertEquals(agreement.AgreementTitle, request.Title)
         assertEquals(agreement.AgreementDescription, request.Description)
         assertEquals(agreement.AgreementImageURL, request.ImageURL)
