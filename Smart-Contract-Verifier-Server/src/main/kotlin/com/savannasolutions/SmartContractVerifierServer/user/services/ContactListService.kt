@@ -120,17 +120,20 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun retrieveContactList(userID: String, contactListID: UUID):RetrieveContactListResponse
+    fun retrieveContactList(userID: String, contactListID: UUID): ApiResponse<RetrieveContactListResponse>
     {
         if(!contactListRepository.existsById(contactListID))
-            return RetrieveContactListResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.contactListDoesNotExist)
 
         val contactList = contactListRepository.getById(contactListID)
 
         if(contactList.owner.publicWalletID != userID)
-            return RetrieveContactListResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User is not the owner of contact list")
 
-        contactList.contactListProfiles?: return RetrieveContactListResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+        contactList.contactListProfiles?: return ApiResponse(responseObject = RetrieveContactListResponse(emptyList()),
+            status = ResponseStatus.SUCCESSFUL)
 
         val list = ArrayList<ContactListAliasWalletResponse>()
         val contactListProfiles = contactListProfileRepository.getAllByContactList(contactList)
@@ -140,7 +143,8 @@ class ContactListService(   val contactListRepository: ContactListRepository,
             list.add(ContactListAliasWalletResponse( cLP.contactAlias, cLP.user.publicWalletID))
         }
 
-        return RetrieveContactListResponse(list, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = RetrieveContactListResponse(list),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun retrieveUserContactLists(userID: String): RetrieveUserContactListResponse{
