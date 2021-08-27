@@ -91,10 +91,10 @@ class SetDurationConditionDatabaseTest {
        val response = negotiationService.setDurationCondition(userA.publicWalletID,
                                                                 agreement.ContractID,
                                                                 request)
-
        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-       assertNotNull(response.conditionID)
-       conditions = conditionsRepository.getById(response.conditionID!!)
+       assertNotNull(response.responseObject)
+       assertNotNull(response.responseObject!!.conditionID)
+       conditions = conditionsRepository.getById(response.responseObject!!.conditionID!!)
        assertContains(conditions.conditionDescription, request.Duration.toSeconds().toString())
     }
 
