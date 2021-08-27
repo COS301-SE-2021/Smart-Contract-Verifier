@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.user.controllers
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.user.requests.*
 import com.savannasolutions.SmartContractVerifierServer.user.responses.*
 import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
@@ -13,30 +14,30 @@ class ContactListController constructor(private val contactListService: ContactL
     @PutMapping("/user/{userId}/contactList/{contactListId}")
     fun addUserToContactList(@PathVariable userId: String,
                              @PathVariable contactListId: UUID,
-                             @RequestBody addUserToContactListRequest: AddUserToContactListRequest): AddUserToContactListResponse{
+                             @RequestBody addUserToContactListRequest: AddUserToContactListRequest): ApiResponse<Objects>{
         return contactListService.addUserToContactList(userId, contactListId, addUserToContactListRequest)
     }
 
     @PostMapping("/user/{userId}/contactList/{contactListName}")
     fun createContactList(@PathVariable userId: String,
-                          @PathVariable contactListName: String): CreateContactListResponse{
+                          @PathVariable contactListName: String): ApiResponse<CreateContactListResponse>{
         return contactListService.createContactList(userId, contactListName,)
     }
 
     @DeleteMapping("/user/{userId}/contactList/{contactListId}/{removedUserId}")
     fun removeUserFromContactList(@PathVariable userId: String,
                                   @PathVariable contactListId: UUID,
-                                  @PathVariable removedUserId: String,): RemoveUserFromContactListResponse{
+                                  @PathVariable removedUserId: String,): ApiResponse<Objects>{
         return contactListService.removeUserFromContactList(userId, contactListId, removedUserId)
     }
 
     @GetMapping("/user/{userId}/contactList/{contactListId}")
-    fun retrieveContactList(@PathVariable userId: String, @PathVariable contactListId: UUID): RetrieveContactListResponse{
+    fun retrieveContactList(@PathVariable userId: String, @PathVariable contactListId: UUID): ApiResponse<RetrieveContactListResponse>{
         return contactListService.retrieveContactList(userId, contactListId)
     }
 
     @GetMapping("/user/{userId}/contactList")
-    fun retrieveUserContactList(@PathVariable userId: String,): RetrieveUserContactListResponse{
+    fun retrieveUserContactList(@PathVariable userId: String,): ApiResponse<RetrieveUserContactListResponse>{
         return contactListService.retrieveUserContactLists(userId)
     }
 
