@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.user.contactlist
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -26,7 +27,7 @@ internal class RetrieveUserContactListRequest {
     private val user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
 
     private fun parameterizedRetrieveUserContactList(userID: String,
-                                                    userExists: Boolean): RetrieveUserContactListResponse
+                                                    userExists: Boolean): ApiResponse<RetrieveUserContactListResponse>
     {
         //Given
         var tempUser = User(userID)
@@ -60,7 +61,8 @@ internal class RetrieveUserContactListRequest {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertEquals(response.ContactListInfo, emptyList())
+        assertNotNull(response.responseObject)
+        assertEquals(response.responseObject!!.ContactListInfo, emptyList())
     }
 
     @Test
@@ -73,8 +75,9 @@ internal class RetrieveUserContactListRequest {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.ContactListInfo)
-        assertTrue { response.ContactListInfo!!.isNotEmpty() }
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.ContactListInfo)
+        assertTrue { response.responseObject!!.ContactListInfo!!.isNotEmpty() }
     }
 
     @Test
