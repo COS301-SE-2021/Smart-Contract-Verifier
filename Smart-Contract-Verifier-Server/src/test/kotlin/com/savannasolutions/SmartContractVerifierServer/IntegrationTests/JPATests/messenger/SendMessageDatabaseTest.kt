@@ -99,8 +99,9 @@ class SendMessageDatabaseTest {
         val response = messagesService.sendMessage(userA.publicWalletID, agreement.ContractID, request)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.MessageID)
-        messageA = messagesRepository.getById(response.MessageID!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.MessageID)
+        messageA = messagesRepository.getById(response.responseObject!!.MessageID!!)
         assertNotNull(messageA)
         assertEquals(messageA.message, request.Message)
         assertEquals(messageA.agreements.ContractID, agreement.ContractID)
