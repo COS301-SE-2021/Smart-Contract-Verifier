@@ -54,10 +54,12 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
 
     fun getAllMessagesByAgreement(userID: String, agreementID: UUID): ApiResponse<GetAllMessagesByAgreementResponse>{
         if(!userRepository.existsById(userID))
-            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userDoesNotExist)
 
         if(!agreementsRepository.existsById(agreementID))
-            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementDoesNotExist)
 
         val agreement = agreementsRepository.getById(agreementID)
 
@@ -73,7 +75,8 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
 
     fun getAllMessagesByUser(userID: String): ApiResponse<GetAllMessagesByUserResponse>{
         if(!userRepository.existsById(userID))
-            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userDoesNotExist)
 
         val user = userRepository.getById(userID)
         val sentMessageList = messagesRepository.getAllBySender(user)
@@ -93,12 +96,14 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
 
         val messageResponseList = generateMessageResponseList(messageList)
 
-        return ApiResponse(responseObject = GetAllMessagesByUserResponse(messageResponseList),status =  ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetAllMessagesByUserResponse(messageResponseList),
+            status =  ResponseStatus.SUCCESSFUL)
     }
 
-    fun getMessageDetail(userID: String, messageID: UUID): GetMessageDetailResponse{
+    fun getMessageDetail(userID: String, messageID: UUID): ApiResponse<GetMessageDetailResponse>{
         if(!messagesRepository.existsById(messageID))
-            return GetMessageDetailResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.messageDoesNotExist)
 
         val message = messagesRepository.getById(messageID)
         var found = false
@@ -115,13 +120,15 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         }
 
         if(!found)
-            return GetMessageDetailResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val messageList = ArrayList<Messages>()
         messageList.add(message)
         val messageResponseList = generateMessageResponseList(messageList)
 
-        return GetMessageDetailResponse(messageResponseList[0], status = ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetMessageDetailResponse(messageResponseList[0]),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun sendMessage(userID:String, agreementID:UUID, sendMessageRequest: SendMessageRequest): SendMessageResponse{
