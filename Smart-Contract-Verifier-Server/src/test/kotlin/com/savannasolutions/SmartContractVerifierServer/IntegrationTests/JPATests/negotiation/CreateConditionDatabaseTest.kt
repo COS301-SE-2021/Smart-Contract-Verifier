@@ -93,8 +93,9 @@ class CreateConditionDatabaseTest {
             request)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.conditionID)
-        conditions = conditionsRepository.getById(response.conditionID!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.conditionID)
+        conditions = conditionsRepository.getById(response.responseObject!!.conditionID!!)
         assertEquals(agreement.ContractID, conditions.contract.ContractID)
         assertEquals(userA.publicWalletID, conditions.proposingUser.publicWalletID)
         assertEquals(request.Title, conditions.conditionTitle)
