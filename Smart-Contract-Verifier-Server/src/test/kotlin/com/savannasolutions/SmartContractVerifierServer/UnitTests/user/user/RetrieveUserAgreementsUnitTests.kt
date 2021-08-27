@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.user.user
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -26,7 +27,7 @@ internal class RetrieveUserAgreementsUnitTests {
     private var userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23", "TestA")
 
     private fun parameterizedRetrieveUserAgreements(userID: String,
-                                                    userExists: Boolean) : RetrieveUserAgreementsResponse
+                                                    userExists: Boolean) : ApiResponse<RetrieveUserAgreementsResponse>
     {
         //Given
         val tempUser = User(userID)
@@ -76,7 +77,8 @@ internal class RetrieveUserAgreementsUnitTests {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertEquals(response.Agreements!!, emptyList())
+        assertNotNull(response.responseObject)
+        assertEquals(response.responseObject!!.Agreements!!, emptyList())
     }
 
     @Test
@@ -88,8 +90,9 @@ internal class RetrieveUserAgreementsUnitTests {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.Agreements)
-        assertTrue { response.Agreements!!.isNotEmpty() }
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.Agreements)
+        assertTrue { response.responseObject!!.Agreements!!.isNotEmpty() }
     }
 
     @Test
