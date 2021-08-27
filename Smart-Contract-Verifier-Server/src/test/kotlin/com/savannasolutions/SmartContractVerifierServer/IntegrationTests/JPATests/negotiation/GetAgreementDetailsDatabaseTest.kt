@@ -100,9 +100,7 @@ class GetAgreementDetailsDatabaseTest {
     @Test
     fun `GetAgreementDetails success`()
     {
-        val request = GetAgreementDetailsRequest(agreement.ContractID)
-
-        val response = negotiationService.getAgreementDetails(request)
+        val response = negotiationService.getAgreementDetails(userA.publicWalletID,agreement.ContractID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.agreementResponse)
