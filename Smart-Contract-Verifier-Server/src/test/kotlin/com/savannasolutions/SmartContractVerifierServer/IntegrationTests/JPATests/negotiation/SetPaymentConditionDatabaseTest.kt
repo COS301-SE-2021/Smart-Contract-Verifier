@@ -93,8 +93,9 @@ class SetPaymentConditionDatabaseTest {
                                                                 request)
 
        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-       assertNotNull(response.conditionID)
-       conditions = conditionsRepository.getById(response.conditionID!!)
+       assertNotNull(response.responseObject)
+       assertNotNull(response.responseObject!!.conditionID)
+       conditions = conditionsRepository.getById(response.responseObject!!.conditionID!!)
        assertContains(conditions.conditionDescription, request.Payment.toString())
     }
 
