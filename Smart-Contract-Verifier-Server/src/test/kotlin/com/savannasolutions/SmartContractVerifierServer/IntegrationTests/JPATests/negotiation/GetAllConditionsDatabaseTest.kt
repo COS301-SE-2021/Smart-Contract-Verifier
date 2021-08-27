@@ -122,9 +122,7 @@ class GetAllConditionsDatabaseTest {
     @Test
     fun `GetAllConditions successful`()
     {
-        val request = GetAllConditionsRequest(agreement.ContractID)
-
-        val response = negotiationService.getAllConditions(request)
+        val response = negotiationService.getAllConditions(userA.publicWalletID, agreement.ContractID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.conditions)
