@@ -4,5 +4,4 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 
-data class GetAllConditionsResponse(@JsonProperty("Conditions") val conditions: List<ConditionResponse>? = null,
-                                    @JsonProperty("Status") val status: ResponseStatus,)
+data class GetAllConditionsResponse(@JsonProperty("Conditions") val conditions: List<ConditionResponse>? = null,)
