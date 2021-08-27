@@ -64,13 +64,12 @@ class CreateAgreementDatabaseTest {
     @Test
     fun `CreateAgreement successful`()
     {
-        val request = CreateAgreementRequest(userA.publicWalletID,
-                                                userB.publicWalletID,
+        val request = CreateAgreementRequest(userB.publicWalletID,
                                                 "Integration test title",
                                                 "This tests the agreement save functionality",
                                                 "www.dodgy_url.com")
 
-        val response = negotiationService.createAgreement(request)
+        val response = negotiationService.createAgreement(userA.publicWalletID, request)
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.agreementID)
         agreement = agreementsRepository.getById(response.agreementID!!)
