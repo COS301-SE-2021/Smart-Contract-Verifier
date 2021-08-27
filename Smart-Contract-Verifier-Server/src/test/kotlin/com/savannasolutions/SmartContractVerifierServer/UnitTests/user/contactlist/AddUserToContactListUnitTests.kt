@@ -8,7 +8,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.Contac
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserToContactListRequest
-import com.savannasolutions.SmartContractVerifierServer.user.responses.AddUserToContactListResponse
 import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
 import org.junit.Test
 import org.mockito.kotlin.any
