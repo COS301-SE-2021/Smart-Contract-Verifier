@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.user.contactlist
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
@@ -28,7 +29,7 @@ internal class AddUserToContactListUnitTests {
                                                     contactListExists: Boolean,
                                                     userAlias: String,
                                                     userExists: Boolean,
-                                                  existsByContactAliasAndContactListAndUser: Boolean): AddUserToContactListResponse
+                                                  existsByContactAliasAndContactListAndUser: Boolean): ApiResponse<Objects>
     {
         //Given
         val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
