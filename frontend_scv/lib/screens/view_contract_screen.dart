@@ -315,6 +315,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
         },
         label: Text('Agreement Chat'),
         icon: Icon(Icons.chat),
+        backgroundColor: Color.fromRGBO(182, 80, 158, 1),
       ),
     );
   }

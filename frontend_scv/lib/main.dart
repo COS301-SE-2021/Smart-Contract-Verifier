@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'Dashboard',
               theme: ThemeData(
-                canvasColor: Color.fromRGBO(37, 37, 37, 1).withOpacity(0.9),
+                canvasColor: Color.fromRGBO(32, 32, 46, 1).withOpacity(1),
                 brightness: Brightness.dark,
                 primarySwatch: Colors.deepOrange,
                 accentColor: Colors.cyan,

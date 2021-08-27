@@ -1,3 +1,4 @@
+import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,46 +50,43 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         // title: Text(Global.userAddress),
-        title: Text('Agreements Dashboard'),
-        // actions: <Widget>[
-        //   PopupMenuButton(
-        //     onSelected: (FilterOptions selectedValue) {
-        //       setState(() {
-        //         if (selectedValue == FilterOptions.Favourites) {
-        //           _showOnlyFavorites = true;
-        //         } else {
-        //           _showOnlyFavorites = false;
-        //         }
-        //       });
-        //     },
-        //     icon: Icon(
-        //       Icons.more_vert,
-        //     ),
-        //     itemBuilder: (_) => [
-        //       PopupMenuItem(
-        //         child: Text('Only Favourites'),
-        //         value: FilterOptions.Favourites,
-        //       ),
-        //       PopupMenuItem(
-        //         child: Text('Show All'),
-        //         value: FilterOptions.All,
-        //       ),
-        //     ],
-        //   ),
-        //   //TODO: Add notification button with badge
-        // ],
+        title: ShaderMask(
+          shaderCallback: (bounds) => LinearGradient(colors: [
+            Color.fromRGBO(50, 183, 196, 1),
+            Color.fromRGBO(167, 89, 160, 1)
+          ]).createShader(
+            Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+          ),
+          child: Text(
+            'Agreements Dashboard',
+            style: TextStyle(
+              // The color must be set to white for this to work
+              color: Colors.white,
+              // fontSize: 50,
+            ),
+          ),
+        ),
       ),
       drawer: AppDrawer(),
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(),
+              child: AwesomeLoader(
+                loaderType: AwesomeLoader.AwesomeLoader4,
+                color: Color.fromRGBO(50, 183, 196, 0.5),
+              ),
             )
           // : ContractsGrid(_showOnlyFavorites),
           : ContractsGrid(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () =>
-            Navigator.of(context).pushNamed(EditContractScreen.routeName),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: FloatingActionButton.extended(
+          label: Text('Create New Agreement'),
+          icon: Icon(Icons.add),
+          onPressed: () =>
+              Navigator.of(context).pushNamed(EditContractScreen.routeName),
+          backgroundColor: Color.fromRGBO(182, 80, 158, 1),
+        ),
       ),
     );
   }
