@@ -368,23 +368,28 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun setDurationCondition(userID: String, agreementID: UUID,setDurationConditionRequest: SetDurationConditionRequest): SetDurationConditionResponse
+    fun setDurationCondition(userID: String, agreementID: UUID,setDurationConditionRequest: SetDurationConditionRequest):
+            ApiResponse<SetDurationConditionResponse>
     {
         if(!agreementsRepository.existsById(agreementID))
-            return SetDurationConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.agreementDoesNotExist)
 
         if(setDurationConditionRequest.Duration.isNegative || setDurationConditionRequest.Duration.isZero)
-            return SetDurationConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Duration is negative or zero")
 
         if(!userRepository.existsById(userID))
-            return SetDurationConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
         val agreement = agreementsRepository.getById(agreementID)
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
         if(userList.elementAt(0).publicWalletID != userID &&
             userList.elementAt(1).publicWalletID != userID)
-            return SetDurationConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val user = userRepository.getById(userID)
 
@@ -409,7 +414,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         agreementsRepository.save(agreement)
 
-        return SetDurationConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = SetDurationConditionResponse(condition.conditionID),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun getJudgingAgreements(userID: String): GetJudgingAgreementsResponse
