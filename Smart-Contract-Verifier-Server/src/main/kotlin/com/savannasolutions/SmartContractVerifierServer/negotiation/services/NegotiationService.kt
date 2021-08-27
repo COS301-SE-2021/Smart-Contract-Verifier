@@ -141,85 +141,29 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun getAgreementDetails(userID: String, AgreementID: UUID): GetAgreementDetailsResponse{
+    fun getAgreementDetails(userID: String, AgreementID: UUID): ApiResponse<GetAgreementDetailsResponse>{
         if(!agreementsRepository.existsById(AgreementID))
-            return GetAgreementDetailsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementDoesNotExist)
+
         if(!userRepository.existsById(userID))
-            return GetAgreementDetailsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userDoesNotExist)
 
         val agreement = agreementsRepository.getById(AgreementID)
-        val conditionList = conditionsRepository.getAllByContract(agreement)
-        val conditions = ArrayList<ConditionResponse>()
-        if(conditionList != null)
-        {
-            for(cond in conditionList)
-            {
-                val tempCond = ConditionResponse(cond.conditionID,
-                    cond.conditionDescription,
-                    UserResponse(cond.proposingUser.publicWalletID),
-                    cond.proposalDate,
-                    agreement.ContractID,
-                    cond.conditionStatus,
-                    cond.conditionTitle)
-                conditions.add(tempCond)
-            }
-        }
 
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
         val partyA = UserResponse(userList[0].publicWalletID)
         val partyB = UserResponse(userList[1].publicWalletID)
 
         if(userID != partyA.PublicWalletID && userID != partyB.PublicWalletID)
-            return GetAgreementDetailsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userNotPartOfAgreement)
 
-        val paymentCondition : Conditions? = if(agreement.PaymentConditionUUID != null)
-            conditionsRepository.getById(agreement.PaymentConditionUUID!!)
-        else null
+        val agreementResponse = generateAgreementResponse(agreement)
 
-        val durationCondition : Conditions? = if(agreement.DurationConditionUUID != null)
-            conditionsRepository.getById(agreement.DurationConditionUUID!!)
-        else null
-
-        val paymentConditionResponse : PaymentConditionResponse?
-        if(paymentCondition != null)
-        {
-            var amountStr = paymentCondition.conditionDescription
-            amountStr = amountStr.replace("Payment of ", "")
-            val amount = amountStr.toDouble()
-            paymentConditionResponse = PaymentConditionResponse(paymentCondition.conditionID,
-                                                                amount,
-                                                                agreement.PayingParty!!,
-                                                                paymentCondition.conditionStatus)
-        } else
-            paymentConditionResponse = null
-
-        val durationConditionResponse : DurationConditionResponse?
-        if(durationCondition != null)
-        {
-            var amountStr = durationCondition.conditionDescription
-            amountStr = amountStr.replace("Duration of ", "")
-            val amount  = amountStr.toDouble()
-            durationConditionResponse = DurationConditionResponse(durationCondition.conditionID,
-                                                                  amount,
-                                                                  durationCondition.conditionStatus)
-        } else
-            durationConditionResponse = null
-
-        val agreementResponse = AgreementResponse(agreement.ContractID,
-                                                    agreement.AgreementTitle,
-                                                    agreement.AgreementDescription,
-                                                    durationConditionResponse,
-                                                    paymentConditionResponse,
-                                                    partyA,
-                                                    partyB,
-                                                    agreement.CreatedDate,
-                                                    agreement.SealedDate,
-                                                    agreement.MovedToBlockChain,
-                                                    conditions,
-                                                    agreement.AgreementImageURL,
-                                                    agreement.blockchainID)
-
-        return GetAgreementDetailsResponse(agreementResponse, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetAgreementDetailsResponse(agreementResponse),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun rejectCondition(userID: String, agreementID: UUID, conditionID: UUID): RejectConditionResponse {
