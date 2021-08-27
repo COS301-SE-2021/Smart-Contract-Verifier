@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
@@ -37,7 +38,7 @@ internal class SendMessageUnitTests {
                                         sendingUserID: String,
                                         senderExists: Boolean,
                                         agreementID: UUID,
-                                        agreementExist: Boolean): SendMessageResponse
+                                        agreementExist: Boolean): ApiResponse<SendMessageResponse>
     {
         //given
         val user = User(sendingUserID)
