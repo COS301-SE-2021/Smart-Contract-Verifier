@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
@@ -36,7 +37,7 @@ internal class SetMessageAsReadUnitTest {
                                              recipientExists: Boolean,
                                              messageExists: Boolean,
                                              ReadDate: Boolean,
-                                             userMessageExists: Boolean): SetMessageAsReadResponse{
+                                             userMessageExists: Boolean): ApiResponse<Objects>{
         //given
         val recipient = User(recipientID)
         val otherUser = User("other user")
