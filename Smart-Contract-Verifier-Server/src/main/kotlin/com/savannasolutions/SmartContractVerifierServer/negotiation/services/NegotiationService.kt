@@ -315,27 +315,32 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return ApiResponse(status = ResponseStatus.SUCCESSFUL, responseObject = getConditionDetailsResponse)
     }
 
-    fun setPaymentCondition(userID: String, agreementID: UUID, setPaymentConditionRequest: SetPaymentConditionRequest): SetPaymentConditionResponse
+    fun setPaymentCondition(userID: String, agreementID: UUID, setPaymentConditionRequest: SetPaymentConditionRequest): ApiResponse<SetPaymentConditionResponse>
     {
         if(setPaymentConditionRequest.PayingUser.isEmpty())
-            return SetPaymentConditionResponse(null, status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Paying user is empty")
 
         if(!agreementsRepository.existsById(agreementID))
-            return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.agreementDoesNotExist)
 
         if(setPaymentConditionRequest.Payment < 0)
-            return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Amount is less than 0")
 
         val agreement = agreementsRepository.getById(agreementID)
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
         if(userID != userList.elementAt(0).publicWalletID
             && userID != userList.elementAt(1).publicWalletID)
-            return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         if(setPaymentConditionRequest.PayingUser != userList.elementAt(0).publicWalletID
             && setPaymentConditionRequest.PayingUser != userList.elementAt(1).publicWalletID)
-            return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val user = userRepository.getById(userID)
 
@@ -359,7 +364,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         agreementsRepository.save(agreement)
 
-        return SetPaymentConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = SetPaymentConditionResponse(condition.conditionID),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun setDurationCondition(userID: String, agreementID: UUID,setDurationConditionRequest: SetDurationConditionRequest): SetDurationConditionResponse
