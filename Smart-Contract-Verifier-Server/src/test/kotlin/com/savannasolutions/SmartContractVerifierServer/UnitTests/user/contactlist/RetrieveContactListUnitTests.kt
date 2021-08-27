@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.user.contactlist
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
@@ -28,7 +29,7 @@ internal class RetrieveContactListUnitTests {
 
     private fun parameterizedRetrieveContactList(userID: String,
                                                     contactListExists: Boolean,
-                                                    ): RetrieveContactListResponse
+                                                    ): ApiResponse<RetrieveContactListResponse>
     {
         //Given
         val tempUser = User(userID)
@@ -65,7 +66,8 @@ internal class RetrieveContactListUnitTests {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertEquals(response.WalletAndAlias, emptyList())
+        assertNotNull(response.responseObject)
+        assertEquals(response.responseObject!!.WalletAndAlias, emptyList())
     }
 
     @Test
@@ -79,8 +81,9 @@ internal class RetrieveContactListUnitTests {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.WalletAndAlias)
-        assertTrue { response.WalletAndAlias!!.isNotEmpty() }
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.WalletAndAlias)
+        assertTrue { response.responseObject!!.WalletAndAlias!!.isNotEmpty() }
     }
 
     @Test
