@@ -166,17 +166,20 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun rejectCondition(userID: String, agreementID: UUID, conditionID: UUID): RejectConditionResponse {
+    fun rejectCondition(userID: String, agreementID: UUID, conditionID: UUID): ApiResponse<Objects> {
         if(!conditionsRepository.existsById(conditionID))
-            return RejectConditionResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.conditionDoesNotExist)
 
         if(!agreementsRepository.existsById(agreementID))
-            return RejectConditionResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.agreementDoesNotExist)
 
         val condition = conditionsRepository.getById(conditionID)
 
         if(condition.contract.ContractID != agreementID)
-            return RejectConditionResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Condition not part of agreement")
 
         val agreement = agreementsRepository.getById(agreementID)
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
@@ -187,19 +190,22 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 found = true
 
         if(!found)
-            return RejectConditionResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         if(condition.conditionStatus == ConditionStatus.PENDING) {
             condition.conditionStatus = ConditionStatus.REJECTED
             conditionsRepository.save(condition)
-            return RejectConditionResponse(ResponseStatus.SUCCESSFUL)
+            return ApiResponse(status = ResponseStatus.SUCCESSFUL)
         }
-        return RejectConditionResponse(ResponseStatus.FAILED)
+        return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.conditionIsNotPending)
     }
 
-    fun getAllConditions(userID:String, agreementID: UUID):GetAllConditionsResponse{
+    fun getAllConditions(userID:String, agreementID: UUID): ApiResponse<GetAllConditionsResponse>{
         if(!agreementsRepository.existsById(agreementID))
-            return GetAllConditionsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.agreementDoesNotExist)
 
         val agreement = agreementsRepository.getById(agreementID)
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
@@ -210,10 +216,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 found = true
 
         if(!found)
-            return GetAllConditionsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val conditions = conditionsRepository.getAllByContract(agreementsRepository.getById(agreementID))
-        conditions?:return GetAllConditionsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+        conditions?:return ApiResponse(responseObject = GetAllConditionsResponse(emptyList()),
+            status = ResponseStatus.SUCCESSFUL)
 
         val conditionList = ArrayList<ConditionResponse>()
         for(cond in conditions)
@@ -229,7 +237,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 )
             )
         }
-        return GetAllConditionsResponse(conditionList, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetAllConditionsResponse(conditionList),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun sealAgreement(sealAgreementRequest: SealAgreementRequest): SealAgreementResponse{
