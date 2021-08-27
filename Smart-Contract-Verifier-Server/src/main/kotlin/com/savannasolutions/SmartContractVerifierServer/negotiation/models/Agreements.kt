@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.models
 
+import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import java.util.*
 import javax.persistence.*
@@ -24,4 +25,7 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
 
     @ManyToMany(mappedBy = "agreements", cascade = [CascadeType.ALL])
     val users: MutableSet<User> = mutableSetOf()
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contract", orphanRemoval = true, cascade = [CascadeType.ALL])
+    var evidence: List<Evidence>? = emptyList()
 }

@@ -5,6 +5,9 @@ import javax.persistence.*
 
 @Entity
 data class LinkedEvidence(@Id @GeneratedValue val evidenceID: UUID,
-                          @OneToOne(fetch = FetchType.LAZY) val evidence: Evidence,
                           val evidenceUrl: String,)
+{
+    @OneToOne(fetch = FetchType.LAZY)
+    lateinit var evidence: Evidence
+}
 

@@ -5,7 +5,10 @@ import javax.persistence.*
 
 @Entity
 data class UploadedEvidence(@Id @GeneratedValue val evidenceID: UUID,
-                            @OneToOne(fetch = FetchType.LAZY) val evidence: Evidence,
                             val filename: String,
                             val fileMimeType: String,)
+{
+    @OneToOne(fetch = FetchType.LAZY)
+    lateinit var evidence: Evidence
+}
 
