@@ -84,10 +84,10 @@ class CreateConditionTest {
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(condition)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(rjson: String, userID: String, agreementID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/create-condition")
+            MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/condition")
             .contentType(MediaType.APPLICATION_JSON)
             .content(rjson)).andReturn().response
     }
@@ -95,13 +95,11 @@ class CreateConditionTest {
     @Test
     fun `CreateCondition successful`(){
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userA.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
                 "    \"ConditionDescription\" : \"This is a postman test\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
@@ -109,13 +107,11 @@ class CreateConditionTest {
     @Test
     fun `CreateCondition failed agreement does not exist`(){
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userA.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"6968236f-6020-4ed5-8167-0941648c5365\",\n" +
                 "    \"ConditionDescription\" : \"This is a postman test\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -123,27 +119,11 @@ class CreateConditionTest {
     @Test
     fun `CreateCondition failed condition description `(){
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userA.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
                 "    \"ConditionDescription\" : \"\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
-    fun `CreateCondition failed when proposed user is empty`(){
-        val rjson = "{\n" +
-                "    \"ProposedUser\" : \"\", \n" +
-                "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
-                "    \"ConditionDescription\" : \"This is a postman test\"\n" +
-                "}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -151,13 +131,11 @@ class CreateConditionTest {
     @Test
     fun `CreateCondition failed title is empty`(){
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userA.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
                 "    \"ConditionDescription\" : \"This is a postman test\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -165,13 +143,11 @@ class CreateConditionTest {
     @Test
     fun `CreateCondition failed user is not part of agreement`(){
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userC.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
                 "    \"ConditionDescription\" : \"This is a postman test\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userC.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
