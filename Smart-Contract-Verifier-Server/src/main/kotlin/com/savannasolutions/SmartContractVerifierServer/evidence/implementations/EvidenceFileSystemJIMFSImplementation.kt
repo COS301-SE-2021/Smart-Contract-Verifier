@@ -1,11 +1,8 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.implementations
 
 import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.EvidenceFileSystem
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
 
 @Component
 class EvidenceFileSystemJIMFSImplementation: EvidenceFileSystem{
