@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
@@ -34,7 +35,7 @@ internal class SetPaymentConditionUnitTests {
     private fun parameterizedSetPaymentCondition(userID: String,
                                                     paymentAmount: Double,
                                                     agreementExists: Boolean,
-                                                    propUser: String): SetPaymentConditionResponse
+                                                    propUser: String): ApiResponse<SetPaymentConditionResponse>
     {
         //given
         var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
