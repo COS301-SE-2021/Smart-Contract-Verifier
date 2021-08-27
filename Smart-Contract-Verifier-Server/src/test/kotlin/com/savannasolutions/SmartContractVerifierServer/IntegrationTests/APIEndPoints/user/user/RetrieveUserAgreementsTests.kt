@@ -109,20 +109,18 @@ class GetAgreementDetail {
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/user/retrieve-user-agreements")
+            MockMvcRequestBuilders.get("/user/${userID}/agreement")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andReturn().response
     }
 
     @Test
     fun `RetrieveUserAgreementsTests successful`()
     {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, agreementUUID.toString())
@@ -132,21 +130,9 @@ class GetAgreementDetail {
     }
 
     @Test
-    fun `RetrieveUserAgreementsTests failed due to userid being empty in request`()
-    {
-        val rjson = "{\"UserID\" : \"\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `RetrieveUserAgreementsTests failed due to user not existing`()
     {
-        val rjson = "{\"UserID\" : \"wrong user\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender("other user")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
