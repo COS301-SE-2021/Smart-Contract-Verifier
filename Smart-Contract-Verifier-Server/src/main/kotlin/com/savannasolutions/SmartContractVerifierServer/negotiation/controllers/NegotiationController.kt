@@ -21,7 +21,7 @@ class NegotiationController constructor(private val negotiationService: Negotiat
     fun acceptCondition(@PathVariable userId: String, @PathVariable agreementId: UUID, @PathVariable conditionId: UUID,) =
         negotiationService.acceptCondition(userId, agreementId, conditionId)
 
-    @PostMapping("/user/{userId}/agreement/{agreementId}/condition/{conditionId}/reject")
+    @PutMapping("/user/{userId}/agreement/{agreementId}/condition/{conditionId}/reject")
     fun rejectCondition(@PathVariable userId: String, @PathVariable agreementId: UUID, @PathVariable conditionId: UUID,) =
         negotiationService.rejectCondition(userId, agreementId, conditionId)
 
