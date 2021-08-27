@@ -98,9 +98,9 @@ class GetConditionDetailsDatabaseTest {
     @Test
     fun `GetConditionDetails successful`()
     {
-        val request = GetConditionDetailsRequest(condition.conditionID)
-
-        val response = negotiationService.getConditionDetails(request)
+        val response = negotiationService.getConditionDetails(userA.publicWalletID,
+            agreement.ContractID,
+            condition.conditionID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.conditionResponse)
