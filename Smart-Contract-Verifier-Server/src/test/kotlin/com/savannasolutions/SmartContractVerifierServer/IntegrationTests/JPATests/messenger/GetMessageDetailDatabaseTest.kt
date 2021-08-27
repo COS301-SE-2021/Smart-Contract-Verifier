@@ -104,8 +104,9 @@ class GetMessageDetailDatabaseTest {
         val response = messagesService.getMessageDetail(userA.publicWalletID,messageA.messageID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messageDetails)
-        assertEquals(response.messageDetails!!.MessageID, messageA.messageID)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messageDetails)
+        assertEquals(response.responseObject!!.messageDetails!!.MessageID, messageA.messageID)
     }
 
 
