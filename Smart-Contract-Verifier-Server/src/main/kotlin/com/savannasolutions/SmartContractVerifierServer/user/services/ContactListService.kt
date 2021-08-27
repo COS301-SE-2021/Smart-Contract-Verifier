@@ -1,8 +1,8 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.ContactListIDContactListNameResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ContactListAliasWalletResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListIDContactListNameResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListAliasWalletResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
@@ -122,7 +122,7 @@ class ContactListService(   val contactListRepository: ContactListRepository,
             list.add(ContactListAliasWalletResponse( cLP.contactAlias, cLP.user.publicWalletID))
         }
 
-        return RetrieveContactListResponse(list,ResponseStatus.SUCCESSFUL)
+        return RetrieveContactListResponse(list, ResponseStatus.SUCCESSFUL)
     }
 
     fun retrieveUserContactLists(userID: String): RetrieveUserContactListResponse{

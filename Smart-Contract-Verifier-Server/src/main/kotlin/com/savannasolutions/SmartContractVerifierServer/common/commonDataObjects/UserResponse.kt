@@ -1,4 +1,4 @@
-package com.savannasolutions.SmartContractVerifierServer.common
+package com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

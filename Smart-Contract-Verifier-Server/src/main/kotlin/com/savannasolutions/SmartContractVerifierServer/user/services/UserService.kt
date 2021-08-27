@@ -1,6 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.*
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
@@ -99,7 +99,7 @@ class UserService(  val userRepository: UserRepository,
             list.add(tempArg)
         }
 
-        return RetrieveUserAgreementsResponse(list,ResponseStatus.SUCCESSFUL)
+        return RetrieveUserAgreementsResponse(list, ResponseStatus.SUCCESSFUL)
     }
 
 }

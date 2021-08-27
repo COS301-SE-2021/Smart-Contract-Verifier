@@ -1,6 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.*
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.*
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
@@ -201,7 +201,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                                     agreement.AgreementImageURL,
                                                     agreement.blockchainID)
 
-        return GetAgreementDetailsResponse(agreementResponse,ResponseStatus.SUCCESSFUL)
+        return GetAgreementDetailsResponse(agreementResponse, ResponseStatus.SUCCESSFUL)
     }
 
     fun rejectCondition(userID: String, agreementID: UUID, conditionID: UUID): RejectConditionResponse {
@@ -251,7 +251,7 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return GetAllConditionsResponse(status = ResponseStatus.FAILED)
 
         val conditions = conditionsRepository.getAllByContract(agreementsRepository.getById(agreementID))
-        conditions?:return GetAllConditionsResponse(emptyList(),ResponseStatus.SUCCESSFUL)
+        conditions?:return GetAllConditionsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
 
         val conditionList = ArrayList<ConditionResponse>()
         for(cond in conditions)
@@ -327,7 +327,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         if(!found)
             return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
 
-        return GetConditionDetailsResponse(ConditionResponse(condition.conditionID,
+        return GetConditionDetailsResponse(
+            ConditionResponse(condition.conditionID,
                                             condition.conditionDescription,
                                             UserResponse(condition.proposingUser.publicWalletID),
                                             condition.proposalDate,

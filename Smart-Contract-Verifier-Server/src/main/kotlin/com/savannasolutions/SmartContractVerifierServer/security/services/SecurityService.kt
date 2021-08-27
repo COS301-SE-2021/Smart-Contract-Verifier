@@ -1,6 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.security.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.security.requests.LoginRequest
@@ -8,7 +8,6 @@ import com.savannasolutions.SmartContractVerifierServer.security.responses.AddUs
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.security.responses.GetNonceResponse
 import com.savannasolutions.SmartContractVerifierServer.security.responses.LoginResponse
-import com.savannasolutions.SmartContractVerifierServer.security.responses.UserExistsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
