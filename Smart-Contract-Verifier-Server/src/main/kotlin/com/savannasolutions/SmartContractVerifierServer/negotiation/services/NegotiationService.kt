@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.*
+import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
@@ -21,41 +22,50 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                                      val userRepository: UserRepository,
                                      val judgesRepository: JudgesRepository){
 
-    fun acceptCondition(userID: String, agreementID: UUID, conditionID: UUID): AcceptConditionResponse{
+    fun acceptCondition(userID: String, agreementID: UUID, conditionID: UUID): ApiResponse<Objects>{
         if(!conditionsRepository.existsById(conditionID))
-            return AcceptConditionResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.conditionDoesNotExist)
 
         if(!agreementsRepository.existsById(agreementID))
-            return AcceptConditionResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementDoesNotExist)
 
         val condition = conditionsRepository.getById(conditionID)
             if(condition.conditionStatus == ConditionStatus.PENDING)
             {
                 condition.conditionStatus = ConditionStatus.ACCEPTED
                 conditionsRepository.save(condition)
-                return AcceptConditionResponse(ResponseStatus.SUCCESSFUL)
+                return ApiResponse(status = ResponseStatus.SUCCESSFUL)
             }
-        return AcceptConditionResponse(ResponseStatus.FAILED)
+        return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.conditionIsNotPending)
     }
 
-    fun createAgreement(userID: String, createAgreementRequest: CreateAgreementRequest): CreateAgreementResponse{
+    fun createAgreement(userID: String, createAgreementRequest: CreateAgreementRequest): ApiResponse<CreateAgreementResponse>{
         if(createAgreementRequest.PartyB.isEmpty())
-            return CreateAgreementResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = "Party B is empty")
 
         if(createAgreementRequest.Title.isEmpty())
-            return CreateAgreementResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.titleIsEmpty)
 
         if(createAgreementRequest.Description.isEmpty())
-            return CreateAgreementResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.descriptionEmpty)
 
         if(createAgreementRequest.PartyB == userID)
-            return CreateAgreementResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = "Party A is equal to party A")
 
         if(!userRepository.existsById(userID))
-            return CreateAgreementResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userDoesNotExist)
 
         if(!userRepository.existsById(createAgreementRequest.PartyB))
-            return CreateAgreementResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Party B does not exist")
 
         val userA = userRepository.getById(userID)
         val userB = userRepository.getById(createAgreementRequest.PartyB)
@@ -86,7 +96,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         userRepository.save(userA)
         userRepository.save(userB)
 
-        return CreateAgreementResponse(nAgreement.ContractID, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = CreateAgreementResponse(nAgreement.ContractID),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun createCondition(userID: String, agreementID: UUID, createConditionRequest: CreateConditionRequest): CreateConditionResponse{
