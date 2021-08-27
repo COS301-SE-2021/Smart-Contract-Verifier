@@ -273,18 +273,22 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         return SealAgreementResponse(ResponseStatus.SUCCESSFUL)
     }
 
-    fun getConditionDetails(userID: String, agreementID: UUID, conditionID: UUID): GetConditionDetailsResponse
+    fun getConditionDetails(userID: String, agreementID: UUID, conditionID: UUID): ApiResponse<GetConditionDetailsResponse>
     {
         if(!conditionsRepository.existsById(conditionID))
-            return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.conditionDoesNotExist)
 
         val condition = conditionsRepository.getById(conditionID)
 
-        if(condition.contract.ContractID != agreementID)
-            return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
-
         if(!agreementsRepository.existsById(agreementID))
-            return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementDoesNotExist)
+
+        if(condition.contract.ContractID != agreementID)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.conditionDoesNotExist)
+
 
         val agreement = agreementsRepository.getById(agreementID)
 
@@ -296,17 +300,19 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                 found = true
 
         if(!found)
-            return GetConditionDetailsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userNotPartOfAgreement)
 
-        return GetConditionDetailsResponse(
+        val getConditionDetailsResponse = GetConditionDetailsResponse(
             ConditionResponse(condition.conditionID,
                                             condition.conditionDescription,
                                             UserResponse(condition.proposingUser.publicWalletID),
                                             condition.proposalDate,
                                             condition.contract.ContractID,
                                             condition.conditionStatus,
-                                            condition.conditionTitle),
-                                            ResponseStatus.SUCCESSFUL)
+                                            condition.conditionTitle))
+
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL, responseObject = getConditionDetailsResponse)
     }
 
     fun setPaymentCondition(userID: String, agreementID: UUID, setPaymentConditionRequest: SetPaymentConditionRequest): SetPaymentConditionResponse
