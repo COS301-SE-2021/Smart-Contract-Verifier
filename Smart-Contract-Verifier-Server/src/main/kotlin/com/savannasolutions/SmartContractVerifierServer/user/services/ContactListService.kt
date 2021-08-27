@@ -32,6 +32,9 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         if(!contactListRepository.existsById(contactListID))
             return AddUserToContactListResponse(ResponseStatus.FAILED)
 
+        if(userID == addUserToContactListRequest.UserID)
+            return AddUserToContactListResponse(ResponseStatus.FAILED)
+
         val tempContactList = contactListRepository.getById(contactListID)
         val tempUser = userRepository.getById(addUserToContactListRequest.UserID)
 
