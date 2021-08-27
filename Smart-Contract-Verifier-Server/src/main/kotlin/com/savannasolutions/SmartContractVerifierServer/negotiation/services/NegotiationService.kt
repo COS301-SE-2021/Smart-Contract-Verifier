@@ -100,25 +100,31 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun createCondition(userID: String, agreementID: UUID, createConditionRequest: CreateConditionRequest): CreateConditionResponse{
+    fun createCondition(userID: String, agreementID: UUID, createConditionRequest: CreateConditionRequest):
+            ApiResponse<CreateConditionResponse>{
         if(!agreementsRepository.existsById(agreementID))
-            return CreateConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementDoesNotExist)
 
         if(createConditionRequest.ConditionDescription.isEmpty())
-            return CreateConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.descriptionEmpty)
 
         if(createConditionRequest.Title.isEmpty())
-            return CreateConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.titleIsEmpty)
 
         if(!userRepository.existsById(userID))
-            return CreateConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userDoesNotExist)
 
         val agreement = agreementsRepository.getById(agreementID)
 
         val users = userRepository.getUsersByAgreementsContaining(agreement)
 
         if(users.elementAt(0).publicWalletID != userID && users.elementAt(1).publicWalletID != userID)
-            return CreateConditionResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val user = userRepository.getById(userID)
 
@@ -131,7 +137,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         nCondition = conditionsRepository.save(nCondition)
 
-        return CreateConditionResponse(nCondition.conditionID, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = CreateConditionResponse(nCondition.conditionID),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun getAgreementDetails(userID: String, AgreementID: UUID): GetAgreementDetailsResponse{
