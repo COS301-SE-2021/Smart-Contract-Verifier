@@ -93,18 +93,6 @@ internal class RetrieveUserAgreementsUnitTests {
     }
 
     @Test
-    fun `RetrieveUserAgreements userid is empty`()
-    {
-        //Given
-
-        //When
-        val response = parameterizedRetrieveUserAgreements("", true)
-
-        //Then
-        assertEquals(response.status, ResponseStatus.FAILED)
-    }
-
-    @Test
     fun `RetrieveUserAgreements does not exist`()
     {
         //Given
