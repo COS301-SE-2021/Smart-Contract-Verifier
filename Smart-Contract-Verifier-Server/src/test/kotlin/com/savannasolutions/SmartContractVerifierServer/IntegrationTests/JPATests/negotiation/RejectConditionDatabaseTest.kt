@@ -66,6 +66,11 @@ class RejectConditionDatabaseTest {
         agreement = agreement.apply { conditions = conditionList }
         agreement = agreementsRepository.save(agreement)
 
+        pUser = pUser.apply { agreements.add(agreement) }
+        userB = userB.apply { agreements.add(agreement) }
+        pUser = userRepository.save(pUser)
+        userB = userRepository.save(userB)
+
         pendingCondition = Conditions(UUID.fromString("b0cc41a5-bd56-4687-ae7f-e6f48c7ed972"),
             "Pending Condition",
             "This is a pending condition",
@@ -106,7 +111,7 @@ class RejectConditionDatabaseTest {
     }
 
     @Test
-    fun `AcceptCondition successful`()
+    fun `RejectCondition successful`()
     {
         val response = negotiationService.rejectCondition(pUser.publicWalletID,
                                                         agreement.ContractID,
@@ -118,7 +123,7 @@ class RejectConditionDatabaseTest {
     }
 
     @Test
-    fun `AcceptCondition failed due to already being accepted`()
+    fun `RejectCondition failed due to already being accepted`()
     {
         val response = negotiationService.rejectCondition(pUser.publicWalletID,
             agreement.ContractID,
@@ -130,7 +135,7 @@ class RejectConditionDatabaseTest {
     }
 
     @Test
-    fun `AcceptCondition failed due to already being rejected`()
+    fun `RejectCondition failed due to already being rejected`()
     {
         val response = negotiationService.rejectCondition(pUser.publicWalletID,
             agreement.ContractID,
