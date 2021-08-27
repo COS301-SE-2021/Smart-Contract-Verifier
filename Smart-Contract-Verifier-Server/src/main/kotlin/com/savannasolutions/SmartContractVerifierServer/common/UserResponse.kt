@@ -1,3 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.common
 
-data class UserResponse(val PublicWalletID: String)
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class UserResponse(@JsonProperty("PublicWalletID") val PublicWalletID: String)

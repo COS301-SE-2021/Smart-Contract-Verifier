@@ -3,11 +3,9 @@ package com.savannasolutions.SmartContractVerifierServer.user.controllers
 import com.savannasolutions.SmartContractVerifierServer.user.requests.*
 import com.savannasolutions.SmartContractVerifierServer.user.responses.*
 import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
+@CrossOrigin
 @RestController
 @RequestMapping("/contactlist")
 class ContactListController constructor(private val contactListService: ContactListService) {

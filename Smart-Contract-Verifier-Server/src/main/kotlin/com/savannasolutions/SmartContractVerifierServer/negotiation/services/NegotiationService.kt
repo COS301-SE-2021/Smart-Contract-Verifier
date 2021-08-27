@@ -1,9 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.AgreementResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.common.*
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -11,9 +9,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.*
-import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.springframework.stereotype.Service
 import java.util.*
@@ -24,7 +19,7 @@ import kotlin.collections.ArrayList
 class NegotiationService constructor(val agreementsRepository: AgreementsRepository,
                                      val conditionsRepository: ConditionsRepository,
                                      val userRepository: UserRepository,
-                                     ){
+                                     val judgesRepository: JudgesRepository){
 
     fun acceptCondition(acceptConditionRequest: AcceptConditionRequest): AcceptConditionResponse{
         if(conditionsRepository.existsById(acceptConditionRequest.conditionID)){
@@ -80,14 +75,16 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val tempB = agreementsRepository.getAllByUsersContaining(userB) ?:
         mutableSetOf()
 
+
+        nAgreement = agreementsRepository.save(nAgreement)
+
         userA.agreements = tempA
         userB.agreements = tempB
 
         userA.agreements.add(nAgreement)
         userB.agreements.add(nAgreement)
-
-        nAgreement = agreementsRepository.save(nAgreement)
-
+        userRepository.save(userA)
+        userRepository.save(userB)
 
         return CreateAgreementResponse(nAgreement.ContractID, ResponseStatus.SUCCESSFUL)
     }
@@ -111,7 +108,9 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         val agreement = agreementsRepository.getById(createConditionRequest.AgreementID)
 
-        if(agreement.users.elementAt(0).publicWalletID != createConditionRequest.PreposedUser && agreement.users.elementAt(1).publicWalletID != createConditionRequest.PreposedUser)
+        val users = userRepository.getUsersByAgreementsContaining(agreement)
+
+        if(users.elementAt(0).publicWalletID != createConditionRequest.PreposedUser && users.elementAt(1).publicWalletID != createConditionRequest.PreposedUser)
             return CreateConditionResponse(status = ResponseStatus.FAILED)
 
         val user = userRepository.getById(createConditionRequest.PreposedUser)
@@ -154,19 +153,52 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         val userList = userRepository.getUsersByAgreementsContaining(agreement)
         val partyA = UserResponse(userList[0].publicWalletID)
         val partyB = UserResponse(userList[1].publicWalletID)
+        val paymentCondition : Conditions? = if(agreement.PaymentConditionUUID != null)
+            conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+        else null
+
+        val durationCondition : Conditions? = if(agreement.DurationConditionUUID != null)
+            conditionsRepository.getById(agreement.DurationConditionUUID!!)
+        else null
+
+        val paymentConditionResponse : PaymentConditionResponse?
+        if(paymentCondition != null)
+        {
+            var amountStr = paymentCondition.conditionDescription
+            amountStr = amountStr.replace("Payment of ", "")
+            val amount = amountStr.toDouble()
+            paymentConditionResponse = PaymentConditionResponse(paymentCondition.conditionID,
+                                                                amount,
+                                                                agreement.PayingParty!!,
+                                                                paymentCondition.conditionStatus)
+        } else
+            paymentConditionResponse = null
+
+        val durationConditionResponse : DurationConditionResponse?
+        if(durationCondition != null)
+        {
+            var amountStr = durationCondition.conditionDescription
+            amountStr = amountStr.replace("Duration of ", "")
+            val amount  = amountStr.toDouble()
+            durationConditionResponse = DurationConditionResponse(durationCondition.conditionID,
+                                                                  amount,
+                                                                  durationCondition.conditionStatus)
+        } else
+            durationConditionResponse = null
 
         val agreementResponse = AgreementResponse(agreement.ContractID,
                                                     agreement.AgreementTitle,
                                                     agreement.AgreementDescription,
-                                                    agreement.DurationConditionUUID,
-                                                    agreement.PaymentConditionUUID,
+                                                    durationConditionResponse,
+                                                    paymentConditionResponse,
                                                     partyA,
                                                     partyB,
                                                     agreement.CreatedDate,
                                                     agreement.SealedDate,
                                                     agreement.MovedToBlockChain,
                                                     conditions,
-                                                    agreement.AgreementImageURL)
+                                                    agreement.AgreementImageURL,
+                                                    agreement.blockchainID)
 
         return GetAgreementDetailsResponse(agreementResponse,ResponseStatus.SUCCESSFUL)
     }
@@ -234,6 +266,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
                     return SealAgreementResponse(ResponseStatus.FAILED)
 
         agreement.SealedDate = Date()
+        agreement.blockchainID = sealAgreementRequest.index
+        agreement.MovedToBlockChain = true
         agreementsRepository.save(agreement)
         return SealAgreementResponse(ResponseStatus.SUCCESSFUL)
     }
@@ -256,6 +290,12 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
     fun setPaymentCondition(setPaymentConditionRequest: SetPaymentConditionRequest): SetPaymentConditionResponse
     {
+        if(setPaymentConditionRequest.PreposedUser.isEmpty())
+            return SetPaymentConditionResponse(null, status = ResponseStatus.FAILED)
+
+        if(setPaymentConditionRequest.PayingUser.isEmpty())
+            return SetPaymentConditionResponse(null, status = ResponseStatus.FAILED)
+
         if(!agreementsRepository.existsById(setPaymentConditionRequest.AgreementID))
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
@@ -263,9 +303,14 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
         val agreement = agreementsRepository.getById(setPaymentConditionRequest.AgreementID)
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(setPaymentConditionRequest.PreposedUser != agreement.users.elementAt(0).publicWalletID
-            && setPaymentConditionRequest.PreposedUser != agreement.users.elementAt(0).publicWalletID)
+        if(setPaymentConditionRequest.PreposedUser != userList.elementAt(0).publicWalletID
+            && setPaymentConditionRequest.PreposedUser != userList.elementAt(1).publicWalletID)
+            return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
+
+        if(setPaymentConditionRequest.PayingUser != userList.elementAt(0).publicWalletID
+            && setPaymentConditionRequest.PayingUser != userList.elementAt(1).publicWalletID)
             return SetPaymentConditionResponse(null, ResponseStatus.FAILED)
 
         val user = userRepository.getById(setPaymentConditionRequest.PreposedUser)
@@ -278,8 +323,15 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         condition = condition.apply { proposingUser = user }
 
         condition = conditionsRepository.save(condition)
+        if(agreement.PaymentConditionUUID != null)
+        {
+            val prevPaymentCondition = conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+            prevPaymentCondition.conditionStatus = ConditionStatus.REJECTED
+            conditionsRepository.save(prevPaymentCondition)
+        }
 
         agreement.PaymentConditionUUID = condition.conditionID
+        agreement.PayingParty = setPaymentConditionRequest.PayingUser
 
         agreementsRepository.save(agreement)
 
@@ -298,16 +350,17 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
         val agreement = agreementsRepository.getById(setDurationConditionRequest.AgreementID)
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
 
-        if(agreement.users.elementAt(0).publicWalletID != setDurationConditionRequest.PreposedUser &&
-            agreement.users.elementAt(1).publicWalletID != setDurationConditionRequest.PreposedUser)
+        if(userList.elementAt(0).publicWalletID != setDurationConditionRequest.PreposedUser &&
+            userList.elementAt(1).publicWalletID != setDurationConditionRequest.PreposedUser)
             return SetDurationConditionResponse(status = ResponseStatus.FAILED)
 
         val user = userRepository.getById(setDurationConditionRequest.PreposedUser)
 
         var condition = Conditions(UUID.randomUUID(),
                 "Duration condition",
-                "Duration of " + setDurationConditionRequest.Duration.toString(),
+                "Duration of " + setDurationConditionRequest.Duration.toSeconds().toString(),
                 ConditionStatus.PENDING,
                 Date(),).apply { contract = agreement }
 
@@ -315,11 +368,108 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
 
         condition = conditionsRepository.save(condition)
 
+        if(agreement.DurationConditionUUID != null)
+        {
+            val prevDurationCondition = conditionsRepository.getById(agreement.DurationConditionUUID!!)
+            prevDurationCondition.conditionStatus = ConditionStatus.REJECTED
+            conditionsRepository.save(prevDurationCondition)
+        }
+
         agreement.DurationConditionUUID = condition.conditionID
 
         agreementsRepository.save(agreement)
 
         return SetDurationConditionResponse(condition.conditionID, ResponseStatus.SUCCESSFUL)
+    }
+
+    fun getJudgingAgreements(getJudgingAgreementsRequest: GetJudgingAgreementsRequest): GetJudgingAgreementsResponse
+    {
+        if(!userRepository.existsById(getJudgingAgreementsRequest.walletID))
+            return GetJudgingAgreementsResponse(status = ResponseStatus.FAILED)
+
+        val user = userRepository.getById(getJudgingAgreementsRequest.walletID)
+        val judgeList = judgesRepository.getAllByJudge(user) ?:
+            return GetJudgingAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+
+        val agreementsResponseList = ArrayList<AgreementResponse>()
+
+        for(judge in judgeList)
+        {
+            agreementsResponseList.add(generateAgreementResponse(judge.agreement))
+        }
+
+        return GetJudgingAgreementsResponse(agreementsResponseList, ResponseStatus.SUCCESSFUL)
+    }
+
+    private fun generateAgreementResponse(agreement: Agreements): AgreementResponse {
+        val conditionList = conditionsRepository.getAllByContract(agreement)
+        val conditions = ArrayList<ConditionResponse>()
+        if (conditionList != null) {
+            for (cond in conditionList) {
+                val tempCond = ConditionResponse(
+                    cond.conditionID,
+                    cond.conditionDescription,
+                    UserResponse(cond.proposingUser.publicWalletID),
+                    cond.proposalDate,
+                    agreement.ContractID,
+                    cond.conditionStatus,
+                    cond.conditionTitle
+                )
+                conditions.add(tempCond)
+            }
+        }
+
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+        val partyA = UserResponse(userList[0].publicWalletID)
+        val partyB = UserResponse(userList[1].publicWalletID)
+        val paymentCondition : Conditions? = if(agreement.PaymentConditionUUID != null)
+            conditionsRepository.getById(agreement.PaymentConditionUUID!!)
+        else null
+
+        val durationCondition : Conditions? = if(agreement.DurationConditionUUID != null)
+            conditionsRepository.getById(agreement.DurationConditionUUID!!)
+        else null
+
+        val paymentConditionResponse : PaymentConditionResponse?
+        if(paymentCondition != null)
+        {
+            var amountStr = paymentCondition.conditionDescription
+            amountStr = amountStr.replace("Payment of ", "")
+            val amount = amountStr.toDouble()
+            paymentConditionResponse = PaymentConditionResponse(paymentCondition.conditionID,
+                amount,
+                agreement.PayingParty!!,
+                paymentCondition.conditionStatus)
+        } else
+            paymentConditionResponse = null
+
+        val durationConditionResponse : DurationConditionResponse?
+        if(durationCondition != null)
+        {
+            var amountStr = durationCondition.conditionDescription
+            amountStr = amountStr.replace("Duration of ", "")
+            val amount  = amountStr.toDouble()
+            durationConditionResponse = DurationConditionResponse(durationCondition.conditionID,
+                amount,
+                durationCondition.conditionStatus)
+        } else
+            durationConditionResponse = null
+
+        return AgreementResponse(
+            agreement.ContractID,
+            agreement.AgreementTitle,
+            agreement.AgreementDescription,
+            durationConditionResponse,
+            paymentConditionResponse,
+            partyA,
+            partyB,
+            agreement.CreatedDate,
+            agreement.SealedDate,
+            agreement.MovedToBlockChain,
+            conditions,
+            agreement.AgreementImageURL,
+            agreement.blockchainID
+        )
     }
 
 }
