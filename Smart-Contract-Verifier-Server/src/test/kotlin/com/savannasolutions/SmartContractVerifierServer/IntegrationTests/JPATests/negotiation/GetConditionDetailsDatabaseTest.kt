@@ -103,12 +103,13 @@ class GetConditionDetailsDatabaseTest {
             condition.conditionID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.conditionResponse)
-        assertEquals(response.conditionResponse!!.conditionID, condition.conditionID)
-        assertNotNull(response.conditionResponse!!.conditionTitle)
-        assertEquals(response.conditionResponse!!.conditionTitle!!, condition.conditionTitle)
-        assertNotNull(response.conditionResponse!!.conditionDescription)
-        assertEquals(response.conditionResponse!!.conditionDescription!!, condition.conditionDescription)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.conditionResponse)
+        assertEquals(response.responseObject!!.conditionResponse!!.conditionID, condition.conditionID)
+        assertNotNull(response.responseObject!!.conditionResponse!!.conditionTitle)
+        assertEquals(response.responseObject!!.conditionResponse!!.conditionTitle!!, condition.conditionTitle)
+        assertNotNull(response.responseObject!!.conditionResponse!!.conditionDescription)
+        assertEquals(response.responseObject!!.conditionResponse!!.conditionDescription!!, condition.conditionDescription)
     }
 
 }
