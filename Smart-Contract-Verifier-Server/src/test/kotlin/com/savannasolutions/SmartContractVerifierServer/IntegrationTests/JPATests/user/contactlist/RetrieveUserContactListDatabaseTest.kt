@@ -7,8 +7,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveContactListRequest
-import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserContactListRequest
 import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -75,9 +73,7 @@ class RetrieveUserContactListDatabaseTest {
     @Test
     fun `RetrieveContactListDatabase success`()
     {
-        val request = RetrieveUserContactListRequest(ownerUser.publicWalletID)
-
-        val response = contactListService.retrieveUserContactLists(request)
+        val response = contactListService.retrieveUserContactLists(ownerUser.publicWalletID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.ContactListInfo)
