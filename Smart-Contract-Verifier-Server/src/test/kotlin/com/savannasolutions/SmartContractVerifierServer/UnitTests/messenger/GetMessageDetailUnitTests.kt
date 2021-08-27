@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
@@ -30,7 +31,7 @@ internal class GetMessageDetailUnitTests {
         judgesRepository)
 
     private fun parameterizeGetMessageDetail(messageID: UUID,
-                                             messageExist: Boolean): GetMessageDetailResponse
+                                             messageExist: Boolean): ApiResponse<GetMessageDetailResponse>
     {
         //given
         var message = Messages(messageID,"Test Data", Date())
