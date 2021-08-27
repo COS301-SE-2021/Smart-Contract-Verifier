@@ -38,9 +38,9 @@ internal class RetrieveUserContactListRequest {
         tempUser = tempUser.apply { this.contactList = list }
 
         //When
-        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(userExists)
-        whenever(userRepository.getById(user.publicWalletID)).thenReturn(tempUser)
-        whenever(contactListRepository.getAllByOwner(user)).thenReturn(list)
+        whenever(userRepository.existsById(tempUser.publicWalletID)).thenReturn(userExists)
+        whenever(userRepository.getById(tempUser.publicWalletID)).thenReturn(tempUser)
+        whenever(contactListRepository.getAllByOwner(tempUser)).thenReturn(list)
 
         //Then
         return contactListService.retrieveUserContactLists(userID)
@@ -75,18 +75,6 @@ internal class RetrieveUserContactListRequest {
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.ContactListInfo)
         assertTrue { response.ContactListInfo!!.isNotEmpty() }
-    }
-
-    @Test
-    fun `RetrieveUserContactLists user id is empty`()
-    {
-        //Given
-
-        //When
-        val response = parameterizedRetrieveUserContactList("", true)
-
-        //Then
-        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
