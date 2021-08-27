@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
@@ -29,7 +30,7 @@ internal class GetConditionDetailsUnitTests {
 
     private fun parameterizedGetConditionDetails(userID: String,
                                                 agreementExists: Boolean,
-                                                conditionExists: Boolean): GetConditionDetailsResponse
+                                                conditionExists: Boolean): ApiResponse<GetConditionDetailsResponse>
     {
         //given
         val conditionAUUID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937")
