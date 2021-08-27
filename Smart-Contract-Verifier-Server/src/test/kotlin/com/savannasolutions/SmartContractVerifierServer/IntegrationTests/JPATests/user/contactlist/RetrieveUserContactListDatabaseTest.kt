@@ -76,8 +76,9 @@ class RetrieveUserContactListDatabaseTest {
         val response = contactListService.retrieveUserContactLists(ownerUser.publicWalletID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.ContactListInfo)
-        for(contactLists in response.ContactListInfo!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.ContactListInfo)
+        for(contactLists in response.responseObject!!.ContactListInfo!!)
         {
             assertEquals(contactLists.contactListID, testContactList.contactListID)
             assertEquals(contactLists.contactListName, testContactList.contactListName)
