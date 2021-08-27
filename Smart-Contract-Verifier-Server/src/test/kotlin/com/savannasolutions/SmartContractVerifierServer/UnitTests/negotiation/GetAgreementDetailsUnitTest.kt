@@ -11,12 +11,12 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.Ge
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.test.assertEquals
 
 internal class GetAgreementDetailsUnitTest {
     private val conditionsRepository : ConditionsRepository = mock()
@@ -77,7 +77,7 @@ internal class GetAgreementDetailsUnitTest {
         val response = parameterizedGetAgreementDetails(userA.publicWalletID,true)
 
         //then
-        Assertions.assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
     }
 
     @Test
@@ -97,6 +97,8 @@ internal class GetAgreementDetailsUnitTest {
         agreementUser.add(userA)
         agreementUser.add(userB)
 
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
         whenever(agreementsRepository.existsById(mockAgreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(mockAgreement.ContractID)).thenReturn(mockAgreement)
         whenever(userRepository.getUsersByAgreementsContaining(mockAgreement)).thenReturn(agreementUser)
@@ -105,7 +107,7 @@ internal class GetAgreementDetailsUnitTest {
         val response = negotiationService.getAgreementDetails(userA.publicWalletID, mockAgreement.ContractID)
 
         //then
-        Assertions.assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
     }
 
     @Test
@@ -116,7 +118,7 @@ internal class GetAgreementDetailsUnitTest {
         val response = parameterizedGetAgreementDetails(userA.publicWalletID, false)
 
         //then
-        Assertions.assertEquals(response.status, ResponseStatus.FAILED)
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
@@ -128,7 +130,7 @@ internal class GetAgreementDetailsUnitTest {
         val response = parameterizedGetAgreementDetails("other user", false)
 
         //then
-        Assertions.assertEquals(response.status, ResponseStatus.FAILED)
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
@@ -140,7 +142,7 @@ internal class GetAgreementDetailsUnitTest {
         val response = parameterizedGetAgreementDetails(otherUser.publicWalletID, true)
 
         //then
-        Assertions.assertEquals(response.status, ResponseStatus.FAILED)
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
 
