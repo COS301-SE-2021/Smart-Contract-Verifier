@@ -81,43 +81,26 @@ class SetMessageAsReadTest {
 
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID:String, messageID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/messenger/set-message-as-read")
+            MockMvcRequestBuilders.put("/user/${userID}/message/${messageID}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andReturn().response
     }
 
     @Test
     fun `SetMessageAsReadTest successful`()
     {
-        val rjson = "{\"MessageID\" : \"${message.messageID}\"," +
-                        "\"RecipientID\" : \"${userB.publicWalletID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userB.publicWalletID, message.messageID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
 
     @Test
-    fun `SetMessageAsReadTest failed due to recipient is empty`()
-    {
-        val rjson = "{\"MessageID\" : \"${message.messageID}\"," +
-                "\"RecipientID\" : \"\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `SetMessageAsReadTest failed due to user not existing`()
     {
-        val rjson = "{\"MessageID\" : \"${message.messageID}\"," +
-                "\"RecipientID\" : \"other people\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender("other user", message.messageID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -125,10 +108,7 @@ class SetMessageAsReadTest {
     @Test
     fun `SetMessageAsReadTest failed due to message not exists`()
     {
-        val rjson = "{\"MessageID\" : \"638496e4-a37a-4095-9a6f-a5b8ce3ccffa\"," +
-                "\"RecipientID\" : \"${userB.publicWalletID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userB.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
