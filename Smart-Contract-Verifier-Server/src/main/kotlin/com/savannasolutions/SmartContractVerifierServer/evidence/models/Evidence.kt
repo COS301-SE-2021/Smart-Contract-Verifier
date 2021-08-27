@@ -8,7 +8,8 @@ enum class EvidenceType{LINKED, UPLOADED}
 
 @Entity
 data class Evidence(@Id val evidenceHash: String,
-                    val evidenceType: Enum<EvidenceType>,)
+                    val evidenceType: Enum<EvidenceType>,
+                    var removed: Boolean = false,)
 {
 
     @ManyToOne(fetch = FetchType.LAZY,)
