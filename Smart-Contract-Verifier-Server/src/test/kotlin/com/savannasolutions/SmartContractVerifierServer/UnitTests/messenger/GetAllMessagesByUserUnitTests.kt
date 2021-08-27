@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
@@ -37,7 +38,8 @@ internal class GetAllMessagesByUserUnitTests {
     private fun parameterizeGetAllMessagesByUser(userAddress: String,
                                                  userExist: Boolean,
                                                  messageListSending: List<Messages>? = null,
-                                                 messageListReceivingStatus: List<MessageStatus>? = null,): GetAllMessagesByUserResponse
+                                                 messageListReceivingStatus: List<MessageStatus>? = null,):
+            ApiResponse<GetAllMessagesByUserResponse>
     {
         //given
         val user = User(userAddress)
@@ -90,8 +92,9 @@ internal class GetAllMessagesByUserUnitTests {
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messages)
-        assertTrue(response.messages!!.isEmpty())
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messages)
+        assertTrue(response.responseObject!!.messages!!.isEmpty())
     }
 
     @Test
@@ -132,8 +135,9 @@ internal class GetAllMessagesByUserUnitTests {
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messages)
-        assertFalse { response.messages!!.isEmpty() }
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messages)
+        assertFalse { response.responseObject!!.messages!!.isEmpty() }
     }
 
     @Test
@@ -177,8 +181,9 @@ internal class GetAllMessagesByUserUnitTests {
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messages)
-        assertFalse { response.messages!!.isEmpty() }
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messages)
+        assertFalse { response.responseObject!!.messages!!.isEmpty() }
     }
 
     @Test
@@ -250,8 +255,9 @@ internal class GetAllMessagesByUserUnitTests {
 
         //Then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messages)
-        assertFalse { response.messages!!.isEmpty() }
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messages)
+        assertFalse { response.responseObject!!.messages!!.isEmpty() }
     }
 
     @Test
