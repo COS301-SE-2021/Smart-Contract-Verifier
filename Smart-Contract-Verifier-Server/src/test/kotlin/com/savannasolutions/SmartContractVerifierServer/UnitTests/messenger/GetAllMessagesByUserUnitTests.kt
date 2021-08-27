@@ -255,17 +255,6 @@ internal class GetAllMessagesByUserUnitTests {
     }
 
     @Test
-    fun `getAllMessagesByUser failure where user string is empty`(){
-        //given
-
-        //when
-        val response = parameterizeGetAllMessagesByUser("", true)
-
-        //then
-        assertEquals(response.status, ResponseStatus.FAILED)
-    }
-
-    @Test
     fun `getAllMessagesByUser failure where user does not exist`(){
         //given
 
