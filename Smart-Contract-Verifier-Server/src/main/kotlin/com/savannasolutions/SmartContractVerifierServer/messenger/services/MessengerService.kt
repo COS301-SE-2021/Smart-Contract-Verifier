@@ -1,9 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.messenger.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.MessageResponse
-import com.savannasolutions.SmartContractVerifierServer.common.MessageStatusResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.*
+import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
@@ -54,21 +52,23 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         return messageResponseList
     }
 
-    fun getAllMessagesByAgreement(userID: String, agreementID: UUID): GetAllMessagesByAgreementResponse{
+    fun getAllMessagesByAgreement(userID: String, agreementID: UUID): ApiResponse<GetAllMessagesByAgreementResponse>{
         if(!userRepository.existsById(userID))
-            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
 
         if(!agreementsRepository.existsById(agreementID))
-            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
 
         val agreement = agreementsRepository.getById(agreementID)
 
         val messageList = messagesRepository.getAllByAgreements(agreement) ?:
-            return GetAllMessagesByAgreementResponse(emptyList(), status = ResponseStatus.SUCCESSFUL)
+            return ApiResponse(responseObject = GetAllMessagesByAgreementResponse(emptyList()),
+                status = ResponseStatus.SUCCESSFUL)
 
         val messageResponseList = generateMessageResponseList(messageList)
 
-        return GetAllMessagesByAgreementResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetAllMessagesByAgreementResponse(messageResponseList),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun getAllMessagesByUser(userID: String): GetAllMessagesByUserResponse{
