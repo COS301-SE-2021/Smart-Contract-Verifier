@@ -1,6 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.*
+import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
@@ -15,14 +16,16 @@ class UserService(  val userRepository: UserRepository,
                     val conditionsRepository: ConditionsRepository) {
 
 
-    fun retrieveUserAgreements(userId: String): RetrieveUserAgreementsResponse {
+    fun retrieveUserAgreements(userId: String): ApiResponse<RetrieveUserAgreementsResponse> {
         if(!userRepository.existsById(userId))
-            return RetrieveUserAgreementsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
         val user = userRepository.getById(userId)
 
         val agreementList = agreementsRepository.getAllByUsersContaining(user)
-            ?: return RetrieveUserAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+            ?: return ApiResponse(responseObject = RetrieveUserAgreementsResponse(emptyList()),
+                status = ResponseStatus.SUCCESSFUL)
 
         val list = ArrayList<AgreementResponse>()
 
@@ -99,7 +102,8 @@ class UserService(  val userRepository: UserRepository,
             list.add(tempArg)
         }
 
-        return RetrieveUserAgreementsResponse(list, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = RetrieveUserAgreementsResponse(list),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
 }
