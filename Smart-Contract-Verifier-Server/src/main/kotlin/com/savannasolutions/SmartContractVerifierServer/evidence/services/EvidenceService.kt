@@ -64,6 +64,48 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
 
     fun getAllEvidence(userId: String, agreementId: UUID): GetAllEvidenceResponse? = null
 
-    fun removeEvidence(userId: String, agreementId: UUID, evidenceHash: String): RemoveEvidenceResponse? = null
+    fun removeEvidence(userId: String, agreementId: UUID, evidenceHash: String): RemoveEvidenceResponse {
+        //the agreement doesn't exist
+        if(!agreementsRepository.existsById(agreementId))
+            return RemoveEvidenceResponse(ResponseStatus.FAILED)
+        val agreement = agreementsRepository.getById(agreementId)
+
+        //the user doesn't exist
+        if(!userRepository.existsById(userId))
+            return RemoveEvidenceResponse(ResponseStatus.FAILED)
+        val user = userRepository.getById(userId)
+
+        //the user isn't party to the agreement
+        if(!agreement.users.contains(user))
+            return  RemoveEvidenceResponse(ResponseStatus.FAILED)
+
+        //evidence doesn't exist
+        if(!evidenceRepository.existsById(evidenceHash))
+            return RemoveEvidenceResponse(ResponseStatus.FAILED)
+        val evidence = evidenceRepository.getById(evidenceHash)
+
+        //user doesn't own the file
+        if(evidence.user != user)
+            return RemoveEvidenceResponse(ResponseStatus.FAILED)
+
+        // delete actual file
+        val uploadedEvidence = evidence.uploadedEvidence
+        if (uploadedEvidence != null) {
+            fileSystem.deleteFile(uploadedEvidence.filename)
+        }
+
+        //remove link to evidence
+        val linkedEvidence = evidence.evidenceUrl
+        if(linkedEvidence != null){
+            linkedEvidence.evidenceUrl = "Removed"
+            linkedEvidenceRepository.save(linkedEvidence)
+        }
+
+        //mark as removed
+        evidence.removed = true
+        evidenceRepository.save(evidence)
+
+        return RemoveEvidenceResponse(ResponseStatus.SUCCESSFUL)
+    }
 
 }
