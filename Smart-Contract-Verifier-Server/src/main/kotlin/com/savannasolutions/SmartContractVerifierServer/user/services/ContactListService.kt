@@ -89,30 +89,35 @@ class ContactListService(   val contactListRepository: ContactListRepository,
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun removeUserFromContactList(userID: String, contactListID: UUID, removeUserID: String): RemoveUserFromContactListResponse{
+    fun removeUserFromContactList(userID: String, contactListID: UUID, removeUserID: String): ApiResponse<Objects>{
         if(removeUserID.isEmpty())
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "UserID is empty")
 
         if(!userRepository.existsById(removeUserID))
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
         if(!contactListRepository.existsById(contactListID))
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.contactListDoesNotExist)
 
         val user = userRepository.getById(removeUserID)
         val contactList = contactListRepository.getById(contactListID)
 
         if(!contactListProfileRepository.existsByContactListAndUser(contactList, user))
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User is not part of contact list")
 
         val contactListProfile = contactListProfileRepository.getByContactListAndUser(contactList, user)!!
 
         contactListProfileRepository.delete(contactListProfile)
 
         if(contactListProfileRepository.existsById(contactListProfile.ProfileID!!))
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Failed to delete user")
 
-        return RemoveUserFromContactListResponse(ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
     fun retrieveContactList(userID: String, contactListID: UUID):RetrieveContactListResponse
