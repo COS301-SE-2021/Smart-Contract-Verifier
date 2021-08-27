@@ -56,8 +56,9 @@ class CreateContactListDatabaseTest {
         val response = contactListService.createContactList(user.publicWalletID, "test")
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.ContactListID)
-        contactList = contactListRepository.getById(response.ContactListID!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.ContactListID)
+        contactList = contactListRepository.getById(response.responseObject!!.ContactListID!!)
         assertEquals(contactList.contactListName, "test")
         assertEquals(contactList.owner, user)
     }
