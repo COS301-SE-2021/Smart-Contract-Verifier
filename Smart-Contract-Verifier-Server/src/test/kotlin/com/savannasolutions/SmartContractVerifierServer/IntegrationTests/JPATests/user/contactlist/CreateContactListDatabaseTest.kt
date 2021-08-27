@@ -6,7 +6,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.CreateContactListRequest
 import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -55,14 +54,12 @@ class CreateContactListDatabaseTest {
     @Test
     fun `CreateContactList successful`()
     {
-        val request = CreateContactListRequest(user.publicWalletID, "Test list")
-
-        val response = contactListService.createContactList(request)
+        val response = contactListService.createContactList(user.publicWalletID, "test")
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.ContactListID)
         contactList = contactListRepository.getById(response.ContactListID!!)
-        assertEquals(contactList.contactListName, request.ContactListName)
+        assertEquals(contactList.contactListName, "test")
         assertEquals(contactList.owner, user)
     }
 }
