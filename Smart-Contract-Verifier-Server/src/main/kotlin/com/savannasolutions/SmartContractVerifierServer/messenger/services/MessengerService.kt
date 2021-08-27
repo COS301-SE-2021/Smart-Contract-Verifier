@@ -71,9 +71,9 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun getAllMessagesByUser(userID: String): GetAllMessagesByUserResponse{
+    fun getAllMessagesByUser(userID: String): ApiResponse<GetAllMessagesByUserResponse>{
         if(!userRepository.existsById(userID))
-            return GetAllMessagesByUserResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
 
         val user = userRepository.getById(userID)
         val sentMessageList = messagesRepository.getAllBySender(user)
@@ -93,7 +93,7 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
 
         val messageResponseList = generateMessageResponseList(messageList)
 
-        return GetAllMessagesByUserResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetAllMessagesByUserResponse(messageResponseList),status =  ResponseStatus.SUCCESSFUL)
     }
 
     fun getMessageDetail(userID: String, messageID: UUID): GetMessageDetailResponse{
