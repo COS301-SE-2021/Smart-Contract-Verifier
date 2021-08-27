@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
@@ -38,7 +39,7 @@ internal class GetAllMessagesByAgreementUnitTests {
                                                       agreementID: UUID,
                                                       userExist: Boolean,
                                                       agreementExist: Boolean,
-                                                      messageList: List<Messages>? = null): GetAllMessagesByAgreementResponse
+                                                      messageList: List<Messages>? = null): ApiResponse<GetAllMessagesByAgreementResponse>
     {
         //given
         val user = User(userAddress)
@@ -87,8 +88,9 @@ internal class GetAllMessagesByAgreementUnitTests {
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messages)
-        assertTrue { response.messages!!.isEmpty()}
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messages)
+        assertTrue { response.responseObject!!.messages!!.isEmpty()}
     }
 
     @Test
@@ -121,8 +123,9 @@ internal class GetAllMessagesByAgreementUnitTests {
 
         //then
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messages)
-        assertFalse{response.messages!!.isEmpty()}
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messages)
+        assertFalse{response.responseObject!!.messages!!.isEmpty()}
     }
 
     @Test
