@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
@@ -28,7 +29,7 @@ internal class RejectConditionUnitTests {
                                              conditionID: UUID,
                                              agreementID: UUID,
                                              status: ConditionStatus
-    ): AcceptConditionResponse
+    ): ApiResponse<Objects>
     {
         //Given
         var mockAgreementA = Agreements(
