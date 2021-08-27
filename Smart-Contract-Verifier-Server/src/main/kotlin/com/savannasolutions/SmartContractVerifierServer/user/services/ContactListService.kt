@@ -1,8 +1,10 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListIDContactListNameResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListAliasWalletResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
@@ -19,21 +21,26 @@ class ContactListService(   val contactListRepository: ContactListRepository,
                             val userRepository: UserRepository,
                             val contactListProfileRepository: ContactListProfileRepository, ){
 
-    fun addUserToContactList(userID: String, contactListID: UUID, addUserToContactListRequest: AddUserToContactListRequest ): AddUserToContactListResponse{
+    fun addUserToContactList(userID: String, contactListID: UUID, addUserToContactListRequest: AddUserToContactListRequest ): ApiResponse<Objects>{
         if(addUserToContactListRequest.UserAlias.isEmpty())
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User alias is empty")
 
         if(addUserToContactListRequest.UserID.isEmpty())
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User id is empty")
 
         if(!userRepository.existsById(addUserToContactListRequest.UserID))
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
         if(!contactListRepository.existsById(contactListID))
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.contactListDoesNotExist)
 
         if(userID == addUserToContactListRequest.UserID)
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User cannot add themselves to a contact list")
 
         val tempContactList = contactListRepository.getById(contactListID)
         val tempUser = userRepository.getById(addUserToContactListRequest.UserID)
@@ -41,11 +48,13 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         if(contactListProfileRepository.getAllByContactListAndUser(tempContactList,tempUser) != null)
         {
             if(contactListProfileRepository.getAllByContactListAndUser(tempContactList,tempUser)!!.size > 1)
-                return AddUserToContactListResponse(ResponseStatus.FAILED)
+                return ApiResponse(status = ResponseStatus.FAILED,
+                message = "User already added to contact list")
         }
 
         if(contactListProfileRepository.existsByContactAliasAndContactListAndUser(addUserToContactListRequest.UserAlias,tempContactList,tempUser))
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(ResponseStatus.FAILED,
+            message = "User already exists with alias in contact list")
 
         var contactListProfile = ContactListProfile(contactAlias = addUserToContactListRequest.UserAlias)
         contactListProfile = contactListProfile.apply { contactList = tempContactList }
@@ -53,7 +62,7 @@ class ContactListService(   val contactListRepository: ContactListRepository,
 
         contactListProfileRepository.save(contactListProfile)
 
-        return AddUserToContactListResponse(ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
     fun createContactList(userID: String, contactListName: String): CreateContactListResponse{
