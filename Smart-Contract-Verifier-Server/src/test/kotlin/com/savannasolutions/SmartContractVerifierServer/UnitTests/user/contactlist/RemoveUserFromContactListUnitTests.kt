@@ -7,7 +7,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.responses.RemoveUserFromContactListResponse
 import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
 import org.junit.Test
 import org.mockito.kotlin.mock
