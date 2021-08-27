@@ -147,14 +147,16 @@ class ContactListService(   val contactListRepository: ContactListRepository,
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun retrieveUserContactLists(userID: String): RetrieveUserContactListResponse{
+    fun retrieveUserContactLists(userID: String): ApiResponse<RetrieveUserContactListResponse>{
         if(!userRepository.existsById(userID))
-            return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
         val user = userRepository.getById(userID)
         val contactLists = contactListRepository.getAllByOwner(user)
 
-        contactLists?:return RetrieveUserContactListResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+        contactLists?:return ApiResponse(responseObject = RetrieveUserContactListResponse(emptyList()),
+            status = ResponseStatus.SUCCESSFUL)
 
         val resultList = ArrayList<ContactListIDContactListNameResponse>()
 
@@ -163,6 +165,7 @@ class ContactListService(   val contactListRepository: ContactListRepository,
             resultList.add(ContactListIDContactListNameResponse(list.contactListName, list.contactListID!!))
         }
 
-        return RetrieveUserContactListResponse(resultList, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = RetrieveUserContactListResponse(resultList),
+            status = ResponseStatus.SUCCESSFUL)
     }
 }
