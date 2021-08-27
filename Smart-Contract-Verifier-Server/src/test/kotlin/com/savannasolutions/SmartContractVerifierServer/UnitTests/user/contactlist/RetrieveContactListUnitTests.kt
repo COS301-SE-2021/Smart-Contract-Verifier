@@ -35,10 +35,10 @@ internal class RetrieveContactListUnitTests {
         var contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
         var contactListProfile = ContactListProfile(UUID.fromString("8a4904c5-0ffb-4567-88de-233b160d7ddc"), "Test")
         contactListProfile = contactListProfile.apply { this.contactList = contactList }
-        contactListProfile = contactListProfile.apply { this.user = tempUser }
+        contactListProfile = contactListProfile.apply { this.user = User("other user") }
         val list = ArrayList<ContactListProfile>()
         list.add(contactListProfile)
-        contactList = contactList.apply { this.contactListProfiles = list}
+        contactList = contactList.apply { this.contactListProfiles = list}.apply { owner = tempUser }
 
         //When
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(contactListExists)
@@ -54,7 +54,7 @@ internal class RetrieveContactListUnitTests {
     fun `RetrieveContactList successful with empty list`()
     {
         //Given
-        val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName")
+        val contactList = ContactList(UUID.fromString("2b4dc93a-92f5-4425-9a11-073ce06d14c7"), "TestName").apply { owner = user }
 
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(true)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
