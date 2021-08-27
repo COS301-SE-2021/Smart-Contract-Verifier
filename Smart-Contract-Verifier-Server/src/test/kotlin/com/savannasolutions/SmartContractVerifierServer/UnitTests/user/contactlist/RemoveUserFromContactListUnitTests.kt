@@ -43,8 +43,8 @@ internal class RemoveUserFromContactListUnitTests {
         whenever(userRepository.getById(userID)).thenReturn(tUser)
         whenever(contactListRepository.existsById(contactList.contactListID!!)).thenReturn(contactListExists)
         whenever(contactListRepository.getById(contactList.contactListID!!)).thenReturn(contactList)
-        whenever(contactListProfileRepository.existsByContactListAndUser(contactList,user)).thenReturn(existsByContactListAndUser)
-        whenever(contactListProfileRepository.getByContactListAndUser(contactList,user)).thenReturn(contactListProfile)
+        whenever(contactListProfileRepository.existsByContactListAndUser(contactList,tUser)).thenReturn(existsByContactListAndUser)
+        whenever(contactListProfileRepository.getByContactListAndUser(contactList,tUser)).thenReturn(contactListProfile)
         whenever(contactListProfileRepository.existsById(contactListProfile.ProfileID!!)).thenReturn(contactListProfileExists)
 
         //then
