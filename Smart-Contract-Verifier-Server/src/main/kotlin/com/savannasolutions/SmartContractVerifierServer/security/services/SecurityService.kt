@@ -1,10 +1,10 @@
 package com.savannasolutions.SmartContractVerifierServer.security.services
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.security.requests.LoginRequest
-import com.savannasolutions.SmartContractVerifierServer.security.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.security.responses.GetNonceResponse
 import com.savannasolutions.SmartContractVerifierServer.security.responses.LoginResponse
@@ -34,16 +34,17 @@ class SecurityService(val userRepository: UserRepository,
         return GetNonceResponse(0, ResponseStatus.FAILED)
     }
 
-    fun addUser(addUserRequest: AddUserRequest): AddUserResponse {
+    fun addUser(addUserRequest: AddUserRequest): ApiResponse<Objects> {
         val wID = addUserRequest.WalletID
         if(userRepository.existsById(wID))
-            return AddUserResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User exists in database")
 
         val user = User(publicWalletID = addUserRequest.WalletID, alias = addUserRequest.Alias)
 
         userRepository.save(user)
 
-        return  AddUserResponse(status = ResponseStatus.SUCCESSFUL)
+        return  ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
     fun login(userId: String, loginRequest: LoginRequest): LoginResponse {
