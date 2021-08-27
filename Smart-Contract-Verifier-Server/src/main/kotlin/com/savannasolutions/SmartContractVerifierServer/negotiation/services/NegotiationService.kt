@@ -418,14 +418,16 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun getJudgingAgreements(userID: String): GetJudgingAgreementsResponse
+    fun getJudgingAgreements(userID: String): ApiResponse<GetJudgingAgreementsResponse>
     {
         if(!userRepository.existsById(userID))
-            return GetJudgingAgreementsResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
         val user = userRepository.getById(userID)
         val judgeList = judgesRepository.getAllByJudge(user) ?:
-            return GetJudgingAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+            return ApiResponse(responseObject = GetJudgingAgreementsResponse(emptyList()),
+                status = ResponseStatus.SUCCESSFUL)
 
         val agreementsResponseList = ArrayList<AgreementResponse>()
 
@@ -434,7 +436,8 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             agreementsResponseList.add(generateAgreementResponse(judge.agreement))
         }
 
-        return GetJudgingAgreementsResponse(agreementsResponseList, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetJudgingAgreementsResponse(agreementsResponseList),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     private fun generateAgreementResponse(agreement: Agreements): AgreementResponse {
