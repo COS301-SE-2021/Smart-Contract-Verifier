@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.UnitTests.user.contactlist
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
@@ -26,7 +27,7 @@ internal class RemoveUserFromContactListUnitTests {
                                                         userExists: Boolean,
                                                         contactListExists: Boolean,
                                                         existsByContactListAndUser: Boolean,
-                                                        contactListProfileExists: Boolean): RemoveUserFromContactListResponse
+                                                        contactListProfileExists: Boolean): ApiResponse<Objects>
     {
         //Given
         val tUser = User(userID)
