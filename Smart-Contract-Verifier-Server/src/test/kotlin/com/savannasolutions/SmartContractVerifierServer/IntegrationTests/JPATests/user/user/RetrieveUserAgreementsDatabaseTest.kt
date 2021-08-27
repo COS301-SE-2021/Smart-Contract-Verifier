@@ -6,10 +6,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Condi
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.services.UserService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -99,9 +97,7 @@ class RetrieveUserAgreementsDatabaseTest {
     @Test
     fun `RetrieveUserAgreements successful`()
     {
-        val request = RetrieveUserAgreementsRequest(userA.publicWalletID)
-
-        val responses = userService.retrieveUserAgreements(request)
+        val responses = userService.retrieveUserAgreements(userA.publicWalletID)
 
         assertEquals(responses.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(responses.Agreements)
