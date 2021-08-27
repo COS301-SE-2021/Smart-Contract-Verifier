@@ -4,7 +4,7 @@ import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/services/Server/loginService.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:animated_background/animated_background.dart';
+import 'package:awesome_loader/awesome_loader.dart';
 
 import '../providers/auth.dart';
 
@@ -73,8 +73,11 @@ class AuthScreen extends StatelessWidget {
                             text: [
                               "Contracts the smart way.",
                             ],
-                            textStyle:
-                                TextStyle(fontSize: 16.0, fontFamily: "Agne"),
+                            textStyle: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.white54,
+                                fontFamily: "Agn"
+                                    "e"),
                           ),
                         ),
                       ],
@@ -157,7 +160,10 @@ class _AuthCardState extends State<AuthCard> {
   Widget build(BuildContext context) {
     return Container(
       child: _isLoading
-          ? CircularProgressIndicator()
+          ? AwesomeLoader(
+              loaderType: AwesomeLoader.AwesomeLoader4,
+              color: Color.fromRGBO(50, 183, 196, 0.5),
+            )
           : Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
