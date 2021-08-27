@@ -8,8 +8,8 @@ enum class EvidenceType{LINKED, UPLOADED}
 
 @Entity
 data class Evidence(@Id val evidenceHash: String,
-                    val evidenceType: Enum<EvidenceType>,
-                    @OneToOne(fetch = FetchType.LAZY) val uploadedUrl: UploadedEvidence?,){
+                    val evidenceType: Enum<EvidenceType>,)
+{
 
     @ManyToOne(fetch = FetchType.LAZY,)
     lateinit var contract: Agreements
