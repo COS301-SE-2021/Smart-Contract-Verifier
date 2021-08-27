@@ -65,24 +65,28 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun createContactList(userID: String, contactListName: String): CreateContactListResponse{
+    fun createContactList(userID: String, contactListName: String): ApiResponse<CreateContactListResponse>{
         if(contactListName.isEmpty())
-            return CreateContactListResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Contact list name is empty")
 
         if(!userRepository.existsById(userID))
-            return CreateContactListResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
         val user = userRepository.getById(userID)
 
         if(contactListRepository.existsByOwnerAndContactListName(user,contactListName))
-            return CreateContactListResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User already has a contact list with passed name")
 
         var contactList = ContactList(contactListName = contactListName)
         contactList = contactList.apply { owner = user }
 
         contactList = contactListRepository.save(contactList)
 
-        return CreateContactListResponse(contactList.contactListID, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = CreateContactListResponse(contactList.contactListID),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
     fun removeUserFromContactList(userID: String, contactListID: UUID, removeUserID: String): RemoveUserFromContactListResponse{
