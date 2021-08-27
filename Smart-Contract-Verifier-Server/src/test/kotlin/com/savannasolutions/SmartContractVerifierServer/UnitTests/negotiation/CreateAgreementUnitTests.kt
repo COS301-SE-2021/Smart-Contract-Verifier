@@ -70,17 +70,6 @@ internal class CreateAgreementUnitTests {
     }
 
     @Test
-    fun `createAgreement Party A is empty`(){
-        //given
-
-        //when
-        val response = parameterizedCreateAgreement("",true,userBID,true)
-
-        //then
-        Assertions.assertEquals(ResponseStatus.FAILED, response.status)
-    }
-
-    @Test
     fun `createAgreement Party B is empty`(){
         //given
 
