@@ -7,8 +7,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Condi
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SetDurationConditionRequest
-import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SetPaymentConditionRequest
-import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.SetPaymentConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -88,11 +86,11 @@ class SetDurationConditionDatabaseTest {
     @Test
     fun `SetPaymentCondition successful`()
     {
-       val request = SetDurationConditionRequest(userA.publicWalletID,
-                                                agreement.ContractID,
-                                                Duration.ofSeconds(500))
+       val request = SetDurationConditionRequest(Duration.ofSeconds(500))
 
-       val response = negotiationService.setDurationCondition(request)
+       val response = negotiationService.setDurationCondition(userA.publicWalletID,
+                                                                agreement.ContractID,
+                                                                request)
 
        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
        assertNotNull(response.conditionID)
