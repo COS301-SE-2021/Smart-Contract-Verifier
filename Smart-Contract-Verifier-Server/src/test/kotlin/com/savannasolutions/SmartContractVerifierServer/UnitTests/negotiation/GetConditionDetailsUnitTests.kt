@@ -11,11 +11,11 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.Ge
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.*
+import kotlin.test.assertEquals
 
 internal class GetConditionDetailsUnitTests {
     private val conditionsRepository : ConditionsRepository = mock()
@@ -49,6 +49,7 @@ internal class GetConditionDetailsUnitTests {
         //when
         whenever(agreementsRepository.getById(mockAgreementA.ContractID)).thenReturn(mockAgreementA)
         whenever(agreementsRepository.existsById(mockAgreementA.ContractID)).thenReturn(agreementExists)
+        whenever(userRepository.getUsersByAgreementsContaining(mockAgreementA)).thenReturn(mockAgreementA.users.toList())
         whenever(conditionsRepository.existsById(conditionAUUID)).thenReturn(conditionExists)
         whenever(conditionsRepository.getById(conditionAUUID)).thenReturn(mockConditionA)
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
@@ -70,7 +71,7 @@ internal class GetConditionDetailsUnitTests {
                                                         conditionExists = true)
 
         //then
-        Assertions.assertEquals(response.status, ResponseStatus.SUCCESSFUL)
+        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
     }
 
     @Test
@@ -83,7 +84,7 @@ internal class GetConditionDetailsUnitTests {
             conditionExists = false)
 
         //then
-        Assertions.assertEquals(response.status, ResponseStatus.FAILED)
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 
     @Test
@@ -97,6 +98,6 @@ internal class GetConditionDetailsUnitTests {
             conditionExists = true)
 
         //then
-        Assertions.assertEquals(response.status, ResponseStatus.FAILED)
+        assertEquals(response.status, ResponseStatus.FAILED)
     }
 }
