@@ -97,21 +97,6 @@ internal class SetMessageAsReadUnitTest {
     }
 
     @Test
-    fun `setMessageAsRead failed recipientID is empty`(){
-        //given
-
-        //when
-        val response = parameterizeSetMessageAsRead("",
-            recipientExists = true,
-            messageExists = true,
-            ReadDate = false,
-            userMessageExists = true)
-
-        //then
-        assertEquals(response.status, ResponseStatus.FAILED)
-    }
-
-    @Test
     fun `setMessageAsRead failed user does not exist`(){
         //given
 
