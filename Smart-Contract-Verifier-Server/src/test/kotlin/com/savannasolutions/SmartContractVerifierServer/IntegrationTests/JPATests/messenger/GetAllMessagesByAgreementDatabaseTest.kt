@@ -113,9 +113,10 @@ class GetAllMessagesByAgreementDatabaseTest {
         val response = messagesService.getAllMessagesByAgreement(userA.publicWalletID, agreement.ContractID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messages)
-        val msg1 = response.messages!![0]
-        val msg2 = response.messages!![1]
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messages)
+        val msg1 = response.responseObject!!.messages!![0]
+        val msg2 = response.responseObject!!.messages!![1]
 
         assertEquals(msg1.AgreementID, messageA.agreements.ContractID)
         assertEquals(msg1.Message, messageA.message)
