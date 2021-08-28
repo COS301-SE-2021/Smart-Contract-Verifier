@@ -6,7 +6,7 @@ import java.io.File
 interface EvidenceFileSystem {
     fun saveFile(fileToSave: MultipartFile)
 
-    fun retrieveFile(fileToRetrieve: String)
+    fun retrieveFile(fileToRetrieve: String): MultipartFile
 
     fun deleteFile(fileToDelete: String)
 }

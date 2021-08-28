@@ -62,7 +62,36 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return LinkEvidenceResponse(ResponseStatus.SUCCESSFUL)
     }
 
-    fun fetchEvidence(userId: String, agreementId: UUID, evidenceHash: String): FetchEvidenceResponse? = null
+    fun fetchEvidence(userId: String, agreementId: UUID, evidenceHash: String): FetchEvidenceResponse {
+        if(!agreementsRepository.existsById(agreementId))
+            return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+        val agreement = agreementsRepository.getById(agreementId)
+
+        //user doesn't exist
+        if(!userRepository.existsById(userId))
+            return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+        val user = userRepository.getById(userId)
+
+        //evidence doesn't exist
+        if(!evidenceRepository.existsById(evidenceHash))
+            return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+        val evidence = evidenceRepository.getById(evidenceHash)
+
+        //user isn't party to the agreement
+        val judge = judgesRepository.getAllByJudge(user)?.get(0)
+        val judges = agreement.judges
+        if (!agreement.users.contains(user) && (judges != null && !judges.contains(judge)))
+            return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+
+        val evidenceLink = evidence.evidenceUrl
+        return if(evidenceLink!=null)
+            FetchEvidenceResponse(ResponseStatus.FAILED, evidenceLink.evidenceUrl, null)
+        else{
+            val uploadedEvidence = evidence.uploadedEvidence
+            val file = uploadedEvidence?.let { fileSystem.retrieveFile(it.filename) }
+            FetchEvidenceResponse(ResponseStatus.FAILED, null, file)
+        }
+    }
 
     fun getAllEvidence(userId: String, agreementId: UUID): GetAllEvidenceResponse {
         //agreement doesn't exist
