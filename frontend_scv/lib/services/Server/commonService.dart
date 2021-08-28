@@ -17,24 +17,22 @@ class CommonService {
           'An error was encountered, and the agreement could not be retrieved');
   //Error object to return on exception.
 
-  Future<List<Contract>> getInvolvedAgreements(String party) async {
+  Future<List<Contract>> getInvolvedAgreements(String addr) async {
     //Get all agreements where a user is involved
     var response;
 
     try {
-      response = await _api
-          .postData('/user/retrieve-user-agreements', {'UserID': party});
+      response = await _api.getData('/user/$addr/agreement');
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Retrieval of agreements failed');
     } on Exception catch (e) {
       //Handle Exception
       print(e);
-      return []; //This should be revised
+      return [];
     }
 
     List<dynamic> jsonList = ((response['agreements']));
-    //print("Fetched" + jsonList.toString());
     List<Contract> ret = [];
     for (int i = 0; i < jsonList.length; i++) {
       ret.add(Contract.fromJson(jsonList[i]));
@@ -43,24 +41,6 @@ class CommonService {
     return ret;
   }
 
-  Future<Contract> getAgreement(String id) async {
-    //Get agreement with specified id
-
-    var response;
-
-    try {
-      response = await _api
-          .postData('/negotiation/get-agreement-details', {'AgreementID': id});
-
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Agreement could not be retrieved');
-    } on Exception catch (e) {
-      print(e.toString());
-      throw e;
-    }
-
-    return Contract.fromJson(response['AgreementResponse']);
-  }
 
   Future<List<Condition>> getConditions(String id) async {
     //Get a list of conditions for an agreement
