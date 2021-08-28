@@ -1,13 +1,12 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SetPaymentConditionRequest
-import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.SetPaymentConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -86,16 +85,17 @@ class SetPaymentConditionDatabaseTest {
     @Test
     fun `SetPaymentCondition successful`()
     {
-       val request = SetPaymentConditionRequest(userA.publicWalletID,
-                                                agreement.ContractID,
-                                                500.0,
+       val request = SetPaymentConditionRequest(500.0,
                                                 userA.publicWalletID)
 
-       val response = negotiationService.setPaymentCondition(request)
+       val response = negotiationService.setPaymentCondition(userA.publicWalletID,
+                                                                agreement.ContractID,
+                                                                request)
 
        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-       assertNotNull(response.conditionID)
-       conditions = conditionsRepository.getById(response.conditionID!!)
+       assertNotNull(response.responseObject)
+       assertNotNull(response.responseObject!!.conditionID)
+       conditions = conditionsRepository.getById(response.responseObject!!.conditionID!!)
        assertContains(conditions.conditionDescription, request.Payment.toString())
     }
 

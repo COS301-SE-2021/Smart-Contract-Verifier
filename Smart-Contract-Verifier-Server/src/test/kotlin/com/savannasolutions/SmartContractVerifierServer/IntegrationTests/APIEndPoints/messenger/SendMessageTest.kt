@@ -88,10 +88,10 @@ class SendMessageTest {
 
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(rjson: String, userID: String, agreementID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/messenger/send-message")
+            MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/message")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rjson)).andReturn().response
     }
@@ -99,11 +99,9 @@ class SendMessageTest {
     @Test
     fun `SendMessage successful`()
     {
-        val rjson = "{\"SendingUser\" : \"${userA.publicWalletID}\"," +
-                        "\"AgreementID\" : \"${agreementAUUID}\"," +
-                        "\"Message\" : \"Test message\"}"
+        val rjson = "{\"Message\" : \"Test message\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreementAUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, message.messageID.toString())
@@ -112,11 +110,9 @@ class SendMessageTest {
     @Test
     fun `SendMessage failed due to user not existing`()
     {
-        val rjson = "{\"SendingUser\" : \"\"," +
-                "\"AgreementID\" : \"${agreementAUUID}\"," +
-                "\"Message\" : \"Test message\"}"
+        val rjson = "{\"Message\" : \"Test message\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, "other user", agreementAUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -124,11 +120,9 @@ class SendMessageTest {
     @Test
     fun `SendMessage failed due to agreement not existing`()
     {
-        val rjson = "{\"SendingUser\" : \"${userA.publicWalletID}\"," +
-                "\"AgreementID\" : \"cb2e06da-e5a8-4cd5-824b-656c68ee670d\"," +
-                "\"Message\" : \"Test message\"}"
+        val rjson = "{\"Message\" : \"Test message\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -136,11 +130,9 @@ class SendMessageTest {
     @Test
     fun `SendMessage failed message is empty`()
     {
-        val rjson = "{\"SendingUser\" : \"${userA.publicWalletID}\"," +
-                "\"AgreementID\" : \"${agreementAUUID}\"," +
-                "\"Message\" : \"\"}"
+        val rjson = "{\"Message\" : \"\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,userA.publicWalletID, agreementAUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

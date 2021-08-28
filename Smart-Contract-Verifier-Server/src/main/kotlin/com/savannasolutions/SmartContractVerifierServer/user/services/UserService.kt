@@ -1,14 +1,13 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.*
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.*
+import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
 import org.springframework.stereotype.Service
-import java.util.*
 import kotlin.collections.ArrayList
 
 @Service
@@ -17,17 +16,16 @@ class UserService(  val userRepository: UserRepository,
                     val conditionsRepository: ConditionsRepository) {
 
 
-    fun retrieveUserAgreements(retrieveUserAgreementsRequest: RetrieveUserAgreementsRequest): RetrieveUserAgreementsResponse {
-        if(retrieveUserAgreementsRequest.UserID.isEmpty())
-            return RetrieveUserAgreementsResponse(status = ResponseStatus.FAILED)
+    fun retrieveUserAgreements(userId: String): ApiResponse<RetrieveUserAgreementsResponse> {
+        if(!userRepository.existsById(userId))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!userRepository.existsById(retrieveUserAgreementsRequest.UserID))
-            return RetrieveUserAgreementsResponse(status = ResponseStatus.FAILED)
-
-        val user = userRepository.getById(retrieveUserAgreementsRequest.UserID)
+        val user = userRepository.getById(userId)
 
         val agreementList = agreementsRepository.getAllByUsersContaining(user)
-            ?: return RetrieveUserAgreementsResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+            ?: return ApiResponse(responseObject = RetrieveUserAgreementsResponse(emptyList()),
+                status = ResponseStatus.SUCCESSFUL)
 
         val list = ArrayList<AgreementResponse>()
 
@@ -104,7 +102,8 @@ class UserService(  val userRepository: UserRepository,
             list.add(tempArg)
         }
 
-        return RetrieveUserAgreementsResponse(list,ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = RetrieveUserAgreementsResponse(list),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
 }

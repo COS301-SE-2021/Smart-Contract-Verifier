@@ -1,15 +1,13 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.user.user
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveUserAgreementsRequest
 import com.savannasolutions.SmartContractVerifierServer.user.services.UserService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -99,13 +97,12 @@ class RetrieveUserAgreementsDatabaseTest {
     @Test
     fun `RetrieveUserAgreements successful`()
     {
-        val request = RetrieveUserAgreementsRequest(userA.publicWalletID)
-
-        val responses = userService.retrieveUserAgreements(request)
+        val responses = userService.retrieveUserAgreements(userA.publicWalletID)
 
         assertEquals(responses.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(responses.Agreements)
-        for(agreementResponse in responses.Agreements!!)
+        assertNotNull(responses.responseObject)
+        assertNotNull(responses.responseObject!!.Agreements)
+        for(agreementResponse in responses.responseObject!!.Agreements!!)
         {
             assertNotNull(agreementResponse)
             assertEquals(agreementResponse.agreementID, agreement.ContractID)
