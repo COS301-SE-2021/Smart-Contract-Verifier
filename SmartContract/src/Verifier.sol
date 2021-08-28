@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "./UnisonToken.sol";
 import "./Structs/AgreementLib.sol";
 import "./JurorStore.sol";
-
+import "./FeeContract.sol";
 
 // pragma experimental ABIEncoderV2;
 
@@ -13,6 +13,7 @@ contract Verifier{
     using AgreementLib for AgreementLib.Agreement;
 
     uint private nextAgreeID = 0;
+    uint numActive = 0;
 
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => AgreementLib.Agreement) agreements;
@@ -21,14 +22,14 @@ contract Verifier{
     JurorStore jurorStore;
     uint jurySeed = 10;
     UnisonToken unisonToken;
-
-    uint stakingAmount = 10000;
+    FeeContract feeContract;
 
     // Fraction out of a thousand
     uint constant controversyRatio = 300;
 
     constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
+        feeContract = new FeeContract(address(this));
         jurorStore = new JurorStore(address(this), randomSource);
     }
 
@@ -75,7 +76,7 @@ contract Verifier{
         agreements[nextAgreeID].resolutionTime = resolutionTime;
         agreements[nextAgreeID].text = text;
         agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
-        agreements[nextAgreeID].platformFee = 1000000000;
+        agreements[nextAgreeID].platformFee = getPlatformFee();
         agreements[nextAgreeID].uuid = uuid;
 
         emit CreateAgreement(msg.sender, party2, nextAgreeID, uuid);
@@ -143,6 +144,7 @@ contract Verifier{
             agreements[agreeID].feePayer = msg.sender;
             if(agreements[agreeID].feePaid == agreements[agreeID].platformFee){
                 agreements[agreeID].state = AgreementLib.AgreementState.ACTIVE;
+                numActive++;
                 emit ActiveAgreement(agreeID);
             }
         }
@@ -200,6 +202,7 @@ contract Verifier{
 
             // Close the agreement
             agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+            numActive--;
             emit CloseAgreement(agreeID);
         }
 
@@ -241,8 +244,8 @@ contract Verifier{
         address j = msg.sender;
 
         uint allowed = unisonToken.allowance(j, address(this));
-        require(allowed >= stakingAmount);
-        unisonToken.transferFrom(j, address(this), stakingAmount);
+        require(allowed >= getStakingAmount());
+        unisonToken.transferFrom(j, address(this), getStakingAmount());
 
         jurorStore.addJuror(j);
         emit AddJuror(j);
@@ -251,7 +254,7 @@ contract Verifier{
     // remove yourself from available jurors list
     function removeJuror() public{
         jurorStore.removeJuror(msg.sender);
-        unisonToken.transfer(msg.sender, stakingAmount);
+        unisonToken.transfer(msg.sender, getStakingAmount());
         emit RemoveJuror(msg.sender);
     }
 
@@ -313,14 +316,14 @@ contract Verifier{
             // Jury voted no, do a refund
             decision = AgreementLib.Vote.NO;
             _refundAgreement(agreeID);
-            payPerJuror = stakingAmount / no;
+            payPerJuror = agreements[agreeID].feePaid / no;
             controversy = (1000 * yes) /(no + yes);
         }
         else{
             // Jury voted yes (even result is counted as yes), pay out as normal
             decision = AgreementLib.Vote.YES;
             _payoutAgreement(agreeID);
-            payPerJuror = stakingAmount / yes;
+            payPerJuror = agreements[agreeID].feePaid / yes;
             controversy = (1000 * no) /(no + yes);
         }
 
@@ -352,6 +355,7 @@ contract Verifier{
 
 
         agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+        numActive--;
         emit CloseAgreement(agreeID);
     }
 
@@ -394,6 +398,18 @@ contract Verifier{
 
         _juryMakeDecision(agreeID);
 
+    }
+
+    function _totalRatio() internal view returns(uint){
+        return (1000*numActive) / jurorStore.getNumJurors();
+    }
+
+    function getPlatformFee() public view returns(uint){
+        return feeContract.getPlatformFee();
+    }
+
+    function getStakingAmount() public view returns(uint){
+        return feeContract.getStakingAmount();
     }
 
     event CreateAgreement(address party1, address party2, uint agreeID, string uuid);

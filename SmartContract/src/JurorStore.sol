@@ -48,6 +48,10 @@ contract JurorStore{
         return strikes[a];
     }
 
+    function getNumJurors() public view returns(uint){
+        return numJurors;
+    }
+
     function removeJuror(address j) public onlyOwner(){
         // Address 0 can't be removed since:
         // a) it isn't in jurorIndex so it's index is 0
