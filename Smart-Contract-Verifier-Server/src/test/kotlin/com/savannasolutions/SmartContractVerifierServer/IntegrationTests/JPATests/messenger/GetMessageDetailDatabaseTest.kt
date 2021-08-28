@@ -1,12 +1,11 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.messenger
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetMessageDetailRequest
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -102,13 +101,12 @@ class GetMessageDetailDatabaseTest {
     @Test
     fun `GetMessageDetail success`()
     {
-        val request = GetMessageDetailRequest(messageA.messageID)
-
-        val response = messagesService.getMessageDetail(request)
+        val response = messagesService.getMessageDetail(userA.publicWalletID,messageA.messageID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messageDetails)
-        assertEquals(response.messageDetails!!.MessageID, request.MessageID)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messageDetails)
+        assertEquals(response.responseObject!!.messageDetails!!.MessageID, messageA.messageID)
     }
 
 

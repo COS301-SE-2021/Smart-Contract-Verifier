@@ -130,20 +130,18 @@ class GetAllMessagesByUserTest {
         }
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/messenger/get-all-messages-by-user")
+            MockMvcRequestBuilders.get("/user/${userID}/message")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andReturn().response
     }
 
     @Test
     fun `GetAllMessagesByUser successful`()
     {
-        val rjson = "{\"RequestingUser\" : \"${userA.publicWalletID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, messageA.messageID.toString())
@@ -155,21 +153,9 @@ class GetAllMessagesByUserTest {
     }
 
     @Test
-    fun `GetAllMessagesByUser failed user is empty`()
-    {
-        val rjson = "{\"RequestingUser\" : \"\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `GetAllMessagesByUser failure user does not exist`()
     {
-        val rjson = "{\"RequestingUser\" : \"user does not exist\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender("other user")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

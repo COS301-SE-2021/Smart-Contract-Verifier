@@ -43,6 +43,7 @@ class AcceptConditionTest {
     private lateinit var acceptedConditionID: UUID
     private lateinit var rejectedConditionID: UUID
     private lateinit var pendingConditionID: UUID
+    private lateinit var agreementsUUID: UUID
 
     @BeforeEach
     fun beforeEach() {
@@ -57,6 +58,7 @@ class AcceptConditionTest {
             CreatedDate = Date(),
             MovedToBlockChain = false
         )
+        agreementsUUID = agreement.ContractID
 
         val pendingCondition = Conditions(UUID.fromString("967ee13c-dd5d-4de5-adb5-7dd4907fb2cf"),
                                     "Test conditions pending",
@@ -84,6 +86,7 @@ class AcceptConditionTest {
         conditionList.add(acceptedCondition)
         conditionList.add(rejectedCondition)
 
+        whenever(agreementsRepository.existsById(agreementsUUID)).thenReturn(true)
         whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
         whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
         whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
@@ -98,20 +101,17 @@ class AcceptConditionTest {
 
     }
 
-    private fun requestSender(rjson: String): MockHttpServletResponse {
+    private fun requestSender(userID: String, agreementID: UUID, conditionID: UUID): MockHttpServletResponse {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/accept-condition")
+            MockMvcRequestBuilders.put("/user/${userID}/agreement/${agreementID}/condition/${conditionID}/accept")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)
         ).andReturn().response
     }
 
     @Test
     fun `AcceptCondition successful`()
     {
-        val rjson = "{\"ConditionID\" : \"$pendingConditionID\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementsUUID, pendingConditionID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
@@ -119,9 +119,15 @@ class AcceptConditionTest {
     @Test
     fun `AcceptCondition failed due to condition not existing`()
     {
-        val rjson = "{\"ConditionID\" : \"980ccce0-59aa-4246-96ef-b55501f150ec\"}"
+        val response = requestSender(userA.publicWalletID, agreementsUUID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
-        val response = requestSender(rjson)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+    }
+
+    @Test
+    fun `AcceptCondition failed due to agreement not existing`()
+    {
+        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"), pendingConditionID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -129,9 +135,7 @@ class AcceptConditionTest {
     @Test
     fun `AcceptCondition failed due to condition being already rejected`()
     {
-        val rjson = "{\"ConditionID\" : \"$rejectedConditionID\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementsUUID, rejectedConditionID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -139,9 +143,7 @@ class AcceptConditionTest {
     @Test
     fun `AcceptCondition failed due to condition being already accepted`()
     {
-        val rjson = "{\"ConditionID\" : \"$acceptedConditionID\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementsUUID, acceptedConditionID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

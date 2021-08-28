@@ -1,13 +1,12 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.GetAgreementDetailsRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -101,21 +100,20 @@ class GetAgreementDetailsDatabaseTest {
     @Test
     fun `GetAgreementDetails success`()
     {
-        val request = GetAgreementDetailsRequest(agreement.ContractID)
-
-        val response = negotiationService.getAgreementDetails(request)
+        val response = negotiationService.getAgreementDetails(userA.publicWalletID,agreement.ContractID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.agreementResponse)
-        assertEquals(response.agreementResponse!!.agreementID, agreement.ContractID)
-        assertEquals(response.agreementResponse!!.agreementTitle, agreement.AgreementTitle)
-        assertEquals(response.agreementResponse!!.agreementImageURL, agreement.AgreementImageURL)
-        assertNotNull(response.agreementResponse!!.partyA)
-        assertNotNull(response.agreementResponse!!.partyB)
-        assertEquals(response.agreementResponse!!.partyA!!.PublicWalletID, userA.publicWalletID)
-        assertEquals(response.agreementResponse!!.partyB!!.PublicWalletID, userB.publicWalletID)
-        assertNotNull(response.agreementResponse!!.conditions)
-        for(cond in response.agreementResponse!!.conditions!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.agreementResponse)
+        assertEquals(response.responseObject!!.agreementResponse!!.agreementID, agreement.ContractID)
+        assertEquals(response.responseObject!!.agreementResponse!!.agreementTitle, agreement.AgreementTitle)
+        assertEquals(response.responseObject!!.agreementResponse!!.agreementImageURL, agreement.AgreementImageURL)
+        assertNotNull(response.responseObject!!.agreementResponse!!.partyA)
+        assertNotNull(response.responseObject!!.agreementResponse!!.partyB)
+        assertEquals(response.responseObject!!.agreementResponse!!.partyA!!.PublicWalletID, userA.publicWalletID)
+        assertEquals(response.responseObject!!.agreementResponse!!.partyB!!.PublicWalletID, userB.publicWalletID)
+        assertNotNull(response.responseObject!!.agreementResponse!!.conditions)
+        for(cond in response.responseObject!!.agreementResponse!!.conditions!!)
         {
             assertEquals(cond.conditionID, conditions.conditionID)
         }

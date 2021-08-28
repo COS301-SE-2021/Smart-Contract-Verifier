@@ -1,13 +1,12 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.user.contactlist
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.RetrieveContactListRequest
 import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -74,13 +73,13 @@ class RetrieveContactListDatabaseTest {
     @Test
     fun `RetrieveContactListDatabase success`()
     {
-        val request = RetrieveContactListRequest(testContactList.contactListID!!)
-
-        val response = contactListService.retrieveContactList(request)
+        val response = contactListService.retrieveContactList(ownerUser.publicWalletID,
+                                                                testContactList.contactListID!!)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.WalletAndAlias)
-        for(usr in response.WalletAndAlias!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.WalletAndAlias)
+        for(usr in response.responseObject!!.WalletAndAlias!!)
         {
             assertEquals(usr.Alias, contactListProfile.contactAlias)
             assertEquals(usr.WalletID, otherUser.publicWalletID)

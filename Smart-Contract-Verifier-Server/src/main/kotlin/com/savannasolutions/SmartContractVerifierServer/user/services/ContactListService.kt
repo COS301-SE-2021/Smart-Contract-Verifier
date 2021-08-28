@@ -1,8 +1,10 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.ContactListIDContactListNameResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ContactListAliasWalletResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListIDContactListNameResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListAliasWalletResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
@@ -11,6 +13,7 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRe
 import com.savannasolutions.SmartContractVerifierServer.user.requests.*
 import com.savannasolutions.SmartContractVerifierServer.user.responses.*
 import org.springframework.stereotype.Service
+import java.util.*
 import kotlin.collections.ArrayList
 
 @Service
@@ -18,96 +21,119 @@ class ContactListService(   val contactListRepository: ContactListRepository,
                             val userRepository: UserRepository,
                             val contactListProfileRepository: ContactListProfileRepository, ){
 
-    fun addUserToContactList(addUserToContactListRequest: AddUserToContactListRequest ): AddUserToContactListResponse{
+    fun addUserToContactList(userID: String, contactListID: UUID, addUserToContactListRequest: AddUserToContactListRequest ): ApiResponse<Objects>{
         if(addUserToContactListRequest.UserAlias.isEmpty())
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User alias is empty")
 
         if(addUserToContactListRequest.UserID.isEmpty())
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User id is empty")
 
         if(!userRepository.existsById(addUserToContactListRequest.UserID))
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!contactListRepository.existsById(addUserToContactListRequest.ContactListID))
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+        if(!contactListRepository.existsById(contactListID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.contactListDoesNotExist)
 
-        val vcontactList = contactListRepository.getById(addUserToContactListRequest.ContactListID)
-        val vuser = userRepository.getById(addUserToContactListRequest.UserID)
+        if(userID == addUserToContactListRequest.UserID)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User cannot add themselves to a contact list")
 
-        if(contactListProfileRepository.getAllByContactListAndUser(vcontactList,vuser) != null)
+        val tempContactList = contactListRepository.getById(contactListID)
+        val tempUser = userRepository.getById(addUserToContactListRequest.UserID)
+
+        if(contactListProfileRepository.getAllByContactListAndUser(tempContactList,tempUser) != null)
         {
-            if(contactListProfileRepository.getAllByContactListAndUser(vcontactList,vuser)!!.size > 1)
-                return AddUserToContactListResponse(ResponseStatus.FAILED)
+            if(contactListProfileRepository.getAllByContactListAndUser(tempContactList,tempUser)!!.size > 1)
+                return ApiResponse(status = ResponseStatus.FAILED,
+                message = "User already added to contact list")
         }
 
-        if(contactListProfileRepository.existsByContactAliasAndContactListAndUser(addUserToContactListRequest.UserAlias,vcontactList,vuser))
-            return AddUserToContactListResponse(ResponseStatus.FAILED)
+        if(contactListProfileRepository.existsByContactAliasAndContactListAndUser(addUserToContactListRequest.UserAlias,tempContactList,tempUser))
+            return ApiResponse(ResponseStatus.FAILED,
+            message = "User already exists with alias in contact list")
 
         var contactListProfile = ContactListProfile(contactAlias = addUserToContactListRequest.UserAlias)
-        contactListProfile = contactListProfile.apply { contactList = vcontactList }
-        contactListProfile = contactListProfile.apply { user = vuser }
+        contactListProfile = contactListProfile.apply { contactList = tempContactList }
+        contactListProfile = contactListProfile.apply { user = tempUser }
 
         contactListProfileRepository.save(contactListProfile)
 
-        return AddUserToContactListResponse(ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun createContactList(createContactListRequest: CreateContactListRequest): CreateContactListResponse{
-        if(createContactListRequest.ContactListName.isEmpty())
-            return CreateContactListResponse(status = ResponseStatus.FAILED)
+    fun createContactList(userID: String, contactListName: String): ApiResponse<CreateContactListResponse>{
+        if(contactListName.isEmpty())
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Contact list name is empty")
 
-        if(createContactListRequest.UserID.isEmpty())
-            return CreateContactListResponse(status = ResponseStatus.FAILED)
+        if(!userRepository.existsById(userID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!userRepository.existsById(createContactListRequest.UserID))
-            return CreateContactListResponse(status = ResponseStatus.FAILED)
+        val user = userRepository.getById(userID)
 
-        val user = userRepository.getById(createContactListRequest.UserID)
+        if(contactListRepository.existsByOwnerAndContactListName(user,contactListName))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User already has a contact list with passed name")
 
-        if(contactListRepository.existsByOwnerAndContactListName(user,createContactListRequest.ContactListName))
-            return CreateContactListResponse(status = ResponseStatus.FAILED)
-
-        var contactList = ContactList(contactListName = createContactListRequest.ContactListName)
+        var contactList = ContactList(contactListName = contactListName)
         contactList = contactList.apply { owner = user }
 
         contactList = contactListRepository.save(contactList)
 
-        return CreateContactListResponse(contactList.contactListID, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = CreateContactListResponse(contactList.contactListID),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun removeUserFromContactList(removeUserFromContactListRequest: RemoveUserFromContactListRequest): RemoveUserFromContactListResponse{
-        if(removeUserFromContactListRequest.RemoveUserID.isEmpty())
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+    fun removeUserFromContactList(userID: String, contactListID: UUID, removeUserID: String): ApiResponse<Objects>{
+        if(removeUserID.isEmpty())
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "UserID is empty")
 
-        if(!userRepository.existsById(removeUserFromContactListRequest.RemoveUserID))
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+        if(!userRepository.existsById(removeUserID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!contactListRepository.existsById(removeUserFromContactListRequest.ContactListID))
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+        if(!contactListRepository.existsById(contactListID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.contactListDoesNotExist)
 
-        val user = userRepository.getById(removeUserFromContactListRequest.RemoveUserID)
-        val contactList = contactListRepository.getById(removeUserFromContactListRequest.ContactListID)
+        val user = userRepository.getById(removeUserID)
+        val contactList = contactListRepository.getById(contactListID)
 
         if(!contactListProfileRepository.existsByContactListAndUser(contactList, user))
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User is not part of contact list")
 
         val contactListProfile = contactListProfileRepository.getByContactListAndUser(contactList, user)!!
 
         contactListProfileRepository.delete(contactListProfile)
 
         if(contactListProfileRepository.existsById(contactListProfile.ProfileID!!))
-            return RemoveUserFromContactListResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "Failed to delete user")
 
-        return RemoveUserFromContactListResponse(ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun retrieveContactList(retrieveContactListRequest: RetrieveContactListRequest):RetrieveContactListResponse
+    fun retrieveContactList(userID: String, contactListID: UUID): ApiResponse<RetrieveContactListResponse>
     {
-        if(!contactListRepository.existsById(retrieveContactListRequest.ContactListID))
-            return RetrieveContactListResponse(status = ResponseStatus.FAILED)
+        if(!contactListRepository.existsById(contactListID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.contactListDoesNotExist)
 
-        val contactList = contactListRepository.getById(retrieveContactListRequest.ContactListID)
-        contactList.contactListProfiles?: return RetrieveContactListResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+        val contactList = contactListRepository.getById(contactListID)
+
+        if(contactList.owner.publicWalletID != userID)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User is not the owner of contact list")
+
+        contactList.contactListProfiles?: return ApiResponse(responseObject = RetrieveContactListResponse(emptyList()),
+            status = ResponseStatus.SUCCESSFUL)
 
         val list = ArrayList<ContactListAliasWalletResponse>()
         val contactListProfiles = contactListProfileRepository.getAllByContactList(contactList)
@@ -117,29 +143,29 @@ class ContactListService(   val contactListRepository: ContactListRepository,
             list.add(ContactListAliasWalletResponse( cLP.contactAlias, cLP.user.publicWalletID))
         }
 
-        return RetrieveContactListResponse(list,ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = RetrieveContactListResponse(list),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun retrieveUserContactLists(retrieveUserContactListRequest: RetrieveUserContactListRequest): RetrieveUserContactListResponse{
-        if(retrieveUserContactListRequest.UserID.isEmpty())
-            return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
+    fun retrieveUserContactLists(userID: String): ApiResponse<RetrieveUserContactListResponse>{
+        if(!userRepository.existsById(userID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!userRepository.existsById(retrieveUserContactListRequest.UserID))
-            return RetrieveUserContactListResponse(status = ResponseStatus.FAILED)
+        val user = userRepository.getById(userID)
+        val contactLists = contactListRepository.getAllByOwner(user)
 
-        val contactList = userRepository.getById(retrieveUserContactListRequest.UserID).contactList
-        val user = userRepository.getById(retrieveUserContactListRequest.UserID)
-
-        contactList?:return RetrieveUserContactListResponse(emptyList(), ResponseStatus.SUCCESSFUL)
+        contactLists?:return ApiResponse(responseObject = RetrieveUserContactListResponse(emptyList()),
+            status = ResponseStatus.SUCCESSFUL)
 
         val resultList = ArrayList<ContactListIDContactListNameResponse>()
-        val contactLists = contactListRepository.getAllByOwner(user)
 
         for(list in contactLists)
         {
-            resultList.add(ContactListIDContactListNameResponse(list.contactListName, list.contactListID!!,))
+            resultList.add(ContactListIDContactListNameResponse(list.contactListName, list.contactListID!!))
         }
 
-        return RetrieveUserContactListResponse(resultList, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = RetrieveUserContactListResponse(resultList),
+            status = ResponseStatus.SUCCESSFUL)
     }
 }
