@@ -43,7 +43,7 @@ class NegotiationService {
     Map<String, dynamic> response;
     try {
       response =
-          await _api.postData(_reqPath + 'create-condition', cond.toJson());
+          await _api.postData(_reqPath + '/${Global.userAddress}/agreement/${cond.agreementId}/condition', cond.toJson());
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Condition could not be saved');
