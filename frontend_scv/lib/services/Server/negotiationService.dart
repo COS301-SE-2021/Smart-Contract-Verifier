@@ -26,7 +26,7 @@ class NegotiationService {
     Map<String, dynamic> response;
     try {
       response =
-          await _api.postData(_reqPath + '/' + Global.userAddress + '/agreement', agr.toJson());
+          await _api.postData('$_reqPath/${Global.userAddress}/agreement', agr.toJson());
       print(response.toString());
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be saved');
@@ -43,7 +43,7 @@ class NegotiationService {
     Map<String, dynamic> response;
     try {
       response =
-          await _api.postData(_reqPath + '/${Global.userAddress}/agreement/${cond.agreementId}/condition', cond.toJson());
+          await _api.postData('$_reqPath/${Global.userAddress}/agreement/${cond.agreementId}/condition', cond.toJson());
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Condition could not be saved');
@@ -54,26 +54,28 @@ class NegotiationService {
     }
   }
 
-  void acceptCondition(String id) async {
+  void acceptCondition(Condition con) async {
     //Or condition object?
 
-    await _handleCondition(id, true);
+    await _handleCondition(con, true);
   }
 
-  void rejectCondition(String id) async {
-    await _handleCondition(id, false);
+  void rejectCondition(Condition con) async {
+    await _handleCondition(con, false);
   }
 
   //This class was made to handle both payment and duration.
   //The api requests bodies for the two are now different.
-  Future<void> _handleCondition(String id, bool acc) async {
+  Future<void> _handleCondition(Condition con, bool acc) async {
     //Either accept or reject condition
 
-    String path = acc ? 'accept-condition' : 'reject-condition';
+    String path = acc ? 'accept' : 'reject';
 
+    //TODO DANGER WARNING ALERT EVERYTHING ELSE THIS WILL BREAK,
+    //The ui needs to change the way it calls the function
     Map<String, dynamic> response;
     try {
-      response = await _api.postData(_reqPath + path, {'ConditionID': id});
+      /*response = */await _api.putData('/$_reqPath/${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception(
