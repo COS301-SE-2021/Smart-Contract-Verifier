@@ -12,7 +12,7 @@ enum AgreementState {
 //REJECTED: Was not accepted.....
 //ACCEPTED: Other party accepted, awaiting platform fee payment
 //ACTIVE: Platform fee has been paid, and the agreement is official
-//COMPLETEED: The agreement has concluded
+//COMPLETED: The agreement has concluded
 
 
 
