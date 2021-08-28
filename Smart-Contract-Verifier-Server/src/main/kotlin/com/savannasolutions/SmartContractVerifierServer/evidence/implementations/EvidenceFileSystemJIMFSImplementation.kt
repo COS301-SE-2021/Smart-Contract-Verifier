@@ -6,11 +6,11 @@ import org.springframework.web.multipart.MultipartFile
 
 @Component
 class EvidenceFileSystemJIMFSImplementation: EvidenceFileSystem{
-    override fun saveFile(fileToSave: MultipartFile) {
+    override fun saveFile(fileToSave: MultipartFile, filename: String) {
         TODO("Not yet implemented")
     }
 
-    override fun retrieveFile(fileToRetrieve: String) {
+    override fun retrieveFile(fileToRetrieve: String): MultipartFile {
         TODO("Not yet implemented")
     }
 
