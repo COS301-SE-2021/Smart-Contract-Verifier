@@ -7,6 +7,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.Evid
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.EvidenceType
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.LinkedEvidence
+import com.savannasolutions.SmartContractVerifierServer.evidence.models.UploadedEvidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
@@ -35,7 +36,41 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         fileSystem = evidenceConfig.filesystem
     }
 
-    fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidenceRequest: UploadEvidenceRequest): UploadEvidenceResponse? = null
+    fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidenceRequest: UploadEvidenceRequest): UploadEvidenceResponse {
+        //agreement doesn't exist
+        if(!agreementsRepository.existsById(agreementId))
+            return UploadEvidenceResponse(ResponseStatus.FAILED)
+        val agreement = agreementsRepository.getById(agreementId)
+
+        //user doesn't exist
+        if(!userRepository.existsById(userId))
+            return UploadEvidenceResponse(ResponseStatus.FAILED)
+        val user = userRepository.getById(userId)
+
+        //user isn't party to the agreement
+        if (!agreement.users.contains(user))
+            return UploadEvidenceResponse(ResponseStatus.FAILED)
+
+        //TODO: implement hash calculation
+        val hashString = ""
+        val nEvidence = Evidence(hashString, EvidenceType.UPLOADED)
+        val filename = System.currentTimeMillis().toString() + "_" + uploadEvidenceRequest.fileToUpload.name
+
+        //TODO: Check filetype for risk (part of security)
+        val nUploadedEvidence = if(uploadEvidenceRequest.fileToUpload.contentType != null)
+            UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
+                filename, uploadEvidenceRequest.fileToUpload.contentType!!)
+        else
+            UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
+                filename, "Unknown")
+
+        evidenceRepository.save(nEvidence)
+        uploadedEvidenceRepository.save(nUploadedEvidence)
+
+        fileSystem.saveFile(uploadEvidenceRequest.fileToUpload, filename)
+
+        return UploadEvidenceResponse(ResponseStatus.SUCCESSFUL)
+    }
 
     fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): LinkEvidenceResponse {
         if(!agreementsRepository.existsById(agreementId))
