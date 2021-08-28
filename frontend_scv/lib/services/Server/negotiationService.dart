@@ -11,7 +11,7 @@ import 'backendAPI.dart';
 
 class NegotiationService {
   ApiInteraction _api = ApiInteraction();
-  final String _reqPath = '/negotiation/';
+  final String _reqPath = '/user/';
   UnisonService _uniServ = UnisonService();
 
   Future<dynamic> getNotifications(String party) async {
@@ -26,7 +26,7 @@ class NegotiationService {
     Map<String, dynamic> response;
     try {
       response =
-          await _api.postData(_reqPath + 'create-agreement', agr.toJson());
+          await _api.postData(_reqPath + '/' + Global.userAddress + '/agreement', agr.toJson());
       print(response.toString());
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreement could not be saved');

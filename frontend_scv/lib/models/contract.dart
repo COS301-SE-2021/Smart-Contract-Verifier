@@ -82,7 +82,7 @@ class Contract with ChangeNotifier {
   Map<String, String> toJson() {
     return {
       //This is used in the initial save to the backend, hence not all fields being present.
-      'PartyA': partyA,
+    //  'PartyA': partyA,
       'PartyB': partyB,
       'AgreementTitle': title,
       'AgreementDescription': description,

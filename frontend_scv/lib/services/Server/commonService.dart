@@ -11,12 +11,6 @@ import 'backendAPI.dart';
 class CommonService {
   ApiInteraction _api = ApiInteraction();
 
-  Contract errorContract = new Contract(
-      title: 'Error',
-      description:
-          'An error was encountered, and the agreement could not be retrieved');
-  //Error object to return on exception.
-
   Future<List<Contract>> getInvolvedAgreements(String addr) async {
     //Get all agreements where a user is involved
     var response;
