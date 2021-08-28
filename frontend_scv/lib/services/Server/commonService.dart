@@ -42,41 +42,4 @@ class CommonService {
   }
 
 
-
-
-  Future<void> getHello() async {
-    //To test api
-
-    print('Call');
-    final res = await _api.getData('/negotiation/hello');
-    print('Res: ' + res.toString());
-  }
-
-  Future<List<Contract>> getAllAgreements() async {
-    //Get all agreements in the db. This is purely for testing
-
-    Map<String, String> body = {};
-    var response;
-
-    try {
-      response =
-          await _api.postData('/negotiation/get-agreement', body); //Revise url
-
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Agreements could not be retrieved');
-    } on Exception catch (e) {
-      //Handle Exception,
-      print(e.toString());
-      throw e; //This should be revised
-    }
-
-    List<dynamic> jsonList = ((response['Agreements']));
-
-    List<Contract> ret = [];
-    for (int i = 0; i < jsonList.length; i++) {
-      ret.add(Contract.fromJson(jsonList[i]));
-    }
-
-    return ret;
-  }
 }
