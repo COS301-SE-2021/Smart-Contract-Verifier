@@ -42,28 +42,7 @@ class CommonService {
   }
 
 
-  Future<List<Condition>> getConditions(String id) async {
-    //Get a list of conditions for an agreement
 
-    List<Condition> res = [];
-    Map<String, dynamic> response;
-
-    try {
-      response = await _api.postData('', {'AgreementID': id});
-
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Conditions could not be retrieved');
-    } on Exception catch (e) {
-      print(e.toString());
-      throw e;
-    }
-
-    for (int i = 0; i < response['Conditions'].length; i++) {
-      res.add(Condition.fromJson(response['Conditions'][i]));
-    }
-
-    return res;
-  }
 
   Future<void> getHello() async {
     //To test api
