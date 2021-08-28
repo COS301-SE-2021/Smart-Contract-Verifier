@@ -6,6 +6,15 @@ import 'package:unison/models/global.dart';
 enum AgreementState {
   PENDING, PROPOSED, REJECTED, ACCEPTED, ACTIVE, COMPLETED, SETTLED, CONTESTED, DECIDED, CLOSED
 }
+//Explanation of some states:
+//PENDING: The agreement basically does not exist
+//PROPOSED: Someone has created an agreement on the blockchain, awaiting acceptance
+//REJECTED: Was not accepted.....
+//ACCEPTED: Other party accepted, awaiting platform fee payment
+//ACTIVE: Platform fee has been paid, and the agreement is official
+//COMPLETEED: The agreement has concluded
+
+
 
 class BlockchainAgreement {
   String serverID;
