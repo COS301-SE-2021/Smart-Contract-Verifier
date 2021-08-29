@@ -217,4 +217,42 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
+    fun getUnreadMessages(userID: String): ApiResponse<GetUnreadMessagesResponse>{
+        val user = userRepository.getById(userID)
+
+        val agreementList = agreementsRepository.getAllByUsersContaining(user)?:
+            return ApiResponse(status = ResponseStatus.SUCCESSFUL)
+
+        val messagesByAgreementResponseList = ArrayList<MessagesByAgreementResponse>()
+
+        for(agreement in agreementList)
+        {
+            val messageList = messagesRepository.getAllByAgreements(agreement)
+            if(messageList == null)
+                messagesByAgreementResponseList.add(MessagesByAgreementResponse(agreement.ContractID))
+            else
+            {
+                val unReadMessagesList = ArrayList<Messages>()
+                for(msg in messageList)
+                {
+                    var messageStatus = messageStatusRepository.getByRecipientAndMessage(user, msg)
+                    if(messageStatus != null) {
+                        if (messageStatus.ReadDate == null) {
+                            messageStatus = messageStatus.apply { ReadDate = Date() }
+                            messageStatusRepository.save(messageStatus)
+                            unReadMessagesList.add(msg)
+                        }
+                    }
+                }
+                val messageResponseList = generateMessageResponseList(unReadMessagesList)
+                messagesByAgreementResponseList.add(
+                    MessagesByAgreementResponse(AgreementID = agreement.ContractID,
+                    Messages = messageResponseList))
+            }
+        }
+        val getUnreadMessageResponse = GetUnreadMessagesResponse(messagesByAgreementResponseList)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL,
+        responseObject = getUnreadMessageResponse)
+    }
+
 }
