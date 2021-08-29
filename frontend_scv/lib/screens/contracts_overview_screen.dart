@@ -49,18 +49,39 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     TokenService tokServ = TokenService();
 
     return Scaffold(
       appBar: AppBar(
         // title: Text(Global.userAddress),
-        actions: [FutureBuilder(future: tokServ.getAllowance(), builder: (context, snap) {
-          if (snap.connectionState == ConnectionState.done) {
-            return Container(child: Row(children: [Text('Remaining allowance: ' + snap.data.toString()), IconButton(onPressed: () async {await tokServ.setAllowance(BigInt.from(10000000000));}, icon: Icon(Icons.add))]),);
-          } return CircularProgressIndicator();
-        })
+        actions: [
+          FutureBuilder(
+              future: tokServ.getAllowance(),
+              builder: (context, snap) {
+                if (snap.connectionState == ConnectionState.done) {
+                  return Container(
+                    child: Row(
+                      children: [
+                        Row(children: [
+                          TextButton(
+                                child: Text('Top Up Allowance',
+                                    style: TextStyle(color: Colors.purple, fontSize: 20,),
+                                ),
+                                onPressed: () async {
+                                  await tokServ.setAllowance(BigInt.from(10000000000));
+                                },
+                              ),
+                              SizedBox(width: 50,),
+                            Text('Remaining allowance: ' + snap.data.toString(),
+                              style: TextStyle(fontSize: 15),),
+                        ]),
+                        SizedBox(width:30),
+                      ],
+                    ),
+                  );
+                }
+                return CircularProgressIndicator();
+              })
         ],
         title: ShaderMask(
           shaderCallback: (bounds) => LinearGradient(colors: [
