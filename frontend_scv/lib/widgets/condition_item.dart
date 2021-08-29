@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:unison/models/condition.dart';
-import 'package:unison/models/contracts.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 
 class ConditionItem extends StatefulWidget {
   final Condition contractCondition;
   final NegotiationService negotiationService;
+  final Function reloadParent;
 
   ConditionItem({
     @required this.contractCondition,
     @required this.negotiationService,
+    @required this.reloadParent,
   });
 
   @override
@@ -19,11 +19,8 @@ class ConditionItem extends StatefulWidget {
 }
 
 class _ConditionItemState extends State<ConditionItem> {
-  var _isLoading = false;
-
   @override
   void initState() {
-    // print('InitState()');
     super.initState();
   }
 
@@ -54,13 +51,12 @@ class _ConditionItemState extends State<ConditionItem> {
                   ? 'Couldn\'t load title'
                   : widget.contractCondition.title,
             ),
-            leading: CircleAvatar(
-              backgroundColor: Colors.deepOrange,
+            leading: Icon(
+              Icons.face,
+              color: Colors.white70,
             ),
-            // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
-            //     '${contractCondition.proposedBy}'),
-            // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
-            //     '${contractCondition.proposedBy}'),
+
+            subtitle: Text('${widget.contractCondition.description}'),
             onTap: () => _showConditionDialog(widget.contractCondition),
             trailing: Row(
               //The currently logged in user created the condition
@@ -78,7 +74,6 @@ class _ConditionItemState extends State<ConditionItem> {
                               : (widget.contractCondition.status == 'REJECTED')
                                   ? Colors.red
                                   : Colors.amber //PENDING
-
                           ),
                     ),
                   ],
@@ -92,13 +87,11 @@ class _ConditionItemState extends State<ConditionItem> {
                   ? 'Couldn\'t load title'
                   : widget.contractCondition.title,
             ),
-            leading: CircleAvatar(
-              backgroundColor: Colors.cyan,
+            leading: Icon(
+              Icons.perm_identity,
+              color: Colors.cyan,
             ),
-            // subtitle: Text(
-            //   'Status: ${contractCondition.status}\nProposed by: '
-            //   '${contractCondition.proposedBy}',
-            // ),
+            subtitle: Text(widget.contractCondition.description),
             onTap: () => _showConditionDialog(widget.contractCondition),
             trailing: Row(
               //The currently logged in user did not create the condition
@@ -119,28 +112,22 @@ class _ConditionItemState extends State<ConditionItem> {
                           Text(
                             'REJECTED',
                             style: TextStyle(
-                              color: Colors.deepOrangeAccent,
+                              color: Colors.pinkAccent,
                             ),
                           ),
                         ]
                   : [
                       //PENDING
-                      // Text('Status: ${contractCondition}'),
                       IconButton(
                         icon: Icon(
                           Icons.thumb_down_outlined,
-                          color: Colors.deepOrangeAccent,
+                          color: Colors.pinkAccent,
                         ),
                         onPressed: () async {
-                          print('Accept');
-                          setState(() {
-                            _isLoading = true;
-                          });
                           try {
                             await widget.negotiationService.rejectCondition(
-                                widget.contractCondition.conditionId);
-                            print('rejected: ' +
-                                widget.contractCondition.conditionId);
+                              widget.contractCondition.conditionId,
+                            );
                           } catch (error) {
                             await showDialog(
                               context: context,
@@ -159,9 +146,7 @@ class _ConditionItemState extends State<ConditionItem> {
                             );
                           }
                           setState(() {
-                            _isLoading = false;
-                            Provider.of<Contracts>(context, listen: false)
-                                .fetchAndSetContracts();
+                            widget.reloadParent();
                           });
                         },
                       ),
@@ -171,15 +156,10 @@ class _ConditionItemState extends State<ConditionItem> {
                           color: Colors.cyan,
                         ),
                         onPressed: () async {
-                          print('Accept');
-                          setState(() {
-                            _isLoading = true;
-                          });
                           try {
                             await widget.negotiationService.acceptCondition(
-                                widget.contractCondition.conditionId);
-                            print('accepted: ' +
-                                widget.contractCondition.conditionId);
+                              widget.contractCondition.conditionId,
+                            );
                           } catch (error) {
                             await showDialog(
                               context: context,
@@ -197,11 +177,11 @@ class _ConditionItemState extends State<ConditionItem> {
                               ),
                             );
                           }
-                          setState(() {
-                            _isLoading = false;
-                            Provider.of<Contracts>(context, listen: false)
-                                .fetchAndSetContracts();
-                          });
+                          setState(
+                            () {
+                              widget.reloadParent();
+                            },
+                          );
                         },
                       ),
                     ],
