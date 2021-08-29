@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:jdenticon_dart/jdenticon_dart.dart';
 import 'package:unison/models/condition.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
@@ -19,30 +21,49 @@ class ContractDetailInfoPanel extends StatefulWidget {
 }
 
 class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
-  bool disableSealButton;
   @override
   Widget build(BuildContext context) {
+    List<bool> _isOpen;
     return Center(
       child: Card(
+        color: Color.fromRGBO(56, 61, 81, 1),
         elevation: 15,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: Icon(Icons.info),
-              title: Text(widget._contract.contractId),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              leading: SvgPicture.string(
+                Jdenticon.toSvg(
+                  widget._contract.contractId,
+                  colorSaturation: 1.0,
+                  grayscaleSaturation: 1.0,
+                  colorLightnessMinValue: 0.40,
+                  colorLightnessMaxValue: 0.80,
+                  grayscaleLightnessMinValue: 0.30,
+                  grayscaleLightnessMaxValue: 0.90,
+                  backColor: '#ff7800',
+                  hues: [205],
+                ).toString(),
+                fit: BoxFit.fill,
+                height: 32,
+                width: 32,
+              ),
+              title: Text(widget._contract.title),
+              subtitle: Text(widget._contract.description),
+              trailing: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text('Created: ${widget._contract.createdDate}'),
                   Text(
-                      'Moved to Blockchain: ${widget._contract.movedToBlockchain.toString()}'),
-                  SizedBox(
-                    width: 15,
+                    'Agreement ID: ${widget._contract.contractId}',
                   ),
-                  _buildSealButton(),
+                  Text(
+                    'Creation Date: ${widget._contract.createdDate}',
+                  ),
                 ],
               ),
+              // Text(
+              //     'Moved to Blockchain: ${widget._contract.movedToBlockchain.toString()}'),
+              //           _buildSealButton(),
             ),
             Container(
               padding: EdgeInsets.only(
@@ -51,25 +72,45 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                 bottom: 10,
               ),
               width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Agreement ID: ${widget._contract.contractId}'),
-                  Text(
-                    'Party A: ${widget._contract.partyA}',
-                    style: TextStyle(
-                      color: widget._contract.partyA == Global.userAddress
-                          ? Colors.deepOrange
-                          : Colors.cyan,
-                    ),
-                  ),
-                  Text(
-                    'Party B: ${widget._contract.partyB}',
-                    style: TextStyle(
-                      color: widget._contract.partyB == Global.userAddress
-                          ? Colors.deepOrange
-                          : Colors.cyan,
-                    ),
+                  _buildSealButton(),
+                  // ExpansionPanelList(
+                  //   children: [
+                  //     ExpansionPanel(
+                  //       headerBuilder: (context, isOpen) {
+                  //         return Text('Agreement Details');
+                  //       },
+                  //       body: Text('Details go here'),
+                  //       isExpanded: _isOpen[0],
+                  //     ),
+                  //   ],
+                  //   expansionCallback: (i, _isOpen) =>
+                  //       setState(() => _isOpen = !_isOpen),
+                  // )
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text('Agreement ID: ${widget._contract.contractId}'),
+                      Text(
+                        'Party A: ${widget._contract.partyA}',
+                        style: TextStyle(
+                          color: widget._contract.partyA == Global.userAddress
+                              ? Colors.deepOrange
+                              : Colors.cyan,
+                        ),
+                      ),
+                      Text(
+                        'Party B: ${widget._contract.partyB}',
+                        style: TextStyle(
+                          color: widget._contract.partyB == Global.userAddress
+                              ? Colors.deepOrange
+                              : Colors.cyan,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -117,7 +158,6 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                   ElevatedButton(
                     onPressed: () async {
                       try {
-                        print('Happiness');
                         await widget.unisonService.agreementFulfilled(
                           widget._contract,
                           true,
@@ -187,7 +227,7 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                                 },
                                 child: Text('Accept Blockchain Agreement'),
                               )
-                            : Text(snapshot.data.agreementState())
+                            : Text(snapshot.data.getAgreementState().toString())
                         // : Text('Awaiting other party confirmation')
                         : CircularProgressIndicator();
                   }),

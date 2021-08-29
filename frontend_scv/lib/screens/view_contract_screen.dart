@@ -233,77 +233,83 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
       appBar: AppBar(
         title: Text(loadedContract.title),
       ),
-      body: Column(
-        children: [
-          ContractDetailInfoPanel(loadedContract),
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 8,
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            ContractDetailInfoPanel(loadedContract),
+            Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 8,
+              ),
+              // alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Agreement Conditions:',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  if (!loadedContract.movedToBlockchain)
+                    TextButton(
+                      onPressed: () async {
+                        await _newConditionDialog(contractId);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.add),
+                          Text('Add New Condition'),
+                        ],
+                      ),
+                    ),
+                  if (!loadedContract.movedToBlockchain)
+                    TextButton(
+                      onPressed: () async {
+                        await _newSpecialConditionDialog(
+                            contractId, ConditionType.Payment);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.add),
+                          Text('Add New Payment Condition'),
+                        ],
+                      ),
+                    ),
+                  if (!loadedContract.movedToBlockchain)
+                    TextButton(
+                      onPressed: () async {
+                        await _newSpecialConditionDialog(
+                            contractId, ConditionType.Duration);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.add),
+                          Text('Add New Duration Condition'),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             ),
-            // alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Agreement Conditions:',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    await _newConditionDialog(contractId);
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.add),
-                      Text('Add New Condition'),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    await _newSpecialConditionDialog(
-                        contractId, ConditionType.Payment);
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.add),
-                      Text('Add New Payment Condition'),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    await _newSpecialConditionDialog(
-                        contractId, ConditionType.Duration);
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.add),
-                      Text('Add New Duration Condition'),
-                    ],
-                  ),
-                ),
-              ],
+            Expanded(
+              child: _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ContractConditionsPanel(loadedContract),
+              flex: 6,
             ),
-          ),
-          Expanded(
-            child: _isLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : ContractConditionsPanel(loadedContract),
-            flex: 6,
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-                // TODO: More Information or actions here?
-                ),
-          )
-        ],
+            Expanded(
+              flex: 1,
+              child: Container(
+                  // TODO: More Information or actions here?
+                  ),
+            )
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(

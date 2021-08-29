@@ -105,4 +105,22 @@
 *   - Working with Ronan to integrate with the server and smart-contract
 *   - Next up for individual contribution is Ronan.
 *
+* Agreement Flow:
+* PENDING Conditions:
+*   - BlockStatus.Pending
+* No pending conditions
+* -> Seal Agreement (either party)
+*   - BlockStatus.Proposed
+* --> Accept Blockchain Agreement (party who did not seal)
+*   - BlockStatus.Accepted
+* ---> Show 'Pay Platform Fee' (either party)
+*   - BlockStatus.Active (once paid)
+* ----> After Agreement has timed out show 'Conclude' or 'Dispute'
+*   - BlockStatus.???????
+*
+*
+*
+*
+*
+*
 * */

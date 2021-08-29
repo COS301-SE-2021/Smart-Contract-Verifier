@@ -63,8 +63,11 @@ class Contract with ChangeNotifier {
 
     try {
       blockchainId = BigInt.from(jsn['BlockChainID']);
-    } catch (_) {
-      blockchainId = BigInt.from(0);
+      movedToBlockchain = true;
+    } catch (error) {
+      print('BC ID ERR: ' + error.toString());
+      // blockchainId = BigInt.from(0);
+      movedToBlockchain = false;
     }
     movedToBlockchain = jsn['MovedToBlockchain'];
     description = jsn['AgreementDescription'];

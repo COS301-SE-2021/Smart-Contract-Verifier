@@ -50,29 +50,6 @@ class ContractItem extends StatelessWidget {
           height: 32,
           width: 32,
         ),
-        // ),
-        trailing: Container(
-          width: 50,
-          child: Row(
-            children: <Widget>[
-              // Consumer<Contract>(
-              //   //consumer takes a builder:
-              //   builder: (ctx, product, child) => IconButton(
-              //     icon: Icon(
-              //       product.isFavorite ? Icons.favorite : Icons.favorite_border,
-              //     ),
-              //     // label: child,
-              //     onPressed: () => {
-              //       // product.toggleFavoriteStatus(
-              //       //   authData.userWalletAddress,
-              //       // ),
-              //     },
-              //     color: Theme.of(context).accentColor,
-              //   ),
-              // ),
-            ],
-          ),
-        ),
       ),
     );
   }

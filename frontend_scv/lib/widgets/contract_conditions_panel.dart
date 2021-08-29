@@ -6,16 +6,11 @@ import '../models/contract.dart';
 
 class ContractConditionsPanel extends StatelessWidget {
   final Contract _contract;
-
   ContractConditionsPanel(this._contract);
-
   @override
   Widget build(BuildContext context) {
     NegotiationService negS = NegotiationService();
-
-    print(_contract.conditions);
     return Container(
-      // padding: EdgeInsets.all(8),
       child: _contract.conditions.isEmpty //TODO handle empty conditions
           ? Text('No Conditions Set!')
           : ListView.builder(
