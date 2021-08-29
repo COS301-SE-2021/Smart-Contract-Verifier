@@ -75,7 +75,7 @@ class NegotiationService {
     //The ui needs to change the way it calls the function
     Map<String, dynamic> response;
     try {
-      /*response = */await _api.putData('/$_reqPath/${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
+      /*response = */await _api.putData('/user/${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception(
@@ -91,15 +91,13 @@ class NegotiationService {
     //Set the payment condition of an agreement.
 
     Map<String, dynamic> body = {
-      'ProposedUser': Global.userAddress,
-      'AgreementID': con,
       'Payment' : price,
       'PayingUser' : payingUser,
     };
     var response;
 
     try {
-      response = await _api.postData(_reqPath + 'set-payment-condition', body);
+      response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/payment', body);
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Payment info could not be saved');
@@ -115,14 +113,12 @@ class NegotiationService {
     //Set the duration condition of an agreement.
 
     Map<String, dynamic> body = {
-      'ProposedUser': Global.userAddress,
-      'AgreementID': con,
       'Duration': dur,
     };
     var response;
 
     try {
-      response = await _api.postData(_reqPath + 'set-duration-condition', body);
+      response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/duration', body);
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Duration info could not be saved');
@@ -133,29 +129,29 @@ class NegotiationService {
     }
   }
 
-  Future<void> _handlePayDuration(String con, double val, bool price) async {
-    //Handles both price and duration
-
-    Map<String, dynamic> body = {
-      'ProposedUser': Global.userAddress,
-      'AgreementID': con,
-      (price ? 'Payment' : 'Duration'): val
-    };
-    Map<String, dynamic> response;
-    String path = price ? 'payment' : 'duration';
-
-    try {
-      response = await _api.postData(_reqPath + 'set-$path-condition', body);
-
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception(
-            '${(price ? 'Payment' : 'Duration')} could not be saved');
-    } on Exception catch (e) {
-      //Handle exception
-      print(e);
-      throw e;
-    }
-  }
+  // Future<void> _handlePayDuration(String con, double val, bool price) async {
+  //   //Handles both price and duration
+  //
+  //   Map<String, dynamic> body = {
+  //     'ProposedUser': Global.userAddress,
+  //     'AgreementID': con,
+  //     (price ? 'Payment' : 'Duration'): val
+  //   };
+  //   Map<String, dynamic> response;
+  //   String path = price ? 'payment' : 'duration';
+  //
+  //   try {
+  //     response = await _api.postData(_reqPath + 'set-$path-condition', body);
+  //
+  //     if (response['Status'] != 'SUCCESSFUL')
+  //       throw Exception(
+  //           '${(price ? 'Payment' : 'Duration')} could not be saved');
+  //   } on Exception catch (e) {
+  //     //Handle exception
+  //     print(e);
+  //     throw e;
+  //   }
+  // }
 
   //This method is bound to change soon.
   //The api will be updated with a new 'seal flow'

@@ -28,7 +28,7 @@ class CommonService {
       return [];
     }
 
-    List<dynamic> jsonList = ((response['agreements']));
+    List<dynamic> jsonList = ((response['ResponseObject']['agreements']));
     List<Contract> ret = [];
     for (int i = 0; i < jsonList.length; i++) {
       ret.add(Contract.fromJson(jsonList[i]));
