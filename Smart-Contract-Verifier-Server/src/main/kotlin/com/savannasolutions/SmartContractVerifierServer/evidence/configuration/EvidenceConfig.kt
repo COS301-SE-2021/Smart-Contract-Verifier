@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 import javax.annotation.PostConstruct
 
 
-@ConfigurationProperties("com.unison")
+@ConfigurationProperties("com.unison.evidence")
 @ConstructorBinding
 data class EvidenceConfig(val enabledFilesystem: String,){
 

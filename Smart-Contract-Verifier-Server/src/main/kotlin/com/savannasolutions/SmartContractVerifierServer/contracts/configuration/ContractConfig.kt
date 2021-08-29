@@ -6,7 +6,7 @@ import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.*
 
 
-@ConfigurationProperties("com.unison")
+@ConfigurationProperties("com.unison.blockchain")
 @ConstructorBinding
 data class ContractConfig(var nodeAddress: String, var contractId: String, var useblockchain: String){
 
