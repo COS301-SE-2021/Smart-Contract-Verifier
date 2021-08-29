@@ -1,9 +1,8 @@
 package com.savannasolutions.SmartContractVerifierServer.messenger.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.MessageResponse
-import com.savannasolutions.SmartContractVerifierServer.common.MessageStatusResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.common.UserResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.*
+import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
+import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
@@ -20,7 +19,8 @@ import kotlin.collections.ArrayList
 class MessengerService constructor(val messagesRepository: MessagesRepository,
                                     val messageStatusRepository: MessageStatusRepository,
                                     val userRepository: UserRepository,
-                                    val agreementsRepository: AgreementsRepository){
+                                    val agreementsRepository: AgreementsRepository,
+                                    val judgesRepository: JudgesRepository){
 
     private fun generateMessageResponseList(messageList : List<Messages>): List<MessageResponse>{
         val messageResponseList = ArrayList<MessageResponse>()
@@ -52,31 +52,33 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
         return messageResponseList
     }
 
-    fun getAllMessagesByAgreement(getAllMessagesByAgreementRequest: GetAllMessagesByAgreementRequest): GetAllMessagesByAgreementResponse{
-        if(!userRepository.existsById(getAllMessagesByAgreementRequest.RequestingUser))
-            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+    fun getAllMessagesByAgreement(userID: String, agreementID: UUID): ApiResponse<GetAllMessagesByAgreementResponse>{
+        if(!userRepository.existsById(userID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!agreementsRepository.existsById(getAllMessagesByAgreementRequest.AgreementID))
-            return GetAllMessagesByAgreementResponse(status = ResponseStatus.FAILED)
+        if(!agreementsRepository.existsById(agreementID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementDoesNotExist)
 
-        val agreement = agreementsRepository.getById(getAllMessagesByAgreementRequest.AgreementID)
+        val agreement = agreementsRepository.getById(agreementID)
 
         val messageList = messagesRepository.getAllByAgreements(agreement) ?:
-            return GetAllMessagesByAgreementResponse(emptyList(), status = ResponseStatus.SUCCESSFUL)
+            return ApiResponse(responseObject = GetAllMessagesByAgreementResponse(emptyList()),
+                status = ResponseStatus.SUCCESSFUL)
 
         val messageResponseList = generateMessageResponseList(messageList)
 
-        return GetAllMessagesByAgreementResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetAllMessagesByAgreementResponse(messageResponseList),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun getAllMessagesByUser(getAllMessagesByUserRequest: GetAllMessagesByUserRequest): GetAllMessagesByUserResponse{
-        if(getAllMessagesByUserRequest.RequestingUser.isEmpty())
-            return GetAllMessagesByUserResponse(status = ResponseStatus.FAILED)
+    fun getAllMessagesByUser(userID: String): ApiResponse<GetAllMessagesByUserResponse>{
+        if(!userRepository.existsById(userID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!userRepository.existsById(getAllMessagesByUserRequest.RequestingUser))
-            return GetAllMessagesByUserResponse(status = ResponseStatus.FAILED)
-
-        val user = userRepository.getById(getAllMessagesByUserRequest.RequestingUser)
+        val user = userRepository.getById(userID)
         val sentMessageList = messagesRepository.getAllBySender(user)
         val receivedMessageList = messageStatusRepository.getAllByRecipient(user)
         val messageList = ArrayList<Messages>()
@@ -94,34 +96,56 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
 
         val messageResponseList = generateMessageResponseList(messageList)
 
-        return GetAllMessagesByUserResponse(messageResponseList, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetAllMessagesByUserResponse(messageResponseList),
+            status =  ResponseStatus.SUCCESSFUL)
     }
 
-    fun getMessageDetail(getMessageDetailRequest: GetMessageDetailRequest): GetMessageDetailResponse{
-        if(!messagesRepository.existsById(getMessageDetailRequest.MessageID))
-            return GetMessageDetailResponse(status = ResponseStatus.FAILED)
+    fun getMessageDetail(userID: String, messageID: UUID): ApiResponse<GetMessageDetailResponse>{
+        if(!messagesRepository.existsById(messageID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.messageDoesNotExist)
 
-        val message = messagesRepository.getById(getMessageDetailRequest.MessageID)
+        val message = messagesRepository.getById(messageID)
+        var found = false
+        if(message.sender.publicWalletID == userID)
+            found = true
+
+        val messageStatus = messageStatusRepository.getAllByMessage(message)
+        if(messageStatus != null) {
+            for (msgStatus in messageStatus)
+            {
+                if(msgStatus.recipient.publicWalletID == userID)
+                    found = true
+            }
+        }
+
+        if(!found)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.userNotPartOfAgreement)
+
         val messageList = ArrayList<Messages>()
         messageList.add(message)
         val messageResponseList = generateMessageResponseList(messageList)
 
-        return GetMessageDetailResponse(messageResponseList[0], status = ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = GetMessageDetailResponse(messageResponseList[0]),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun sendMessage(sendMessageRequest: SendMessageRequest): SendMessageResponse{
-        //TODO Implement setting jury as recipients as well
-        if(!userRepository.existsById(sendMessageRequest.SendingUser))
-            return SendMessageResponse(status = ResponseStatus.FAILED)
+    fun sendMessage(userID:String, agreementID:UUID, sendMessageRequest: SendMessageRequest): ApiResponse<SendMessageResponse>{
+        if(!userRepository.existsById(userID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+                        message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!agreementsRepository.existsById(sendMessageRequest.AgreementID))
-            return SendMessageResponse(status = ResponseStatus.FAILED)
+        if(!agreementsRepository.existsById(agreementID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+                        message = commonResponseErrorMessages.agreementDoesNotExist)
 
         if(sendMessageRequest.Message.isEmpty())
-            return SendMessageResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = "Message is empty")
 
-        val user = userRepository.getById(sendMessageRequest.SendingUser)
-        val agreement = agreementsRepository.getById(sendMessageRequest.AgreementID)
+        val user = userRepository.getById(userID)
+        val agreement = agreementsRepository.getById(agreementID)
+        val judges = judgesRepository.getAllByAgreement(agreement)
 
         var message = Messages(UUID.fromString("eebe3abc-b594-4a2f-a7dc-246bad26aaa5"),
                                 sendMessageRequest.Message,
@@ -146,35 +170,51 @@ class MessengerService constructor(val messagesRepository: MessagesRepository,
             }
         }
 
+        if(judges != null)
+        {
+            for(judge in judges)
+            {
+                val judgeUser = judge.judge
+                if(!(usersInAgreement.contains(judgeUser)))
+                {
+                    var tempMessageStatus = MessageStatus(UUID.fromString("eebe3abc-b594-4a2f-a7dc-246bad26aaa5"))
+                    tempMessageStatus.recipient = judgeUser
+                    tempMessageStatus.message = message
+                    tempMessageStatus = messageStatusRepository.save(tempMessageStatus)
+                    messageStatusList.add(tempMessageStatus)
+                }
+            }
+        }
+
         message.messageStatuses = messageStatusList
 
-        message = messagesRepository.save(message)
-
-        return SendMessageResponse(message.messageID, ResponseStatus.SUCCESSFUL)
+        return ApiResponse(responseObject = SendMessageResponse(message.messageID),
+            status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun setMessageAsRead(setMessageAsReadRequest: SetMessageAsReadRequest): SetMessageAsReadResponse{
-        if(setMessageAsReadRequest.RecipientID.isEmpty())
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+    fun setMessageAsRead(userID: String, messageID: UUID): ApiResponse<Objects>{
+        if(!userRepository.existsById(userID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.userDoesNotExist)
 
-        if(!userRepository.existsById(setMessageAsReadRequest.RecipientID))
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+        if(!messagesRepository.existsById(messageID))
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = commonResponseErrorMessages.messageDoesNotExist)
 
-        if(!messagesRepository.existsById(setMessageAsReadRequest.MessageID))
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
-
-        val user = userRepository.getById(setMessageAsReadRequest.RecipientID)
-        val message = messagesRepository.getById(setMessageAsReadRequest.MessageID)
+        val user = userRepository.getById(userID)
+        val message = messagesRepository.getById(messageID)
         val messageStatus = messageStatusRepository.getByRecipientAndMessage(user, message)?:
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = "User is not a recipient of the provided message")
 
         if(messageStatus.ReadDate != null)
-            return SetMessageAsReadResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                    message = "Message has already been read")
 
         messageStatus.ReadDate = Date()
 
         messageStatusRepository.save(messageStatus)
-        return SetMessageAsReadResponse(status = ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
 }
