@@ -34,8 +34,6 @@ class Message with ChangeNotifier {
     //ToJSON when sending a message
 
     return {
-      'SendingUser': sender,
-      'AgreementID': agreement,
       'Message': messageText,
     };
   }

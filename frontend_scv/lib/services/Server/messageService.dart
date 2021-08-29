@@ -7,13 +7,13 @@ import 'backendAPI.dart';
 
 class MessageService {
   ApiInteraction _api = ApiInteraction();
-  final String _reqPath = '/messenger/';
+  final String _reqPath = '/user/' + Global.userAddress;
 
   Future<void> sendMessage(Message mess) async {
     var response;
     try {
       response =
-          await _api.postData(_reqPath + 'send-message', mess.toJSONSend());
+          await _api.postData('$_reqPath/agreement/${mess.messageID }/message', mess.toJSONSend());
 
       if (response['Status'] != "SUCCESSFUL")
         throw Exception('Message could not be sent');
@@ -37,10 +37,10 @@ class MessageService {
         : {'RequestingUser': id};
     var response;
 
+    String path = '$_reqPath/' + (byAgreement? 'agreement/$id/message': 'message');
+
     try {
-      String path = byAgreement ? 'agreement' : 'user';
-      response =
-          await _api.postData(_reqPath + 'get-all-messages-by-$path', body);
+      response = await _api.getData(path);
 
       if (response['Status'] != "SUCCESSFUL")
         throw Exception('Messages could not be retrieved');
