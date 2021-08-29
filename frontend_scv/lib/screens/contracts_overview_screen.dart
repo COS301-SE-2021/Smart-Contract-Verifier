@@ -2,7 +2,7 @@ import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/services/Blockchain/tokenService.dart';
-import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:unison/widgets/funky_text_widget.dart';
 
 import '../models/contracts.dart';
 import '../screens/edit_contract_screen.dart';
@@ -21,7 +21,6 @@ class ContractsOverviewScreen extends StatefulWidget {
 }
 
 class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
-  var _showOnlyFavorites = false;
   var _isInit = true;
   var _isLoading = false;
 
@@ -54,6 +53,7 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         // title: Text(Global.userAddress),
+        title: FunkyText('Agreements Dashboard'),
         actions: [
           FutureBuilder(
               future: tokServ.getAllowance(),
@@ -64,18 +64,27 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
                       children: [
                         Row(children: [
                           TextButton(
-                                child: Text('Top Up Allowance',
-                                    style: TextStyle(color: Colors.purple, fontSize: 20,),
-                                ),
-                                onPressed: () async {
-                                  await tokServ.setAllowance(BigInt.from(10000000000));
-                                },
+                            child: Text(
+                              'Top Up Allowance',
+                              style: TextStyle(
+                                color: Colors.purple,
+                                fontSize: 20,
                               ),
-                              SizedBox(width: 50,),
-                            Text('Remaining allowance: ' + snap.data.toString(),
-                              style: TextStyle(fontSize: 15),),
+                            ),
+                            onPressed: () async {
+                              await tokServ
+                                  .setAllowance(BigInt.from(10000000000));
+                            },
+                          ),
+                          SizedBox(
+                            width: 50,
+                          ),
+                          Text(
+                            'Remaining allowance: ' + snap.data.toString(),
+                            style: TextStyle(fontSize: 15),
+                          ),
                         ]),
-                        SizedBox(width:30),
+                        SizedBox(width: 30),
                       ],
                     ),
                   );
@@ -83,22 +92,6 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
                 return CircularProgressIndicator();
               })
         ],
-        title: ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(colors: [
-            Color.fromRGBO(50, 183, 196, 1),
-            Color.fromRGBO(167, 89, 160, 1)
-          ]).createShader(
-            Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-          ),
-          child: Text(
-            'Agreements Dashboard',
-            style: TextStyle(
-              // The color must be set to white for this to work
-              color: Colors.white,
-              // fontSize: 50,
-            ),
-          ),
-        ),
       ),
       drawer: AppDrawer(),
       body: _isLoading
