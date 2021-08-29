@@ -1,7 +1,8 @@
 # Savanna Solutions
 <!-- ## Unison - Smart-Contract-Verifier -->
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/41339070/130430042-f3f7bc7a-eb38-40e5-a882-6f6647cc938b.png" alt="Unison Logo" />
+  
+  <img src="https://user-images.githubusercontent.com/41339070/131267171-58f71bde-e99f-4b60-8435-1b958d74a660.gif" alt="Unison Logo" />
   <h2 align="center">Smart Contract Verifier</h2>
 </p>
 
