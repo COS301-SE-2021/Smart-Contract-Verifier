@@ -59,20 +59,8 @@ class MessageService {
 
   Future<void> setMessageRead(Message mes) async {
     //Let the backend know that a message has been read
+    await _api.putData('$_reqPath/message/${mes.messageID}');
 
-    var response;
-
-    try {
-      response = await _api.postData(
-          _reqPath + 'set-message-as-read', mes.toJSONSetRead());
-
-      //RFC: Is error checking even necessary for an 'unimportant' operation?
-      if (response['Status'] != "SUCCESSFUL")
-        throw Exception('Messages could not be set as read');
-    } catch (err) {
-      print('Is this here? ' + err); //Handle exception
-      throw err;
-    }
   }
 
   //The following methods are implemented for the sake of completeness, should they ever be needed.
