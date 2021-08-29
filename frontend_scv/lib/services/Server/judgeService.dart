@@ -78,21 +78,6 @@ class JudgeService {
     return res;
   }
 
-  //This method is mostly for testing.
-  //It sets the UNT allowances of all addresses passed in, granted by the addresses responsible for the minting of the token.
-  //All of the addresses will then be able to sign up to the jury.
-  Future<void> setAllowances(List<String> add, BigInt amount) async {
-    for (String a in add) {
-      await _tokServ.setAllowance(
-          a, BigInt.from(10000)); //User stakes 10 000 gwei
-    }
-  }
-
-  //Lets Verifier use UNT
-  Future<void> setContractAllowance() async {
-    await _tokServ.setAllowance(
-        await Global.getContractId('Verifier'), BigInt.from(10000000000));
-  }
 
   //Get the jury for an agreement from the blockchain
   Future<Jury> getJury(BigInt id) async {

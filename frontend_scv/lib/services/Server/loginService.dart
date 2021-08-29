@@ -19,13 +19,6 @@ class LoginService {
 
   }
 
-  Future<void> allowToken() async {
-
-    //Sets the contract allowance on first login. This should only be done once, as it costs money.
-    //TODO: Temporary solution.
-    await _jS.setContractAllowance();
-  }
-
   Future<void> tryAddUser() async { //This attempts to add a new user to the DB. Failure means the user already exists
 
     try {

@@ -1,6 +1,8 @@
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/services/Blockchain/tokenService.dart';
+import 'package:unison/services/Blockchain/unisonService.dart';
 
 import '../models/contracts.dart';
 import '../screens/edit_contract_screen.dart';
@@ -47,9 +49,19 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    TokenService tokServ = TokenService();
+
     return Scaffold(
       appBar: AppBar(
         // title: Text(Global.userAddress),
+        actions: [FutureBuilder(future: tokServ.getAllowance(), builder: (context, snap) {
+          if (snap.connectionState == ConnectionState.done) {
+            return Container(child: Row(children: [Text('Remaining allowance: ' + snap.data.toString()), IconButton(onPressed: () async {await tokServ.setAllowance(BigInt.from(10000000000));}, icon: Icon(Icons.add))]),);
+          } return CircularProgressIndicator();
+        })
+        ],
         title: ShaderMask(
           shaderCallback: (bounds) => LinearGradient(colors: [
             Color.fromRGBO(50, 183, 196, 1),

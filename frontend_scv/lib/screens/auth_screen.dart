@@ -132,7 +132,7 @@ class _AuthCardState extends State<AuthCard> {
     await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
     await unisonService.getAgreement(BigInt.from(0));
     await judgeService.isJudge();
-    await judgeService.setContractAllowance();
+    //await judgeService.setContractAllowance();
   }
 
   Future<void> _submit() async {
@@ -145,7 +145,7 @@ class _AuthCardState extends State<AuthCard> {
       await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
       await unisonService.getAgreement(BigInt.from(0));
       await judgeService.isJudge();
-      await judgeService.setContractAllowance();
+      //await judgeService.setContractAllowance();
     } catch (error) {
       const errorMessage = 'Authenticate Failed.\nPlease ensure you '
           'have the metamask extension installed.';

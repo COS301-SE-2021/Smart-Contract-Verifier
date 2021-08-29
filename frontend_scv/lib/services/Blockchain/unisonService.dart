@@ -40,6 +40,7 @@ class UnisonService {
     print(res);
   }
 
+
   Future<void> acceptAgreement(Contract con) async {
     //This should probably be called immediately after the contract is sealed on backend.
     print(con.movedToBlockchain);
