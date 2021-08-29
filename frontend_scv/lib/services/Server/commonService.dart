@@ -4,6 +4,8 @@
 
 import 'dart:async';
 
+import 'package:unison/models/global.dart';
+
 import '../../models/condition.dart';
 import '../../models/contract.dart';
 import 'backendAPI.dart';
@@ -33,6 +35,25 @@ class CommonService {
     }
 
     return ret;
+  }
+
+  Future<Contract> getAgreement(String id) async {
+
+    var response;
+
+    try {
+      response = await _api.getData('/user/${Global.userAddress}/agreement/$id');
+
+      if (response['Status'] != 'SUCCESSFUL')
+        throw Exception('Retrieval of agreement failed');
+    } on Exception catch (e) {
+      //Handle Exception
+      print(e);
+      throw e;
+    }
+
+    return Contract.fromJson(response['ResponseObject']['AgreementResponse']);
+
   }
 
 
