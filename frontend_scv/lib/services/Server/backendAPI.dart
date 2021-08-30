@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:retry/retry.dart';
+import 'package:unison/services/Server/apiResponse.dart';
 
 class ApiInteraction {
   final String baseUrl =
@@ -22,7 +23,7 @@ class ApiInteraction {
 
   ApiInteraction._internal(); //Private constructor
 
-  Future<Map<dynamic, dynamic>> getData(String url) async {
+  Future<ApiResponse> getData(String url) async {
     //Pass in url extension
     var response;
     try {
@@ -40,10 +41,10 @@ class ApiInteraction {
     if (response.statusCode != 200)
       throw Exception('Request could not be made'); //Failed http request
 
-    return json.decode(response.body);
+    return ApiResponse.fromJSON(json.decode(response.body));
   }
 
-  Future<Map<String, dynamic>> postData(
+  Future<ApiResponse> postData(
       String url, Map<dynamic, dynamic> jsn) async {
     //Pass in url extension and json body
     var response;
@@ -71,7 +72,7 @@ class ApiInteraction {
           'An error occurred while making the request. The server responded with status code ' +
               response.statusCode.toString()); //Failed http request
 
-    return json.decode(response.body);
+    return ApiResponse.fromJSON(json.decode(response.body));
   }
 
 
