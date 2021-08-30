@@ -3,6 +3,7 @@
 import 'package:unison/models/global.dart';
 
 import '../../models/message.dart';
+import 'apiResponse.dart';
 import 'backendAPI.dart';
 
 class MessageService {
@@ -10,12 +11,12 @@ class MessageService {
   final String _reqPath = '/user/' + Global.userAddress;
 
   Future<void> sendMessage(Message mess) async {
-    var response;
+    ApiResponse response;
     try {
       response =
           await _api.postData('$_reqPath/agreement/${mess.agreement }/message', mess.toJSONSend());
 
-      if (response['Status'] != "SUCCESSFUL")
+      if (!response.successful)
         throw Exception('Message could not be sent');
     } catch (err) {
       print(err); //Handle exception
@@ -35,14 +36,14 @@ class MessageService {
     Map<String, dynamic> body = byAgreement
         ? {'AgreementID': id, 'RequestingUser': Global.userAddress}
         : {'RequestingUser': id};
-    var response;
+    ApiResponse response;
 
     String path = '$_reqPath/' + (byAgreement? 'agreement/$id/message': 'message');
 
     try {
       response = await _api.getData(path);
 
-      if (response['Status'] != "SUCCESSFUL")
+      if (!response.successful)
         throw Exception('Messages could not be retrieved');
     } catch (err) {
       print(err); //Handle exception
@@ -50,8 +51,8 @@ class MessageService {
     }
 
     List<Message> ret = [];
-    for (int i = 0; i < response['Messages'].length; i++) {
-      ret.add(Message.fromJSON((response['ResponseObject']['Messages'][i])));
+    for (int i = 0; i < response.result.length; i++) {
+      ret.add(Message.fromJSON((response.result['Messages'][i])));
     }
 
     return ret;
@@ -59,7 +60,8 @@ class MessageService {
 
   Future<void> setMessageRead(Message mes) async {
     //Let the backend know that a message has been read
-    await _api.putData('$_reqPath/message/${mes.messageID}');
+    ApiResponse res = await _api.putData('$_reqPath/message/${mes.messageID}');
+    //Can check if successful here
 
   }
 
@@ -82,11 +84,11 @@ class MessageService {
       await Future.delayed(interval);
       final response = await _api.postData(_reqPath + 'getUnread', body);
 
-      if (response['Status'] != "SUCCESSFUL")
+      if (!response.successful)
         throw Exception('Messages could not be retrieved');
 
-      for (int i = 0; i < response['Messages'].length; i++) { //Yield any unread messages
-        yield Message.fromJSON((response['Messages'][i]));
+      for (int i = 0; i < response.result.length; i++) { //Yield any unread messages
+        yield Message.fromJSON((response.result['Messages'][i]));
       }
     }
 
