@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';
 import 'package:unison/widgets/funky_text_widget.dart';
@@ -74,13 +75,81 @@ class _MessagingScreenState extends State<MessagingScreen> {
       // drawer: AppDrawer(),
       body: Column(
         children: [
+          Card(
+            // : EdgeInsets.symmetric(
+            //   vertical: MediaQuery.of(context).size.height * 0.1,
+            //   horizontal: MediaQuery.of(context).size.width * 0.1,
+            // ),
+            color: Color.fromRGBO(43, 45, 60, 0.8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text('Participants:'),
+                Text(
+                  'You: ' +
+                      Global.userAddress.substring(0, 6) +
+                      '...' +
+                      Global.userAddress.substring(
+                          Global.userAddress.length - 4,
+                          Global.userAddress.length),
+                  style: TextStyle(
+                    color: Global.userAddress == partyA ||
+                            Global.userAddress == partyB
+                        ? Colors.pink[400]
+                        : Colors.teal[400],
+                    // fontSize: 10,
+                  ),
+                ),
+                if (Global.userAddress != partyA &&
+                    Global.userAddress == partyB)
+                  Text(
+                    'Other Party: ' +
+                        partyA.substring(0, 6) +
+                        '...' +
+                        partyA.substring(partyA.length - 4, partyA.length),
+                    style: TextStyle(
+                      color: Colors.cyan[400],
+                      // fontSize: 10,
+                    ),
+                  ),
+                if (Global.userAddress == partyA &&
+                    Global.userAddress != partyB)
+                  Text(
+                    'Other Party: ' +
+                        partyB.substring(0, 6) +
+                        '...' +
+                        partyB.substring(partyB.length - 4, partyB.length),
+                    style: TextStyle(
+                      color: Colors.cyan[400],
+                      // fontSize: 10,
+                    ),
+                  ),
+                Text(
+                  'Jurors (when agreement is in dispute): ' +
+                      partyA.substring(0, 6) +
+                      '0x12345'
+                          '...6789',
+                  style: TextStyle(
+                    color: Colors.teal[400],
+                    // fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             flex: 6,
             // child: MessagesPanel(agreementId, _isInit),
-            child: MessagesPanel(
-              agreementId: agreementId,
-              partyA: partyA,
-              partyB: partyB,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                      vertical: 0,
+                      horizontal: MediaQuery.of(context).size.width) *
+                  0.1,
+              child: MessagesPanel(
+                agreementId: agreementId,
+                partyA: partyA,
+                partyB: partyB,
+              ),
             ),
           ),
           Expanded(
