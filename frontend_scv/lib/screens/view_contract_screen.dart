@@ -40,6 +40,8 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
 
   Widget build(BuildContext context) {
     final agreementId = ModalRoute.of(context).settings.arguments as String;
+    String pA = '';
+    String pB = '';
     return Scaffold(
       appBar: AppBar(title: FunkyText('View Agreement')),
       body: Padding(
@@ -48,6 +50,8 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
             future: fetchAgreement(agreementId),
             builder: (context, agreementSnap) {
               if (agreementSnap.connectionState == ConnectionState.done) {
+                pA = agreementSnap.data.partyA;
+                pB = agreementSnap.data.partyB;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -82,7 +86,11 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
         onPressed: () {
           Navigator.of(context).pushNamed(
             MessagingScreen.routeName,
-            arguments: agreementId,
+            arguments: {
+              'agreementId': agreementId,
+              'partyA': pA,
+              'partyB': pB,
+            },
           );
         },
         label: Text('Agreement Chat'),
