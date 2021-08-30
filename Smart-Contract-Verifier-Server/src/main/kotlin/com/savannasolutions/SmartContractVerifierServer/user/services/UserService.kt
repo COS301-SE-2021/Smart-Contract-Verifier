@@ -13,7 +13,7 @@ import kotlin.collections.ArrayList
 @Service
 class UserService(  val userRepository: UserRepository,
                     val agreementsRepository: AgreementsRepository,
-                    val conditionsRepository: ConditionsRepository) {
+                    val conditionsRepository: ConditionsRepository,) {
 
 
     fun retrieveUserAgreements(userId: String): ApiResponse<RetrieveUserAgreementsResponse> {

@@ -31,4 +31,8 @@ class MessengerController constructor(private val messengerService: MessengerSer
     @PutMapping("/user/{userId}/message/{messageId}")
     fun setMessageAsRead(@PathVariable userId: String, @PathVariable messageId: UUID,) =
         messengerService.setMessageAsRead(userId, messageId)
+
+    @GetMapping("/user/{userId}/message/unread")
+    fun getUnreadMessages(@PathVariable userId: String,) =
+        messengerService.getUnreadMessages(userId)
 }
