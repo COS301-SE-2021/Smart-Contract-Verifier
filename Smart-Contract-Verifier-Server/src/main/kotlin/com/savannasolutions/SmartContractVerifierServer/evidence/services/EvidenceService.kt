@@ -17,6 +17,9 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+import java.math.BigInteger
+import java.security.MessageDigest
 import java.util.*
 import javax.annotation.PostConstruct
 
@@ -52,7 +55,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
             return UploadEvidenceResponse(ResponseStatus.FAILED)
 
         //TODO: implement hash calculation
-        val hashString = ""
+        val hashString = computeHash(uploadEvidenceRequest.fileToUpload)
         val nEvidence = Evidence(hashString, EvidenceType.UPLOADED)
         val filename = System.currentTimeMillis().toString() + "_" + uploadEvidenceRequest.fileToUpload.name
 
@@ -196,4 +199,9 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return RemoveEvidenceResponse(ResponseStatus.SUCCESSFUL)
     }
 
+    fun computeHash(file: MultipartFile): String{
+        val byteHash = MessageDigest.getInstance("MD5").digest(file.bytes)
+        val bigRep = BigInteger(1, byteHash)
+        return String.format("%032x", bigRep)
+    }
 }
