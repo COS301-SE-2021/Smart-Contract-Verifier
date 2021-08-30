@@ -9,7 +9,7 @@ create table contact_list (contact_listid uuid not null, contact_list_name varch
 drop table if exists contact_list_profile cascade;
 create table contact_list_profile (profileid uuid not null, contact_alias varchar(255), contact_list_contact_listid uuid, user_public_walletid varchar(255), primary key (profileid));
 drop table if exists evidence cascade;
-create table evidence (evidence_hash varchar(255) not null, evidence_type bytea, contract_contractid uuid, evidence_url_evidenceid uuid, uploaded_url_evidenceid uuid, user_public_walletid varchar(255), primary key (evidence_hash));
+create table evidence (evidence_hash varchar(255) not null, evidence_type bytea, removed boolean not null, contract_contractid uuid, user_public_walletid varchar(255), primary key (evidence_hash));
 drop table if exists judges cascade;
 create table judges (judge_agreementid uuid not null, agreement_contractid uuid, judge_public_walletid varchar(255), primary key (judge_agreementid));
 drop table if exists linked_evidence cascade;
@@ -28,8 +28,6 @@ alter table contact_list add constraint FK5d2wo4ku79ty5wy0sp91wmfne foreign key 
 alter table contact_list_profile add constraint FK1i7nmkgr287spuk0nbtuoq41a foreign key (contact_list_contact_listid) references contact_list;
 alter table contact_list_profile add constraint FKoexhgbgvmx752nsvk805144ov foreign key (user_public_walletid) references public.user;
 alter table evidence add constraint FKlpioqqatotxodcjc4rw9es0oc foreign key (contract_contractid) references agreements;
-alter table evidence add constraint FKajyqwe4nut3a9nlsnrg5jkdp6 foreign key (evidence_url_evidenceid) references linked_evidence;
-alter table evidence add constraint FKkeqst2mm0d8ikev3y3oc5ov6o foreign key (uploaded_url_evidenceid) references uploaded_evidence;
 alter table evidence add constraint FK98ib2d8e7lq8d96jwrup8u8qf foreign key (user_public_walletid) references public.user;
 alter table judges add constraint FK45ou5j98s4pvyp2aoid0fxmt1 foreign key (agreement_contractid) references agreements;
 alter table judges add constraint FKrs0xin46m7dds86a4uxwafqnf foreign key (judge_public_walletid) references public.user;

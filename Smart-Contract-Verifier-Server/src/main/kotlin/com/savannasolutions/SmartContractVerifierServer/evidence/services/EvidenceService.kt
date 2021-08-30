@@ -15,6 +15,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.requests.*
 import com.savannasolutions.SmartContractVerifierServer.evidence.responses.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -24,6 +25,7 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 @Service
+@AutoConfigureAfter(EvidenceConfig::class)
 @EnableConfigurationProperties(EvidenceConfig::class)
 class EvidenceService constructor(val agreementsRepository: AgreementsRepository,
                                   val userRepository: UserRepository,
@@ -39,7 +41,8 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         fileSystem = evidenceConfig.filesystem
     }
 
-    fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidenceRequest: UploadEvidenceRequest): UploadEvidenceResponse {
+    fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidence: MultipartFile): UploadEvidenceResponse {
+        TODO("change return type to MultipartFile, and update controller")
         //agreement doesn't exist
         if(!agreementsRepository.existsById(agreementId))
             return UploadEvidenceResponse(ResponseStatus.FAILED)
@@ -55,22 +58,25 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
             return UploadEvidenceResponse(ResponseStatus.FAILED)
 
         //TODO: implement hash calculation
-        val hashString = computeHash(uploadEvidenceRequest.fileToUpload)
+        val hashString = computeHash(uploadEvidence)
         val nEvidence = Evidence(hashString, EvidenceType.UPLOADED)
-        val filename = System.currentTimeMillis().toString() + "_" + uploadEvidenceRequest.fileToUpload.name
+        val filename = System.currentTimeMillis().toString() + "_" + uploadEvidence.name
 
         //TODO: Check filetype for risk (part of security)
-        val nUploadedEvidence = if(uploadEvidenceRequest.fileToUpload.contentType != null)
+        val nUploadedEvidence = if(uploadEvidence.contentType != null)
             UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
-                filename, uploadEvidenceRequest.fileToUpload.contentType!!)
+                filename, uploadEvidence.contentType!!)
         else
             UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
                 filename, "Unknown")
 
+        nEvidence.user = user
+        nEvidence.contract = agreement
+        nEvidence.uploadedEvidence = nUploadedEvidence
+        nUploadedEvidence.evidence = nEvidence
         evidenceRepository.save(nEvidence)
-        uploadedEvidenceRepository.save(nUploadedEvidence)
 
-        fileSystem.saveFile(uploadEvidenceRequest.fileToUpload, filename)
+        fileSystem.saveFile(uploadEvidence, filename)
 
         return UploadEvidenceResponse(ResponseStatus.SUCCESSFUL)
     }
@@ -89,13 +95,18 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         if(!agreement.users.contains(user))
             return LinkEvidenceResponse(ResponseStatus.FAILED)
 
-        val nEvidence = Evidence("", EvidenceType.LINKED)
+        val hash = userId+"_"+agreementId+"_"+System.currentTimeMillis().toString()+"lEvidence"
+
+        val nEvidence = Evidence(hash , EvidenceType.LINKED)
         val linkedEvidence = LinkedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
                                             linkEvidenceRequest.url,)
         nEvidence.evidenceUrl = linkedEvidence
+        nEvidence.user = user
+        nEvidence.contract = agreement
+        linkedEvidence.evidence = nEvidence
 
         evidenceRepository.save(nEvidence)
-        linkedEvidenceRepository.save(linkedEvidence)
+
 
         return LinkEvidenceResponse(ResponseStatus.SUCCESSFUL)
     }
@@ -116,18 +127,27 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val evidence = evidenceRepository.getById(evidenceHash)
 
         //user isn't party to the agreement
-        val judge = judgesRepository.getAllByJudge(user)?.get(0)
+        var valid = false
         val judges = agreement.judges
-        if (!agreement.users.contains(user) && (judges != null && !judges.contains(judge)))
-            return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+        if (!agreement.users.contains(user)) {
+            if (judges != null) {
+                for(judge in judges){
+                    if(judge.judge == user){
+                        valid = true
+                    }
+                }
+            }
+            if(!valid)
+                return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+        }
 
         val evidenceLink = evidence.evidenceUrl
         return if(evidenceLink!=null)
-            FetchEvidenceResponse(ResponseStatus.FAILED, evidenceLink.evidenceUrl, null)
+            FetchEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceLink.evidenceUrl, null)
         else{
             val uploadedEvidence = evidence.uploadedEvidence
             val file = uploadedEvidence?.let { fileSystem.retrieveFile(it.filename) }
-            FetchEvidenceResponse(ResponseStatus.FAILED, null, file)
+            FetchEvidenceResponse(ResponseStatus.SUCCESSFUL, null, file)
         }
     }
 
@@ -143,14 +163,23 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val user = userRepository.getById(userId)
 
         //user isn't party to the agreement
-        val judge = judgesRepository.getAllByJudge(user)?.get(0)
+        var valid = false
         val judges = agreement.judges
-        if (!agreement.users.contains(user) && (judges != null && !judges.contains(judge)))
-            return GetAllEvidenceResponse(ResponseStatus.FAILED, emptyList())
+        if (!agreement.users.contains(user)) {
+            if (judges != null) {
+                for(judge in judges){
+                    if(judge.judge == user){
+                        valid = true
+                    }
+                }
+            }
+            if(!valid)
+                return GetAllEvidenceResponse(ResponseStatus.FAILED, emptyList())
+        }
 
         //build list of evidenceHashes
         val evidenceList: MutableList<String> = mutableListOf()
-        evidenceRepository.getAllByContract(agreement).forEach { evidence -> evidenceList.add(evidence.evidenceHash) }
+        evidenceRepository.getAllByContract(agreement).forEach { evidenceInstance -> evidenceList.add(evidenceInstance.evidenceHash) }
 
         return GetAllEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceList.toList())
     }

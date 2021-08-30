@@ -1,20 +1,21 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.controllers
 
-import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.EvidenceFileSystem
+import com.google.common.net.MediaType
 import com.savannasolutions.SmartContractVerifierServer.evidence.requests.*
 import com.savannasolutions.SmartContractVerifierServer.evidence.services.EvidenceService
-import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @RestController
 class EvidenceController constructor(private val evidenceService: EvidenceService,) {
 
-    @PostMapping("/user/{userId}/agreement/{agreementId}/evidence/upload")
+    @PostMapping("/user/{userId}/agreement/{agreementId}/evidence/upload", consumes = [org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE])
     fun uploadEvidence(@PathVariable userId: String,
                        @PathVariable agreementId: UUID,
-                       @RequestBody uploadEvidenceRequest: UploadEvidenceRequest,) =
-        evidenceService.uploadEvidence(userId, agreementId, uploadEvidenceRequest)
+                       @RequestParam uploadEvidence: MultipartFile,) =
+        evidenceService.uploadEvidence(userId, agreementId, uploadEvidence)
 
     @PostMapping("/user/{userId}/agreement/{agreementId}/evidence/link")
     fun linkEvidence(@PathVariable userId: String,
@@ -25,8 +26,11 @@ class EvidenceController constructor(private val evidenceService: EvidenceServic
     @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}")
     fun retrieveEvidence(@PathVariable userId: String,
                          @PathVariable agreementId: UUID,
-                         @PathVariable evidenceHash: String,) =
+                         @PathVariable evidenceHash: String,) {
         evidenceService.fetchEvidence(userId, agreementId, evidenceHash)
+
+    }
+
 
     @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/")
     fun getAllEvidence(@PathVariable userId: String,
