@@ -60,7 +60,13 @@ class _MessagingScreenState extends State<MessagingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final agreementId = ModalRoute.of(context).settings.arguments as String;
+    final args = ModalRoute.of(context).settings.arguments as Map;
+    final agreementId = args['agreementId'];
+    final partyA = args['partyA'];
+    final partyB = args['partyB'];
+    print('MESSAGING SCREEN: ${agreementId}\n'
+        'PA: ${partyA}, PB:${partyB}');
+
     return Scaffold(
       appBar: AppBar(
         title: FunkyText('Agreement Chat: ' + agreementId),
@@ -72,7 +78,9 @@ class _MessagingScreenState extends State<MessagingScreen> {
             flex: 6,
             // child: MessagesPanel(agreementId, _isInit),
             child: MessagesPanel(
-              agreementId,
+              agreementId: agreementId,
+              partyA: partyA,
+              partyB: partyB,
             ),
           ),
           Expanded(
