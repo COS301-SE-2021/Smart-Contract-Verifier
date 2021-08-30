@@ -10,7 +10,9 @@ class ApiResponse {
     successful = jsn['Status'] == 'SUCCESSFUL';
 
     if (successful) {
-      result = jsn['ResponseData'];
+      try { //Add response data if there is any
+        result = jsn['ResponseData'];
+      } catch (_) {}
     }
     else {
       errorMessage = jsn['Message'];

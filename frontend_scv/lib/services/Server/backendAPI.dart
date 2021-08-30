@@ -76,7 +76,7 @@ class ApiInteraction {
   }
 
 
-  Future</*Map<String, dynamic>*/void> putData(String url) async {
+  Future<ApiResponse> putData(String url) async {
 
     var response;
     try {
@@ -92,14 +92,17 @@ class ApiInteraction {
 
     } on Exception catch (e) {
       print('Error: ' + e.toString());
-      throw Exception(
+      return ApiResponse.fromError(
           'Could not connect to backend'); //Could be expanded in the future
     }
 
     if (response.statusCode != 200)
-      throw Exception(
+      return ApiResponse.fromError(
           'An error occurred while making the request. The server responded with status code ' +
               response.statusCode.toString()); //Failed http request
+
+    return ApiResponse.fromJSON(jsonDecode(response.body));
+
   }
 
 }
