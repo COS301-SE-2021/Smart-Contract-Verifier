@@ -24,7 +24,6 @@ class Message with ChangeNotifier {
   Message.fromJSON(Map<String, dynamic> jsn) {
     //Generate from backend api response
     this.sender = jsn['sendingUser']['publicWalletID'];
-    print(this.sender);
     this.messageText = jsn['message'];
     this.dateSent = DateTime.tryParse(jsn['sendingDate']);
     this.messageID = jsn['messageID'];

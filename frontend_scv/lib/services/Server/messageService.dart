@@ -13,7 +13,7 @@ class MessageService {
     var response;
     try {
       response =
-          await _api.postData('$_reqPath/agreement/${mess.messageID }/message', mess.toJSONSend());
+          await _api.postData('$_reqPath/agreement/${mess.agreement }/message', mess.toJSONSend());
 
       if (response['Status'] != "SUCCESSFUL")
         throw Exception('Message could not be sent');
@@ -51,7 +51,7 @@ class MessageService {
 
     List<Message> ret = [];
     for (int i = 0; i < response['Messages'].length; i++) {
-      ret.add(Message.fromJSON((response['Messages'][i])));
+      ret.add(Message.fromJSON((response['ResponseObject']['Messages'][i])));
     }
 
     return ret;
