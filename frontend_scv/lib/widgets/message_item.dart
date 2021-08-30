@@ -18,7 +18,7 @@ class MessageItem extends StatelessWidget {
       //Judges:
       if (message.sender == Global.userAddress) {
         //Currently Logged in JUROR sent message
-        return _buildSender(MessageItemType.JurorCurrent);
+        return _buildSender(MessageItemType.JurorCurrent, context);
       } else {
         //Other JUROR or Imposter sent message
         return _buildReceiver(MessageItemType.JurorOther, context);
@@ -27,7 +27,7 @@ class MessageItem extends StatelessWidget {
       //Parties:
       if (message.sender == Global.userAddress) {
         //Currently Logged in PARTY sent message
-        return _buildSender(MessageItemType.PartyCurrent);
+        return _buildSender(MessageItemType.PartyCurrent, context);
       } else {
         //Other PARTY sent message
         return _buildReceiver(MessageItemType.PartyOther, context);
@@ -36,22 +36,10 @@ class MessageItem extends StatelessWidget {
     return Text('Oops');
   }
 
-  Widget _buildSender(MessageItemType messType) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [Text(message.messageText)],
-    );
-  }
-
   Widget _buildReceiver(MessageItemType messType, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      // mainAxisSize: MainAxisSize.min,
       children: [
-        // JdenticonSVG(
-        //   message.sender,
-        //   messType == MessageItemType.PartyOther ? [205] : [100],
-        // ),
         Card(
           elevation: 5.0,
           shape: RoundedRectangleBorder(
@@ -69,7 +57,7 @@ class MessageItem extends StatelessWidget {
               children: [
                 JdenticonSVG(
                   message.sender,
-                  messType == MessageItemType.PartyOther ? [205] : [100],
+                  messType == MessageItemType.PartyOther ? [205] : [150],
                 ),
                 SizedBox(
                   width: 5,
@@ -87,7 +75,9 @@ class MessageItem extends StatelessWidget {
                                   message.sender.length - 4,
                                   message.sender.length),
                           style: TextStyle(
-                            color: Colors.cyan[400],
+                            color: messType == MessageItemType.PartyOther
+                                ? Colors.cyan[400]
+                                : Colors.teal[400],
                             fontSize: 10,
                           ),
                         ),
@@ -113,26 +103,77 @@ class MessageItem extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
 
-        // Container(
-        //   width: MediaQuery.of(context).size.width * 0.45,
-        //   child: ListTile(
-        //     title: Text(
-        //       message.messageText,
-        //       style: TextStyle(fontWeight: FontWeight.normal),
-        //     ),
-        //     leading:
-        //     subtitle: Text(
-        //       DateFormat('yyyy-MM-dd kk:mm').format(message.dateSent),
-        //       style: TextStyle(
-        //         fontSize: 10,
-        //       ),
-        //     ),
-        //     dense: true,
-        //     tileColor: Color.fromRGBO(56, 61, 81, 1),
-        //   ),
-        // ),
-        // Text(message.messageText),
+  Widget _buildSender(MessageItemType messType, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Card(
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            bottomLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+            bottomRight: Radius.circular(0.0),
+          )),
+          margin: EdgeInsets.all(5.0),
+          color: Color.fromRGBO(43, 45, 60, 1),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          message.sender.substring(0, 6) +
+                              '...' +
+                              message.sender.substring(
+                                  message.sender.length - 4,
+                                  message.sender.length),
+                          style: TextStyle(
+                            color: messType == MessageItemType.PartyCurrent
+                                ? Colors.pink[400]
+                                : Colors.teal[400],
+                            fontSize: 10,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      message.messageText,
+                      style: TextStyle(
+                        // color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      DateFormat('yyyy-MM-dd kk:mm').format(message.dateSent),
+                      style: TextStyle(fontSize: 10, color: Colors.white54),
+                    ),
+                  ],
+                ),
+                // JdenticonSVG(
+                //   message.sender,
+                //   messType == MessageItemType.PartyCurrent ? [340] : [150],
+                // ),
+                SizedBox(
+                  width: 15,
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
