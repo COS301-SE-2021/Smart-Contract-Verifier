@@ -3,10 +3,8 @@
 //like getting a list of agreements involving a user.
 
 import 'dart:async';
-
 import 'package:unison/models/global.dart';
-
-import '../../models/condition.dart';
+import 'package:unison/services/Server/apiResponse.dart';
 import '../../models/contract.dart';
 import 'backendAPI.dart';
 
@@ -15,20 +13,12 @@ class CommonService {
 
   Future<List<Contract>> getInvolvedAgreements(String addr) async {
     //Get all agreements where a user is involved
-    var response;
+    ApiResponse response = await _api.getData('/user/$addr/agreement');
 
-    try {
-      response = await _api.getData('/user/$addr/agreement');
+    if (!response.successful)
+      throw Exception('Retrieval of agreements failed');
 
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Retrieval of agreements failed');
-    } on Exception catch (e) {
-      //Handle Exception
-      print(e);
-      return [];
-    }
-
-    List<dynamic> jsonList = ((response['ResponseObject']['agreements']));
+    List<dynamic> jsonList = ((response.result['agreements']));
     List<Contract> ret = [];
     for (int i = 0; i < jsonList.length; i++) {
       ret.add(Contract.fromJson(jsonList[i]));
@@ -39,20 +29,12 @@ class CommonService {
 
   Future<Contract> getAgreement(String id) async {
 
-    var response;
+    ApiResponse response = await _api.getData('/user/${Global.userAddress}/agreement/$id');
 
-    try {
-      response = await _api.getData('/user/${Global.userAddress}/agreement/$id');
+    if (!response.successful)
+      throw Exception('Retrieval of agreement failed');
 
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Retrieval of agreement failed');
-    } on Exception catch (e) {
-      //Handle Exception
-      print(e);
-      throw e;
-    }
-
-    return Contract.fromJson(response['ResponseObject']['AgreementResponse']);
+    return Contract.fromJson(response.result['AgreementResponse']);
 
   }
 
