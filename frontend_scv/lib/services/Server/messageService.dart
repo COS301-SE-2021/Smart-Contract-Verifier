@@ -83,25 +83,32 @@ class MessageService {
   }
 
   //This method returns a stream which checks for unread messages every 3 seconds, and yields any unread messages.
-  Stream<Message> getNewMessageStream(String id) async* {
+  Stream<List<Message>> getNewMessageStream(String id) async* {
+    // Stream<Message> getNewMessageStream(String id) async* {
     Duration interval = Duration(seconds: 3);
     //Check every 3 seconds
 
     //This will change soon.
-    Map<String, String> body = {'AgreementID': id, 'RequestingUser': Global.userAddress};
+    Map<String, String> body = {
+      'AgreementID': id,
+      'RequestingUser': Global.userAddress
+    };
 
     while (true) {
       await Future.delayed(interval);
-      final response = await _api.postData(_reqPath + 'get-all-messages-by-agreement', body);
+      final response =
+          await _api.postData(_reqPath + 'get-all-messages-by-agreement', body);
 
       if (response['Status'] != "SUCCESSFUL")
         throw Exception('Messages could not be retrieved');
 
-      for (int i = 0; i < response['Messages'].length; i++) { //Yield any unread messages
-        yield Message.fromJSON((response['Messages'][i]));
+      List<Message> yeildSend = [];
+      for (int i = 0; i < response['Messages'].length; i++) {
+        //Yield any unread messages
+        // yield Message.fromJSON((response['Messages'][i]));
+        yeildSend.add(Message.fromJSON((response['Messages'][i])));
       }
+      yield yeildSend;
     }
-
   }
-
 }
