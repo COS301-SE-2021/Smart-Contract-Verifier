@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:unison/services/Server/apiResponse.dart';
 import 'package:web3dart/credentials.dart';
 import '../../models/condition.dart';
 import '../../models/contract.dart';
@@ -19,39 +20,21 @@ class NegotiationService {
   }
 
   Future<void> saveAgreement(Contract agr) async {
-    //Save initial version of agreement to backend
-    //TODO list:
-    //Add exception handling. Maybe change return type to String
 
-    Map<String, dynamic> response;
-    try {
-      response =
+    ApiResponse response =
           await _api.postData('$_reqPath/${Global.userAddress}/agreement', agr.toJson());
-      print(response.toString());
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Agreement could not be saved');
-    } on Exception catch (e) {
-      //Handle exception
-      print(e);
-      throw e;
-    }
+    if (!response.successful)
+      throw Exception('Agreement could not be saved');
+
   }
 
   Future<void> saveCondition(Condition cond) async {
     //Save a condition associated with a contract
+    ApiResponse response = await _api.postData('$_reqPath/${Global.userAddress}/agreement/${cond.agreementId}/condition', cond.toJson());
 
-    Map<String, dynamic> response;
-    try {
-      response =
-          await _api.postData('$_reqPath/${Global.userAddress}/agreement/${cond.agreementId}/condition', cond.toJson());
+    if (!response.successful)
+      throw Exception('Condition could not be saved');
 
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Condition could not be saved');
-    } on Exception catch (e) {
-      //Handle exception
-      print(e);
-      throw e;
-    }
   }
 
   void acceptCondition(Condition con) async {
@@ -71,20 +54,14 @@ class NegotiationService {
 
     String path = acc ? 'accept' : 'reject';
 
-    //TODO DANGER WARNING ALERT EVERYTHING ELSE THIS WILL BREAK,
+    //TODO DANGER WARNING ALERT AND EVERYTHING ELSE, THIS WILL BREAK
     //The ui needs to change the way it calls the function
-    Map<String, dynamic> response;
-    try {
-      /*response = */await _api.putData('/user/${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
+    ApiResponse response = await _api.putData('/user/${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
 
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception(
+    if (!response.successful)
+      throw Exception(
             'Condition could not be ' + (acc ? 'accepted' : 'rejected'));
-    } on Exception catch (e) {
-      //Handle exception
-      print(e);
-      return;
-    }
+
   }
 
   Future<void> setPayment(String con, String payingUser, double price) async {
@@ -94,18 +71,10 @@ class NegotiationService {
       'Payment' : price,
       'PayingUser' : payingUser,
     };
-    var response;
+    ApiResponse response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/payment', body);
 
-    try {
-      response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/payment', body);
-
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Payment info could not be saved');
-    } on Exception catch (e) {
-      //Handle exception
-      print(e);
-      throw e;
-    }
+    if (!response.successful)
+       throw Exception('Payment info could not be saved');
 
   }
 
@@ -115,18 +84,11 @@ class NegotiationService {
     Map<String, dynamic> body = {
       'Duration': dur,
     };
-    var response;
+    ApiResponse response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/duration', body);
 
-    try {
-      response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/duration', body);
+    if (!response.successful)
+       throw Exception('Duration info could not be saved');
 
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Duration info could not be saved');
-    } on Exception catch (e) {
-      //Handle exception
-      print(e);
-      throw e;
-    }
   }
 
   // Future<void> _handlePayDuration(String con, double val, bool price) async {
@@ -153,24 +115,9 @@ class NegotiationService {
   //   }
   // }
 
-  //This method is bound to change soon.
+
   //The api will be updated with a new 'seal flow'
   Future<void> sealAgreement(Contract con) async {
-    Map<String, dynamic> response;
-    try {
-      response = await _api.postData(
-          _reqPath + 'seal-agreement', {'AgreementID': con.contractId});
-
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Agreement could not be sealed');
-
-      //Save the agreement on the blockchain
-      await _uniServ.saveAgreement(con);
-      //await _uniServ.addPaymentConditions(con.blockchainId, EthereumAddress.fromHex(con.payingUser), BigInt.from(con.price.toInt()));
-    } on Exception catch (e) {
-      //Handle exception
-      print(e);
-      throw (e);
-    }
+    return; //To be rewritten soon.
   }
 }
