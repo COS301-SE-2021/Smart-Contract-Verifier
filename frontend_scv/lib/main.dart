@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
                 accentColor: Colors.cyan,
                 fontFamily: 'Lato',
               ),
+
               // themeMode: ThemeMode.dark,
               home: auth.isAuth ? ContractsOverviewScreen() : AuthScreen(),
               routes: {
