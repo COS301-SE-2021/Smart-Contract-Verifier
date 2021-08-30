@@ -11,17 +11,12 @@ class MessageService {
   final String _reqPath = '/user/' + Global.userAddress;
 
   Future<void> sendMessage(Message mess) async {
-    ApiResponse response;
-    try {
-      response =
+    ApiResponse response =
           await _api.postData('$_reqPath/agreement/${mess.agreement }/message', mess.toJSONSend());
 
       if (!response.successful)
         throw Exception('Message could not be sent');
-    } catch (err) {
-      print(err); //Handle exception
-      throw err;
-    }
+
   }
 
   Future<List<Message>> getMessages(String id) async {
@@ -36,19 +31,13 @@ class MessageService {
     Map<String, dynamic> body = byAgreement
         ? {'AgreementID': id, 'RequestingUser': Global.userAddress}
         : {'RequestingUser': id};
-    ApiResponse response;
+
 
     String path = '$_reqPath/' + (byAgreement? 'agreement/$id/message': 'message');
+    ApiResponse response = await _api.getData(path);
 
-    try {
-      response = await _api.getData(path);
-
-      if (!response.successful)
-        throw Exception('Messages could not be retrieved');
-    } catch (err) {
-      print(err); //Handle exception
-      throw err;
-    }
+    if (!response.successful)
+      throw Exception('Messages could not be retrieved');
 
     List<Message> ret = [];
     for (int i = 0; i < response.result.length; i++) {

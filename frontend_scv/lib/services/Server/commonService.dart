@@ -1,6 +1,7 @@
 //This is for the ui to request data from the api in an abstract sense.
 //This one deals with common issues,
 //like getting a list of agreements involving a user.
+//Exceptions are thrown, and must be handled by the UI. This is subject to change.
 
 import 'dart:async';
 import 'package:unison/models/global.dart';
