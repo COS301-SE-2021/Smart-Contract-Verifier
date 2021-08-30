@@ -4,22 +4,22 @@ import 'package:jdenticon_dart/jdenticon_dart.dart';
 
 class JdenticonSVG extends StatelessWidget {
   final String _inputString;
-  final String colorHash;
+  final List<int> hues;
 
-  JdenticonSVG(this._inputString, this.colorHash);
+  JdenticonSVG(this._inputString, this.hues);
 
   @override
   Widget build(BuildContext context) {
     String rawSvg = Jdenticon.toSvg(
       _inputString,
-      colorSaturation: 1.0,
+      colorSaturation: 0.7,
       grayscaleSaturation: 1.0,
       colorLightnessMinValue: 0.40,
       colorLightnessMaxValue: 0.80,
       grayscaleLightnessMinValue: 0.30,
       grayscaleLightnessMaxValue: 0.90,
-      backColor: colorHash,
-      hues: [205],
+      // backColor: colorHash,
+      hues: hues,
     ).toString();
     return SvgPicture.string(
       rawSvg,

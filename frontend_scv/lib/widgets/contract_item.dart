@@ -18,7 +18,7 @@ class ContractItem extends StatelessWidget {
       },
       child: ListTile(
         title: Text(contract.title),
-        leading: JdenticonSVG(contract.contractId, '#ff7800'),
+        leading: JdenticonSVG(contract.contractId, [205]),
       ),
     );
   }
