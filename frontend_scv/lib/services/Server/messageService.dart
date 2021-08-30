@@ -88,11 +88,11 @@ class MessageService {
     //Check every 3 seconds
 
     //This will change soon.
-    Map<String, String> body = {};
+    Map<String, String> body = {'AgreementID': id, 'RequestingUser': Global.userAddress};
 
     while (true) {
       await Future.delayed(interval);
-      final response = await _api.postData(_reqPath + 'getUnread', body);
+      final response = await _api.postData(_reqPath + 'get-all-messages-by-agreement', body);
 
       if (response['Status'] != "SUCCESSFUL")
         throw Exception('Messages could not be retrieved');
