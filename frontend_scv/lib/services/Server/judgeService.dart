@@ -21,8 +21,7 @@ class JudgeService {
 
     var response;
     try {
-      response = await _api.postData('/negotiation/get-judging-agreement',
-          {'WalletID': Global.userAddress});
+      response = await _api.getData('/judge/${Global.userAddress}/agreement');
 
       if (response['Status'] != 'SUCCESSFUL')
         throw Exception('Agreements for judge could not be retrieved');
@@ -31,7 +30,7 @@ class JudgeService {
       throw (e);
     }
 
-    List<dynamic> jsonList = ((response['AgreementList']));
+    List<dynamic> jsonList = ((response['ResponseObject']['AgreementList']));
     List<Contract> ret = [];
 
     for (int i = 0; i < jsonList.length; i++) {
