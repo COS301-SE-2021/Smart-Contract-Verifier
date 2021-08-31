@@ -147,6 +147,28 @@ library AgreementLib{
         PaymentInfoLib.PaymentInfo[] payments;
     }
 
+    struct ReturnEvidence{
+        string[] url;
+        uint256[] evidenceHash;
+    }
+
+    function makeReturnEvidence(Jury storage jury) external view returns(ReturnEvidence memory){
+        ReturnEvidence memory result;
+        if(jury.numFiles <= 0)
+            return result;
+        
+        result.url = new string[](jury.numFiles);
+        result.evidenceHash = new uint256[](jury.numFiles);
+        
+        for(uint i=0; i<jury.numFiles; i++){
+            result.url[i] = jury.evidenceFile[i];
+            result.evidenceHash[i] = jury.evidenceHash[i];
+        }
+
+        return result;
+    }
+
+
     struct ReturnJury{
         bool assigned;
         uint deadline;
