@@ -2,11 +2,15 @@ const Verifier = artifacts.require("Verifier");
 const UnisonToken = artifacts.require("UnisonToken");
 const RandomSource = artifacts.require("Utilities/RandomSource.sol");
 
+const AgreementLib = artifacts.require("Structs/AgreementLib.sol");
+
 fs = require('fs');
 
 module.exports = async (deployer) => {
   await deployer.deploy(RandomSource);
   await deployer.deploy(UnisonToken);
+  await deployer.deploy(AgreementLib);
+  await deployer.link(AgreementLib, [Verifier]);
   await deployer.deploy(Verifier, UnisonToken.address, RandomSource.address);
 
   var obj = {
