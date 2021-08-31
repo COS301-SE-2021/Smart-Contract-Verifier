@@ -23,14 +23,16 @@ class EvidenceController constructor(private val evidenceService: EvidenceServic
                      @RequestBody linkEvidenceRequest: LinkEvidenceRequest,) =
         evidenceService.linkEvidence(userId, agreementId, linkEvidenceRequest)
 
-    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}")
+    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}/linked")
     fun retrieveEvidence(@PathVariable userId: String,
                          @PathVariable agreementId: UUID,
-                         @PathVariable evidenceHash: String,) {
+                         @PathVariable evidenceHash: String,) =
         evidenceService.fetchEvidence(userId, agreementId, evidenceHash)
 
-    }
+    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}/download")
+    fun downloadEvidence(@PathVariable userId: String, @PathVariable agreementId: UUID, @PathVariable evidenceHash: String,){
 
+    }
 
     @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/")
     fun getAllEvidence(@PathVariable userId: String,
