@@ -528,5 +528,24 @@ contract('Verifier', (accounts) =>{
             assert(evidence.evidenceHash[1] == 43, "file hash wrong in evidence")
         })
 
+        it("multiple evidence files from both parties", async ()=>{
+            try{
+                await verifier.addEvidence(0, "file 3", 10, {from : accounts[1]});
+                await verifier.addEvidence(0, "file 4", 11);
+                assert(false, "addEvidence didn't thow an error");
+            }
+            catch{}
+            
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url.length == 4, "wrong amount of evidence");
+            assert(evidence.evidenceHash.length == 4, "wrong amount of evidence");
+
+            assert(evidence.url[2] == "file 3", "file url wrong in evidence")
+            assert(evidence.evidenceHash[2] == 10, "file hash wrong in evidence")
+
+            assert(evidence.url[3] == "file 4", "file url wrong in evidence")
+            assert(evidence.evidenceHash[3] == 11, "file hash wrong in evidence")
+        })
+        
     })
 })
