@@ -6,6 +6,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.Evid
 import org.bouncycastle.util.encoders.UTF8
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.lang.Exception
 import java.nio.file.FileSystem
 import java.nio.file.Files
@@ -26,15 +27,14 @@ class EvidenceFileSystemJIMFSImplementation: EvidenceFileSystem{
         }
     }
 
-    override fun retrieveFile(fileToRetrieve: String): MultipartFile {
+    override fun retrieveFile(fileToRetrieve: String): File? {
         val path = filesystem.getPath(fileToRetrieve)
         try{
-            val bytes = Files.readAllBytes(path)
-            return ByteArrayMultipartFile(bytes)
+            return
         }catch (e: Exception){
             println(e.message)
         }
-        return ByteArrayMultipartFile("no such file".toByteArray(Charsets.UTF_8))
+        return
     }
 
     override fun deleteFile(fileToDelete: String) {

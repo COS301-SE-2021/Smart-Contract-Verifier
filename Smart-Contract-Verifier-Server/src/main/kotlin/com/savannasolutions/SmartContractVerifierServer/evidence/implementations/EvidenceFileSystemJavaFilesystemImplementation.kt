@@ -9,7 +9,7 @@ class EvidenceFileSystemJavaFilesystemImplementation: EvidenceFileSystem {
         TODO("Not yet implemented")
     }
 
-    override fun retrieveFile(fileToRetrieve: String): MultipartFile {
+    override fun retrieveFile(fileToRetrieve: String): File? {
         TODO("Not yet implemented")
     }
 

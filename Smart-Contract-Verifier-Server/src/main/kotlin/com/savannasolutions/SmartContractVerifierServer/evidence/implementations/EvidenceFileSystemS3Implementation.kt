@@ -3,6 +3,7 @@ package com.savannasolutions.SmartContractVerifierServer.evidence.implementation
 import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.EvidenceFileSystem
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 
 @Component
 class EvidenceFileSystemS3Implementation: EvidenceFileSystem{
@@ -10,7 +11,7 @@ class EvidenceFileSystemS3Implementation: EvidenceFileSystem{
         TODO("Not yet implemented")
     }
 
-    override fun retrieveFile(fileToRetrieve: String): MultipartFile {
+    override fun retrieveFile(fileToRetrieve: String): File? {
         TODO("Not yet implemented")
     }
 
