@@ -61,7 +61,7 @@ library AgreementLib{
 
     }
 
-    function addEvidence(Jury storage jury, string calldata file, uint256 fileHash) internal{
+    function addEvidence(Jury storage jury, string calldata file, uint256 fileHash) external{
         jury.evidenceFile[jury.numFiles] = file;
         jury.evidenceHash[jury.numFiles] = fileHash;
         jury.numFiles++;
@@ -96,7 +96,7 @@ library AgreementLib{
         Vote[] votes;
     }
 
-    function makeReturnAgreement(Agreement storage agreement) view internal returns(ReturnAgreement memory){
+    function makeReturnAgreement(Agreement storage agreement) external view returns(ReturnAgreement memory){
         ReturnAgreement memory result;
 
         result.uuid = agreement.uuid;
@@ -123,7 +123,7 @@ library AgreementLib{
         return result;
     }
 
-    function makeReturnJury(Jury storage jury) view internal returns(ReturnJury memory){
+    function makeReturnJury(Jury storage jury) external view returns(ReturnJury memory){
         ReturnJury memory result;
 
         result.assigned = jury.assigned;

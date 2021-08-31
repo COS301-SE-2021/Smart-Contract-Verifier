@@ -11,6 +11,7 @@ import "./FeeContract.sol";
 
 contract Verifier{
     using AgreementLib for AgreementLib.Agreement;
+    using AgreementLib for AgreementLib.Jury;
 
     uint private nextAgreeID = 0;
     uint private numActive = 0;
