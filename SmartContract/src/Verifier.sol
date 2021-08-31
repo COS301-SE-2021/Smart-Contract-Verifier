@@ -13,16 +13,16 @@ contract Verifier{
     using AgreementLib for AgreementLib.Agreement;
 
     uint private nextAgreeID = 0;
-    uint numActive = 0;
+    uint private numActive = 0;
 
     // Non-existent entries will return a struct filled with 0's
-    mapping(uint => AgreementLib.Agreement) agreements;
-    mapping(uint => AgreementLib.Jury) juries;
+    mapping(uint => AgreementLib.Agreement) private agreements;
+    mapping(uint => AgreementLib.Jury) private juries;
 
-    JurorStore jurorStore;
-    uint jurySeed = 10;
-    UnisonToken unisonToken;
-    FeeContract feeContract;
+    JurorStore private jurorStore;
+    uint private jurySeed = 10;
+    UnisonToken private unisonToken;
+    FeeContract private feeContract;
 
     // Fraction out of a thousand
     uint constant controversyRatio = 300;
@@ -235,12 +235,13 @@ contract Verifier{
         uint index = _partyIndex(agreeID, msg.sender);
         require(index > 0, "E9");
 
-        require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "E10");
         if(index == 1){
+            require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "E10");
             agreements[agreeID].party1Vote = vote;
             _updateStateAfterVote(agreeID);
         }
         else{
+            require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "E10");
             agreements[agreeID].party2Vote = vote;
             _updateStateAfterVote(agreeID);
         }
