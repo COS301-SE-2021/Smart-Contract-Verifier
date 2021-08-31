@@ -149,19 +149,19 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
     }
 
-    fun downloadEvidence(userId: String, agreementId: UUID, evidenceHash: String): File? {
+    fun downloadEvidence(userId: String, agreementId: UUID, evidenceHash: String): DownloadEvidenceResponse {
         if(!agreementsRepository.existsById(agreementId))
-            return null
+            return DownloadEvidenceResponse(null, "")
         val agreement = agreementsRepository.getById(agreementId)
 
         //user doesn't exist
         if(!userRepository.existsById(userId))
-            return null
+            return DownloadEvidenceResponse(null, "")
         val user = userRepository.getById(userId)
 
         //evidence doesn't exist
         if(!evidenceRepository.existsById(evidenceHash))
-            return null
+            return DownloadEvidenceResponse(null, "")
         val evidence = evidenceRepository.getById(evidenceHash)
 
         //user isn't party to the agreement
@@ -176,13 +176,16 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
                 }
             }
             if(!valid)
-                return null
+                return DownloadEvidenceResponse(null, "")
         }
 
         //return file
         val uploadedEvidence = evidence.uploadedEvidence
-        return uploadedEvidence?.let { fileSystem.retrieveFile(it.filename) }
-
+        if (uploadedEvidence != null) {
+            return DownloadEvidenceResponse(fileSystem.retrieveFile(uploadedEvidence.filename),
+                uploadedEvidence.fileMimeType)
+        }
+        return DownloadEvidenceResponse(null, "")
     }
 
     fun getAllEvidence(userId: String, agreementId: UUID): GetAllEvidenceResponse {
