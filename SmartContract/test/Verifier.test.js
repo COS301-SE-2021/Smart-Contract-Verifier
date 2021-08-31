@@ -354,7 +354,7 @@ contract('Verifier', (accounts) =>{
         })
 
         it("evidence from party2", async()=>{
-            await verifier.addEvidence(0, "file2", 101);
+            await verifier.addEvidence(0, "file2", 101, {from : accounts[1]});
             var evidence = await verifier.getEvidence(0);
             assert(evidence.url[1] == "file2", "file url wrong in evidence")
             assert(evidence.evidenceHash[1] == 101, "file hash wrong in evidence")
