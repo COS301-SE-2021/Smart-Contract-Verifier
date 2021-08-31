@@ -30,11 +30,11 @@ class EvidenceFileSystemJIMFSImplementation: EvidenceFileSystem{
     override fun retrieveFile(fileToRetrieve: String): File? {
         val path = filesystem.getPath(fileToRetrieve)
         try{
-            return
+            return path.toFile()
         }catch (e: Exception){
             println(e.message)
         }
-        return
+        return null
     }
 
     override fun deleteFile(fileToDelete: String) {
