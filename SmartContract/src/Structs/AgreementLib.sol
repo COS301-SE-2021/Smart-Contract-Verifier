@@ -61,6 +61,12 @@ library AgreementLib{
 
     }
 
+    function addEvidence(Jury storage jury, string calldata file, uint256 fileHash) internal{
+        jury.evidenceFile[jury.numFiles] = file;
+        jury.evidenceHash[jury.numFiles] = fileHash;
+        jury.numFiles++;
+    }
+
     // Version of Agreement to be used in functions as return value
     // Agreement can't be returned by a function since it contains a mapping, but ReturnAgreement can't
     // be in storage since it contains a dynamic array of structs
