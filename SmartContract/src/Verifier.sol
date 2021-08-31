@@ -14,7 +14,7 @@ contract Verifier{
     using AgreementLib for AgreementLib.Jury;
 
     uint private nextAgreeID = 0;
-    uint private numActive = 0;
+    uint private numActive = 0; //number of active agreements
 
     // Non-existent entries will return a struct filled with 0's
     mapping(uint => AgreementLib.Agreement) private agreements;
@@ -37,16 +37,6 @@ contract Verifier{
     // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0
     modifier inAgreement(uint agreeID){
         require(msg.sender == agreements[agreeID].party1 || msg.sender == agreements[agreeID].party2);
-        _;
-    }
-
-    modifier inJury(uint agreeID){
-        require(juries[agreeID].assigned, "E1");
-        for(uint i=0; i<juries[agreeID].numJurors; i++){
-            if(juries[agreeID].jurors[i] == msg.sender)
-                return;
-        }
-        require(false, "E2");
         _;
     }
 
@@ -149,6 +139,8 @@ contract Verifier{
                 emit ActiveAgreement(agreeID);
             }
         }
+
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
 
@@ -259,6 +251,8 @@ contract Verifier{
 
         jurorStore.addJuror(j);
         emit AddJuror(j);
+
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
     // remove yourself from available jurors list
@@ -266,6 +260,8 @@ contract Verifier{
         jurorStore.removeJuror(msg.sender);
         unisonToken.transfer(msg.sender, getStakingAmount());
         emit RemoveJuror(msg.sender);
+
+        // feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
     function _abs(int x) internal pure returns (int) {
@@ -396,10 +392,6 @@ contract Verifier{
 
         _juryMakeDecision(agreeID);
 
-    }
-
-    function _totalRatio() internal view returns(uint){
-        return (1000*numActive) / jurorStore.getNumJurors();
     }
 
     function getPlatformFee() public view returns(uint){
