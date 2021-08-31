@@ -177,6 +177,7 @@ contract Verifier{
         juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;
+        agreements[agreeID].state = AgreementLib.AgreementState.CONTESTED;
         emit JuryAssigned(agreeID, jury);
     }
 
