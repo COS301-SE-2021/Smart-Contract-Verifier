@@ -182,8 +182,10 @@ contract Verifier{
         emit JuryAssigned(agreeID, jury);
     }
 
-    function _updateStateAfterVote(uint agreeID) internal{
+    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+        AgreementLib.voteResolution(agreements[agreeID], vote);
 
+        // update state after vote
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
                 agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
             if(juries[agreeID].assigned)
@@ -207,13 +209,6 @@ contract Verifier{
             numActive--;
             emit CloseAgreement(agreeID);
         }
-
-    }
-
-
-    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
-        AgreementLib.voteResolution(agreements[agreeID], vote);
-        _updateStateAfterVote(agreeID);
     }
 
     // Sign yourself up to become a juror
