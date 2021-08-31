@@ -474,4 +474,33 @@ contract('Verifier', (accounts) =>{
 
     })
 
+
+    describe("Verifier unit tests 5", async () =>{
+
+        var verifier
+
+        before(async () =>{
+            token = await UnisonToken.new()
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
+
+            await createActiveAgreement(verifier, accounts);
+
+            prepareJurors(verifier, token, accounts, 1, 10)
+
+            for(var i=3; i<9; i++){
+                token.approve(verifier.address, 10000, {from: accounts[i]});
+                verifier.addJuror({from: accounts[i]});
+            }
+
+            // Contest agreement
+            result = await verifier.voteResolution(0, 1, {from: accounts[1]});
+
+        })
+
+        it("Outsider can't add evidence", async ()=>{
+            
+        })
+
+    })
 })
