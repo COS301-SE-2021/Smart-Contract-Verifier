@@ -352,8 +352,8 @@ contract('Verifier', (accounts) =>{
         it("1 evidence file", async()=>{
             await verifier.addEvidence(0, "file", 42);
             var evidence = await verifier.getEvidence(0);
-            assert(evidence.url[0] == "file", "file url wrong in evidence")
-            assert(evidence.evidenceHash[0] == 42, "file hash wrong in evidence")
+            assert(evidence.url[0] == "file", "file url wrong in evidence");
+            assert(evidence.evidenceHash[0] == 42, "file hash wrong in evidence");
         })
 
         it("evidence from party2", async()=>{
@@ -507,6 +507,25 @@ contract('Verifier', (accounts) =>{
             var evidence = await verifier.getEvidence(0);
             assert(evidence.url.length == 0, "file url was added by outsider")
             assert(evidence.evidenceHash.length == 0, "file hash was added by outsider")
+        })
+
+        it("multiple evidence files", async ()=>{
+            try{
+                await verifier.addEvidence(0, "file", 42);
+                await verifier.addEvidence(0, "another file", 43);
+                assert(false, "addEvidence didn't thow an error");
+            }
+            catch{}
+            
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url.length == 2, "wrong amount of evidence");
+            assert(evidence.evidenceHash.length == 2, "wrong amount of evidence");
+
+            assert(evidence.url[0] == "file", "file url wrong in evidence")
+            assert(evidence.evidenceHash[0] == 42, "file hash wrong in evidence")
+
+            assert(evidence.url[1] == "another file", "file url wrong in evidence")
+            assert(evidence.evidenceHash[1] == 43, "file hash wrong in evidence")
         })
 
     })
