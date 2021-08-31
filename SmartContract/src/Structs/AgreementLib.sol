@@ -54,6 +54,11 @@ library AgreementLib{
         mapping(uint => address) jurors;
         mapping(uint => Vote) votes;
         uint numJurors;
+
+        mapping(uint => string) evidenceFile;
+        mapping(uint => uint256) evidenceHash;
+        uint numFiles;
+
     }
 
     // Version of Agreement to be used in functions as return value
