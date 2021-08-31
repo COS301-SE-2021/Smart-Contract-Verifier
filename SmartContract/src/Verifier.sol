@@ -111,8 +111,6 @@ contract Verifier{
             _addPaymentToAgreement(agreeID, p);
 
         }        
-
-
     }
 
     function payPlatformFee(uint agreeID) public{
@@ -150,6 +148,10 @@ contract Verifier{
 
     function getJury(uint agreeID) public view returns(AgreementLib.ReturnJury memory){
         return AgreementLib.makeReturnJury(juries[agreeID]);
+    }
+
+    function getEvidence(uint agreeID) external view returns(AgreementLib.ReturnEvidence memory){
+        return AgreementLib.makeReturnEvidence(juries[agreeID]);
     }
 
     function addEvidence(uint agreeID, string calldata url, uint256 evidenceHash) public inAgreement(agreeID){
