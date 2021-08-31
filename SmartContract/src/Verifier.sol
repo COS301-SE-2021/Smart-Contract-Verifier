@@ -268,26 +268,6 @@ contract Verifier{
         emit RemoveJuror(msg.sender);
     }
 
-    function _decisionTime(uint agreeID) internal view returns(bool){
-        // Returns true if it's time to take action on jury's decision
-        // Either when voting deadline has been reached or if all jurors voted
-
-        if(!juries[agreeID].assigned)
-            return false;
-        
-        // True if deadline reached
-        if(juries[agreeID].deadline <= block.timestamp)
-            return true;
-
-        // False if anyone hasn't voted yet
-        for(uint i=0; i < juries[agreeID].numJurors; i++){
-            if(juries[agreeID].votes[i] == AgreementLib.Vote.NONE)
-                return false;
-        }
-
-        return true;
-    }
-
     function _abs(int x) internal pure returns (int) {
         return x >= 0 ? x : -x;
     }
@@ -391,9 +371,18 @@ contract Verifier{
         // Set vote
         juries[agreeID].votes[uint(index)] = vote;
 
-        if(_decisionTime(agreeID)){
-            _juryMakeDecision(agreeID);
+
+        // Determine if it's time to make decision, return if not
+        
+        if(juries[agreeID].deadline > block.timestamp){
+            // If deadline hasn't been reached and there are outstanding votes, return
+            for(uint i=0; i < juries[agreeID].numJurors; i++){
+                if(juries[agreeID].votes[i] == AgreementLib.Vote.NONE)
+                    return;
+            }
         }
+
+        _juryMakeDecision(agreeID);
 
     }
 
