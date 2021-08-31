@@ -40,12 +40,12 @@ contract Verifier{
     }
 
     modifier inJury(uint agreeID){
-        require(juries[agreeID].assigned, "Specified agreement has no jury");
+        require(juries[agreeID].assigned, "E1");
         for(uint i=0; i<juries[agreeID].numJurors; i++){
             if(juries[agreeID].jurors[i] == msg.sender)
                 return;
         }
-        require(false, "You are not on this jury");
+        require(false, "E2");
         _;
     }
 
@@ -96,8 +96,8 @@ contract Verifier{
 
     // Each payment must have the allowance ready, it will be transferred immediately
     function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
-        require(tokens.length == amount.length, "mismatch between tokens and amounts");
-        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "Agreement state invalid for adding payments");
+        require(tokens.length == amount.length, "E3");
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
         uint numPayments = tokens.length;
 
         address otherParty;
@@ -108,7 +108,7 @@ contract Verifier{
 
         for(uint i=0; i<numPayments; i++){
             uint256 allowed = tokens[i].allowance(msg.sender, address(this));
-            require(allowed >= amount[i], "Insufficient allowance on a specified payment");
+            require(allowed >= amount[i], "E5");
 
             PaymentInfoLib.PaymentInfo memory p;
             p.token = tokens[i];
@@ -137,7 +137,7 @@ contract Verifier{
         require(payment > 0);
 
         uint256 allowed = unisonToken.allowance(msg.sender, address(this));
-        require(allowed >= payment, "insufficient allowance to pay platform fee");
+        require(allowed >= payment, "E5");
 
         if(unisonToken.transferFrom(msg.sender, address(this), payment)){
             agreements[agreeID].feePaid += payment;
@@ -157,6 +157,14 @@ contract Verifier{
 
     function getJury(uint agreeID) public view returns(AgreementLib.ReturnJury memory){
         return AgreementLib.makeReturnJury(juries[agreeID]);
+    }
+
+    function addEvidence(uint agreeID, string calldata url, uint256 evidenceHash) public inAgreement(agreeID){
+        require(agreements[agreeID].state != AgreementLib.AgreementState.CONTESTED, "E6");
+
+
+
+        AgreementLib.addEvidence(juries[agreeID], url, evidenceHash);
     }
 
     function _assignJury(uint agreeID) internal{
@@ -219,21 +227,20 @@ contract Verifier{
     }
 
     function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
-        require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
+        require(agreements[agreeID].resolutionTime < block.timestamp, "E7");
 
         require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
+            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "E8");
 
         uint index = _partyIndex(agreeID, msg.sender);
-        require(index > 0, "You can only vote if you're part of the agreement");
+        require(index > 0, "E9");
 
+        require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "E10");
         if(index == 1){
-            require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party1Vote = vote;
             _updateStateAfterVote(agreeID);
         }
         else{
-            require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
             agreements[agreeID].party2Vote = vote;
             _updateStateAfterVote(agreeID);
         }
@@ -371,14 +378,14 @@ contract Verifier{
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
         // Yes means pay out as normal, no means refund all payments
 
-        require(juries[agreeID].assigned, "There is no jury for this agreement");
+        require(juries[agreeID].assigned, "E11");
 
         int index = _jurorIndex(agreeID);
 
-        require(index >= 0, "You are not on this jury");
+        require(index >= 0, "E12");
         // If the following two conditions hold, then the agreement also can't be closed.
-        require(juries[agreeID].deadline > block.timestamp, "Deadline for voting has passed");
-        require(juries[agreeID].votes[uint(index)] == AgreementLib.Vote.NONE, "You already voted");
+        require(juries[agreeID].deadline > block.timestamp, "E13");
+        require(juries[agreeID].votes[uint(index)] == AgreementLib.Vote.NONE, "E10");
 
         // Set vote
         juries[agreeID].votes[uint(index)] = vote;
@@ -393,9 +400,9 @@ contract Verifier{
         // If not all jury members voted, this will be needed to finish the agreement
         // (since code execution must come from someone)
 
-        require(juries[agreeID].assigned, "There is no jury for this agreement");
-        require(juries[agreeID].deadline <= block.timestamp, "Jurors still have time to vote");
-        require(agreements[agreeID].state != AgreementLib.AgreementState.CLOSED, "Agreement is already paid out");
+        require(juries[agreeID].assigned, "E11");
+        require(juries[agreeID].deadline <= block.timestamp, "E14");
+        require(agreements[agreeID].state != AgreementLib.AgreementState.CLOSED, "E15");
 
         _juryMakeDecision(agreeID);
 
