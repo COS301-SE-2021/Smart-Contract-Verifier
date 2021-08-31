@@ -78,11 +78,10 @@ contract Verifier{
         // if(agreements[agreeID].party1 == address(0))
         //     return;
         require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED);
+        require(msg.sender == agreements[agreeID].party2, "E16");
 
-        if(msg.sender == agreements[agreeID].party2){
-            agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
-            emit AcceptAgreement(agreeID);
-        }
+        agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
+        emit AcceptAgreement(agreeID);
     }
 
     // Each payment must have the allowance ready, it will be transferred immediately
@@ -156,9 +155,6 @@ contract Verifier{
 
     function addEvidence(uint agreeID, string calldata url, uint256 evidenceHash) public inAgreement(agreeID){
         require(agreements[agreeID].state != AgreementLib.AgreementState.CONTESTED, "E6");
-
-
-
         AgreementLib.addEvidence(juries[agreeID], url, evidenceHash);
     }
 

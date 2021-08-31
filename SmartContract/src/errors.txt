@@ -13,3 +13,4 @@ E12     You are not on this jury
 E13     Deadline for voting has passed
 E14     Jurors still have time to vote
 E15     Agreement is already paid out
+E16     You must be party2 to accept the agreement

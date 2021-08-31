@@ -71,7 +71,11 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Can't accept someone else's agreement", async () =>{
-            verifier.acceptAgreement(0, {from: accounts[2]})
+            try{
+                await verifier.acceptAgreement(0, {from: accounts[2]})
+                assert.equal(false, "acceptAgreement didn't throw an error");
+            }
+            catch{}
 
             var agree = await verifier.getAgreement(0)
             assert.equal(agree.state, 1)
@@ -79,7 +83,7 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Can accept agreement", async () =>{
-            verifier.acceptAgreement(0, {from: accounts[1]})
+            await verifier.acceptAgreement(0, {from: accounts[1]})
 
             var agree = await verifier.getAgreement(0)
             assert.equal(agree.state, 3)
