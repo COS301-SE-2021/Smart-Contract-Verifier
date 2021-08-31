@@ -346,11 +346,18 @@ contract('Verifier', (accounts) =>{
             assert(jury.jurors.length > 0, "Jury wasn't assigned");
         })
 
-        it("add & retrieve evidence", async()=>{
+        it("1 evidence file", async()=>{
             await verifier.addEvidence(0, "file", 42);
             var evidence = await verifier.getEvidence(0);
             assert(evidence.url[0] == "file", "file url wrong in evidence")
             assert(evidence.evidenceHash[0] == 42, "file hash wrong in evidence")
+        })
+
+        it("evidence from party2", async()=>{
+            await verifier.addEvidence(0, "file2", 101);
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url[1] == "file2", "file url wrong in evidence")
+            assert(evidence.evidenceHash[1] == 101, "file hash wrong in evidence")
         })
 
         it("Jury votes NO", async ()=>{
