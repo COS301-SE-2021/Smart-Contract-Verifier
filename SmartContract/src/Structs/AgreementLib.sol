@@ -48,6 +48,31 @@ library AgreementLib{
         uint numPayments;
     }
 
+    function voteResolution(Agreement storage agreement, AgreementLib.Vote vote) external{
+                require(agreement.resolutionTime < block.timestamp, "E7");
+
+        require(agreement.state == AgreementLib.AgreementState.ACTIVE
+            || agreement.state == AgreementLib.AgreementState.COMPLETED, "E8");
+
+        uint index = 0;
+        // index starts at 1, 0 means not included
+        if(agreement.party1 == tx.origin)
+            index = 1;
+        else if(agreement.party2 == tx.origin)
+            index = 2;
+
+        require(index > 0, "E9");
+
+        if(index == 1){
+            require(agreement.party1Vote == AgreementLib.Vote.NONE, "E10");
+            agreement.party1Vote = vote;
+        }
+        else{
+            require(agreement.party2Vote == AgreementLib.Vote.NONE, "E10");
+             agreement.party2Vote = vote;
+        }
+    }
+
     struct Jury{
         bool assigned;
         uint deadline;

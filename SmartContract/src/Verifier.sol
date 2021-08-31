@@ -210,34 +210,10 @@ contract Verifier{
 
     }
 
-    function _partyIndex(uint agreeID, address a) internal view returns(uint){
-        // index starts at 1, 0 means not included
-        if(agreements[agreeID].party1 == a)
-            return 1;
-        if(agreements[agreeID].party2 == a)
-            return 2;
-        return 0;
-    }
 
     function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
-        require(agreements[agreeID].resolutionTime < block.timestamp, "E7");
-
-        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "E8");
-
-        uint index = _partyIndex(agreeID, msg.sender);
-        require(index > 0, "E9");
-
-        if(index == 1){
-            require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "E10");
-            agreements[agreeID].party1Vote = vote;
-            _updateStateAfterVote(agreeID);
-        }
-        else{
-            require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "E10");
-            agreements[agreeID].party2Vote = vote;
-            _updateStateAfterVote(agreeID);
-        }
+        AgreementLib.voteResolution(agreements[agreeID], vote);
+        _updateStateAfterVote(agreeID);
     }
 
     // Sign yourself up to become a juror
@@ -263,7 +239,7 @@ contract Verifier{
 
         // feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
-    
+
     function _juryMakeDecision(uint agreeID) internal{
         // Time to tally up votes & make a decision
         uint yes = 0;
