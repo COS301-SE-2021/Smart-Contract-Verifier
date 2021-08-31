@@ -268,17 +268,6 @@ contract Verifier{
         emit RemoveJuror(msg.sender);
     }
 
-    function _jurorIndex(uint agreeID) internal view returns(int){
-        if(!juries[agreeID].assigned)
-            return -1;
-
-        for(uint i=0; i<juries[agreeID].numJurors; i++){
-            if(juries[agreeID].jurors[i] == msg.sender)
-                return int(i);
-        }
-        return -1;
-    }
-
     function _decisionTime(uint agreeID) internal view returns(bool){
         // Returns true if it's time to take action on jury's decision
         // Either when voting deadline has been reached or if all jurors voted
@@ -382,8 +371,18 @@ contract Verifier{
 
         require(juries[agreeID].assigned, "E11");
 
-        int index = _jurorIndex(agreeID);
-
+        // Get index of juror
+        int index = -1;
+        if(!juries[agreeID].assigned)
+            index = -1;
+        else{
+            for(uint i=0; i<juries[agreeID].numJurors; i++){
+                if(juries[agreeID].jurors[i] == msg.sender){
+                    index = int(i);
+                }
+            }
+       }
+ 
         require(index >= 0, "E12");
         // If the following two conditions hold, then the agreement also can't be closed.
         require(juries[agreeID].deadline > block.timestamp, "E13");
