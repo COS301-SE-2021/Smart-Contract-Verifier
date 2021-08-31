@@ -310,42 +310,8 @@ contract Verifier{
     }
 
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
-        // Yes means pay out as normal, no means refund all payments
-
-        require(juries[agreeID].assigned, "E11");
-
-        // Get index of juror
-        int index = -1;
-        if(!juries[agreeID].assigned)
-            index = -1;
-        else{
-            for(uint i=0; i<juries[agreeID].numJurors; i++){
-                if(juries[agreeID].jurors[i] == msg.sender){
-                    index = int(i);
-                }
-            }
-       }
- 
-        require(index >= 0, "E12");
-        // If the following two conditions hold, then the agreement also can't be closed.
-        require(juries[agreeID].deadline > block.timestamp, "E13");
-        require(juries[agreeID].votes[uint(index)] == AgreementLib.Vote.NONE, "E10");
-
-        // Set vote
-        juries[agreeID].votes[uint(index)] = vote;
-
-
-        // Determine if it's time to make decision, return if not
-        
-        if(juries[agreeID].deadline > block.timestamp){
-            // If deadline hasn't been reached and there are outstanding votes, return
-            for(uint i=0; i < juries[agreeID].numJurors; i++){
-                if(juries[agreeID].votes[i] == AgreementLib.Vote.NONE)
-                    return;
-            }
-        }
-
-        _juryMakeDecision(agreeID);
+        if(AgreementLib.juryVote(juries[agreeID], vote))
+            _juryMakeDecision(agreeID);
 
     }
 

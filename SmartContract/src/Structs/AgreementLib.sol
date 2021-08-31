@@ -92,6 +92,39 @@ library AgreementLib{
         jury.numFiles++;
     }
 
+    //return indicates if it's time to make a decision
+    function juryVote(Jury storage jury, AgreementLib.Vote vote) external returns(bool){
+        // Yes means pay out as normal, no means refund all payments
+        require(jury.assigned, "E11");
+
+        // Get index of juror
+        int index = -1;
+
+        for(uint i=0; i<jury.numJurors; i++){
+            if(jury.jurors[i] == msg.sender){
+                index = int(i);
+            }
+        }
+ 
+        require(index >= 0, "E12");
+        // If the following two conditions hold, then the agreement also can't be closed.
+        require(jury.deadline > block.timestamp, "E13");
+        require(jury.votes[uint(index)] == AgreementLib.Vote.NONE, "E10");
+
+        // Set vote
+        jury.votes[uint(index)] = vote;
+
+        // Determine if it's time to make decision        
+        if(jury.deadline > block.timestamp){
+            // If deadline hasn't been reached and there are outstanding votes, return
+            for(uint i=0; i < jury.numJurors; i++){
+                if(jury.votes[i] == AgreementLib.Vote.NONE)
+                    return false;
+            }
+        }
+        return true;
+    }
+
     // Version of Agreement to be used in functions as return value
     // Agreement can't be returned by a function since it contains a mapping, but ReturnAgreement can't
     // be in storage since it contains a dynamic array of structs
