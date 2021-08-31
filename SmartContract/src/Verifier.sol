@@ -232,7 +232,7 @@ contract Verifier{
         unisonToken.transfer(msg.sender, getStakingAmount());
         emit RemoveJuror(msg.sender);
 
-        // feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
     function _juryMakeDecision(uint agreeID) internal{
