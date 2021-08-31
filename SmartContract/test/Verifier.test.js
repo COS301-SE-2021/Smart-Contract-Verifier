@@ -342,6 +342,9 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Agreement is contested", async()=>{
+            var agree = await verifier.getAgreement(0);
+            assert(agree.state == 7, "Agreement is not in contested state");
+
             var jury = await verifier.getJury(0);
             assert(jury.jurors.length > 0, "Jury wasn't assigned");
         })
