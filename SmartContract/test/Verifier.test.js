@@ -499,7 +499,14 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Outsider can't add evidence", async ()=>{
-            
+            try{
+                await verifier.addEvidence(0, "file", 42, {from : accounts[2]});
+                assert(false, "addEvidence didn't thow an error");
+            }
+            catch{}
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url.length == 0, "file url was added by outsider")
+            assert(evidence.evidenceHash.length == 0, "file hash was added by outsider")
         })
 
     })
