@@ -154,7 +154,7 @@ contract Verifier{
     }
 
     function addEvidence(uint agreeID, string calldata url, uint256 evidenceHash) public inAgreement(agreeID){
-        require(agreements[agreeID].state != AgreementLib.AgreementState.CONTESTED, "E6");
+        require(agreements[agreeID].state == AgreementLib.AgreementState.CONTESTED, "E6");
         AgreementLib.addEvidence(juries[agreeID], url, evidenceHash);
     }
 
