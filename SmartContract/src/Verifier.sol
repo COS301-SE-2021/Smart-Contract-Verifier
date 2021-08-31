@@ -263,11 +263,7 @@ contract Verifier{
 
         // feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
-
-    function _abs(int x) internal pure returns (int) {
-        return x >= 0 ? x : -x;
-    }
-
+    
     function _juryMakeDecision(uint agreeID) internal{
         // Time to tally up votes & make a decision
         uint yes = 0;
