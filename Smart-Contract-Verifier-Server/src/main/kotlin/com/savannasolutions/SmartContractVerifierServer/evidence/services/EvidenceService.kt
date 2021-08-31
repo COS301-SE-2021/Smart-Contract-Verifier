@@ -19,6 +19,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
@@ -142,13 +143,46 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         }
 
         val evidenceLink = evidence.evidenceUrl
-        return if(evidenceLink!=null)
-            FetchEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceLink.evidenceUrl, null)
-        else{
-            val uploadedEvidence = evidence.uploadedEvidence
-            val file = uploadedEvidence?.let { fileSystem.retrieveFile(it.filename) }
-            FetchEvidenceResponse(ResponseStatus.SUCCESSFUL, null, file)
+        if (evidenceLink != null) {
+            return FetchEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceLink.evidenceUrl, null)
         }
+        return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+    }
+
+    fun downloadEvidence(userId: String, agreementId: UUID, evidenceHash: String): File? {
+        if(!agreementsRepository.existsById(agreementId))
+            return null
+        val agreement = agreementsRepository.getById(agreementId)
+
+        //user doesn't exist
+        if(!userRepository.existsById(userId))
+            return null
+        val user = userRepository.getById(userId)
+
+        //evidence doesn't exist
+        if(!evidenceRepository.existsById(evidenceHash))
+            return null
+        val evidence = evidenceRepository.getById(evidenceHash)
+
+        //user isn't party to the agreement
+        var valid = false
+        val judges = agreement.judges
+        if (!agreement.users.contains(user)) {
+            if (judges != null) {
+                for(judge in judges){
+                    if(judge.judge == user){
+                        valid = true
+                    }
+                }
+            }
+            if(!valid)
+                return null
+        }
+
+        //return file
+        val uploadedEvidence = evidence.uploadedEvidence
+        return uploadedEvidence?.let { fileSystem.retrieveFile(it.filename) }
+
     }
 
     fun getAllEvidence(userId: String, agreementId: UUID): GetAllEvidenceResponse {
@@ -179,7 +213,16 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
 
         //build list of evidenceHashes
         val evidenceList: MutableList<String> = mutableListOf()
-        evidenceRepository.getAllByContract(agreement).forEach { evidenceInstance -> evidenceList.add(evidenceInstance.evidenceHash) }
+        evidenceRepository.getAllByContract(agreement).forEach {
+            evidenceInstance ->
+            var evidence: String = evidenceInstance.evidenceHash
+            evidence = if(evidenceInstance.evidenceType == EvidenceType.LINKED){
+                "LINKED:$evidence"
+            }else{
+                "UPLOADED:$evidence"
+            }
+            evidenceList.add(evidence)
+        }
 
         return GetAllEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceList.toList())
     }
