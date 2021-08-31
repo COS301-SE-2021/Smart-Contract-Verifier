@@ -6,14 +6,15 @@ import 'package:unison/models/global.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/services/Server/negotiationService.dart';
+import 'package:unison/widgets/jdenticon_svg.dart';
 
 import '../models/contract.dart';
 
 class ContractDetailInfoPanel extends StatefulWidget {
   final Contract _contract;
   ContractDetailInfoPanel(this._contract);
-  NegotiationService negotiationService = NegotiationService();
-  UnisonService unisonService = UnisonService();
+  final NegotiationService negotiationService = NegotiationService();
+  final UnisonService unisonService = UnisonService();
 
   @override
   _ContractDetailInfoPanelState createState() =>
@@ -32,22 +33,7 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: SvgPicture.string(
-                Jdenticon.toSvg(
-                  widget._contract.contractId,
-                  colorSaturation: 1.0,
-                  grayscaleSaturation: 1.0,
-                  colorLightnessMinValue: 0.40,
-                  colorLightnessMaxValue: 0.80,
-                  grayscaleLightnessMinValue: 0.30,
-                  grayscaleLightnessMaxValue: 0.90,
-                  backColor: '#ff7800',
-                  hues: [205],
-                ).toString(),
-                fit: BoxFit.fill,
-                height: 32,
-                width: 32,
-              ),
+              leading: JdenticonSVG(widget._contract.contractId, [205]),
               title: Text(widget._contract.title),
               subtitle: Text(widget._contract.description),
               trailing: Column(
