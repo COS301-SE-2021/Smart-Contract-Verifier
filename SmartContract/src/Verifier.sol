@@ -11,18 +11,19 @@ import "./FeeContract.sol";
 
 contract Verifier{
     using AgreementLib for AgreementLib.Agreement;
+    using AgreementLib for AgreementLib.Jury;
 
     uint private nextAgreeID = 0;
-    uint numActive = 0;
+    uint private numActive = 0; //number of active agreements
 
     // Non-existent entries will return a struct filled with 0's
-    mapping(uint => AgreementLib.Agreement) agreements;
-    mapping(uint => AgreementLib.Jury) juries;
+    mapping(uint => AgreementLib.Agreement) private agreements;
+    mapping(uint => AgreementLib.Jury) private juries;
 
-    JurorStore jurorStore;
-    uint jurySeed = 10;
-    UnisonToken unisonToken;
-    FeeContract feeContract;
+    JurorStore private jurorStore;
+    uint private jurySeed = 10;
+    UnisonToken private unisonToken;
+    FeeContract private feeContract;
 
     // Fraction out of a thousand
     uint constant controversyRatio = 300;
@@ -36,16 +37,6 @@ contract Verifier{
     // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0
     modifier inAgreement(uint agreeID){
         require(msg.sender == agreements[agreeID].party1 || msg.sender == agreements[agreeID].party2);
-        _;
-    }
-
-    modifier inJury(uint agreeID){
-        require(juries[agreeID].assigned, "Specified agreement has no jury");
-        for(uint i=0; i<juries[agreeID].numJurors; i++){
-            if(juries[agreeID].jurors[i] == msg.sender)
-                return;
-        }
-        require(false, "You are not on this jury");
         _;
     }
 
@@ -87,17 +78,16 @@ contract Verifier{
         // if(agreements[agreeID].party1 == address(0))
         //     return;
         require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED);
+        require(msg.sender == agreements[agreeID].party2, "E16");
 
-        if(msg.sender == agreements[agreeID].party2){
-            agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
-            emit AcceptAgreement(agreeID);
-        }
+        agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
+        emit AcceptAgreement(agreeID);
     }
 
     // Each payment must have the allowance ready, it will be transferred immediately
     function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
-        require(tokens.length == amount.length, "mismatch between tokens and amounts");
-        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "Agreement state invalid for adding payments");
+        require(tokens.length == amount.length, "E3");
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
         uint numPayments = tokens.length;
 
         address otherParty;
@@ -108,7 +98,7 @@ contract Verifier{
 
         for(uint i=0; i<numPayments; i++){
             uint256 allowed = tokens[i].allowance(msg.sender, address(this));
-            require(allowed >= amount[i], "Insufficient allowance on a specified payment");
+            require(allowed >= amount[i], "E5");
 
             PaymentInfoLib.PaymentInfo memory p;
             p.token = tokens[i];
@@ -120,8 +110,6 @@ contract Verifier{
             _addPaymentToAgreement(agreeID, p);
 
         }        
-
-
     }
 
     function payPlatformFee(uint agreeID) public{
@@ -137,7 +125,7 @@ contract Verifier{
         require(payment > 0);
 
         uint256 allowed = unisonToken.allowance(msg.sender, address(this));
-        require(allowed >= payment, "insufficient allowance to pay platform fee");
+        require(allowed >= payment, "E5");
 
         if(unisonToken.transferFrom(msg.sender, address(this), payment)){
             agreements[agreeID].feePaid += payment;
@@ -148,6 +136,8 @@ contract Verifier{
                 emit ActiveAgreement(agreeID);
             }
         }
+
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
 
@@ -157,6 +147,15 @@ contract Verifier{
 
     function getJury(uint agreeID) public view returns(AgreementLib.ReturnJury memory){
         return AgreementLib.makeReturnJury(juries[agreeID]);
+    }
+
+    function getEvidence(uint agreeID) external view returns(AgreementLib.ReturnEvidence memory){
+        return AgreementLib.makeReturnEvidence(juries[agreeID]);
+    }
+
+    function addEvidence(uint agreeID, string calldata url, uint256 evidenceHash) public inAgreement(agreeID){
+        require(agreements[agreeID].state == AgreementLib.AgreementState.CONTESTED, "E6");
+        AgreementLib.addEvidence(juries[agreeID], url, evidenceHash);
     }
 
     function _assignJury(uint agreeID) internal{
@@ -177,11 +176,14 @@ contract Verifier{
         juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;
+        agreements[agreeID].state = AgreementLib.AgreementState.CONTESTED;
         emit JuryAssigned(agreeID, jury);
     }
 
-    function _updateStateAfterVote(uint agreeID) internal{
+    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+        AgreementLib.voteResolution(agreements[agreeID], vote);
 
+        // update state after vote
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
                 agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
             if(juries[agreeID].assigned)
@@ -205,37 +207,6 @@ contract Verifier{
             numActive--;
             emit CloseAgreement(agreeID);
         }
-
-    }
-
-    function _partyIndex(uint agreeID, address a) internal view returns(uint){
-        // index starts at 1, 0 means not included
-        if(agreements[agreeID].party1 == a)
-            return 1;
-        if(agreements[agreeID].party2 == a)
-            return 2;
-        return 0;
-    }
-
-    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
-        require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
-
-        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
-
-        uint index = _partyIndex(agreeID, msg.sender);
-        require(index > 0, "You can only vote if you're part of the agreement");
-
-        if(index == 1){
-            require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
-            agreements[agreeID].party1Vote = vote;
-            _updateStateAfterVote(agreeID);
-        }
-        else{
-            require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
-            agreements[agreeID].party2Vote = vote;
-            _updateStateAfterVote(agreeID);
-        }
     }
 
     // Sign yourself up to become a juror
@@ -249,6 +220,8 @@ contract Verifier{
 
         jurorStore.addJuror(j);
         emit AddJuror(j);
+
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
     // remove yourself from available jurors list
@@ -256,41 +229,8 @@ contract Verifier{
         jurorStore.removeJuror(msg.sender);
         unisonToken.transfer(msg.sender, getStakingAmount());
         emit RemoveJuror(msg.sender);
-    }
 
-    function _jurorIndex(uint agreeID) internal view returns(int){
-        if(!juries[agreeID].assigned)
-            return -1;
-
-        for(uint i=0; i<juries[agreeID].numJurors; i++){
-            if(juries[agreeID].jurors[i] == msg.sender)
-                return int(i);
-        }
-        return -1;
-    }
-
-    function _decisionTime(uint agreeID) internal view returns(bool){
-        // Returns true if it's time to take action on jury's decision
-        // Either when voting deadline has been reached or if all jurors voted
-
-        if(!juries[agreeID].assigned)
-            return false;
-        
-        // True if deadline reached
-        if(juries[agreeID].deadline <= block.timestamp)
-            return true;
-
-        // False if anyone hasn't voted yet
-        for(uint i=0; i < juries[agreeID].numJurors; i++){
-            if(juries[agreeID].votes[i] == AgreementLib.Vote.NONE)
-                return false;
-        }
-
-        return true;
-    }
-
-    function _abs(int x) internal pure returns (int) {
-        return x >= 0 ? x : -x;
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
     function _juryMakeDecision(uint agreeID) internal{
@@ -368,23 +308,8 @@ contract Verifier{
     }
 
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
-        // Yes means pay out as normal, no means refund all payments
-
-        require(juries[agreeID].assigned, "There is no jury for this agreement");
-
-        int index = _jurorIndex(agreeID);
-
-        require(index >= 0, "You are not on this jury");
-        // If the following two conditions hold, then the agreement also can't be closed.
-        require(juries[agreeID].deadline > block.timestamp, "Deadline for voting has passed");
-        require(juries[agreeID].votes[uint(index)] == AgreementLib.Vote.NONE, "You already voted");
-
-        // Set vote
-        juries[agreeID].votes[uint(index)] = vote;
-
-        if(_decisionTime(agreeID)){
+        if(AgreementLib.juryVote(juries[agreeID], vote))
             _juryMakeDecision(agreeID);
-        }
 
     }
 
@@ -392,16 +317,12 @@ contract Verifier{
         // If not all jury members voted, this will be needed to finish the agreement
         // (since code execution must come from someone)
 
-        require(juries[agreeID].assigned, "There is no jury for this agreement");
-        require(juries[agreeID].deadline <= block.timestamp, "Jurors still have time to vote");
-        require(agreements[agreeID].state != AgreementLib.AgreementState.CLOSED, "Agreement is already paid out");
+        require(juries[agreeID].assigned, "E11");
+        require(juries[agreeID].deadline <= block.timestamp, "E14");
+        require(agreements[agreeID].state != AgreementLib.AgreementState.CLOSED, "E15");
 
         _juryMakeDecision(agreeID);
 
-    }
-
-    function _totalRatio() internal view returns(uint){
-        return (1000*numActive) / jurorStore.getNumJurors();
     }
 
     function getPlatformFee() public view returns(uint){

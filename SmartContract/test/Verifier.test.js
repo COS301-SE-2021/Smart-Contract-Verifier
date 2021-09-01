@@ -71,7 +71,11 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Can't accept someone else's agreement", async () =>{
-            verifier.acceptAgreement(0, {from: accounts[2]})
+            try{
+                await verifier.acceptAgreement(0, {from: accounts[2]})
+                assert.equal(false, "acceptAgreement didn't throw an error");
+            }
+            catch{}
 
             var agree = await verifier.getAgreement(0)
             assert.equal(agree.state, 1)
@@ -79,7 +83,7 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Can accept agreement", async () =>{
-            verifier.acceptAgreement(0, {from: accounts[1]})
+            await verifier.acceptAgreement(0, {from: accounts[1]})
 
             var agree = await verifier.getAgreement(0)
             assert.equal(agree.state, 3)
@@ -338,8 +342,25 @@ contract('Verifier', (accounts) =>{
         })
 
         it("Agreement is contested", async()=>{
+            var agree = await verifier.getAgreement(0);
+            assert(agree.state == 7, "Agreement is not in contested state");
+
             var jury = await verifier.getJury(0);
             assert(jury.jurors.length > 0, "Jury wasn't assigned");
+        })
+
+        it("1 evidence file", async()=>{
+            await verifier.addEvidence(0, "file", 42);
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url[0] == "file", "file url wrong in evidence");
+            assert(evidence.evidenceHash[0] == 42, "file hash wrong in evidence");
+        })
+
+        it("evidence from party2", async()=>{
+            await verifier.addEvidence(0, "file2", 101, {from : accounts[1]});
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url[1] == "file2", "file url wrong in evidence")
+            assert(evidence.evidenceHash[1] == 101, "file hash wrong in evidence")
         })
 
         it("Jury votes NO", async ()=>{
@@ -453,4 +474,78 @@ contract('Verifier', (accounts) =>{
 
     })
 
+
+    describe("Verifier unit tests 5", async () =>{
+
+        var verifier
+
+        before(async () =>{
+            token = await UnisonToken.new()
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
+
+            await createActiveAgreement(verifier, accounts);
+
+            prepareJurors(verifier, token, accounts, 1, 10)
+
+            for(var i=3; i<9; i++){
+                token.approve(verifier.address, 10000, {from: accounts[i]});
+                verifier.addJuror({from: accounts[i]});
+            }
+
+            // Contest agreement
+            result = await verifier.voteResolution(0, 1, {from: accounts[1]});
+
+        })
+
+        it("Outsider can't add evidence", async ()=>{
+            try{
+                await verifier.addEvidence(0, "file", 42, {from : accounts[2]});
+                assert(false, "addEvidence didn't thow an error");
+            }
+            catch{}
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url.length == 0, "file url was added by outsider")
+            assert(evidence.evidenceHash.length == 0, "file hash was added by outsider")
+        })
+
+        it("multiple evidence files", async ()=>{
+            try{
+                await verifier.addEvidence(0, "file", 42);
+                await verifier.addEvidence(0, "another file", 43);
+                assert(false, "addEvidence didn't thow an error");
+            }
+            catch{}
+            
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url.length == 2, "wrong amount of evidence");
+            assert(evidence.evidenceHash.length == 2, "wrong amount of evidence");
+
+            assert(evidence.url[0] == "file", "file url wrong in evidence")
+            assert(evidence.evidenceHash[0] == 42, "file hash wrong in evidence")
+
+            assert(evidence.url[1] == "another file", "file url wrong in evidence")
+            assert(evidence.evidenceHash[1] == 43, "file hash wrong in evidence")
+        })
+
+        it("multiple evidence files from both parties", async ()=>{
+            try{
+                await verifier.addEvidence(0, "file 3", 10, {from : accounts[1]});
+                await verifier.addEvidence(0, "file 4", 11);
+                assert(false, "addEvidence didn't thow an error");
+            }
+            catch{}
+            
+            var evidence = await verifier.getEvidence(0);
+            assert(evidence.url.length == 4, "wrong amount of evidence");
+            assert(evidence.evidenceHash.length == 4, "wrong amount of evidence");
+
+            assert(evidence.url[2] == "file 3", "file url wrong in evidence")
+            assert(evidence.evidenceHash[2] == 10, "file hash wrong in evidence")
+
+            assert(evidence.url[3] == "file 4", "file url wrong in evidence")
+            assert(evidence.evidenceHash[3] == 11, "file hash wrong in evidence")
+        })
+        
+    })
 })
