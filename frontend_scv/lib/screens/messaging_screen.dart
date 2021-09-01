@@ -65,8 +65,6 @@ class _MessagingScreenState extends State<MessagingScreen> {
     final agreementId = args['agreementId'];
     final partyA = args['partyA'];
     final partyB = args['partyB'];
-    print('MESSAGING SCREEN: ${agreementId}\n'
-        'PA: ${partyA}, PB:${partyB}');
 
     return Scaffold(
       appBar: AppBar(
