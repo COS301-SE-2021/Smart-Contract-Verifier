@@ -43,7 +43,6 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
     }
 
     fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidence: MultipartFile): UploadEvidenceResponse {
-        TODO("change return type to MultipartFile, and update controller")
         //agreement doesn't exist
         if(!agreementsRepository.existsById(agreementId))
             return UploadEvidenceResponse(ResponseStatus.FAILED)
@@ -96,7 +95,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         if(!agreement.users.contains(user))
             return LinkEvidenceResponse(ResponseStatus.FAILED)
 
-        val hash = userId+"_"+agreementId+"_"+System.currentTimeMillis().toString()+"lEvidence"
+        val hash = userId+"_"+System.currentTimeMillis().toString()
 
         val nEvidence = Evidence(hash , EvidenceType.LINKED)
         val linkedEvidence = LinkedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
@@ -114,17 +113,17 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
 
     fun fetchEvidence(userId: String, agreementId: UUID, evidenceHash: String): FetchEvidenceResponse {
         if(!agreementsRepository.existsById(agreementId))
-            return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+            return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
         val agreement = agreementsRepository.getById(agreementId)
 
         //user doesn't exist
         if(!userRepository.existsById(userId))
-            return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+            return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
         val user = userRepository.getById(userId)
 
         //evidence doesn't exist
         if(!evidenceRepository.existsById(evidenceHash))
-            return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+            return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
         val evidence = evidenceRepository.getById(evidenceHash)
 
         //user isn't party to the agreement
@@ -139,14 +138,14 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
                 }
             }
             if(!valid)
-                return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+                return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
         }
 
         val evidenceLink = evidence.evidenceUrl
         if (evidenceLink != null) {
-            return FetchEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceLink.evidenceUrl, null)
+            return FetchEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceLink.evidenceUrl,)
         }
-        return FetchEvidenceResponse(ResponseStatus.FAILED, null, null)
+        return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
     }
 
     fun downloadEvidence(userId: String, agreementId: UUID, evidenceHash: String): DownloadEvidenceResponse {

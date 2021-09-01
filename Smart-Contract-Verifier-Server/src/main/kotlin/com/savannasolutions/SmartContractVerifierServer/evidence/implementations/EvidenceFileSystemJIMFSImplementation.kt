@@ -30,7 +30,9 @@ class EvidenceFileSystemJIMFSImplementation: EvidenceFileSystem{
     override fun retrieveFile(fileToRetrieve: String): File? {
         val path = filesystem.getPath(fileToRetrieve)
         try{
-            return path.toFile()
+            val tempFile = File.createTempFile("temp", ".txt")
+            tempFile.writeBytes(Files.readAllBytes(path))
+            return tempFile
         }catch (e: Exception){
             println(e.message)
         }

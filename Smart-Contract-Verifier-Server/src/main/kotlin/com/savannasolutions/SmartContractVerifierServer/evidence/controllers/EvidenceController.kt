@@ -43,7 +43,7 @@ class EvidenceController constructor(private val evidenceService: EvidenceServic
         val fileResp = evidenceService.downloadEvidence(userId, agreementId, evidenceHash)
         if(fileResp.file != null) {
             response.contentType = fileResp.mimeType
-            response.setHeader("Content-Disposition", "attachment; filename=" + fileResp.file?.name)
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileResp.file.name)
             response.setHeader("Content-Transfer-Encoding", "binary")
             try {
                 val outputStream = BufferedOutputStream(response.outputStream)
@@ -64,6 +64,8 @@ class EvidenceController constructor(private val evidenceService: EvidenceServic
             } catch (e: Exception) {
                 throw RuntimeException(e)
             }
+        }else{
+            response.status = 404
         }
     }
 
