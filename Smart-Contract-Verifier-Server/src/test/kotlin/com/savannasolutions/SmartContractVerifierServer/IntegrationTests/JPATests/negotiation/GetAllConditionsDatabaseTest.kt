@@ -1,13 +1,12 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.GetAllConditionsRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -123,14 +122,13 @@ class GetAllConditionsDatabaseTest {
     @Test
     fun `GetAllConditions successful`()
     {
-        val request = GetAllConditionsRequest(agreement.ContractID)
-
-        val response = negotiationService.getAllConditions(request)
+        val response = negotiationService.getAllConditions(userA.publicWalletID, agreement.ContractID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.conditions)
-        assertFalse(response.conditions!!.isEmpty())
-        for(cond in response.conditions!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.conditions)
+        assertFalse(response.responseObject!!.conditions!!.isEmpty())
+        for(cond in response.responseObject!!.conditions!!)
         {
             assertNotNull(cond.conditionTitle)
             assertFalse(cond.conditionTitle!!.isEmpty())

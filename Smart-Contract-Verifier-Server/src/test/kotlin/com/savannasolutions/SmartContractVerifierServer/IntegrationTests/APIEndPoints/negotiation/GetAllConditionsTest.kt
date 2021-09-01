@@ -116,22 +116,22 @@ class GetAllConditionsTest {
         whenever(agreementsRepository.existsById(agreementEmpty.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(agreementEmpty.ContractID)).thenReturn(agreementEmpty)
         whenever(conditionsRepository.getAllByContract(agreementEmpty)).thenReturn(null)
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
+        whenever(userRepository.getUsersByAgreementsContaining(agreementEmpty)).thenReturn(userList)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String, agreementID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/get-all-conditions")
+            MockMvcRequestBuilders.get("/user/${userID}/agreement/${agreementID}/condition")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andReturn().response
     }
 
     @Test
     fun `GetAllConditions successful`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementUUID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, acceptedConditionID.toString())
@@ -142,9 +142,7 @@ class GetAllConditionsTest {
     @Test
     fun `GetAllConditions successful with no conditions`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementEmptyUUID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementEmptyUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, "{\"Conditions\":[]")
@@ -153,9 +151,7 @@ class GetAllConditionsTest {
     @Test
     fun `GetAllConditions failed due to agreement not existing`()
     {
-        val rjson = "{\"AgreementID\" : \"4867a1f9-7fc8-48a3-9490-0b9689e41828\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
         assertFalse(response.contentAsString.contains(acceptedConditionID.toString()))

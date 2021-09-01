@@ -9,7 +9,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -92,26 +91,25 @@ class GetAgreementDetail {
         userList.add(userA)
         userList.add(userB)
 
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
         whenever(agreementsRepository.existsById(agreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(agreement.ContractID)).thenReturn(agreement)
         whenever(conditionsRepository.getAllByContract(agreement)).thenReturn(conditionList)
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String, agreementID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/get-agreement-details")
+            MockMvcRequestBuilders.get("/user/${userID}/agreement/${agreementID}")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(rjson)).andReturn().response
+            ).andReturn().response
     }
 
     @Test
     fun `GetAgreementDetail successful`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementUUID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, agreementUUID.toString())
@@ -120,9 +118,7 @@ class GetAgreementDetail {
     @Test
     fun `GetAgreementDetail failure due to agreement not existing`()
     {
-        val rjson = "{\"AgreementID\" : \"9344c08a-5082-4cd4-a0ef-bfa0b21b84ad\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

@@ -1,7 +1,8 @@
 # Savanna Solutions
 <!-- ## Unison - Smart-Contract-Verifier -->
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/41339070/130430042-f3f7bc7a-eb38-40e5-a882-6f6647cc938b.png" alt="Unison Logo" />
+  
+  <img src="https://user-images.githubusercontent.com/41339070/131267171-58f71bde-e99f-4b60-8435-1b958d74a660.gif" alt="Unison Logo" />
   <h2 align="center">Smart Contract Verifier</h2>
 </p>
 
@@ -22,13 +23,13 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 ### Team Members
 
-| Member Name        | Brief Description        | Links     |
-| ------------------ | --------------------     | --------- | 
-| Kaleb Bruwer       | 3rd Year Computer Science| [LinkedIn](https://www.linkedin.com/in/kaleb-bruwer-033b2b20b  "Kaleb's LinkedIn Profile") \| [Github](https://github.com/Kaleb-Bruwer  "Kaleb's Github Profile") |
-| Kevin du Preez     | 4th Year B.IT            | [LinkedIn](https://www.linkedin.com/in/kevindupreez8  "Kevin's LinkedIn Profile") \| [Github](https://github.com/bitBadger8  "Kevin's Github Profile") \| [Personal Page](http://bitbadger8.github.io/  "Kevin's Personal Profile") 
-| Jason Maritz       | 3rd Year Computer Science| [LinkedIn](https://www.linkedin.com/in/jason-maritz-b2170b15a  "Jason's LinkedIn Profile") \| [Github](https://github.com/JasonMaritz  "Jason's Github Profile") |
-| Cobus Redelinghuys | 3rd Year Computer Science| [LinkedIn](https://www.linkedin.com/in/cobus-redelinghuys-5a752516b  "Cobus's LinkedIn Profile") \| [Github](https://github.com/DarkMerlin1  "Cobus's Github Profile") |
-| Ronan van de Vyver | 3rd Year Computer Science| [LinkedIn](https://linkedin.com/in/ronan-van-de-vyver-98bb7820b  "Ronan's LinkedIn Profile") \| [Github](https://github.com/Ronan-UP  "Ronan's Github Profile") |
+| Member Name        | Brief Description         | Links                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kaleb Bruwer       | 3rd Year Computer Science | <p><a href="https://github.com/Kaleb-Bruwer" target="_blank"><img alt="Github" src="https://img.shields.io/badge/GitHub-%2312100E.svg?&style=for-the-badge&logo=Github&logoColor=white" /></a> <a href="https://www.linkedin.com/in/kaleb-bruwer-033b2b20b" target="_blank"><img alt="LinkedIn" src="https://img.shields.io/badge/linkedin-%2312100E.svg?&style=for-the-badge&logo=linkedin&logoColor=white" /></a></p> |
+| Kevin du Preez     | 4th Year B.IT             | <p><a href="https://github.com/bitBadger8" target="_blank"><img alt="Github" src="https://img.shields.io/badge/GitHub-%2312100E.svg?&style=for-the-badge&logo=Github&logoColor=white" /></a> <a href="https://www.linkedin.com/in/kevindupreez8" target="_blank"><img alt="LinkedIn" src="https://img.shields.io/badge/linkedin-%2312100E.svg?&style=for-the-badge&logo=linkedin&logoColor=white" /></a> <a href="https://bitbadger8.github.io/" target="_blank"><img alt="PersonalPage" src="https://img.shields.io/badge/Personal Page-%2312100E.svg?&style=for-the-badge&logo=linux&logoColor=white" /></a></p>            |
+| Jason Maritz | 3rd Year Computer Science | <p><a href="https://github.com/JasonMaritz" target="_blank"><img alt="Github" src="https://img.shields.io/badge/GitHub-%2312100E.svg?&style=for-the-badge&logo=Github&logoColor=white" /></a> <a href="https://www.linkedin.com/in/jason-maritz-b2170b15a" target="_blank"><img alt="LinkedIn" src="https://img.shields.io/badge/linkedin-%2312100E.svg?&style=for-the-badge&logo=linkedin&logoColor=white" /></a></p> |                                                                                                                                                                                                                                                                                                                                        |
+| Cobus Redelinghuys | 3rd Year Computer Science | <p><a href="https://github.com/DarkMerlin1" target="_blank"><img alt="Github" src="https://img.shields.io/badge/GitHub-%2312100E.svg?&style=for-the-badge&logo=Github&logoColor=white" /></a> <a href="https://www.linkedin.com/in/cobus-redelinghuys-5a752516b" target="_blank"><img alt="LinkedIn" src="https://img.shields.io/badge/linkedin-%2312100E.svg?&style=for-the-badge&logo=linkedin&logoColor=white" /></a></p> |                                                                                                                                                                                                                                                    |
+| Ronan van de Vyver | 3rd Year Computer Science | <p><a href="https://github.com/Ronan-UP" target="_blank"><img alt="Github" src="https://img.shields.io/badge/GitHub-%2312100E.svg?&style=for-the-badge&logo=Github&logoColor=white" /></a> <a href="https://linkedin.com/in/ronan-van-de-vyver-98bb7820b" target="_blank"><img alt="LinkedIn" src="https://img.shields.io/badge/linkedin-%2312100E.svg?&style=for-the-badge&logo=linkedin&logoColor=white" /></a></p> |
 
 
 ### SRS Document
@@ -44,7 +45,7 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 
 ### Project Management Tool Link
-[Space](https://savannasolutions.jetbrains.space/p/scv  "JetBrains Space SCV") 
+<a href="https://savannasolutions.jetbrains.space/oauth/auth/invite/43d3a67afaa6f3eb7485461147cc31a9" target="_blank"><img alt="Space" src="https://img.shields.io/badge/JetBrains Space-%2312100E.svg?&style=for-the-badge&logo=jetBrains&logoColor=royalblue" /></a> 
 
 
 ### Demo Videos
@@ -69,3 +70,5 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 [Coding Standards Latest](https://drive.google.com/file/d/1ZY9B8_qNpj48cPnye7gBYitTgVsB55hW/view?usp=sharing "Coding Standards Document")
 
 [Coding Standards Demo 2](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
+
+

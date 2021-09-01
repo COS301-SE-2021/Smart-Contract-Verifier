@@ -1,6 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.user.contactlist
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -69,10 +69,11 @@ class AddUserToContactListDatabaseTest {
     fun `AddUserToContactList success`()
     {
         val request = AddUserToContactListRequest(user.publicWalletID,
-                                                    contactList.contactListID!!,
                                                     "New user")
 
-        val response = contactListService.addUserToContactList(request)
+        val response = contactListService.addUserToContactList(ownerUser.publicWalletID,
+                                                                contactList.contactListID!!,
+                                                                request)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         val cLP = contactListProfileRepository.getByContactListAndUser(contactList, user)

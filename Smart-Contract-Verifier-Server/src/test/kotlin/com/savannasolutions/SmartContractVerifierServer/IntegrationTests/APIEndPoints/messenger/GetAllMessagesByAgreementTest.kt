@@ -109,20 +109,18 @@ class GetAllMessagesByAgreementTest {
         }
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String, agreementID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/messenger/get-all-messages-by-agreement")
+            MockMvcRequestBuilders.get("/user/${userID}/agreement/${agreementID}/message")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andReturn().response
     }
 
     @Test
     fun `GetAllMessagesByAgreementTest successful with messages`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementAUUID.toString()}\",\"RequestingUser\" : \"${userA.publicWalletID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementAUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, messageA.messageID.toString())
@@ -136,9 +134,7 @@ class GetAllMessagesByAgreementTest {
     @Test
     fun `GetAllMessagesByAgreementTest successful without messages`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementBUUID.toString()}\",\"RequestingUser\" : \"${userA.publicWalletID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementBUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, "\"Messages\":[]")
@@ -147,9 +143,7 @@ class GetAllMessagesByAgreementTest {
     @Test
     fun `GetAllMessagesByAgreementTest user does not exist`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementBUUID.toString()}\",\"RequestingUser\" : \"\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender("other user", agreementAUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -157,9 +151,7 @@ class GetAllMessagesByAgreementTest {
     @Test
     fun `GetAllMessagesByAgreementTest failed agreement does not exist`()
     {
-        val rjson = "{\"AgreementID\" : \"4285318d-c845-4324-9b8f-0ef915cca8dd\",\"RequestingUser\" : \"${userA.publicWalletID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
