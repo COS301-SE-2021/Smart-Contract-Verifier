@@ -33,13 +33,12 @@ class UnisonService {
     ]); //Soon, this will be replaced by a spinner in the UI
     // It will have to check for an event.
 
-    final ev = await _smC.getCreationSubscription();
-    await ev.asFuture(); //Wait for the block to be added
-    await ev.cancel();
-
-    print(res);
+    // final ev = await _smC.getCreationSubscription();
+    // await ev.asFuture(); //Wait for the block to be added
+    // await ev.cancel();
+    //
+    // print(res);
   }
-
 
   Future<void> acceptAgreement(Contract con) async {
     //This should probably be called immediately after the contract is sealed on backend.
@@ -49,14 +48,13 @@ class UnisonService {
     //   throw Exception('Agreement is not on blockchain yet');
     // }TODO
 
-     final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
+    final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
   }
 
   Future<BlockchainAgreement> getAgreement(BigInt id) async {
-
     if (id == null)
 //      return null;
-        print('Was null');
+      print('Was null');
 
     final res = await _smC.makeReadCall('getAgreement', [id]);
     return BlockchainAgreement.fromCHAIN(res[0]);
@@ -98,7 +96,7 @@ class UnisonService {
   }
 
   Future<dynamic> getJury(BigInt id) async {
-    final res =  await _smC.makeReadCall('getJury', [id]);
+    final res = await _smC.makeReadCall('getJury', [id]);
 
     print(res);
     return res[0];
@@ -131,11 +129,12 @@ class UnisonService {
     await _smC.makeWriteCall('payPlatformFee', [id]);
   }
 
-
   //This method is called by the party that should make the payment in an agreement.
   Future<void> payToBlockchain(BigInt id, BigInt amount) async {
-
-    await _smC.makeWriteCall('addPaymentConditions', [id, [Global.getContractId('Verifier')], [amount]]);
+    await _smC.makeWriteCall('addPaymentConditions', [
+      id,
+      [Global.getContractId('Verifier')],
+      [amount]
+    ]);
   }
-
 }
