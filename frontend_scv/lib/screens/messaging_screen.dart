@@ -31,7 +31,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
     if (!isValid) return;
     _formKey.currentState.save();
     //^^^^saves the form -> executes the 'onSaved' of each input
-    setState(() {});
+    // setState(() {});
 
     try {
       //Save to DB:
@@ -54,9 +54,9 @@ class _MessagingScreenState extends State<MessagingScreen> {
         ),
       );
     }
-    setState(() {
-      super.setState(() {});
-    });
+    // setState(() {
+    //   super.setState(() {});
+    // });
   }
 
   @override
@@ -124,7 +124,6 @@ class _MessagingScreenState extends State<MessagingScreen> {
                   ),
                 Text(
                   'Jurors (when agreement is in dispute): ' +
-                      partyA.substring(0, 6) +
                       '0x12345'
                           '...6789',
                   style: TextStyle(
