@@ -139,7 +139,24 @@ class _ContractActionAreaState extends State<ContractActionArea> {
         if (currentState == AgreementState.PROPOSED) {
           //Check if the current user needs to Accept move to Blockchain:
           if (_loadedBCAgreement.shouldAccept()) {
-            return Text('Show ACCEPT MOVE TO BC button');
+            return TextButton(
+              onPressed: () async {
+                showLoaderDialog(context);
+                try {
+                  print('Accept Blockchain Agreement');
+                  await widget._unisonService.acceptAgreement(
+                    widget._agreement,
+                  );
+                  Navigator.of(context).pop();
+                  setState(() {});
+                } catch (error) {
+                  //TODO: make dialog throw handler in parent
+                  Navigator.of(context).pop();
+                  setState(() {});
+                }
+              },
+              child: Text('Accept Blockchain Agreement'),
+            );
           }
           return Text('Awaiting acceptance from other party');
         }
