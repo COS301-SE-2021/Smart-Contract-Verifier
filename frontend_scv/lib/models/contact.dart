@@ -9,7 +9,9 @@ class Contact {
 
   Contact.fromJSON(Map<String, dynamic> jsn) {
 
-    //address =
+    var walAl = jsn['walletAndAlias'];
+    address = walAl['walletID'];
+    alias = walAl['alias'];
   }
 
 }
