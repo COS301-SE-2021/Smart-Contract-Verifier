@@ -24,7 +24,7 @@ class ContactService {
   }
   
   ///Get a list of contacts for a ContactList by id.
-  ///Should be used in conjunction with ContactList.loadContacts()
+  ///Should be used in conjunction with ContactList.setContacts()
   Future<List<Contact>> getContacts(String id) async {
     ApiResponse res = await _api.getData('/user/${Global.userAddress}/contactList/$id');
     List<Contact> ret = [];

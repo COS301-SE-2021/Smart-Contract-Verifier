@@ -16,6 +16,11 @@ class ContactList {
     id = listInfo['ContactListID'];
   }
 
+  ///Set the contacts of this contact list
+  ///Load them using the relevant ContactService method
+  Future<void> setContracts(List<Contact> c) async {
+    contacts = List.from(c);
+  }
 
 
 }
