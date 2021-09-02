@@ -76,26 +76,4 @@ class SmartContract {
     return event;
   }
 
-  //This is used to detect the event emitted by creating a contract. This can be made more general, more thought is needed.
-  Future<StreamSubscription> getCreationSubscription() async {
-    final con = await _getContract();
-    final ev = con.event('CreateAgreement'); //Revise
-
-    //Function thing = Function(void Function);
-
-    final res = _smC
-        .events(FilterOptions.events(contract: con, event: ev))
-        .take(1)
-        .listen((event) {
-      final decoded = ev.decodeResults(event.topics, event.data);
-
-      final partyA = decoded[0] as EthereumAddress;
-      final partyB = decoded[1] as EthereumAddress;
-      final id = decoded[2] as BigInt;
-
-      print('Contract $id between $partyA and $partyB');
-    });
-
-    return res;
-  }
 }

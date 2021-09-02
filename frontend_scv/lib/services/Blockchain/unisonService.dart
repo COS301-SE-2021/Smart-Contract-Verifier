@@ -33,11 +33,6 @@ class UnisonService {
     ]); //Soon, this will be replaced by a spinner in the UI
     // It will have to check for an event.
 
-    final ev = await _smC.getCreationSubscription();
-    await ev.asFuture(); //Wait for the block to be added
-    await ev.cancel();
-
-    print(res);
   }
 
   Future<void> acceptAgreement(Contract con) async {
@@ -103,15 +98,6 @@ class UnisonService {
     return res[0];
   }
 
-  //For testing
-  Future<void> setEvent() async {
-    final res = await _smC.getCreationSubscription();
-    print('Starting await');
-    await res.asFuture();
-    print('Starting cancel');
-    await res.cancel();
-    print('Done');
-  }
 
   //A party can pay into the agreement, after it has been moved to the blockchain
   Future<void> addPaymentConditions(
