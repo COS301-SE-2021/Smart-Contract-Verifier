@@ -10,11 +10,11 @@ class ContactList {
   List<Contact> contacts = [];
 
   ///Generate a contact list from an api result.
-  ContactList.fromJSON(Map<String, dynamic> jsn) {
+  ContactList. fromJSON(Map<String, dynamic> jsn) {
 
-    var listInfo = jsn['contactListInfo'];
-    name = listInfo['ContactListName'];
-    id = listInfo['ContactListID'];
+    //var listInfo = jsn['contactListInfo'];
+    name = jsn['ContactListName'];
+    id = jsn['ContactListID'];
   }
 
   ///Set the contacts of this contact list

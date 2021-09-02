@@ -16,10 +16,25 @@ class ContactService {
     ApiResponse res = await _api.postData('/user/${Global.userAddress}/contactList/$name', {});
   }
 
-  ///Get a contact list via an id
-  Future<ContactList> getContactList(String id) async {
-    ApiResponse res = await _api.getData('/user/${Global.userAddress}/contactList/$id');
-    return ContactList.fromJSON(res.result);
+  ///Get all contact lists for a user
+  Future<List<ContactList>> getContactLists() async {
+
+    print ('Before call');
+    ApiResponse res = await _api.getData('/user/${Global.userAddress}/contactList/');
+    print ('After call');
+    List<ContactList> ret = [];
+    print (res.result['contactListInfo']);
+    for (var i in res.result['contactListInfo']) {
+      try {
+        ret.add(ContactList.fromJSON(i));
+        print ('Added');
+      } catch (e) {
+        print ('Error: ' + e);
+      }
+    }
+
+    print ('Returning: ' + ret.toString());
+    return ret;
 
   }
   
