@@ -12,11 +12,21 @@ import '../screens/view_contract_screen.dart';
 
 //Be aware of confusion with Contract (with an r in the middle)
 class ContactItem extends StatelessWidget {
+
+
+  ContactItem(Contact c) {
+    address = c.address;
+    alias = c.alias;
+  }
+
+  String address;
+  String alias;
+
   @override
   Widget build(BuildContext context) {
-    final contact = Provider.of<Contact>(context);
+    //final contact = Provider.of<Contact>(context);
     final String rawSvg = Jdenticon.toSvg(
-      contact.address,
+      address,
       colorSaturation: 1.0,
       grayscaleSaturation: 1.0,
       colorLightnessMinValue: 0.40,
@@ -27,9 +37,11 @@ class ContactItem extends StatelessWidget {
       hues: [205],
     );
 
+
+
     return ListTile(
-      title: Text(contact.alias),
-      subtitle: Text(contact.address),
+      title: Text(alias),
+      subtitle: Text(address),
       leading:
       SvgPicture.string(
         rawSvg,

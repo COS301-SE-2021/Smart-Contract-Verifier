@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:unison/models/contact.dart';
 import 'package:unison/models/contactList.dart';
 import 'package:unison/services/Server/contactService.dart';
+import 'package:unison/widgets/ContactList_item.dart';
 
 import './contract_item.dart';
 import '../models/contracts.dart';
@@ -41,7 +42,8 @@ class _ContactListGridState extends State<ContactListGrid> {
          List<Widget> ch = [];
          print (snap.data);
           for (var i in snap.data) {
-            ch.add(Column(children: [Text(i.name), Text(i.id)]));
+          //  ch.add(Column(children: [Text(i.name), Text(i.id)]));
+            ch.add(ContactListItem(i));
           }
         return ListView(children: ch,);
       });

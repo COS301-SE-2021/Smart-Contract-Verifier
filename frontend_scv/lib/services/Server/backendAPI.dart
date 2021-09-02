@@ -75,7 +75,7 @@ class ApiInteraction {
         response = await RetryOptions(maxAttempts: 5).retry(
               () => (method == ReqType.GET) ? toCall(Uri.parse(baseUrl + url),
                   headers: headers) :toCall(Uri.parse(baseUrl + url),
-            headers: headers, body: jsonEncode(jsn),)
+                headers: headers, body: jsonEncode(jsn),)
               .timeout(Duration(seconds: 2)),
           retryIf: (e) => e is SocketException || e is TimeoutException,
         );

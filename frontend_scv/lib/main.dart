@@ -5,6 +5,7 @@ import 'package:unison/screens/contacts_screen.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
 import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/screens/view_assignment_screen.dart';
+import 'package:unison/screens/view_contact_screen.dart';
 
 import './providers/auth.dart';
 import './screens/auth_screen.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
                 JudgeDutyScreen.routeName: (ctx) => JudgeDutyScreen(),
                 MessagingScreen.routeName: (ctx) => MessagingScreen(),
                 ContactScreen.routeName: (cts) => ContactScreen(),
+                ViewContactScreen.routeName: (cts) => ViewContactScreen(),
               },
             )),
       ),

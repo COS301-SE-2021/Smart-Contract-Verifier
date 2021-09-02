@@ -1,55 +1,76 @@
-// //Not to be confused with view contract screen
+//Not to be confused with view contract screen
 //
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:unison/models/condition.dart';
-// import 'package:unison/models/contact.dart';
-// import 'package:unison/models/global.dart';
-// import 'package:unison/screens/messaging_screen.dart';
-// import 'package:unison/services/Server/negotiationService.dart';
-//
-// import '../models/contracts.dart';
-// import '../widgets/contract_conditions_panel.dart';
-// import '../widgets/contract_detail_info_panel.dart';
-//
-// class ViewContactScreen extends StatefulWidget {
-//   static const routeName = '/view-contact';
-//
-//   @override
-//   _ViewContactScreenState createState() => _ViewContactScreenState();
-// }
-//
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:unison/models/condition.dart';
+import 'package:unison/models/contact.dart';
+import 'package:unison/models/global.dart';
+import 'package:unison/screens/messaging_screen.dart';
+import 'package:unison/services/Server/contactService.dart';
+import 'package:unison/services/Server/negotiationService.dart';
+import 'package:unison/widgets/contact_item.dart';
+import '../models/contracts.dart';
+import '../widgets/contract_conditions_panel.dart';
+import '../widgets/contract_detail_info_panel.dart';
+
+class ViewContactScreen extends StatefulWidget {
+  static const routeName = '/view-contact';
+
+  @override
+  _ViewContactScreenState createState() => _ViewContactScreenState();
+}
+
 // enum ConditionType { Normal, Payment, Duration }
 //
-// class _ViewContactScreenState extends State<ViewContactScreen> {
+class _ViewContactScreenState extends State<ViewContactScreen> {
 //   final _conditionTitleController = TextEditingController();
 //   final _conditionDescriptionController = TextEditingController();
 //   final _paymentConditionAmountController = TextEditingController();
 //   final _durationConditionAmountController = TextEditingController();
 //   var _isLoading = false;
 //   // var _isInit = true;
-//
+  final ContactService cs = ContactService();
 //   NegotiationService negotiationService = NegotiationService();
 //
 //   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 //
-//   @override
-//   void initState() {
-//     // print('InitState()');
-//     super.initState();
-//   }
-//
-//
-//
-//   bool isNumeric(String s) {
-//     if (s == null) {
-//       return false;
-//     }
-//     return double.tryParse(s) != null;
-//   }
-//
-//
-//
+  @override
+  void initState() {
+    // print('InitState()');
+    super.initState();
+  }
+
+
+  Widget build(BuildContext context) {
+    final args = ModalRoute.of(context).settings.arguments as List<dynamic>;
+    final id = args[0];
+    final name = args[1];
+
+    print ('Returning scaffold');
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(name),
+      ),
+      body: FutureBuilder(future: cs.getContacts(id),builder: (context, AsyncSnapshot snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return CircularProgressIndicator();
+        }
+
+        if (snap.data == null)
+          return Text('Damn problem');
+
+        List<Widget> ch = [];
+        print (snap.data);
+        for (var i in snap.data) {
+          //  ch.add(Column(children: [Text(i.name), Text(i.id)]));
+          ch.add(ContactItem(i));
+        }
+        return ListView(children: ch,);
+      })
+    );
+  }
+}
+
 //   Widget build(BuildContext context) {
 //     final contactId = ModalRoute.of(context).settings.arguments as String;
 //     final loadedContact =
