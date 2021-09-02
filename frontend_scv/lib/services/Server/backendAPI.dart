@@ -27,26 +27,30 @@ class ApiInteraction {
 
   ApiInteraction._internal(); //Private constructor
 
+  ///Get data from the server
   Future<ApiResponse> getData(String url) async {
     return _baseRequest(url, ReqType.GET);
   }
 
+  ///Post data to the server
   Future<ApiResponse> postData(
       String url, Map<dynamic, dynamic> jsn) async {
 
     return _baseRequest(url, ReqType.POST, jsn);
   }
 
+  ///Put data on the server
   Future<ApiResponse> putData(String url, [Map<dynamic, dynamic> jsn]) async {
     return _baseRequest(url, ReqType.PUT, jsn);
   }
 
+  ///Delete data from the server
   Future<ApiResponse> deleteData(String url, [Map<dynamic, dynamic> jsn]) async {
     return _baseRequest(url, ReqType.DELETE, jsn);
   }
 
     //An attempt at re-organising the services.
-    Future<ApiResponse> _baseRequest(String url, ReqType method, [Map<dynamic, dynamic> jsn]) async {
+  Future<ApiResponse> _baseRequest(String url, ReqType method, [Map<dynamic, dynamic> jsn]) async {
       jsn ??= {}; //If null, make empty
 
       Function toCall = get;

@@ -9,6 +9,7 @@ class ContactList {
   String id; //Server id of the list
   List<Contact> contacts = [];
 
+  ///Generate a contact list from an api result.
   ContactList.fromJSON(Map<String, dynamic> jsn) {
 
     var listInfo = jsn['contactListInfo'];
