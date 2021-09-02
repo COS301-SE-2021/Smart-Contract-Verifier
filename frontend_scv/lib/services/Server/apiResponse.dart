@@ -11,7 +11,7 @@ class ApiResponse {
 
     if (successful) {
       try { //Add response data if there is any
-        result = jsn['ResponseData'];
+        result = jsn['ResponseObject'];
       } catch (_) {}
     }
     else {

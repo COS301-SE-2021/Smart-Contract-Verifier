@@ -63,14 +63,16 @@ class ApiInteraction {
           break; }
       }
 
+      print ('Here 1');
       var headers = {
         'Content-Type': 'application/json; charset=UTF-8',
       };
       var response;
       try {
         response = await RetryOptions(maxAttempts: 5).retry(
-              () => toCall(Uri.parse(baseUrl + url),
-            headers: headers, body: jsn,)
+              () => (method == ReqType.GET) ? toCall(Uri.parse(baseUrl + url),
+                  headers: headers) :toCall(Uri.parse(baseUrl + url),
+            headers: headers, body: jsonEncode(jsn),)
               .timeout(Duration(seconds: 2)),
           retryIf: (e) => e is SocketException || e is TimeoutException,
         );

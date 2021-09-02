@@ -19,11 +19,14 @@ class CommonService {
     if (!response.successful)
       throw Exception('Retrieval of agreements failed');
 
+    print ('I am here....');
     List<dynamic> jsonList = ((response.result['agreements']));
     List<Contract> ret = [];
+    print ('About to read from list');
     for (int i = 0; i < jsonList.length; i++) {
       ret.add(Contract.fromJson(jsonList[i]));
     }
+    print ('Done with list');
 
     return ret;
   }
