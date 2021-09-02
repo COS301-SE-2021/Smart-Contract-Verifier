@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:http/http.dart';
 import 'package:retry/retry.dart';
 import 'package:unison/services/Server/apiResponse.dart';
@@ -72,7 +71,7 @@ class ApiInteraction {
         response = await RetryOptions(maxAttempts: 5).retry(
               () => toCall(Uri.parse(baseUrl + url),
             headers: headers, body: jsn,)
-              .timeout(Duration(seconds: 1)),
+              .timeout(Duration(seconds: 2)),
           retryIf: (e) => e is SocketException || e is TimeoutException,
         );
 
