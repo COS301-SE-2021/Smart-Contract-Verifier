@@ -10,15 +10,23 @@ class ContactService {
 
   Future<void> createNewList(String name) async {
 
-    await _api.postData('/user/${Global.userAddress}/contactList/$name', {});
+    ApiResponse res = await _api.postData('/user/${Global.userAddress}/contactList/$name', {});
   }
 
-  //Add a user to a specific contact list
+  ///Add a user to a specific contact list
   Future<void> addUser(String ad, String id) async {
 
       String path = '/user/${Global.userAddress}/contactList/$id';
       var body = {};
       ApiResponse res = await _api.putData(path, body);
+
+  }
+
+  ///Remove a user from a contact list
+  Future<void> removeUser(String ad, String id) async {
+
+      String path = '/user/${Global.userAddress}/contactList/$id/$ad';
+      ApiResponse res = await _api.deleteData(path);
   }
 
 }

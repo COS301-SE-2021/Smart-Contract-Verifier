@@ -10,100 +10,84 @@ import 'package:http/http.dart';
 import 'package:retry/retry.dart';
 import 'package:unison/services/Server/apiResponse.dart';
 
+//Request Type
+enum ReqType {
+  GET, POST, PUT, DELETE
+}
+
 class ApiInteraction {
   final String baseUrl =
       "http://localhost:8080"; //Url where the backend is deployed
   static final ApiInteraction api =
       ApiInteraction._internal(); //Only instance of the class
 
+  ///Factory constructor to return instance;
   factory ApiInteraction() {
-    //Factory constructor to return instance;
     return api;
   }
 
   ApiInteraction._internal(); //Private constructor
 
   Future<ApiResponse> getData(String url) async {
-    //Pass in url extension
-    var response;
-    try {
-      response = await RetryOptions(maxAttempts: 5).retry(
-        () => get(Uri.parse(baseUrl + url)).timeout(Duration(seconds: 5)),
-        retryIf: (e) => e is SocketException || e is TimeoutException,
-      );
-    } on Exception catch (e) {
-      //Some other exception
-      print(e);
-      return ApiResponse.fromError(
-          'Could not connect to backend'); //Could be expanded in the future
-    }
-
-    if (response.statusCode != 200)
-      return ApiResponse.fromError('Request could not be made'); //Failed http request
-
-    return ApiResponse.fromJSON(json.decode(response.body));
+    return _baseRequest(url, ReqType.GET);
   }
 
   Future<ApiResponse> postData(
       String url, Map<dynamic, dynamic> jsn) async {
-    //Pass in url extension and json body
-    var response;
 
-    try {
-      response = await RetryOptions(maxAttempts: 5).retry(
-        () => post(Uri.parse(baseUrl + url),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: jsonEncode(jsn))
-            .timeout(Duration(seconds: 1)),
-        retryIf: (e) => e is SocketException || e is TimeoutException,
-      );
-      print (response.body.toString());
-
-    } on Exception catch (e) {
-      print('Error: ' + e.toString());
-      return ApiResponse.fromError(
-          'Could not connect to backend'); //Could be expanded in the future
-    }
-
-    if (response.statusCode != 200)
-      return ApiResponse.fromError(
-          'An error occurred while making the request. The server responded with status code ' +
-              response.statusCode.toString()); //Failed http request
-
-    return ApiResponse.fromJSON(json.decode(response.body));
+    return _baseRequest(url, ReqType.POST, jsn);
   }
-
 
   Future<ApiResponse> putData(String url, [Map<dynamic, dynamic> jsn]) async {
-    jsn ??= {}; //If null, make empty
+    return _baseRequest(url, ReqType.PUT, jsn);
+  }
 
-    var response;
-    try {
-      response = await RetryOptions(maxAttempts: 5).retry(
-            () => put(Uri.parse(baseUrl + url),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            }, body: jsn,)
-            .timeout(Duration(seconds: 1)),
-        retryIf: (e) => e is SocketException || e is TimeoutException,
-      );
-      //print (response.body.toString());
+  Future<ApiResponse> deleteData(String url, [Map<dynamic, dynamic> jsn]) async {
+    return _baseRequest(url, ReqType.DELETE, jsn);
+  }
 
-    } on Exception catch (e) {
-      print('Error: ' + e.toString());
-      return ApiResponse.fromError(
-          'Could not connect to backend'); //Could be expanded in the future
+    //An attempt at re-organising the services.
+    Future<ApiResponse> _baseRequest(String url, ReqType method, [Map<dynamic, dynamic> jsn]) async {
+      jsn ??= {}; //If null, make empty
+
+      Function toCall = get;
+
+      //Cool function pointers
+      switch (method) {
+        case ReqType.GET : {toCall = get;
+          break;}
+        case ReqType.POST : {toCall = post;
+          break;}
+        case ReqType.PUT : {toCall = put;
+          break;}
+        case ReqType.DELETE : {toCall = delete;
+          break; }
+      }
+
+      var headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+      };
+      var response;
+      try {
+        response = await RetryOptions(maxAttempts: 5).retry(
+              () => toCall(Uri.parse(baseUrl + url),
+            headers: headers, body: jsn,)
+              .timeout(Duration(seconds: 1)),
+          retryIf: (e) => e is SocketException || e is TimeoutException,
+        );
+
+      } on Exception catch (e) {
+        return ApiResponse.fromError(
+            'Could not connect to backend'); //Could be expanded in the future
+      }
+
+      if (response.statusCode != 200)
+        return ApiResponse.fromError(
+            'An error occurred while making the request. The server responded with status code ' +
+                response.statusCode.toString()); //Failed http request
+
+      return ApiResponse.fromJSON(jsonDecode(response.body));
     }
-
-    if (response.statusCode != 200)
-      return ApiResponse.fromError(
-          'An error occurred while making the request. The server responded with status code ' +
-              response.statusCode.toString()); //Failed http request
-
-    return ApiResponse.fromJSON(jsonDecode(response.body));
 
   }
 
-}
