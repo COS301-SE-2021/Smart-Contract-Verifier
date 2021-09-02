@@ -76,7 +76,8 @@ class ApiInteraction {
   }
 
 
-  Future<ApiResponse> putData(String url) async {
+  Future<ApiResponse> putData(String url, [Map<dynamic, dynamic> jsn]) async {
+    jsn ??= {}; //If null, make empty
 
     var response;
     try {
@@ -84,11 +85,11 @@ class ApiInteraction {
             () => put(Uri.parse(baseUrl + url),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
-            }, )
+            }, body: jsn,)
             .timeout(Duration(seconds: 1)),
         retryIf: (e) => e is SocketException || e is TimeoutException,
       );
-      print (response.body.toString());
+      //print (response.body.toString());
 
     } on Exception catch (e) {
       print('Error: ' + e.toString());
