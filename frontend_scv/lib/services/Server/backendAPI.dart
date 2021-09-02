@@ -50,7 +50,6 @@ class ApiInteraction {
       jsn ??= {}; //If null, make empty
 
       Function toCall = get;
-
       //Cool function pointers
       switch (method) {
         case ReqType.GET : {toCall = get;
@@ -89,6 +88,5 @@ class ApiInteraction {
 
       return ApiResponse.fromJSON(jsonDecode(response.body));
     }
-
   }
 
