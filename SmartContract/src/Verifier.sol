@@ -263,7 +263,8 @@ contract Verifier{
             // Jury voted yes (even result is counted as yes), pay out as normal
             decision = AgreementLib.Vote.YES;
             _payoutAgreement(agreeID);
-            payPerJuror = agreements[agreeID].feePaid / yes;
+            if(yes > 0)
+                payPerJuror = agreements[agreeID].feePaid / yes;
             controversy = (1000 * no) /(no + yes);
         }
 
