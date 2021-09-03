@@ -69,6 +69,7 @@ class ApiInteraction {
       print ('Here 1');
       var headers = {
         'Content-Type': 'application/json; charset=UTF-8',
+
       };
       var response;
       try {

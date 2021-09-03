@@ -52,12 +52,11 @@ class ContactService {
   }
 
   ///Add a user to a specific contact list
-  Future<void> addUser(String ad, String id) async {
+  Future<void> addUser(String ad, String name, String id) async {
 
       String path = '/user/${Global.userAddress}/contactList/$id';
-      var body = {};
+      var body = {'NewUserID' : ad, 'NewUserAlias' : name};
       ApiResponse res = await _api.putData(path, body);
-
   }
 
   ///Remove a user from a contact list
