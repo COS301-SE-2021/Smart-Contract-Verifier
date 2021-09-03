@@ -30,8 +30,26 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
     CommonService commonService = CommonService();
     await Future.delayed(Duration(milliseconds: 500));
     try {
+// <<<<<<< dev_front_improvements_api
+      //Save to DB:
+//       if (type == ConditionType.Payment) {
+//         await negotiationService.setPayment(
+//           cId,
+//           Global.userAddress, //TODO: change this to Party Input
+//           double.parse(_paymentConditionAmountController.text),
+//         );
+//       } else if (type == ConditionType.Duration) {
+//         await negotiationService.setDuration(
+//           cId,
+//           (60 * 60 * double.parse(_durationConditionAmountController.text)),
+//         ); //Updated to ask for hours, send through in seconds
+//       } else {
+//         await negotiationService.saveCondition(newCondition);
+//       }
+// =======
       Contract loaded = await commonService.getAgreement(agreementId);
       return loaded;
+// >>>>>>> dev_front_improvements
     } catch (error) {
       print(error);
       throw (error);

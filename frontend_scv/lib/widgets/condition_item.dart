@@ -126,8 +126,9 @@ class _ConditionItemState extends State<ConditionItem> {
                         onPressed: () async {
                           try {
                             await widget.negotiationService.rejectCondition(
-                              widget.contractCondition.conditionId,
-                            );
+
+                                widget.contractCondition);
+
                           } catch (error) {
                             await showDialog(
                               context: context,
@@ -158,8 +159,9 @@ class _ConditionItemState extends State<ConditionItem> {
                         onPressed: () async {
                           try {
                             await widget.negotiationService.acceptCondition(
-                              widget.contractCondition.conditionId,
-                            );
+
+                                widget.contractCondition);
+                            
                           } catch (error) {
                             await showDialog(
                               context: context,

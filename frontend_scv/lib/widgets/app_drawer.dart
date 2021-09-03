@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/models/global.dart';
+import 'package:unison/screens/contacts_screen.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
 
 import '../providers/auth.dart';
@@ -26,6 +27,15 @@ class AppDrawer extends StatelessWidget {
             title: Text('Dashboard'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.contacts),
+            title: Text('My Contacts'),
+            onTap: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(ContactScreen.routeName);
             },
           ),
           Divider(),

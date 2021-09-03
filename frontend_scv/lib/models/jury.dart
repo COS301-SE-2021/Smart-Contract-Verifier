@@ -2,6 +2,7 @@
 
 import 'package:unison/models/global.dart';
 import 'package:unison/models/juror.dart';
+import 'package:unison/services/Server/contactService.dart';
 import 'package:web3dart/credentials.dart';
 
 class Jury {
