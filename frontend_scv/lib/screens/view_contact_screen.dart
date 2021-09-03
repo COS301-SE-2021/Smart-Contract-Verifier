@@ -25,6 +25,7 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
   }
 
 
+
   Future<void> _createDial() async {
 
     await showDialog(context: context, builder: (context) {
@@ -111,7 +112,7 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
             for (var i in snap.data) {
               //  ch.add(Column(children: [Text(i.name), Text(i.id)]));
               ch.add(SizedBox(height: 10));
-              ch.add(ContactItem(i));
+              ch.add(ContactItem(i, id));
             }
             return ListView(children: ch, shrinkWrap: true,);
           }),
