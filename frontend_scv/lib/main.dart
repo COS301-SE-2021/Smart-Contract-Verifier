@@ -39,10 +39,11 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 canvasColor: Color.fromRGBO(32, 32, 46, 1).withOpacity(1),
                 brightness: Brightness.dark,
-                primarySwatch: Colors.deepOrange,
+                primarySwatch: Colors.pink,
                 accentColor: Colors.cyan,
                 fontFamily: 'Lato',
               ),
+
               // themeMode: ThemeMode.dark,
               home: auth.isAuth ? ContractsOverviewScreen() : AuthScreen(),
               routes: {

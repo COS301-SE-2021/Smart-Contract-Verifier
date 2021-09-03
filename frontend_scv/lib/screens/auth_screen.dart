@@ -64,20 +64,40 @@ class AuthScreen extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        // SizedBox(
+                        //   // width: deviceSize.width * 0.4,
+                        //   child: TyperAnimatedTextKit(
+                        //     speed: Duration(seconds: 1),
+                        //     isRepeatingAnimation: false,
+                        //     textAlign: TextAlign.center,
+                        //     text: [
+                        //       "Contracts the smart way.",
+                        //     ],
+                        //     textStyle: TextStyle(
+                        //       fontSize: 16.0,
+                        //       color: Colors.white54,
+                        //       fontFamily: "Agne",
+                        //     ),
+                        //   ),
+                        // ),
                         SizedBox(
-                          // width: deviceSize.width * 0.4,
-                          child: TyperAnimatedTextKit(
-                            duration: Duration(seconds: 4),
-                            isRepeatingAnimation: false,
-                            alignment: Alignment.center,
-                            text: [
-                              "Contracts the smart way.",
-                            ],
-                            textStyle: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.white54,
-                                fontFamily: "Agn"
-                                    "e"),
+                          // width: 250.0,
+                          child: DefaultTextStyle(
+                            // textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white54,
+                              fontFamily: "Agne",
+                            ),
+                            child: AnimatedTextKit(
+                              animatedTexts: [
+                                TyperAnimatedText('Contracts the smart way.',
+                                    speed: Duration(milliseconds: 180),
+                                    textAlign: TextAlign.center,
+                                    curve: Curves.easeInOut),
+                              ],
+                              isRepeatingAnimation: false,
+                            ),
                           ),
                         ),
                       ],
@@ -132,7 +152,7 @@ class _AuthCardState extends State<AuthCard> {
     await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
     await unisonService.getAgreement(BigInt.from(0));
     await judgeService.isJudge();
-    await judgeService.setContractAllowance();
+    //await judgeService.setContractAllowance();
   }
 
   Future<void> _submit() async {
@@ -145,7 +165,7 @@ class _AuthCardState extends State<AuthCard> {
       await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
       await unisonService.getAgreement(BigInt.from(0));
       await judgeService.isJudge();
-      await judgeService.setContractAllowance();
+      //await judgeService.setContractAllowance();
     } catch (error) {
       const errorMessage = 'Authenticate Failed.\nPlease ensure you '
           'have the metamask extension installed.';

@@ -23,11 +23,12 @@ class TokenService {
 
   }
 
-  Future<void> setAllowance(String add, BigInt amount) async {
+  //Sets the Verifier allowance of UnisonToken
+  Future<void> setAllowance(BigInt amount) async {
 
     try {
       await _smC.makeWriteCall(
-          'approve', [EthereumAddress.fromHex(add), amount]);
+          'approve', [EthereumAddress.fromHex(await Global.getContractId('Verifier')), amount]);
     }
     catch (e) {
       print (e);
@@ -36,9 +37,12 @@ class TokenService {
 
   }
 
-  Future<dynamic> getAllowance() async {
+  Future<BigInt> getAllowance() async {
 
-    return (await _smC.makeReadCall('allowance', [EthereumAddress.fromHex(Global.userAddress), EthereumAddress.fromHex(await Global.getContractId('Verifier'))]))[0];
+    final res = await _smC.makeReadCall('allowance', [EthereumAddress.fromHex(Global.userAddress), EthereumAddress.fromHex(await Global.getContractId('Verifier'))]);
+    if (res[0] == null)
+      return BigInt.from(0);
+    return res[0];
 
   }
 
