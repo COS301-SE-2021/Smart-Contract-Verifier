@@ -23,17 +23,9 @@ class ViewContactScreen extends StatefulWidget {
 // enum ConditionType { Normal, Payment, Duration }
 //
 class _ViewContactScreenState extends State<ViewContactScreen> {
-//   final _conditionTitleController = TextEditingController();
-//   final _conditionDescriptionController = TextEditingController();
-//   final _paymentConditionAmountController = TextEditingController();
-//   final _durationConditionAmountController = TextEditingController();
-//   var _isLoading = false;
-//   // var _isInit = true;
+
   final ContactService cs = ContactService();
-//   NegotiationService negotiationService = NegotiationService();
-//
-//   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-//
+
   @override
   void initState() {
     // print('InitState()');
@@ -41,32 +33,60 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
   }
 
 
+  Future<void> _createDial() async {
+    await showDialog(context: context, builder: (context) {
+      return AlertDialog(title: Text('Add Contact'), actions: [TextButton(
+        child: Text('Cancel'),
+        onPressed: () {
+          // _conditionTitleController.clear();
+          // _conditionDescriptionController.clear();
+          Navigator.of(context).pop();
+        },
+      ),
+        TextButton(
+          child: Text('Save'),
+          onPressed: () {
+            // _conditionTitleController.clear();
+            // _conditionDescriptionController.clear();
+            Navigator.of(context).pop();
+          },
+        ),
+      ],);
+    });
+  }
+
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as List<dynamic>;
     final id = args[0];
     final name = args[1];
 
-    print ('Returning scaffold');
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
       ),
-      body: FutureBuilder(future: cs.getContacts(id),builder: (context, AsyncSnapshot snap) {
-        if (snap.connectionState != ConnectionState.done) {
-          return CircularProgressIndicator();
-        }
+      body: Column(
+        children: [
+          Row(children: [TextButton(child: Text('Add a contact to this list'), onPressed: () async {await _createDial;},)
+    ]
+    ),
+          FutureBuilder(future: cs.getContacts(id),builder: (context, AsyncSnapshot snap) {
+            if (snap.connectionState != ConnectionState.done) {
+              return CircularProgressIndicator();
+            }
 
-        if (snap.data == null)
-          return Text('Damn problem');
+            if (snap.data == null)
+              return Text('Damn problem');
 
-        List<Widget> ch = [];
-        print (snap.data);
-        for (var i in snap.data) {
-          //  ch.add(Column(children: [Text(i.name), Text(i.id)]));
-          ch.add(ContactItem(i));
-        }
-        return ListView(children: ch,);
-      })
+            List<Widget> ch = [];
+            print (snap.data);
+            for (var i in snap.data) {
+              //  ch.add(Column(children: [Text(i.name), Text(i.id)]));
+              ch.add(ContactItem(i));
+            }
+            return ListView(children: ch,);
+          }),
+        ],
+      )
     );
   }
 }

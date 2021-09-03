@@ -33,9 +33,9 @@ class ContactListItem extends StatelessWidget {
         );
       },
       child: ListTile(
-        title: Text(list.name),
-        tileColor: Color.fromRGBO(182, 80, 158, 0.2),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        title: Text(list.name,),
+        tileColor: Color.fromRGBO(9, 21, 128, 1.0),//Color.fromRGBO(85, 84, 84, 0.5019607843137255),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
       ),
 
     );
