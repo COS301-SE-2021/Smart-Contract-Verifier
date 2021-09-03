@@ -138,7 +138,7 @@ class _ConditionItemState extends State<ConditionItem> {
                           });
                           try {
                             await widget.negotiationService.rejectCondition(
-                                widget.contractCondition.conditionId);
+                                widget.contractCondition);
                             print('rejected: ' +
                                 widget.contractCondition.conditionId);
                           } catch (error) {
@@ -177,7 +177,7 @@ class _ConditionItemState extends State<ConditionItem> {
                           });
                           try {
                             await widget.negotiationService.acceptCondition(
-                                widget.contractCondition.conditionId);
+                                widget.contractCondition);
                             print('accepted: ' +
                                 widget.contractCondition.conditionId);
                           } catch (error) {

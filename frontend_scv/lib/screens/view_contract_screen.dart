@@ -77,7 +77,6 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
       } else {
         await negotiationService.saveCondition(newCondition);
       }
-      print('new condition saved');
     } catch (error) {
       await showDialog(
         context: context,

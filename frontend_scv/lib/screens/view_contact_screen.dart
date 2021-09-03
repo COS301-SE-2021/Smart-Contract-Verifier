@@ -1,17 +1,8 @@
 //Not to be confused with view contract screen
 //
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:unison/models/condition.dart';
-import 'package:unison/models/contact.dart';
-import 'package:unison/models/global.dart';
-import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/services/Server/contactService.dart';
-import 'package:unison/services/Server/negotiationService.dart';
 import 'package:unison/widgets/contact_item.dart';
-import '../models/contracts.dart';
-import '../widgets/contract_conditions_panel.dart';
-import '../widgets/contract_detail_info_panel.dart';
 
 class ViewContactScreen extends StatefulWidget {
   static const routeName = '/view-contact';
@@ -20,70 +11,109 @@ class ViewContactScreen extends StatefulWidget {
   _ViewContactScreenState createState() => _ViewContactScreenState();
 }
 
-// enum ConditionType { Normal, Payment, Duration }
-//
 class _ViewContactScreenState extends State<ViewContactScreen> {
 
+  final TextEditingController _conAddrController = TextEditingController();
+  final TextEditingController _conNameController = TextEditingController();
   final ContactService cs = ContactService();
+  String id;
+  String name;
 
   @override
   void initState() {
-    // print('InitState()');
     super.initState();
   }
 
 
   Future<void> _createDial() async {
+
     await showDialog(context: context, builder: (context) {
-      return AlertDialog(title: Text('Add Contact'), actions: [TextButton(
+
+      _conNameController.clear();
+      _conAddrController.clear();
+      return AlertDialog(content: Container(child: Column(mainAxisSize: MainAxisSize.min, children: [
+        TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Name:';
+          } else {
+            return null;
+          }
+        },
+        decoration: InputDecoration(labelText: 'Enter Contact Name:'),
+        controller: _conNameController,
+      ),
+        TextFormField(
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Address:';
+            } else {
+              return null;
+            }
+          },
+          decoration: InputDecoration(labelText: 'Enter Wallet Address:'),
+          controller: _conAddrController,
+        ),
+      ] ),
+      ), title: Text('Add Contact'), actions: [TextButton(
         child: Text('Cancel'),
         onPressed: () {
-          // _conditionTitleController.clear();
-          // _conditionDescriptionController.clear();
           Navigator.of(context).pop();
         },
       ),
         TextButton(
           child: Text('Save'),
           onPressed: () {
-            // _conditionTitleController.clear();
-            // _conditionDescriptionController.clear();
             Navigator.of(context).pop();
           },
         ),
       ],);
     });
+
+    await cs.addUser(_conAddrController.text, _conNameController.text, id); //Get from above
   }
 
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as List<dynamic>;
-    final id = args[0];
-    final name = args[1];
+    id = args[0];
+    name = args[1];
 
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
       ),
       body: Column(
-        children: [
-          Row(children: [TextButton(child: Text('Add a contact to this list'), onPressed: () async {await _createDial;},)
-    ]
-    ),
-          FutureBuilder(future: cs.getContacts(id),builder: (context, AsyncSnapshot snap) {
+          children: [
+            TextButton(
+              style: TextButton.styleFrom(
+                  primary: Color.fromRGBO(182, 20, 180, 1.0)),
+              child: Text(
+                'Add a contact to "$name"',
+                style: TextStyle(fontSize: 20),
+              ),
+              onPressed: () async {
+                await _createDial();
+                setState(() {
+                  //TODO: Surely this can be more efficient.... Good luck Kevin
+                  build(context);
+                });
+              },
+            ),
+            FutureBuilder(future: cs.getContacts(id),builder: (context, AsyncSnapshot snap) {
             if (snap.connectionState != ConnectionState.done) {
               return CircularProgressIndicator();
             }
-
             if (snap.data == null)
-              return Text('Damn problem');
+              return Text('Big problem');
 
             List<Widget> ch = [];
             print (snap.data);
             for (var i in snap.data) {
               //  ch.add(Column(children: [Text(i.name), Text(i.id)]));
+              ch.add(SizedBox(height: 10));
               ch.add(ContactItem(i));
             }
-            return ListView(children: ch,);
+            return ListView(children: ch, shrinkWrap: true,);
           }),
         ],
       )
@@ -91,105 +121,3 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
   }
 }
 
-//   Widget build(BuildContext context) {
-//     final contactId = ModalRoute.of(context).settings.arguments as String;
-//     final loadedContact =
-//     Provider.of<Contracts>(context, listen: true).findById(contactId);
-//
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(loadedContact.alias),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(15.0),
-//         child: Column(
-//           children: [
-//             ContractDetailInfoPanel(loadedContract),
-//             Container(
-//               padding: EdgeInsets.symmetric(
-//                 vertical: 10,
-//                 horizontal: 8,
-//               ),
-//               // alignment: Alignment.centerLeft,
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Text(
-//                     'Agreement Conditions:',
-//                     style: TextStyle(
-//                       fontSize: 16,
-//                     ),
-//                   ),
-//                   if (!loadedContract.movedToBlockchain)
-//                     TextButton(
-//                       onPressed: () async {
-//                         await _newConditionDialog(contractId);
-//                       },
-//                       child: Row(
-//                         children: [
-//                           Icon(Icons.add),
-//                           Text('Add New Condition'),
-//                         ],
-//                       ),
-//                     ),
-//                   if (!loadedContract.movedToBlockchain)
-//                     TextButton(
-//                       onPressed: () async {
-//                         await _newSpecialConditionDialog(
-//                             contractId, ConditionType.Payment);
-//                       },
-//                       child: Row(
-//                         children: [
-//                           Icon(Icons.add),
-//                           Text('Add New Payment Condition'),
-//                         ],
-//                       ),
-//                     ),
-//                   if (!loadedContract.movedToBlockchain)
-//                     TextButton(
-//                       onPressed: () async {
-//                         await _newSpecialConditionDialog(
-//                             contractId, ConditionType.Duration);
-//                       },
-//                       child: Row(
-//                         children: [
-//                           Icon(Icons.add),
-//                           Text('Add New Duration Condition'),
-//                         ],
-//                       ),
-//                     ),
-//                 ],
-//               ),
-//             ),
-//             Expanded(
-//               child: _isLoading
-//                   ? Center(
-//                 child: CircularProgressIndicator(),
-//               )
-//                   : ContractConditionsPanel(loadedContract),
-//               flex: 6,
-//             ),
-//             Expanded(
-//               flex: 1,
-//               child: Container(
-//                 // TODO: More Information or actions here?
-//               ),
-//             )
-//           ],
-//         ),
-//       ),
-//       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-//       floatingActionButton: FloatingActionButton.extended(
-//         onPressed: () {
-//           Navigator.of(context).pushNamed(
-//             MessagingScreen.routeName,
-//             arguments: loadedContract.contractId,
-//           );
-//         },
-//         label: Text('Agreement Chat'),
-//         icon: Icon(Icons.chat),
-//         backgroundColor: Color.fromRGBO(182, 80, 158, 1),
-//       ),
-//     );
-//   }
-// }
