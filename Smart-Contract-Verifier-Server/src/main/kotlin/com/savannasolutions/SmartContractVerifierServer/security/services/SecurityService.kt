@@ -13,9 +13,12 @@ import com.savannasolutions.SmartContractVerifierServer.security.responses.UserE
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import jdk.jfr.Unsigned
 import org.springframework.stereotype.Service
 import org.web3j.crypto.ECDSASignature
+import org.web3j.crypto.Hash
 import org.web3j.crypto.Sign
+import org.web3j.utils.Numeric
 import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
@@ -60,21 +63,22 @@ class SecurityService(val userRepository: UserRepository,
 
     fun login(loginRequest: LoginRequest): LoginResponse {
         var match = false
-        val prefix = "\u0019Ethereum Signed Message:\n10"
         if(userRepository.existsById(loginRequest.userId)){
-            val nonce = userRepository.getById(loginRequest.userId).nonce
-            val message = (prefix + nonce.toString()).encodeToByteArray()
-            val signatureBytes = loginRequest.signedNonce.encodeToByteArray()
+            //----------------------------------------------------------------------------------------------------------
+            val nonce = userRepository.getById(loginRequest.userId).nonce.toString()
+            val message = Hash.sha3(nonce).toByteArray()
+            val signatureBytes = Numeric.hexStringToByteArray(loginRequest.signedNonce)
 
             val v = signatureBytes[64]
             if(v < 27)
                 v.plus(27)
             val signatureData = Sign.SignatureData(v,
                 signatureBytes.copyOfRange(0, 32),
-                signatureBytes.copyOfRange(0, 64),)
+                signatureBytes.copyOfRange(32, 64),)
+            //----------------------------------------------------------------------------------------------------------
             var recoveredAddress = ""
-            for(i in 0..4){
-                var publicKey = Sign.recoverFromSignature(
+            for(i in 0..3){
+                val publicKey = Sign.recoverFromSignature(
                     i,
                     ECDSASignature(
                         BigInteger(1, signatureData.r),
@@ -89,7 +93,6 @@ class SecurityService(val userRepository: UserRepository,
                     }
                 }
             }
-
             if(match){
                 val secretKey = Keys.hmacShaKeyFor(securityConfig.secretKey.encodeToByteArray())
                 val jwtToken = Jwts.builder().setSubject(loginRequest.userId).setExpiration(Date(System.currentTimeMillis() + securityConfig.timeout.toLong())).signWith(secretKey).compact()
