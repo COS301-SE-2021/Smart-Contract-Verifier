@@ -1,10 +1,13 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
+import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByUserResponse
+import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetUnreadMessagesResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -13,11 +16,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
@@ -25,6 +33,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/get/user/userid/message/unread")
 class GetUnreadMessagesTest {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -110,21 +119,35 @@ class GetUnreadMessagesTest {
         whenever(messagesStatusRepository.getAllByMessage(messageA)).thenReturn(messageStatusList)
     }
 
-    fun requestSender(): MockHttpServletResponse
+    fun requestSender(responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                      testName: String): MockHttpServletResponse
     {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userBWalletID}/message/unread")
                 .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors)
+            )
         ).andReturn().response
     }
 
     @Test
     fun `GetUnreadMessages successful`()
     {
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(GetUnreadMessagesResponse.response())
+        //End of documentation
+
         //given
 
         //when
-        val response = requestSender();
+        val response = requestSender(fieldDescriptorResponse,"GetUnreadMessages successful")
 
         //then
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
