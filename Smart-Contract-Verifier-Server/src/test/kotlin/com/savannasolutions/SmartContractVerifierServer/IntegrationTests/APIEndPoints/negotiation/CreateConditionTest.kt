@@ -33,7 +33,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "api/docs/post/user/userID/agreement/agreementID/condition")
+@AutoConfigureRestDocs(outputDir = "docs/api/post/user/userID/agreement/agreementID/condition")
 class CreateConditionTest {
     @Autowired
     lateinit var mockMvc : MockMvc
