@@ -25,5 +25,11 @@ data class ApiResponse<T>(
             responseFieldDescriptors.add(PayloadDocumentation.fieldWithPath("Message").description("This will contain an error message if needed").type("String"))
             return responseFieldDescriptors
         }
+
+        fun apiEmptyResponse(): ArrayList<FieldDescriptor>{
+            val responseFieldDescriptors = ArrayList<FieldDescriptor>()
+            responseFieldDescriptors.add(PayloadDocumentation.fieldWithPath("Status").description("Will return successful or failed").type("ENUM"))
+            return responseFieldDescriptors
+        }
     }
 }
