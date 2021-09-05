@@ -119,8 +119,8 @@ class GetAllMessagesByAgreementTest {
 
     private fun requestSender(userID: String,
                               agreementID: UUID,
-                              responseFieldDescriptors: ArrayList<FieldDescriptor>? = null,
-                              testName: String?= "") : MockHttpServletResponse
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
 
         return mockMvc.perform(
