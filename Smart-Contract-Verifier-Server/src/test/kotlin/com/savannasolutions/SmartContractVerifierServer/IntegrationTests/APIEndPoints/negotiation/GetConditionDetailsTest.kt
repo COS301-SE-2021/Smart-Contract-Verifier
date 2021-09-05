@@ -1,21 +1,28 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
+import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.GetConditionDetailsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
@@ -23,6 +30,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/get/user/userID/agreement/agreementID/condition/conditionID")
 class GetConditionDetailsTest {
     @Autowired
     lateinit var mockMvc : MockMvc
@@ -80,18 +88,39 @@ class GetConditionDetailsTest {
         whenever(conditionsRepository.getById(conditionUUID)).thenReturn(condition)
     }
 
-    private fun requestSender(userID: String, agreementID: UUID, conditionID: UUID) : MockHttpServletResponse
+    private fun requestSender(userID: String,
+                              agreementID: UUID,
+                              conditionID: UUID,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/agreement/${agreementID}/condition/${conditionID}")
                 .contentType(MediaType.APPLICATION_JSON)
-                ).andReturn().response
+                ).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors)
+            )
+        ).andReturn().response
     }
 
     @Test
     fun `GetConditionDetails successful`()
     {
-        val response = requestSender(userA.publicWalletID, agreementUUID, conditionUUID)
+        //document
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(GetConditionDetailsResponse.response())
+        //End of documentation
+
+        val response = requestSender(userA.publicWalletID,
+            agreementUUID,
+            conditionUUID,
+            fieldDescriptorResponse,
+            "GetConditionDetails successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, conditionUUID.toString())
@@ -100,7 +129,16 @@ class GetConditionDetailsTest {
     @Test
     fun `GetConditionDetails failure due to condition not existing`()
     {
-        val response = requestSender(userA.publicWalletID, agreementUUID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
+        //document
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //
+
+        val response = requestSender(userA.publicWalletID,
+            agreementUUID,
+            UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"),
+            fieldDescriptorResponse,
+            "GetConditionDetails failure due to condition not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -108,7 +146,16 @@ class GetConditionDetailsTest {
     @Test
     fun `GetConditionDetails failure due to agreement not existing`()
     {
-        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"), conditionUUID)
+        //document
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //
+
+        val response = requestSender(userA.publicWalletID,
+            UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"),
+            conditionUUID,
+            fieldDescriptorResponse,
+            "GetConditionDetails failure due to agreement not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
