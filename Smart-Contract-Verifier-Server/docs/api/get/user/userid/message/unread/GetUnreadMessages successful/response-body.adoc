@@ -1,0 +1,28 @@
+[source,options="nowrap"]
+----
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "messageAgreementList" : [ {
+      "messages" : [ {
+        "message" : "Test message",
+        "messageID" : "0291184c-036a-457c-a37f-1684c69bd9bb",
+        "messageStatuses" : [ {
+          "readDate" : "2021-09-05T13:24:29.154+00:00",
+          "read" : true,
+          "recipientID" : "userB"
+        } ],
+        "sendingUser" : {
+          "publicWalletID" : "userA"
+        },
+        "sendingDate" : "2021-09-05T13:24:29.022+00:00",
+        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86"
+      } ],
+      "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86"
+    }, {
+      "messages" : [ ],
+      "agreementID" : "432cb7d7-a9c5-468c-8c7a-6cc0634b041a"
+    } ]
+  }
+}
+----
