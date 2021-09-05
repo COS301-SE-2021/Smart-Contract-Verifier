@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ http PUT 'http://localhost:8080/user/0x37Ec9a8aBFa094b24054422564e68B08aF3114B4/message/eb558bea-389e-4e7b-afed-4987dbf37f85' \
+    'Content-Type:application/json;charset=UTF-8'
+----
