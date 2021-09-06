@@ -6,9 +6,7 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Condi
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SetDurationConditionRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SetPaymentConditionRequest
-import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.SetDurationConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.SetPaymentConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -30,7 +28,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
 
 @SpringBootTest

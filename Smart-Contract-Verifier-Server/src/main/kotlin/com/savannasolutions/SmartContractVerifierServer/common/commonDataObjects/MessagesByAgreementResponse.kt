@@ -1,9 +1,9 @@
 package com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects
 
-import java.util.*
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
+import java.util.*
 
 data class MessagesByAgreementResponse(@JsonProperty("AgreementID") val AgreementID: UUID,
                                         @JsonProperty("Messages") val Messages: List<MessageResponse>?= emptyList())

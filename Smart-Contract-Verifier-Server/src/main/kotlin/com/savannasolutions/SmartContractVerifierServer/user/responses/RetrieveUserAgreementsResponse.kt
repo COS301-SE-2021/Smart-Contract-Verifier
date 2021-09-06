@@ -2,10 +2,8 @@ package com.savannasolutions.SmartContractVerifierServer.user.responses
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.AgreementResponse
-import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
-import java.io.FileDescriptor
 
 data class RetrieveUserAgreementsResponse(@JsonProperty("Agreements") val Agreements: List<AgreementResponse>? = null,)
 {

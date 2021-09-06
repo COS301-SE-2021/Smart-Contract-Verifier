@@ -20,15 +20,14 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.test.assertContains
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.operation.preprocess.Preprocessors.*
 import org.springframework.restdocs.payload.FieldDescriptor
-import org.springframework.restdocs.payload.PayloadDocumentation.*
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import java.util.*
+import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureRestDocs(outputDir = "docs/api/get/user/userid/agreement/agreementId/message")

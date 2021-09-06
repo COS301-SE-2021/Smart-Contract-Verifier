@@ -7,18 +7,16 @@ import com.savannasolutions.SmartContractVerifierServer.messenger.models.Message
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
-import com.savannasolutions.SmartContractVerifierServer.messenger.responses.*
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.Test
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertEquals
 
 internal class SetMessageAsReadUnitTest {

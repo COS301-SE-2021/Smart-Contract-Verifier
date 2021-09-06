@@ -7,13 +7,12 @@ import com.savannasolutions.SmartContractVerifierServer.messenger.models.Message
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.*
+import com.savannasolutions.SmartContractVerifierServer.messenger.requests.SendMessageRequest
 import com.savannasolutions.SmartContractVerifierServer.messenger.responses.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Service
 class MessengerService constructor(val messagesRepository: MessagesRepository,

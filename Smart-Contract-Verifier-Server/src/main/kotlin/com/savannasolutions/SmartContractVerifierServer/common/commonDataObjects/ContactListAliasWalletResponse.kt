@@ -3,8 +3,6 @@ package com.savannasolutions.SmartContractVerifierServer.common.commonDataObject
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
-import java.util.*
-import kotlin.collections.ArrayList
 
 data class ContactListAliasWalletResponse(@JsonProperty("Alias") val Alias : String,
                                           @JsonProperty("WalletID") val WalletID:String)

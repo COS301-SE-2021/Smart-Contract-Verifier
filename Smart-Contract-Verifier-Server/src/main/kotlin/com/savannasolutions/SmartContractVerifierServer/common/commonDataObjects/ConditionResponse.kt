@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
-import java.io.FileDescriptor
 import java.util.*
-import kotlin.collections.ArrayList
 
 data class ConditionResponse(@JsonProperty("ConditionID") val conditionID: UUID,
                              @JsonProperty("ConditionDescription") val conditionDescription: String? = null,

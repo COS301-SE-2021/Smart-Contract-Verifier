@@ -1,6 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.messenger.responses
 
-import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.MessageResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.MessagesByAgreementResponse
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation

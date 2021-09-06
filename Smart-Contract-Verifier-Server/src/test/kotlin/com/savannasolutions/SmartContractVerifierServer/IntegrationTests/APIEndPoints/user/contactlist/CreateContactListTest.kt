@@ -25,7 +25,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
 
 @SpringBootTest

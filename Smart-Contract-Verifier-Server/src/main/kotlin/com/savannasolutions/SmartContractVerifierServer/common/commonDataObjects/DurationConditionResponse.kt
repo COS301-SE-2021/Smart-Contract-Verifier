@@ -5,7 +5,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Condi
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
 import java.util.*
-import kotlin.collections.ArrayList
 
 data class DurationConditionResponse(@JsonProperty("ID") val conditionID: UUID,
                                      @JsonProperty("Amount") val amount: Double,

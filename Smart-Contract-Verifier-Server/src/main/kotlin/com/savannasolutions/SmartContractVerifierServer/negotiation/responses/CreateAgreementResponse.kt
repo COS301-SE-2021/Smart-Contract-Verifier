@@ -1,11 +1,9 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.responses
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
 import java.util.*
-import kotlin.collections.ArrayList
 
 data class CreateAgreementResponse(@JsonProperty("AgreementID") val agreementID: UUID? = null,)
 {

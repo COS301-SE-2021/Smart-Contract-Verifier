@@ -3,8 +3,6 @@ package com.savannasolutions.SmartContractVerifierServer.negotiation.requests
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
-import java.util.*
-import kotlin.collections.ArrayList
 
 data class CreateConditionRequest(@JsonProperty("ConditionTitle") val Title : String,
                                   @JsonProperty("ConditionDescription") val ConditionDescription: String,)

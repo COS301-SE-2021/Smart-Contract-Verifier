@@ -5,7 +5,6 @@ import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
 import java.math.BigInteger
 import java.util.*
-import kotlin.collections.ArrayList
 
 data class AgreementResponse(@JsonProperty("AgreementID") val agreementID: UUID,
                              @JsonProperty("AgreementTitle") val agreementTitle: String,

@@ -2,7 +2,6 @@ package com.savannasolutions.SmartContractVerifierServer.negotiation.responses
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.AgreementResponse
-import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
 
