@@ -40,7 +40,7 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
     string private _name;
     string private _symbol;
 
-    address owner;
+    address mintAddr;
     uint256 private deployedTime;
 
     /**
@@ -56,19 +56,19 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
         _name = "UnisonToken";
         _symbol = "UNT";
         deployedTime = block.timestamp;
-        owner = _msgSender();
+        mintAddr = _msgSender();
 
-        _mint(owner, 1000000 * 10**decimals());
+        _mint(mintAddr, 1000000 * 10**decimals());
     }
 
 
-    modifier onlyOwner(){
-        require(msg.sender == owner);
+    modifier onlyMinter(){
+        require(msg.sender == mintAddr);
         _;
     }
 
-    function receiveMinted() public onlyOwner(){
-        
+    function receiveMinted() public onlyMinter(){
+
     }
 
     /**
