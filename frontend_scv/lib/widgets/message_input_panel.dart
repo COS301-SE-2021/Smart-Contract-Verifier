@@ -1,3 +1,4 @@
+import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';
@@ -17,7 +18,6 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    // print('InitState()');
     super.initState();
   }
 
@@ -28,10 +28,9 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
       _messageTextController.text,
       agreementId,
     );
+
     if (!isValid) return;
     _formKey.currentState.save();
-    _formKey.currentState?.reset();
-    //^^^^saves the form -> executes the 'onSaved' of each input
     setState(() {
       _isLoading = true;
     });
@@ -40,7 +39,6 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
       //Save to DB:
       await messageService.sendMessage(newMessage);
       print('new message sent');
-      _messageTextController.clear();
     } catch (error) {
       await showDialog(
         context: context,
@@ -59,35 +57,41 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
       );
     }
     setState(() {
-      _isLoading = false;
-      // Provider.of<Contracts>(context, listen: false).fetchAndSetContracts();
-      //TODO: assuming this rebuilds
       _messageTextController.clear();
-      super.setState(() {});
+      _messageTextController.clearComposing();
+      _isLoading = false;
     });
+
+    // setState(() {
+    //   super.setState(() {});
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    MessageService messageService = MessageService();
-    // print(messages);
-    // return Text(messages.toString());
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      // color: Colors.white,
+      margin: EdgeInsets.all(16.0),
+      // padding: EdgeInsets.symmetric(horizontal: 20),
       height: 100,
       child: Row(
         children: [
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 14),
-              height: 60,
+              // padding: EdgeInsets.symmetric(horizontal: 14),
+              // height: 60,
+
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.deepOrange,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
+                  // color: Colors.grey,
+                  color: Color.fromRGBO(43, 45, 60, 1),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.pink,
+                      blurRadius: 5.0,
+                      spreadRadius: 2.0,
+                    ),
+                  ]),
               child: Row(
                 children: [
                   SizedBox(
@@ -97,11 +101,22 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
                     child: Form(
                       key: _formKey,
                       child: TextFormField(
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.only(
+                                left: 15, bottom: 11, top: 11, right: 15),
+                            hintText: "Enter a message..."),
                         maxLines: 1,
                         keyboardType: TextInputType.text,
                         controller: _messageTextController,
                         validator: (value) {
-                          if (value.isEmpty) return 'Please enter a message.';
+                          if (value.isEmpty)
+                            return 'Please send something '
+                                'meaningful';
                           return null;
                         },
                         onFieldSubmitted: (value) {
@@ -110,17 +125,20 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => _saveForm(widget.agreementId),
-                    icon: Icon(Icons.send_outlined),
-                  )
+                  if (!_isLoading)
+                    IconButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () => _saveForm(widget.agreementId),
+                      icon: Icon(
+                        Icons.send_outlined,
+                        color: Colors.pinkAccent,
+                      ),
+                    ),
                 ],
               ),
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
+          )
         ],
       ),
     );
