@@ -4,24 +4,24 @@
   "Status" : "SUCCESSFUL",
   "ResponseObject" : {
     "messageAgreementList" : [ {
+      "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
       "messages" : [ {
         "message" : "Test message",
-        "sendingDate" : "2021-09-06T14:16:47.557+00:00",
+        "messageStatuses" : [ {
+          "readDate" : "2021-09-06T19:53:48.282+00:00",
+          "read" : true,
+          "recipientID" : "userB"
+        } ],
+        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
         "sendingUser" : {
           "publicWalletID" : "userA"
         },
-        "messageStatuses" : [ {
-          "recipientID" : "userB",
-          "readDate" : "2021-09-06T14:16:47.557+00:00",
-          "read" : true
-        } ],
-        "messageID" : "0291184c-036a-457c-a37f-1684c69bd9bb",
-        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86"
-      } ],
-      "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86"
+        "sendingDate" : "2021-09-06T19:53:48.274+00:00",
+        "messageID" : "0291184c-036a-457c-a37f-1684c69bd9bb"
+      } ]
     }, {
-      "messages" : [ ],
-      "agreementID" : "432cb7d7-a9c5-468c-8c7a-6cc0634b041a"
+      "agreementID" : "432cb7d7-a9c5-468c-8c7a-6cc0634b041a",
+      "messages" : [ ]
     } ]
   }
 }
