@@ -1,0 +1,22 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 292
+
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "walletAndAlias" : [ {
+      "alias" : "AliasA",
+      "walletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+    }, {
+      "alias" : "AliasB",
+      "walletID" : "0x37Ec9a77BFa094b24054422564e68B08aF3114B4"
+    } ]
+  }
+}
+----

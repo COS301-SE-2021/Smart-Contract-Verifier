@@ -1,0 +1,14 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 77
+
+{
+  "Status" : "FAILED",
+  "Message" : "User does not exist in database"
+}
+----

@@ -1,7 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.messenger.controllers
 
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.*
-import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByAgreementResponse
+import com.savannasolutions.SmartContractVerifierServer.messenger.requests.SendMessageRequest
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import org.springframework.web.bind.annotation.*
 import java.util.*

@@ -1,0 +1,20 @@
+|===
+|Path|Type|Description
+
+|`+PartyB+`
+|`+String+`
+|This is the public wallet of the other party
+
+|`+AgreementTitle+`
+|`+String+`
+|This is the title of the agreement
+
+|`+AgreementDescription+`
+|`+String+`
+|This is the description of the agreement
+
+|`+AgreementImageURL+`
+|`+String+`
+|This is the image url for the agreement
+
+|===

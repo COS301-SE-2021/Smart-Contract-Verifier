@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "WalletID" : "broken",
+  "Alias" : "test"
+}
+----
