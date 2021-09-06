@@ -13,17 +13,17 @@ Content-Length: 763
     "messageAgreementList" : [ {
       "messages" : [ {
         "message" : "Test message",
-        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
-        "messageStatuses" : [ {
-          "read" : true,
-          "readDate" : "2021-09-06T13:17:41.687+00:00",
-          "recipientID" : "userB"
-        } ],
-        "messageID" : "0291184c-036a-457c-a37f-1684c69bd9bb",
-        "sendingDate" : "2021-09-06T13:17:41.677+00:00",
+        "sendingDate" : "2021-09-06T14:16:47.557+00:00",
         "sendingUser" : {
           "publicWalletID" : "userA"
-        }
+        },
+        "messageStatuses" : [ {
+          "recipientID" : "userB",
+          "readDate" : "2021-09-06T14:16:47.557+00:00",
+          "read" : true
+        } ],
+        "messageID" : "0291184c-036a-457c-a37f-1684c69bd9bb",
+        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86"
       } ],
       "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86"
     }, {
