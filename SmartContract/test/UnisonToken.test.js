@@ -22,12 +22,14 @@ function mintedAtTime(x){
 async function getCurrBlockTime(){
     var block = await web3.eth.getBlock('latest');
     var result = BigInt(block.timestamp);
+    console.log("Block time: " + result);
     return result;
 }
 
+
 contract('UnisonToken', (accounts) =>{
 
-    describe("Unison token unit tests", async () =>{
+    describe("UnisonToken general tests", async () =>{
 
         let token
 
@@ -191,10 +193,21 @@ contract('UnisonToken', (accounts) =>{
     })
 
 
-    describe("Unison token unit tests", async () =>{
+    describe("UnisonToken minting unit tests", async () =>{
 
         let token
         let deployTime;
+
+        async function assertSupply(){
+            var currTime = await getCurrBlockTime();
+            token.receiveMinted();
+            var supply = await token.totalSupply();
+            supply = BigInt(supply);
+
+            var expectedSupply = mintedAtTime(currTime - deployTime);
+
+            assert(supply == expectedSupply, "Incorrect balance " + supply + ", expected " + expectedSupply);
+        }
 
         before(async () =>{
             deployTime = await getCurrBlockTime();
@@ -218,14 +231,37 @@ contract('UnisonToken', (accounts) =>{
         })
 
         it("balance after some time passed", async ()=>{
-            var currTime = await web3.eth.getBlock('latest').timestamp;
-            
-
-            // var acc0Start = await token.totalSupply();
-            // acc0Start = BigInt(acc0Start);
-            // assert(acc0Start == mintedAtTime(), "Initial amount is incorrect");
+            await assertSupply();
         })
 
+        it("balance after more time passed", async ()=>{
+            await advanceTimeAndBlock(15);
+            await assertSupply();
+        })
+
+        it("balance about halfway through", async ()=>{
+            await advanceTimeAndBlock(250 * 86400);
+            await assertSupply();
+        })
+
+        it("balance after 500 days", async ()=>{
+            await advanceTimeAndBlock(250 * 86400);
+            await assertSupply();
+        })
+
+        it("balance some time after minting ended", async ()=>{
+            await advanceTimeAndBlock(50 * 86400);
+            await assertSupply();
+        })
+
+        it("Can't access receiveMinted from oter account", async()=>{
+            try{
+                token.receiveMinted({from:accounts[1]});
+                assert(false, "onlyMinter modifier didn't work");
+            }
+            catch{}
+        })
 
     })
+
 })

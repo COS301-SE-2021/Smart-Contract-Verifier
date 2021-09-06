@@ -131,6 +131,7 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
 
     /**
      * @dev See {IERC20-totalSupply}.
+     * Supply will stop at 2 000 000.000 703 999 974 4 tokens 
      */
     function totalSupply() public view virtual override returns (uint256) {
         return _totalSupply;
