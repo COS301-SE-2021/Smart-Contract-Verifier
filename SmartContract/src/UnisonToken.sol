@@ -40,7 +40,7 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
     string private _name;
     string private _symbol;
 
-    address mintAddr;
+    address private mintAddr;
     uint256 private deployedTime;
 
     /**
@@ -68,7 +68,16 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
     }
 
     function receiveMinted() public onlyMinter(){
+        //Calculate how much must be minted by now
+        uint256 mustExist;
 
+
+        //Take difference between it and _totalSupply
+        uint256 mintNow = mustExist - totalSupply();
+
+
+        //mint new tokens
+        _mint(mintAddr, mintNow);
     }
 
     /**
