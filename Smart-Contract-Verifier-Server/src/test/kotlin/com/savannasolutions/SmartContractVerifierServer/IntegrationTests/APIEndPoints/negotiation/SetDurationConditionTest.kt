@@ -1,10 +1,13 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
+import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SetDurationConditionRequest
+import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.SetDurationConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.BeforeEach
@@ -12,11 +15,16 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
@@ -25,6 +33,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/post/user/userID/agreement/agreementID/condition/duration")
 class SetDurationConditionTest {
     @Autowired
     lateinit var mockMvc : MockMvc
@@ -87,20 +96,41 @@ class SetDurationConditionTest {
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(condition)
     }
 
-    private fun requestSender(rjson: String, userID: String, agreementID: UUID) : MockHttpServletResponse
+    private fun requestSender(rjson: String,
+                              userID: String,
+                              agreementID: UUID,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
             MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/condition/duration")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                .content(rjson)).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors),
+                PayloadDocumentation.requestFields(SetDurationConditionRequest.request())
+            )
+        ).andReturn().response
     }
 
     @Test
     fun `SetDurationCondition successful`()
     {
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(SetDurationConditionResponse.response())
+        //End of documentation
+
         val rjson = "{\"Duration\" : 500.0}"
 
-        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
+        val response = requestSender(rjson, userA.publicWalletID,
+            agreement.ContractID,
+            fieldDescriptorResponse,
+            "SetDurationCondition successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, conditionUUID.toString())
@@ -109,9 +139,17 @@ class SetDurationConditionTest {
     @Test
     fun `SetDurationCondition failed due to amount being below 0`()
     {
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
         val rjson = "{\"Duration\" : -500.0}"
 
-        val response = requestSender(rjson,userA.publicWalletID, agreement.ContractID)
+        val response = requestSender(rjson,userA.publicWalletID,
+            agreement.ContractID,
+            fieldDescriptorResponse,
+            "SetDurationCondition failed due to amount being below 0")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -119,9 +157,18 @@ class SetDurationConditionTest {
     @Test
     fun `SetDurationCondition failed agreement does not exist`()
     {
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
         val rjson = "{\"Duration\" : 500.0}"
 
-        val response = requestSender(rjson, userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"),
+            fieldDescriptorResponse,
+            "SetDurationCondition failed agreement does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -129,9 +176,18 @@ class SetDurationConditionTest {
     @Test
     fun `SetDurationCondition proposing user not part of agreement`()
     {
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
         val rjson = "{\"Duration\" : 500.0}"
 
-        val response = requestSender(rjson, userC.publicWalletID, agreement.ContractID)
+        val response = requestSender(rjson,
+            userC.publicWalletID,
+            agreement.ContractID,
+            fieldDescriptorResponse,
+            "SetDurationCondition proposing user not part of agreement")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
