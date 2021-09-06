@@ -58,7 +58,8 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
         deployedTime = block.timestamp;
         mintAddr = _msgSender();
 
-        _mint(mintAddr, 1000000 * 10**decimals());
+        receiveMinted();
+        // _mint(mintAddr, 1000000 * 10**decimals());
     }
 
 
@@ -71,11 +72,12 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
     // Tokens will be minted to the deploying address at a linearly decreasing
     // rate, which reaches 0 after 500 days. At the end, 2 million tokens
     // will have been minted.
+    // TIME STARTS ONE DAY IN, so ~8000 tokens are immediately minted
     function receiveMinted() public onlyMinter(){
         //Calculate how much must be minted by now
         uint256 mustExist;
 
-        uint256 activeTime = block.timestamp - deployedTime;
+        uint256 activeTime = block.timestamp - deployedTime + 86400;
         if(activeTime > 86400 * 500)
             activeTime = 86400 * 500; //Can't go beyond 500 days
 
