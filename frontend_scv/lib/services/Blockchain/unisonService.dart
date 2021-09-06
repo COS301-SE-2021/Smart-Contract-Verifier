@@ -33,11 +33,6 @@ class UnisonService {
     ]); //Soon, this will be replaced by a spinner in the UI
     // It will have to check for an event.
 
-    final ev = await _smC.getCreationSubscription();
-    await ev.asFuture(); //Wait for the block to be added
-    await ev.cancel();
-
-    print(res);
   }
 
   Future<void> acceptAgreement(Contract con) async {
@@ -48,14 +43,13 @@ class UnisonService {
     //   throw Exception('Agreement is not on blockchain yet');
     // }TODO
 
-     final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
+    final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
   }
 
   Future<BlockchainAgreement> getAgreement(BigInt id) async {
-
     if (id == null)
 //      return null;
-        print('Was null');
+      print('Was null');
 
     final res = await _smC.makeReadCall('getAgreement', [id]);
     return BlockchainAgreement.fromCHAIN(res[0]);
@@ -97,21 +91,12 @@ class UnisonService {
   }
 
   Future<dynamic> getJury(BigInt id) async {
-    final res =  await _smC.makeReadCall('getJury', [id]);
+    final res = await _smC.makeReadCall('getJury', [id]);
 
     print(res);
     return res[0];
   }
 
-  //For testing
-  Future<void> setEvent() async {
-    final res = await _smC.getCreationSubscription();
-    print('Starting await');
-    await res.asFuture();
-    print('Starting cancel');
-    await res.cancel();
-    print('Done');
-  }
 
   //A party can pay into the agreement, after it has been moved to the blockchain
   Future<void> addPaymentConditions(
@@ -128,5 +113,14 @@ class UnisonService {
   Future<void> payPlatformFee(BigInt id) async {
     //print('Paying fee for ' + id.toString());
     await _smC.makeWriteCall('payPlatformFee', [id]);
+  }
+
+  //This method is called by the party that should make the payment in an agreement.
+  Future<void> payToBlockchain(BigInt id, BigInt amount) async {
+    await _smC.makeWriteCall('addPaymentConditions', [
+      id,
+      [Global.getContractId('Verifier')],
+      [amount]
+    ]);
   }
 }

@@ -19,6 +19,7 @@ class Contract with ChangeNotifier {
   String title;
 
   String description;
+  String payingUser;
   double price;
   String imageUrl;
   String partyBId;
@@ -62,8 +63,11 @@ class Contract with ChangeNotifier {
 
     try {
       blockchainId = BigInt.from(jsn['BlockChainID']);
-    } catch (_) {
-      blockchainId = BigInt.from(0);
+      movedToBlockchain = true;
+    } catch (error) {
+      print('BC ID ERR: ' + error.toString());
+      // blockchainId = BigInt.from(0);
+      movedToBlockchain = false;
     }
     movedToBlockchain = jsn['MovedToBlockchain'];
     description = jsn['AgreementDescription'];
@@ -78,7 +82,7 @@ class Contract with ChangeNotifier {
   Map<String, String> toJson() {
     return {
       //This is used in the initial save to the backend, hence not all fields being present.
-      'PartyA': partyA,
+    //  'PartyA': partyA,
       'PartyB': partyB,
       'AgreementTitle': title,
       'AgreementDescription': description,

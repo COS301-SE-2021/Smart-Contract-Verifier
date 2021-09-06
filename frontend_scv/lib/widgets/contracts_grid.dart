@@ -11,10 +11,14 @@ class ContractsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     //-> setting/getting contracts happens in the contracts_overview_screen
     final contracts = Provider.of<Contracts>(context).items; //simply access
-    // the items here
+    var _firstUser = false;
+    if (contracts == null) {
+      _firstUser = true;
+    }
+
     return ListView.builder(
       padding: const EdgeInsets.all(10.0),
-      itemCount: contracts.length,
+      itemCount: _firstUser ? 0 : contracts.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
         value: contracts[i],
         child: ContractItem(),

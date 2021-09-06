@@ -6,6 +6,7 @@ import 'package:unison/models/global.dart';
 import 'package:unison/models/jury.dart';
 import 'package:unison/services/Blockchain/tokenService.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:unison/services/Server/apiResponse.dart';
 import 'package:web3dart/credentials.dart';
 import 'backendAPI.dart';
 import '../../models/contract.dart';
@@ -19,19 +20,12 @@ class JudgeService {
   Future<List<Contract>> getInvolvedAgreements() async {
     //Get all agreements where a user is the judge
 
-    var response;
-    try {
-      response = await _api.postData('/negotiation/get-judging-agreement',
-          {'WalletID': Global.userAddress});
+    ApiResponse response = await _api.getData('/judge/${Global.userAddress}/agreement');
 
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Agreements for judge could not be retrieved');
-    } catch (e) {
-      print(e);
-      throw (e);
-    }
+    if (!response.successful)
+      throw Exception('Agreements for judge could not be retrieved');
 
-    List<dynamic> jsonList = ((response['AgreementList']));
+    List<dynamic> jsonList = ((response.result['AgreementList']));
     List<Contract> ret = [];
 
     for (int i = 0; i < jsonList.length; i++) {
@@ -78,21 +72,6 @@ class JudgeService {
     return res;
   }
 
-  //This method is mostly for testing.
-  //It sets the UNT allowances of all addresses passed in, granted by the addresses responsible for the minting of the token.
-  //All of the addresses will then be able to sign up to the jury.
-  Future<void> setAllowances(List<String> add, BigInt amount) async {
-    for (String a in add) {
-      await _tokServ.setAllowance(
-          a, BigInt.from(10000)); //User stakes 10 000 gwei
-    }
-  }
-
-  //Lets Verifier use UNT
-  Future<void> setContractAllowance() async {
-    await _tokServ.setAllowance(
-        await Global.getContractId('Verifier'), BigInt.from(10000000000));
-  }
 
   //Get the jury for an agreement from the blockchain
   Future<Jury> getJury(BigInt id) async {

@@ -2,6 +2,7 @@
 
 import 'package:unison/models/global.dart';
 import 'package:unison/models/juror.dart';
+import 'package:unison/services/Server/contactService.dart';
 import 'package:web3dart/credentials.dart';
 
 class Jury {
@@ -23,6 +24,16 @@ class Jury {
       _jurors.add(Juror(addresses[i].toString(), votes[i]));
     }
 
+  }
+
+  int getMyVoteNumber() { //Get the raw vote
+
+    for (Juror i in _jurors) {
+      if (i.address == Global.userAddress)
+        return i.voteNumber;
+    }
+
+    return -1; //Invalid
   }
 
   String getMyVote() { //Get the user's vote

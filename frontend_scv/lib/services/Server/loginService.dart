@@ -23,13 +23,15 @@ class LoginService {
 
     //Sets the contract allowance on first login. This should only be done once, as it costs money.
     //TODO: Temporary solution.
-    await _jS.setContractAllowance();
+    //await _jS.setContractAllowance();
   }
 
-  Future<void> tryAddUser() async { //This attempts to add a new user to the DB. Failure means the user already exists
+  Future<void> tryAddUser([String id]) async { //This attempts to add a new user to the DB. Failure means the user already exists
 
+    id ??= Global.userAddress; //Defaults to current user
     try {
-      await _api.postData('/add-user', {'WalletID': Global.userAddress, 'Alias' : 'Nothing'});
+      final res =await _api.postData('/user', {'WalletID': id, 'Alias' : 'Nothing'});
+      print ('Res: ' + res.toString());
 
     } on Exception catch (e) {
       print(e);

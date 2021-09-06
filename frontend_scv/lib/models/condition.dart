@@ -28,10 +28,7 @@ class Condition with ChangeNotifier {
 
   Map<String, dynamic> toJson() => { //For saving a condition to the server
         //Convert instance to JSON
-        'AgreementID': agreementId,
         'ConditionTitle': title,
-        'ProposedUser': proposedBy,
         'ConditionDescription': description,
-        'ConditionStatus' :status,
       };
 }
