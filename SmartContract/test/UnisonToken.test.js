@@ -19,6 +19,11 @@ function mintedAtTime(x){
     return BigInt(result);
 }
 
+async function getCurrBlockTime(){
+    var block = await web3.eth.getBlock('latest');
+    var result = BigInt(block.timestamp);
+    return result;
+}
 
 contract('UnisonToken', (accounts) =>{
 
@@ -189,13 +194,16 @@ contract('UnisonToken', (accounts) =>{
     describe("Unison token unit tests", async () =>{
 
         let token
+        let deployTime;
 
         before(async () =>{
+            deployTime = await getCurrBlockTime();
+
             token = await UnisonToken.new();
         })
 
         it("Initial amount is correct", async ()=>{
-            var acc0Start = await token.balanceOf(accounts[0]);
+            var acc0Start = await token.totalSupply();
             acc0Start = BigInt(acc0Start);
             assert(acc0Start == mintedAtTime(0), "Initial amount is incorrect");
         })
@@ -209,6 +217,14 @@ contract('UnisonToken', (accounts) =>{
             assert(timeDiff >= 1000, "Block time wasn't adjusted");
         })
 
+        it("balance after some time passed", async ()=>{
+            var currTime = await web3.eth.getBlock('latest').timestamp;
+            
+
+            // var acc0Start = await token.totalSupply();
+            // acc0Start = BigInt(acc0Start);
+            // assert(acc0Start == mintedAtTime(), "Initial amount is incorrect");
+        })
 
 
     })
