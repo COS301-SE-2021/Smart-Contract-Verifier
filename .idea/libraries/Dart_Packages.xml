@@ -44,6 +44,13 @@
             </list>
           </value>
         </entry>
+        <entry key="awesome_loader">
+          <value>
+            <list>
+              <option value="$USER_HOME$/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/awesome_loader-0.0.3/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="boolean_selector">
           <value>
             <list>

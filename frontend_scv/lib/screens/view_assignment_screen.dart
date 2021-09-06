@@ -22,28 +22,16 @@ class ViewAssignmentScreen extends StatefulWidget {
 enum ConditionType { Normal, Payment, Duration }
 
 class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
-  // final _conditionTitleController = TextEditingController();
-  // final _conditionDescriptionController = TextEditingController();
-  // final _paymentConditionAmountController = TextEditingController();
-  // final _durationConditionAmountController = TextEditingController();
   var _isLoading = false;
-  // var _isInit = true;
-
   NegotiationService negotiationService = NegotiationService();
-
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
-     //print('InitState()');
     super.initState();
   }
 
   Widget build(BuildContext context) {
-    //final contractId = ModalRoute.of(context).settings.arguments as String;
-    final testCon = ModalRoute.of(context).settings.arguments as Contract;
-    final loadedContract = testCon;
-
+    final loadedContract =
+        ModalRoute.of(context).settings.arguments as Contract;
     return Scaffold(
       appBar: AppBar(
         title: Text(loadedContract.title),
@@ -66,41 +54,6 @@ class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
                     fontSize: 16,
                   ),
                 ),
-                // TextButton(
-                //   onPressed: () async {
-                //     await _newConditionDialog(contractId);
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.add),
-                //       Text('Add New Condition'),
-                //     ],
-                //   ),
-                // ),
-                // TextButton(
-                //   onPressed: () async {
-                //     await _newSpecialConditionDialog(
-                //         contractId, ConditionType.Payment);
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.add),
-                //       Text('Add New Payment Condition'),
-                //     ],
-                //   ),
-                // ),
-                // TextButton(
-                //   onPressed: () async {
-                //     await _newSpecialConditionDialog(
-                //         contractId, ConditionType.Duration);
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.add),
-                //       Text('Add New Duration Condition'),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -125,11 +78,16 @@ class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
         onPressed: () {
           Navigator.of(context).pushNamed(
             MessagingScreen.routeName,
-            arguments: loadedContract.contractId,
+            arguments: {
+              'agreementId': loadedContract.contractId,
+              'partyA': loadedContract.partyA,
+              'partyB': loadedContract.partyB,
+            },
           );
         },
         label: Text('Agreement Chat'),
         icon: Icon(Icons.chat),
+        backgroundColor: Color.fromRGBO(182, 80, 158, 1),
       ),
     );
   }
