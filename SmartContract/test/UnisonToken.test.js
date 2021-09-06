@@ -5,6 +5,21 @@ const {advanceTimeAndBlock} = require("./helper.js")
 
 require('chai').use(require('chai-as-promised')).should()
 
+const c = BigInt("92592592592592592");
+const m = BigInt("1071673525");
+
+function mintedAtTime(x){
+    x = BigInt(x);
+
+    x += BigInt("86400");
+    if(x > BigInt(86400 * 500))
+        x = BigInt(86400 * 500);
+
+    result = c * x - m*x*x;
+    return BigInt(result);
+}
+
+
 contract('UnisonToken', (accounts) =>{
 
     describe("Unison token unit tests", async () =>{
@@ -177,6 +192,12 @@ contract('UnisonToken', (accounts) =>{
 
         before(async () =>{
             token = await UnisonToken.new();
+        })
+
+        it("Initial amount is correct", async ()=>{
+            var acc0Start = await token.balanceOf(accounts[0]);
+            acc0Start = BigInt(acc0Start);
+            assert(acc0Start == mintedAtTime(0), "Initial amount is incorrect");
         })
 
         it("Testing time passage helper function", async ()=>{
