@@ -72,10 +72,13 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
         uint256 mustExist;
 
         uint256 activeTime = block.timestamp - deployedTime;
+        if(activeTime > 86400 * 500)
+            activeTime = 86400 * 500; //Can't go beyond 500 days
 
         uint256 c = 92592592592592592; // wei/second equivalent to 8000 unt/day
         uint256 m = 1071673525; //deceleration term, such that minting completes after 500 days
 
+        mustExist = c * activeTime - m * (activeTime * activeTime);
 
         //Take difference between it and _totalSupply
         uint256 mintNow = mustExist - totalSupply();
