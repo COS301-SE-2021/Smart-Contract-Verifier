@@ -1,0 +1,16 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 123
+
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "contactListID" : "e111bc8f-ef5a-46fb-89ab-bff8b4aa4f33"
+  }
+}
+----
