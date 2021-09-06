@@ -11,6 +11,9 @@ contract JurorStore{
     uint numJurors;
     address[] jurors;
     mapping(address => uint256) jurorIndex;
+    mapping(address => uint256) strikes;
+
+    uint constant maxStrikes = 3;
 
     // Restricts usage of any function with this modifier to the owner (the Verifier contract)
     modifier onlyOwner(){
@@ -28,6 +31,7 @@ contract JurorStore{
 
     function addJuror(address j) public onlyOwner() returns(uint256){
         require(jurorIndex[j] == 0, "You are already a juror");
+        require(strikes[j] < maxStrikes, "You have been banned from being a juror");
 
         uint256 index = jurors.length;
         jurors.push(j);
@@ -38,6 +42,14 @@ contract JurorStore{
 
     function isJuror(address a) public view returns(bool){
         return (jurorIndex[a] != 0);
+    }
+
+    function getStrikes(address a) public view returns(uint){
+        return strikes[a];
+    }
+
+    function getNumJurors() public view returns(uint){
+        return numJurors;
     }
 
     function removeJuror(address j) public onlyOwner(){
@@ -58,6 +70,20 @@ contract JurorStore{
         jurorIndex[j] = 0;
     }
 
+
+    // record strike against juror. If max strikes has been reached,zremove juror from pool
+    function addStrike(address j) public onlyOwner() returns(bool){
+        // Strikes can be placed against already-banned jurors
+        require(jurorIndex[j] > 0 || strikes[j] > 0, "Specified juror is not currently in the system");
+
+        strikes[j]++;
+        if(strikes[j] >= maxStrikes){
+            removeJuror(j);
+            return true;
+        }
+        return false;
+    }
+
     // Cleared after every execution of assignJury
     // It's only here since mappings can't be declared in a function scope
     mapping(uint =>bool) assignedJurors;
@@ -68,14 +94,23 @@ contract JurorStore{
     function assignJury(uint count, uint seed, address[] calldata noUse)
              public onlyOwner() returns(address[] memory jury){
         require(count > 0, "Jury size must be a positive value");
-        require(count <= numJurors, "Jury size is too big, not enough jurors available");
+
+        uint numAvailableJurors = numJurors;
+        uint noUseLen = noUse.length;
+
+        for(uint i=0; i<noUseLen; i++){
+            if(jurorIndex[noUse[i]] != 0)
+                numAvailableJurors--;
+        }
+
+        require(count <= numAvailableJurors, "Jury size is too big, not enough jurors available");
 
         uint[] memory indices = new uint[](count);
         address[] memory result = new address[](count);
 
         uint val = randomSource.getRandVal(seed);
 
-        uint noUseLen = noUse.length;
+
         for(uint i=0; i<count; i++){
             uint index = val % numJurors + 1;
             bool valid = false;

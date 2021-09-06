@@ -39,6 +39,7 @@ class GetConditionDetailsTest {
     private lateinit var userA : User
     private lateinit var userB : User
     private lateinit var conditionUUID: UUID
+    private lateinit var agreementUUID: UUID
 
     @BeforeEach
     fun beforeEach()
@@ -53,6 +54,9 @@ class GetConditionDetailsTest {
             "test description",
             CreatedDate = Date(),
             MovedToBlockChain = false)
+        agreementUUID = agreement.ContractID
+        agreement.users.add(userA)
+        agreement.users.add(userB)
 
         val condition = Conditions(
             UUID.fromString("967ee13c-dd5d-4de5-adb5-7dd4907fb2cf"),
@@ -65,24 +69,29 @@ class GetConditionDetailsTest {
         condition.proposingUser = userB
         condition.contract = agreement
 
+        whenever(agreementsRepository.existsById(agreementUUID)).thenReturn(true)
+        whenever(agreementsRepository.getById(agreementUUID)).thenReturn(agreement)
+        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
+        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
         whenever(conditionsRepository.existsById(conditionUUID)).thenReturn(true)
         whenever(conditionsRepository.getById(conditionUUID)).thenReturn(condition)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String, agreementID: UUID, conditionID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/get-condition-details")
+            MockMvcRequestBuilders.get("/user/${userID}/agreement/${agreementID}/condition/${conditionID}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andReturn().response
     }
 
     @Test
     fun `GetConditionDetails successful`()
     {
-        val rjson = "{\"ConditionID\" : \"${conditionUUID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementUUID, conditionUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, conditionUUID.toString())
@@ -91,9 +100,15 @@ class GetConditionDetailsTest {
     @Test
     fun `GetConditionDetails failure due to condition not existing`()
     {
-        val rjson = "{\"ConditionID\" : \"d763f385-c91a-4a3b-ac95-25dcfc22afe9\"}"
+        val response = requestSender(userA.publicWalletID, agreementUUID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
-        val response = requestSender(rjson)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+    }
+
+    @Test
+    fun `GetConditionDetails failure due to agreement not existing`()
+    {
+        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"), conditionUUID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

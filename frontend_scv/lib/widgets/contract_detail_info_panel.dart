@@ -101,7 +101,6 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
         widget._sealable = true;
       });
     }
-
     return stillPending ? Text(pendingMessage) : Container();
   }
 }

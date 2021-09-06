@@ -52,51 +52,26 @@ class CreateContactListTest {
         whenever(contactListRepository.save(any<ContactList>())).thenReturn(contactList)
     }
 
-    private fun requestSender(rjson: String): MockHttpServletResponse {
+    private fun requestSender(userID: String, contactListName: String): MockHttpServletResponse {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/contactlist/create-contact-list")
+            MockMvcRequestBuilders.post("/user/${userID}/contactList/${contactListName}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)
         ).andReturn().response
     }
 
     @Test
     fun `createContractList successful`()
     {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\",\"ContactListName\" : \"TestName\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, "contact list")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, contactList.contactListID!!.toString())
     }
 
     @Test
-    fun `createContractList failed due to contact list name being empty`()
-    {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\",\"ContactListName\" : \"\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
-    fun `createContractList failed due to user being empty`()
-    {
-        val rjson = "{\"UserID\" : \"\",\"ContactListName\" : \"TestName\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `createContractList failed due to user not existing`()
     {
-        val rjson = "{\"UserID\" : \"random user\",\"ContactListName\" : \"TestName\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender("other user", "test name")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -104,9 +79,7 @@ class CreateContactListTest {
     @Test
     fun `createContractList failed due to a contact list already existing with name and user`()
     {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\",\"ContactListName\" : \"broken\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, "broken")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
