@@ -1,7 +1,0 @@
-[source,options="nowrap"]
-----
-{
-  "Status" : "FAILED",
-  "Message" : "Agreement does not exist in database"
-}
-----
