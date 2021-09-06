@@ -6,6 +6,7 @@ import 'package:unison/models/global.dart';
 import 'package:unison/models/jury.dart';
 import 'package:unison/services/Blockchain/tokenService.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:unison/services/Server/apiResponse.dart';
 import 'package:web3dart/credentials.dart';
 import 'backendAPI.dart';
 import '../../models/contract.dart';
@@ -19,18 +20,12 @@ class JudgeService {
   Future<List<Contract>> getInvolvedAgreements() async {
     //Get all agreements where a user is the judge
 
-    var response;
-    try {
-      response = await _api.getData('/judge/${Global.userAddress}/agreement');
+    ApiResponse response = await _api.getData('/judge/${Global.userAddress}/agreement');
 
-      if (response['Status'] != 'SUCCESSFUL')
-        throw Exception('Agreements for judge could not be retrieved');
-    } catch (e) {
-      print(e);
-      throw (e);
-    }
+    if (!response.successful)
+      throw Exception('Agreements for judge could not be retrieved');
 
-    List<dynamic> jsonList = ((response['ResponseObject']['AgreementList']));
+    List<dynamic> jsonList = ((response.result['AgreementList']));
     List<Contract> ret = [];
 
     for (int i = 0; i < jsonList.length; i++) {
