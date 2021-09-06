@@ -1,6 +1,7 @@
 const { assert } = require('chai')
 
 const UnisonToken = artifacts.require("UnisonToken")
+const {advanceTimeAndBlock} = require("./helper.js")
 
 require('chai').use(require('chai-as-promised')).should()
 
@@ -165,6 +166,28 @@ contract('UnisonToken', (accounts) =>{
 
             assert.equal(allowAfter, finalAmount);
 
+        })
+
+    })
+
+
+    describe("Unison token unit tests", async () =>{
+
+        let token
+
+        before(async () =>{
+            token = await UnisonToken.new()
+        })
+
+        it("Testing time passage helper function", async ()=>{
+          
+            var originalBlock = await web3.eth.getBlock('latest');
+            console.log(originalBlock);
+            var newBlock = await advanceTimeAndBlock(1000);
+            console.log(newBlock);
+            var timeDiff = newBlock.timestamp - originalBlock.timestamp;
+            console.log(timeDiff);
+          
         })
 
     })

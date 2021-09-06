@@ -67,6 +67,10 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
         _;
     }
 
+
+    // Tokens will be minted to the deploying address at a linearly decreasing
+    // rate, which reaches 0 after 500 days. At the end, 2 million tokens
+    // will have been minted.
     function receiveMinted() public onlyMinter(){
         //Calculate how much must be minted by now
         uint256 mustExist;
