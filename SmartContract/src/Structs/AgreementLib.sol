@@ -48,12 +48,81 @@ library AgreementLib{
         uint numPayments;
     }
 
+    function voteResolution(Agreement storage agreement, AgreementLib.Vote vote) external{
+                require(agreement.resolutionTime < block.timestamp, "E7");
+
+        require(agreement.state == AgreementLib.AgreementState.ACTIVE
+            || agreement.state == AgreementLib.AgreementState.COMPLETED, "E8");
+
+        uint index = 0;
+        // index starts at 1, 0 means not included
+        if(agreement.party1 == tx.origin)
+            index = 1;
+        else if(agreement.party2 == tx.origin)
+            index = 2;
+
+        require(index > 0, "E9");
+
+        if(index == 1){
+            require(agreement.party1Vote == AgreementLib.Vote.NONE, "E10");
+            agreement.party1Vote = vote;
+        }
+        else{
+            require(agreement.party2Vote == AgreementLib.Vote.NONE, "E10");
+             agreement.party2Vote = vote;
+        }
+    }
+
     struct Jury{
         bool assigned;
         uint deadline;
         mapping(uint => address) jurors;
         mapping(uint => Vote) votes;
         uint numJurors;
+
+        mapping(uint => string) evidenceFile;
+        mapping(uint => uint256) evidenceHash;
+        uint numFiles;
+
+    }
+
+    function addEvidence(Jury storage jury, string calldata file, uint256 fileHash) external{
+        jury.evidenceFile[jury.numFiles] = file;
+        jury.evidenceHash[jury.numFiles] = fileHash;
+        jury.numFiles++;
+    }
+
+    //return indicates if it's time to make a decision
+    function juryVote(Jury storage jury, AgreementLib.Vote vote) external returns(bool){
+        // Yes means pay out as normal, no means refund all payments
+        require(jury.assigned, "E11");
+
+        // Get index of juror
+        int index = -1;
+
+        for(uint i=0; i<jury.numJurors; i++){
+            if(jury.jurors[i] == msg.sender){
+                index = int(i);
+            }
+        }
+ 
+        require(index >= 0, "E12");
+        // If the following two conditions hold, then the agreement also can't be closed.
+        require(jury.deadline > block.timestamp, "E13");
+        require(jury.votes[uint(index)] == AgreementLib.Vote.NONE, "E10");
+
+        // Set vote
+        jury.votes[uint(index)] = vote;
+
+        // Determine if it's time to make decision        
+        if(jury.deadline > block.timestamp){
+            // If deadline hasn't been reached and there are outstanding votes, return
+            for(uint i=0; i < jury.numJurors; i++){
+                if(jury.votes[i] == AgreementLib.Vote.NONE)
+                    return false;
+            }
+        }
+        return true;
     }
 
     // Version of Agreement to be used in functions as return value
@@ -78,6 +147,28 @@ library AgreementLib{
         PaymentInfoLib.PaymentInfo[] payments;
     }
 
+    struct ReturnEvidence{
+        string[] url;
+        uint256[] evidenceHash;
+    }
+
+    function makeReturnEvidence(Jury storage jury) external view returns(ReturnEvidence memory){
+        ReturnEvidence memory result;
+        if(jury.numFiles <= 0)
+            return result;
+        
+        result.url = new string[](jury.numFiles);
+        result.evidenceHash = new uint256[](jury.numFiles);
+        
+        for(uint i=0; i<jury.numFiles; i++){
+            result.url[i] = jury.evidenceFile[i];
+            result.evidenceHash[i] = jury.evidenceHash[i];
+        }
+
+        return result;
+    }
+
+
     struct ReturnJury{
         bool assigned;
         uint deadline;
@@ -85,7 +176,7 @@ library AgreementLib{
         Vote[] votes;
     }
 
-    function makeReturnAgreement(Agreement storage agreement) view internal returns(ReturnAgreement memory){
+    function makeReturnAgreement(Agreement storage agreement) external view returns(ReturnAgreement memory){
         ReturnAgreement memory result;
 
         result.uuid = agreement.uuid;
@@ -112,7 +203,7 @@ library AgreementLib{
         return result;
     }
 
-    function makeReturnJury(Jury storage jury) view internal returns(ReturnJury memory){
+    function makeReturnJury(Jury storage jury) external view returns(ReturnJury memory){
         ReturnJury memory result;
 
         result.assigned = jury.assigned;

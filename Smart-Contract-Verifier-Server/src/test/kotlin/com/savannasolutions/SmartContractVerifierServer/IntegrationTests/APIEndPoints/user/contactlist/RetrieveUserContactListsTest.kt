@@ -62,20 +62,18 @@ class RetrieveUserContactListsTest {
         whenever(contactListRepository.getAllByOwner(userA)).thenReturn(contactListList)
     }
 
-    private fun requestSender(rjson: String): MockHttpServletResponse {
+    private fun requestSender(userID: String): MockHttpServletResponse {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/contactlist/retrieve-user-contact-list")
+            MockMvcRequestBuilders.get("/user/${userID}/contactList")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)
         ).andReturn().response
     }
 
     @Test
     fun `RetrieveUserContactLists successful`()
     {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, contactListA.contactListID!!.toString())
@@ -83,21 +81,9 @@ class RetrieveUserContactListsTest {
     }
 
     @Test
-    fun `RetrieveUserContactLists failed user id is empty`()
-    {
-        val rjson = "{\"UserID\" : \"\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `RetrieveUserContactLists failed user does not exist`()
     {
-        val rjson = "{\"UserID\" : \"failed user\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender("other user")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -105,9 +91,7 @@ class RetrieveUserContactListsTest {
     @Test
     fun `RetrieveUserContactLists successful but list is empty`()
     {
-        val rjson = "{\"UserID\" : \"${userB.publicWalletID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userB.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, "ListInfo\":[]")

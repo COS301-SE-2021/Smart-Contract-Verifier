@@ -25,7 +25,7 @@ class HelloTest{
     @Test
     fun `MVC call hello`()
     {
-        val response = mockMvc.perform(MockMvcRequestBuilders.get("/negotiation/hello"))
+        val response = mockMvc.perform(MockMvcRequestBuilders.get("/hello"))
         response.andExpect(MockMvcResultMatchers.status().isOk)
         response.andExpect(MockMvcResultMatchers.content().string("HELLO!"))
     }

@@ -43,11 +43,12 @@ class GetMessageDetailTest {
 
     lateinit var message : Messages
 
+    val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
+    val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
+
     @BeforeEach
     fun beforeEach()
     {
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
 
         val agreementA = Agreements(
             UUID.fromString("3c5657d6-e302-48d3-b9df-dcfccec97503"),
@@ -74,20 +75,18 @@ class GetMessageDetailTest {
         whenever(messagesStatusRepository.getAllByMessage(message)).thenReturn(messageStatusList)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String, messageID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/messenger/get-message-detail")
+            MockMvcRequestBuilders.get("/user/${userID}/message/${messageID}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andReturn().response
     }
 
     @Test
     fun `GetMessageDetail successful`()
     {
-        val rjson = "{\"MessageID\" : \"${message.messageID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, message.messageID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, message.messageID.toString())
@@ -97,9 +96,7 @@ class GetMessageDetailTest {
     @Test
     fun `GetMessageDetail failed message does not exist`()
     {
-        val rjson = "{\"MessageID\" : \"689de7e1-103a-4131-8a5f-000d46b800ae\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
