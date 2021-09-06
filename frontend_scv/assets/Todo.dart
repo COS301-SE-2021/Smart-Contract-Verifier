@@ -10,5 +10,7 @@
 * Pay Platform once accepted on blockchain
 * Duration input -> DatePicker
 * Jury chat --> Double Check
+* In the contacts screen, account for uppercase to lowercase walletID conversion
+* Also restyle contacts screen.
 * TODO: Go through all TODO's
 * */

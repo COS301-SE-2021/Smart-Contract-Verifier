@@ -35,11 +35,13 @@ class MessageService {
     String path = '$_reqPath/' + (byAgreement? 'agreement/$id/message': 'message');
     ApiResponse response = await _api.getData(path);
 
+    print ('Res length: '+response.result.length.toString());
+
     if (!response.successful)
       throw Exception('Messages could not be retrieved');
 
     List<Message> ret = [];
-    for (int i = 0; i < response.result.length; i++) {
+    for (int i = 0; i < response.result['Messages'].length; i++) {
       ret.add(Message.fromJSON((response.result['Messages'][i])));
     }
 
@@ -74,20 +76,13 @@ class MessageService {
 
     while (true) {
       await Future.delayed(interval);
-      final response =
-          await _api.postData(_reqPath + 'get-all-messages-by-agreement', body);
-
-      if (!response.successful)
-        throw Exception('Messages could not be retrieved');
+      //final response =
+        //  await _api.postData(_reqPath + 'get-all-messages-by-agreement', body);
 
 
-      List<Message> yeildSend = [];
-      for (int i = 0; i < response['Messages'].length; i++) {
-        //Yield any unread messages
-        // yield Message.fromJSON((response['Messages'][i]));
-        yeildSend.add(Message.fromJSON((response['Messages'][i])));
-
-      }
+      print ('Before');
+      List<Message> yeildSend = List.from(await _getMessageHandler(id, true));
+      print ('Done');
       yield yeildSend;
     }
   }

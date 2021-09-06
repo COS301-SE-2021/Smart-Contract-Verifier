@@ -118,6 +118,6 @@ class NegotiationService {
 
   //The api will be updated with a new 'seal flow'
   Future<void> sealAgreement(Contract con) async {
-    return; //To be rewritten soon.
+    await _uniServ.saveAgreement(con);
   }
 }

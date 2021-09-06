@@ -78,6 +78,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                 // print('Press Trigger');
                 showLoaderDialog(context);
                 try {
+                  print ('Calling metamask');
                   await widget._negotiationService
                       .sealAgreement(widget._agreement);
                   AgreementState as;
@@ -87,6 +88,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                     await Future.delayed(Duration(seconds: 2));
                     widget._agreement = await widget._commonService
                         .getAgreement(widget._agreement.contractId);
+                    print ('ID: ' +widget._agreement.blockchainId.toString() );
                     if (widget._agreement.blockchainId == null ||
                         widget._agreement.blockchainId == BigInt.from(-1)) {
                       print('No Blockchain ID yet...');
