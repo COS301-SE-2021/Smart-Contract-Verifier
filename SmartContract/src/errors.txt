@@ -1,7 +1,7 @@
 E1      Specified agreement has no jury
 E2      You are not on this jury
 E3      Mismatch between tokens and amounts
-E4      Agreement state invalid for adding payments
+E4      Agreement state invalid
 E5      Insufficient allowance on a specified payment
 E6      Agreement must be contested
 E7      It's too soon to vote

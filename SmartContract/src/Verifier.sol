@@ -84,6 +84,12 @@ contract Verifier{
         emit AcceptAgreement(agreeID);
     }
 
+    function rejectAgreement(uint agreeID) public inAgreement(agreeID){
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
+        _refundAgreement(agreeID);
+        agreements[agreeID].state = AgreementLib.AgreementState.REJECTED;
+    }
+
     // Each payment must have the allowance ready, it will be transferred immediately
     function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
         require(tokens.length == amount.length, "E3");
