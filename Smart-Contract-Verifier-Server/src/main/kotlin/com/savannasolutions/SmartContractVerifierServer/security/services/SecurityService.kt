@@ -98,6 +98,10 @@ class SecurityService(val userRepository: UserRepository,
             if(match){
                 //val secretKey = Keys.hmacShaKeyFor(securityConfig.secretKey.encodeToByteArray())
                 val jwtToken = Jwts.builder().setSubject(loginRequest.userId).setExpiration(Date(System.currentTimeMillis() + 10800000)).compact()
+                val newNonce = ThreadLocalRandom.current().nextLong(1000000000, 9999999999)
+                val user = userRepository.getById(loginRequest.userId)
+                user.nonce = newNonce
+                userRepository.save(user)
                 return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)
             }
         }
