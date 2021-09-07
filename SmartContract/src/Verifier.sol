@@ -136,6 +136,9 @@ contract Verifier{
                 emit ActiveAgreement(agreeID);
             }
         }
+        else{
+            require(false, "E17");
+        }
 
         feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
