@@ -5,12 +5,12 @@ import 'package:unison/models/contract.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/JudgeDetailInfoPanel.dart';
-import 'package:unison/widgets/judge_conditions_panel.dart';
+import 'package:unison/widgets/jury/JudgeDetailInfoPanel.dart';
+import 'package:unison/widgets/jury/judge_conditions_panel.dart';
 
 import '../models/contracts.dart';
-import '../widgets/contract_conditions_panel.dart';
-import '../widgets/contract_detail_info_panel.dart';
+import '../widgets/agreement/contract_conditions_panel.dart';
+import '../widgets/agreement/contract_detail_info_panel.dart';
 
 class ViewAssignmentScreen extends StatefulWidget {
   static const routeName = '/view-assignment';
