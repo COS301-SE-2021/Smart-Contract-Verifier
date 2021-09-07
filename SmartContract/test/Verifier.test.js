@@ -119,11 +119,19 @@ contract('Verifier', (accounts) =>{
             token.approve(verifier.address, 10000, {from: accounts[3]});
             verifier.addJuror({from: accounts[3]});
 
+            var balPre = await token.balanceOf(accounts[3]);
+            balPre = BigInt(balPre);
+
             isJ = await verifier.isJuror(accounts[3]);
             assert(isJ == true, "juror seen as non-juror");
 
             verifier.removeJuror({from: accounts[3]});
             
+            var balPost = await token.balanceOf(accounts[3]);
+            balPost = BigInt(balPost);
+            assert(balPost == balPre + BigInt(10000), "Staked tokens weren't refunded")
+
+
             isJ = await verifier.isJuror(accounts[3]);
             assert(isJ == false, "removed juror still seen as juror");
 
