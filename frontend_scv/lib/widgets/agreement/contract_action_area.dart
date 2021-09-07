@@ -6,7 +6,7 @@ import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/commonService.dart';
 import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/waiting_for_blockchain_text.dart';
+import 'package:unison/widgets/miscellaneous/waiting_for_blockchain_text.dart';
 
 class ContractActionArea extends StatefulWidget {
   Contract _agreement;
@@ -78,7 +78,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                 // print('Press Trigger');
                 showLoaderDialog(context);
                 try {
-                  print ('Calling metamask');
+                  print('Calling metamask');
                   await widget._negotiationService
                       .sealAgreement(widget._agreement);
                   AgreementState as;
@@ -88,7 +88,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                     await Future.delayed(Duration(seconds: 2));
                     widget._agreement = await widget._commonService
                         .getAgreement(widget._agreement.contractId);
-                    print ('ID: ' +widget._agreement.blockchainId.toString() );
+                    print('ID: ' + widget._agreement.blockchainId.toString());
                     if (widget._agreement.blockchainId == null ||
                         widget._agreement.blockchainId == BigInt.from(-1)) {
                       print('No Blockchain ID yet...');

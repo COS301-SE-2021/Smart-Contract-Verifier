@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/widgets/jdenticon_svg.dart';
+import 'package:unison/widgets/miscellaneous/jdenticon_svg.dart';
 
-import '../models/contract.dart';
-import '../screens/view_contract_screen.dart';
+import '../../models/contract.dart';
+import '../../screens/view_contract_screen.dart';
 
 class ContractItem extends StatelessWidget {
   @override

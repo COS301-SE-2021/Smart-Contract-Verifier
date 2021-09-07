@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/contract_action_area.dart';
-import 'package:unison/widgets/jdenticon_svg.dart';
+import 'package:unison/widgets/agreement/contract_action_area.dart';
+import 'package:unison/widgets/miscellaneous/jdenticon_svg.dart';
 
-import '../models/contract.dart';
+import '../../models/contract.dart';
 
 class ContractDetailInfoPanel extends StatefulWidget {
   final Contract _contract;

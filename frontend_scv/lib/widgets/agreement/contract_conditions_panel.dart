@@ -1,8 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/condition_item.dart';
-import '../models/contract.dart';
+import 'package:unison/widgets/agreement/condition_item.dart';
+import '../../models/contract.dart';
 
 class ContractConditionsPanel extends StatelessWidget {
   final Contract _contract;
