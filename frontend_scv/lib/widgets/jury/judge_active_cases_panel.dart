@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/commonService.dart';
 import 'package:unison/services/Server/judgeService.dart';
-import 'package:unison/widgets/judge_active_contract_item.dart';
+import 'package:unison/widgets/jury/judge_active_contract_item.dart';
 
 class JudgeActiveCasesPanel extends StatefulWidget {
   @override
@@ -18,10 +18,10 @@ class _JudgeActiveCasesPanelState extends State<JudgeActiveCasesPanel> {
 
   @override
   Widget build(BuildContext context) {
-     JudgeService judgeService = JudgeService();
+    JudgeService judgeService = JudgeService();
     CommonService commonMock = CommonService();
     return FutureBuilder(
-         future: judgeService.getInvolvedAgreements(),
+        future: judgeService.getInvolvedAgreements(),
         //future: commonMock.getInvolvedAgreements(Global.userAddress),
         builder: (context, agreementsSnapshot) {
           return agreementsSnapshot.connectionState != ConnectionState.done
