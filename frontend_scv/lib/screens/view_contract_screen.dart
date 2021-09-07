@@ -1,6 +1,7 @@
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/models/contract.dart';
+import 'package:unison/screens/evidence_screen.dart';
 import 'package:unison/services/Server/commonService.dart';
 import 'package:unison/widgets/agreement/contract_condition_actions_panel.dart';
 import 'package:unison/widgets/agreement/contract_conditions_panel.dart';
@@ -105,7 +106,16 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton.extended(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                EvidenceScreen.routeName,
+                arguments: {
+                  'agreementId': agreementId,
+                  'partyA': pA,
+                  'partyB': pB,
+                },
+              );
+            },
             label: Text('Evidence'),
             icon: Icon(Icons.inventory_2),
             backgroundColor: Color.fromRGBO(50, 183, 196, 1),
