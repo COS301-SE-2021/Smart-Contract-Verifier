@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/judgeService.dart';
-import 'package:unison/widgets/judge_active_cases_panel.dart';
+import 'package:unison/widgets/jury/judge_active_cases_panel.dart';
 
-import '../widgets/app_drawer.dart';
+import '../widgets/miscellaneous/app_drawer.dart';
 
 class JudgeDutyScreen extends StatelessWidget {
   static const routeName = '/judge-duty';
