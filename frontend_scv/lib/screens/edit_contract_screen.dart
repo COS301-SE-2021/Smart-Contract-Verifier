@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/models/global.dart';
-import 'package:unison/widgets/funky_text_widget.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 import '../models/contract.dart';
 import '../models/contracts.dart';
