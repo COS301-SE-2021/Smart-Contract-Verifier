@@ -7,14 +7,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:unison/models/contact.dart';
 import 'package:unison/services/Server/contactService.dart';
 
-import '../models/contract.dart';
-import '../providers/auth.dart';
-import '../screens/view_contract_screen.dart';
+import '../../models/contract.dart';
+import '../../providers/auth.dart';
+import '../../screens/view_contract_screen.dart';
 
 //Be aware of confusion with Contract (with an r in the middle)
 class ContactItem extends StatefulWidget {
-
-
   ContactItem(Contact c, String listId) {
     address = c.address;
     alias = c.alias;
@@ -48,34 +46,42 @@ class _ContactItemState extends State<ContactItem> {
       hues: [205],
     );
 
-
-    return deleted? ListTile(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
-      tileColor: Color.fromRGBO(186, 6, 48, 0.5019607843137255),
-      title: Text('Removed User'),) :
-     ListTile(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
-      tileColor: Color.fromRGBO(12, 147, 136, 0.5019607843137255),
-      title: Text(widget.alias),
-      subtitle: Text(widget.address),
-      leading:
-      SvgPicture.string(
-        rawSvg,
-        fit: BoxFit.fill,
-        height: 32,
-        width: 32,
-      ),
-      trailing: GestureDetector(onTap: () async {
-
-        ContactService cs = ContactService();
-        await cs.removeUser(widget.address, widget.list);
-        setState(() {
-          deleted = true;
-          build(context);
-        });
-        },
-        child: Icon(Icons.delete, size: 50,),
-      ),
-    );
+    return deleted
+        ? ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            tileColor: Color.fromRGBO(186, 6, 48, 0.5019607843137255),
+            title: Text('Removed User'),
+          )
+        : ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            tileColor: Color.fromRGBO(12, 147, 136, 0.5019607843137255),
+            title: Text(widget.alias),
+            subtitle: Text(widget.address),
+            leading: SvgPicture.string(
+              rawSvg,
+              fit: BoxFit.fill,
+              height: 32,
+              width: 32,
+            ),
+            trailing: GestureDetector(
+              onTap: () async {
+                ContactService cs = ContactService();
+                await cs.removeUser(widget.address, widget.list);
+                setState(() {
+                  deleted = true;
+                  build(context);
+                });
+              },
+              child: Icon(
+                Icons.delete,
+                size: 50,
+              ),
+            ),
+          );
 
     // return GestureDetector(
     //   onTap: () {

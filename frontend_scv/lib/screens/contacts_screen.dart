@@ -1,10 +1,10 @@
 //This file will eventually be more professional
 
 import 'package:flutter/material.dart';
-import 'package:unison/widgets/contactList_grid.dart';
-import 'package:unison/widgets/contact_grid.dart';
-import '../widgets/app_drawer.dart';
-import '../widgets/contracts_grid.dart';
+import 'package:unison/widgets/contact/contactList_grid.dart';
+import 'package:unison/widgets/contact/contact_grid.dart';
+import '../widgets/miscellaneous/app_drawer.dart';
+import '../widgets/agreement/contracts_grid.dart';
 
 class ContactScreen extends StatelessWidget {
   static const routeName = '/my-contacts';
@@ -20,5 +20,4 @@ class ContactScreen extends StatelessWidget {
       ),
     );
   }
-
 }
