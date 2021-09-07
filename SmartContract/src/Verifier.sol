@@ -184,14 +184,11 @@ contract Verifier{
     }
 
     function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+        // Cannot be called if other party already voted no
         AgreementLib.voteResolution(agreements[agreeID], vote);
 
         // update state after vote
-        if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
-                agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
-            if(juries[agreeID].assigned)
-                return; //Already has jury
-
+        if(vote == AgreementLib.Vote.NO){
             // If at least one party voted no, agreement becomes contested
             _assignJury(agreeID);
         }
