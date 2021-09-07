@@ -5,9 +5,9 @@ import 'package:unison/screens/contacts_screen.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
 
 import 'package:flutter/services.dart';
-import 'package:unison/widgets/funky_text_widget.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
-import '../providers/auth.dart';
+import '../../providers/auth.dart';
 
 class AppDrawer extends StatelessWidget {
   final snackBar = SnackBar(
