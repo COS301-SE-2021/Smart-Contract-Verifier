@@ -15,7 +15,7 @@ enum ReqType {
 }
 
 class ApiInteraction {
-  final String baseUrl =
+  final String _baseUrl =
       "http://localhost:8080"; //Url where the backend is deployed
   static final ApiInteraction api =
   ApiInteraction._internal(); //Only instance of the class
@@ -73,8 +73,8 @@ class ApiInteraction {
     var response;
     try {
       response = await RetryOptions(maxAttempts: 5).retry(
-            () => (method == ReqType.GET) ? toCall(Uri.parse(baseUrl + url),
-            headers: headers) :toCall(Uri.parse(baseUrl + url),
+            () => (method == ReqType.GET) ? toCall(Uri.parse(_baseUrl + url),
+            headers: headers) :toCall(Uri.parse(_baseUrl + url),
           headers: headers, body: jsonEncode(jsn),)
             .timeout(Duration(seconds: 2)),
         retryIf: (e) => e is SocketException || e is TimeoutException,
@@ -96,7 +96,7 @@ class ApiInteraction {
 
   Future</*ApiResponse*/void> filePost(String url, MultipartFile file) async {
 
-    var req = MultipartRequest('POST', Uri.parse(url));
+    var req = MultipartRequest('POST', Uri.parse(_baseUrl + url));
     req.files.add(
       file,
     );
