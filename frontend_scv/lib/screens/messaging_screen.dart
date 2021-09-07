@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';
-import 'package:unison/widgets/funky_text_widget.dart';
-import 'package:unison/widgets/message_input_panel.dart';
-import 'package:unison/widgets/messages_panel.dart';
+import 'package:unison/widgets/messaging/message_input_panel.dart';
+import 'package:unison/widgets/messaging/messages_panel.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 class MessagingScreen extends StatefulWidget {
   @override
@@ -95,7 +95,6 @@ class _MessagingScreenState extends State<MessagingScreen> {
           ),
           Expanded(
             flex: 6,
-            // child: MessagesPanel(agreementId, _isInit),
             child: Padding(
               padding: EdgeInsets.symmetric(
                       vertical: 0,
