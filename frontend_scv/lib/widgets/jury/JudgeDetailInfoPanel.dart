@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/judgeService.dart';
-import '../models/jury.dart';
+import '../../models/jury.dart';
 
-import '../models/contract.dart';
+import '../../models/contract.dart';
 
 class JudgeDetailInfoPanel extends StatefulWidget {
   final Contract _contract;
