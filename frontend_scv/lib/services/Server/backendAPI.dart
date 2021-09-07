@@ -93,4 +93,15 @@ class ApiInteraction {
     print ('Ended');
     return ApiResponse.fromJSON(jsonDecode(response.body));
   }
+
+  Future</*ApiResponse*/void> filePost(String url, MultipartFile file) async {
+
+    var req = MultipartRequest('POST', Uri.parse(url));
+    req.files.add(
+      file,
+    );
+
+    final res = await req.send();
+    //TODO: Implement response based on what res is.
+  }
 }
