@@ -4,7 +4,7 @@ import 'package:unison/screens/view_assignment_screen.dart';
 import 'package:unison/screens/view_contract_screen.dart';
 
 // import '../providers/auth.dart';
-import '../models/contract.dart';
+import '../../models/contract.dart';
 // TODO: import '../screens/view_case_contract_screen.dart';
 
 class JudgeActiveContractItem extends StatelessWidget {
