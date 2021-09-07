@@ -2,10 +2,10 @@ import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/models/contract.dart';
 import 'package:unison/services/Server/commonService.dart';
-import 'package:unison/widgets/contract_condition_actions_panel.dart';
-import 'package:unison/widgets/contract_conditions_panel.dart';
-import 'package:unison/widgets/contract_detail_info_panel.dart';
-import 'package:unison/widgets/funky_text_widget.dart';
+import 'package:unison/widgets/agreement/contract_condition_actions_panel.dart';
+import 'package:unison/widgets/agreement/contract_conditions_panel.dart';
+import 'package:unison/widgets/agreement/contract_detail_info_panel.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 import 'messaging_screen.dart';
 
@@ -100,20 +100,35 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
             },
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.of(context).pushNamed(
-            MessagingScreen.routeName,
-            arguments: {
-              'agreementId': agreementId,
-              'partyA': pA,
-              'partyB': pB,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: () {},
+            label: Text('Evidence'),
+            icon: Icon(Icons.inventory_2),
+            backgroundColor: Color.fromRGBO(50, 183, 196, 1),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                MessagingScreen.routeName,
+                arguments: {
+                  'agreementId': agreementId,
+                  'partyA': pA,
+                  'partyB': pB,
+                },
+              );
             },
-          );
-        },
-        label: Text('Agreement Chat'),
-        icon: Icon(Icons.chat),
-        backgroundColor: Color.fromRGBO(182, 80, 158, 1),
+            label: Text('Agreement Chat'),
+            icon: Icon(Icons.chat),
+            backgroundColor: Color.fromRGBO(182, 80, 158, 1),
+          ),
+        ],
       ),
     );
   }
