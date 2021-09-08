@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "ConditionTitle" : "",
+  "ConditionDescription" : "This is a postman test"
+}
+----

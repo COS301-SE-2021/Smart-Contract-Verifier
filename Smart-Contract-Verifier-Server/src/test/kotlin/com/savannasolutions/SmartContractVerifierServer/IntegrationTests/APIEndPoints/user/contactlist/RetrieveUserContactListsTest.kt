@@ -1,27 +1,34 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.user.contactlist
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserContactListResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/get/user/userID/contactList")
 class RetrieveUserContactListsTest {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -62,18 +69,34 @@ class RetrieveUserContactListsTest {
         whenever(contactListRepository.getAllByOwner(userA)).thenReturn(contactListList)
     }
 
-    private fun requestSender(userID: String): MockHttpServletResponse {
+    private fun requestSender(userID: String,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String): MockHttpServletResponse {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/contactList")
                 .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors)
+            )
         ).andReturn().response
     }
 
     @Test
     fun `RetrieveUserContactLists successful`()
     {
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(RetrieveUserContactListResponse.response())
+        //End of Documentation
 
-        val response = requestSender(userA.publicWalletID)
+        val response = requestSender(userA.publicWalletID,
+            fieldDescriptorResponse,
+            "RetrieveUserContactLists successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, contactListA.contactListID!!.toString())
@@ -83,7 +106,14 @@ class RetrieveUserContactListsTest {
     @Test
     fun `RetrieveUserContactLists failed user does not exist`()
     {
-        val response = requestSender("other user")
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of Documentation
+
+        val response = requestSender("other user",
+            fieldDescriptorResponse,
+            "RetrieveUserContactLists failed user does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -91,7 +121,15 @@ class RetrieveUserContactListsTest {
     @Test
     fun `RetrieveUserContactLists successful but list is empty`()
     {
-        val response = requestSender(userB.publicWalletID)
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(RetrieveUserContactListResponse.responseEmpty())
+        //End of Documentation
+
+        val response = requestSender(userB.publicWalletID,
+            fieldDescriptorResponse,
+            "RetrieveUserContactLists successful but list is empty")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, "ListInfo\":[]")

@@ -1,0 +1,16 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 119
+
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "messageID" : "e6f884f4-8d9b-4efb-be31-c8ad5532f168"
+  }
+}
+----

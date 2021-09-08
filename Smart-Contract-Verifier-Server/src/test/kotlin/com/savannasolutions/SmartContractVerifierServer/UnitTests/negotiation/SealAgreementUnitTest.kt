@@ -19,7 +19,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.time.Duration
 import java.util.*
-import kotlin.collections.ArrayList
 
 internal class SealAgreementUnitTest {
     private val conditionsRepository : ConditionsRepository = mock()

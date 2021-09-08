@@ -1,8 +1,8 @@
 package com.savannasolutions.SmartContractVerifierServer.user.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
-import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListIDContactListNameResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListAliasWalletResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ContactListIDContactListNameResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
@@ -10,11 +10,12 @@ import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListP
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import com.savannasolutions.SmartContractVerifierServer.user.requests.*
-import com.savannasolutions.SmartContractVerifierServer.user.responses.*
+import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserToContactListRequest
+import com.savannasolutions.SmartContractVerifierServer.user.responses.CreateContactListResponse
+import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveContactListResponse
+import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserContactListResponse
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Service
 class ContactListService(   val contactListRepository: ContactListRepository,

@@ -1,0 +1,51 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 1462
+
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "Messages" : [ {
+      "message" : "TestMessageA",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "messageStatuses" : [ {
+        "readDate" : "2021-09-06T22:25:54.667+00:00",
+        "read" : true,
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+      } ],
+      "messageID" : "16e54fea-d3e0-4547-b005-98bd68393504",
+      "sendingDate" : "2021-09-06T22:25:54.667+00:00",
+      "sendingUser" : {
+        "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
+      }
+    }, {
+      "message" : "TestMessageB",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "messageStatuses" : [ {
+        "readDate" : null,
+        "read" : false,
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+      } ],
+      "messageID" : "92617bf4-02ad-418d-af7a-ba6d46136420",
+      "sendingDate" : "2021-09-06T22:25:54.667+00:00",
+      "sendingUser" : {
+        "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
+      }
+    }, {
+      "message" : "Test 3",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "messageStatuses" : [ ],
+      "messageID" : "62adddbc-12e8-46ca-968e-6c88ee7f0d61",
+      "sendingDate" : "2021-09-06T22:25:54.667+00:00",
+      "sendingUser" : {
+        "publicWalletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+      }
+    } ]
+  }
+}
+----

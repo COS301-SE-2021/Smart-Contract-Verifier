@@ -1,0 +1,9 @@
+[source,options="nowrap"]
+----
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "messageID" : "e6f884f4-8d9b-4efb-be31-c8ad5532f168"
+  }
+}
+----

@@ -1,8 +1,10 @@
 package com.savannasolutions.SmartContractVerifierServer.user.controllers
 
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
-import com.savannasolutions.SmartContractVerifierServer.user.requests.*
-import com.savannasolutions.SmartContractVerifierServer.user.responses.*
+import com.savannasolutions.SmartContractVerifierServer.user.requests.AddUserToContactListRequest
+import com.savannasolutions.SmartContractVerifierServer.user.responses.CreateContactListResponse
+import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveContactListResponse
+import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserContactListResponse
 import com.savannasolutions.SmartContractVerifierServer.user.services.ContactListService
 import org.springframework.web.bind.annotation.*
 import java.util.*
