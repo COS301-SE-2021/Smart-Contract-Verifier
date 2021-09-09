@@ -69,8 +69,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
             UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
                 filename, uploadEvidence.contentType!!)
         else
-            UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
-                filename, "Unknown")
+            return ApiResponse(status = ResponseStatus.FAILED, message = "File Mime type not provided")
 
         nEvidence.user = user
         nEvidence.contract = agreement
