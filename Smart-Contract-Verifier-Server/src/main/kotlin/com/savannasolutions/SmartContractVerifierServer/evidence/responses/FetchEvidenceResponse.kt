@@ -1,7 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.responses
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import org.springframework.web.multipart.MultipartFile
+import org.springframework.restdocs.payload.FieldDescriptor
 
-data class FetchEvidenceResponse(val responseStatus: ResponseStatus,
-                                 val evidenceUrl: String?,)
+data class FetchEvidenceResponse(val evidenceUrl: String?,){
+
+}
