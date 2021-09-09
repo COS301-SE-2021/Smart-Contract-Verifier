@@ -1,6 +1,5 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
@@ -84,19 +83,19 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): LinkEvidenceResponse {
+    fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): ApiResponse<Object> {
         if(!agreementsRepository.existsById(agreementId))
-            return LinkEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
 
         val agreement = agreementsRepository.getById(agreementId)
 
         if(!userRepository.existsById(userId))
-            return LinkEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
 
         val user = userRepository.getById(userId)
 
         if(!agreement.users.contains(user))
-            return LinkEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val hash = userId+"_"+System.currentTimeMillis().toString()
 
@@ -111,7 +110,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         evidenceRepository.save(nEvidence)
 
 
-        return LinkEvidenceResponse(ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
     fun fetchEvidence(userId: String, agreementId: UUID, evidenceHash: String): FetchEvidenceResponse {
