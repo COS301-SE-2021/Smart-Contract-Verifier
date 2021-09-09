@@ -72,19 +72,16 @@ class RetrieveContactListTest {
         whenever(contactListProfileRepository.getAllByContactList(contactList)).thenReturn(contactListProfileList)
     }
 
-    private fun requestSender(rjson: String): MockHttpServletResponse {
+    private fun requestSender(userID: String, contactListID: UUID): MockHttpServletResponse {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/contactlist/retrieve-contact-list")
+            MockMvcRequestBuilders.get("/user/${userID}/contactList/${contactListID}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)
         ).andReturn().response
     }
 
     @Test
     fun `RetrieveContactList successful`(){
-        val rjson = "{\"ContactListID\" : \"${contactList.contactListID}\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, contactList.contactListID!!)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, userB.publicWalletID)
@@ -93,9 +90,8 @@ class RetrieveContactListTest {
 
     @Test
     fun `RetrieveContactList failed due to contact list not existing`(){
-        val rjson = "{\"ContactListID\" : \"d3de557a-08a1-47d3-8769-eaa3fbb11220\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

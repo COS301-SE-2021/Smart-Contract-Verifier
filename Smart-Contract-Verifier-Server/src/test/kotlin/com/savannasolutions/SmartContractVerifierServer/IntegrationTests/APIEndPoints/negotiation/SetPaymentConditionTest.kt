@@ -87,10 +87,10 @@ class SetPaymentConditionTest {
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(condition)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(rjson: String, userID: String, agreementID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/set-payment-condition")
+            MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/condition/payment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rjson)).andReturn().response
     }
@@ -98,22 +98,22 @@ class SetPaymentConditionTest {
     @Test
     fun `SetPaymentCondition successful`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0," +
+        val rjson = "{\"Payment\" : 500.0," +
                 "\"PayingUser\" : \"${userA.publicWalletID}\" }"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, conditionUUID.toString())
     }
 
     @Test
-    fun `SetPaymentCondition failed due to proposing user being empty`()
+    fun `SetPaymentCondition failed due to paying user being empty`()
     {
-        val rjson = "{\"ProposedUser\" : \"\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0," +
-        "\"PayingUser\" : \"${userA.publicWalletID}\" }"
+        val rjson = "{\"Payment\" : 500.0," +
+        "\"PayingUser\" : \"\" }"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -121,10 +121,10 @@ class SetPaymentConditionTest {
     @Test
     fun `SetPaymentCondition failed due to amount being below 0`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : -500.0," +
+        val rjson = "{\"Payment\" : -500.0," +
         "\"PayingUser\" : \"${userA.publicWalletID}\" }"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -132,23 +132,23 @@ class SetPaymentConditionTest {
     @Test
     fun `SetPaymentCondition failed agreement does not exist`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"12a292bd-43e1-4690-8bdb-6d6cc20c1bb9\",\"Payment\" : 500.0," +
+        val rjson = "{\"Payment\" : 500.0," +
         "\"PayingUser\" : \"${userA.publicWalletID}\" }"
 
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
-    fun `SetPaymentCondition proposing user not part of agreement`()
+    fun `SetPaymentCondition paying user not part of agreement`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userC.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Payment\" : 500.0," +
-        "\"PayingUser\" : \"${userA.publicWalletID}\" }"
+        val rjson = "{\"Payment\" : 500.0," +
+        "\"PayingUser\" : \"${userC.publicWalletID}\" }"
 
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

@@ -1,15 +1,13 @@
 package com.savannasolutions.SmartContractVerifierServer.security.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.security.requests.LoginRequest
-import com.savannasolutions.SmartContractVerifierServer.security.requests.UserExistsRequest
-import com.savannasolutions.SmartContractVerifierServer.security.responses.AddUserResponse
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.security.responses.GetNonceResponse
 import com.savannasolutions.SmartContractVerifierServer.security.responses.LoginResponse
-import com.savannasolutions.SmartContractVerifierServer.security.responses.UserExistsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -36,33 +34,24 @@ class SecurityService(val userRepository: UserRepository,
         return GetNonceResponse(0, ResponseStatus.FAILED)
     }
 
-    fun userExists(userExistsRequest: UserExistsRequest): UserExistsResponse {
-        if(userExistsRequest.walletID.isEmpty())
-            return UserExistsResponse(status = ResponseStatus.FAILED)
-
-        return if(userRepository.existsById(userExistsRequest.walletID))
-            UserExistsResponse(true, ResponseStatus.SUCCESSFUL)
-        else
-            UserExistsResponse(status = ResponseStatus.SUCCESSFUL)
-    }
-
-    fun addUser(addUserRequest: AddUserRequest): AddUserResponse {
+    fun addUser(addUserRequest: AddUserRequest): ApiResponse<Objects> {
         val wID = addUserRequest.WalletID
         if(userRepository.existsById(wID))
-            return AddUserResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User exists in database")
 
         val user = User(publicWalletID = addUserRequest.WalletID, alias = addUserRequest.Alias)
 
         userRepository.save(user)
 
-        return  AddUserResponse(status = ResponseStatus.SUCCESSFUL)
+        return  ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun login(loginRequest: LoginRequest): LoginResponse {
+    fun login(userId: String, loginRequest: LoginRequest): LoginResponse {
         var match = false
         val prefix = "\u0019Ethereum Signed Message:\n10"
-        if(userRepository.existsById(loginRequest.userId)){
-            val nonce = userRepository.getById(loginRequest.userId).nonce
+        if(userRepository.existsById(userId)){
+            val nonce = userRepository.getById(userId).nonce
             val message = (prefix + nonce.toString()).encodeToByteArray()
             val signatureBytes = loginRequest.signedNonce.encodeToByteArray()
 
@@ -83,7 +72,7 @@ class SecurityService(val userRepository: UserRepository,
 
                 if(publicKey != null){
                     recoveredAddress = "0x" + org.web3j.crypto.Keys.getAddress(publicKey)
-                    if(recoveredAddress == loginRequest.userId){
+                    if(recoveredAddress == userId){
                         match = true
                         break
                     }
@@ -92,7 +81,7 @@ class SecurityService(val userRepository: UserRepository,
 
             if(match){
                 val secretKey = Keys.hmacShaKeyFor(securityConfig.secretKey.encodeToByteArray())
-                val jwtToken = Jwts.builder().setSubject(loginRequest.userId).setExpiration(Date(System.currentTimeMillis() + securityConfig.timeout.toLong())).signWith(secretKey).compact()
+                val jwtToken = Jwts.builder().setSubject(userId).setExpiration(Date(System.currentTimeMillis() + securityConfig.timeout.toLong())).signWith(secretKey).compact()
                 return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)
             }
         }

@@ -1,6 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
@@ -21,7 +21,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureDataJpa

@@ -58,39 +58,29 @@ class CreateAgreementTest {
         whenever(agreementsRepository.save(any<Agreements>())).thenReturn(agreement)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(rjson: String, userID: String) : MockHttpServletResponse
     {
-        return mockMvc.perform(MockMvcRequestBuilders.post("/negotiation/create-agreement")
+        return mockMvc.perform(MockMvcRequestBuilders.post("/user/${userID}/agreement")
             .contentType(MediaType.APPLICATION_JSON)
             .content(rjson)).andReturn().response
     }
 
 
     @Test fun `CreateAgreement successful`(){
-        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyA\":\"0x743Fb032c0bE976e1178d8157f911a9e825d9E23\",\"PartyB\":\"0x37Ec9a8aBFa094b24054422564e68B08aF3114B4\",\"AgreementTitle\":\"test agreement\"}"
+        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyB\":\"0x37Ec9a8aBFa094b24054422564e68B08aF3114B4\",\"AgreementTitle\":\"test agreement\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, "\"AgreementID\":\"3c5657d6-e302-48d3-b9df-dcfccec97503\"")
     }
 
     @Test
-    fun `CreateAgreement failed when party A is empty`()
-    {
-        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyA\":\"\",\"PartyB\":\"0x37Ec9a8aBFa094b24054422564e68B08aF3114B4\",\"AgreementTitle\":\"test agreement\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `CreateAgreement failed when party B is empty`()
     {
-        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyA\":\"0x743Fb032c0bE976e1178d8157f911a9e825d9E23\",\"PartyB\":\"\",\"AgreementTitle\":\"test agreement\"}"
+        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyB\":\"\",\"AgreementTitle\":\"test agreement\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -98,9 +88,9 @@ class CreateAgreementTest {
     @Test
     fun `CreateAgreement failed when Agreement description is empty`()
     {
-        val rjson = "{\"AgreementDescription\":\"\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyA\":\"0x743Fb032c0bE976e1178d8157f911a9e825d9E23\",\"PartyB\":\"0x37Ec9a8aBFa094b24054422564e68B08aF3114B4\",\"AgreementTitle\":\"test agreement\"}"
+        val rjson = "{\"AgreementDescription\":\"\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyB\":\"0x37Ec9a8aBFa094b24054422564e68B08aF3114B4\",\"AgreementTitle\":\"test agreement\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -108,36 +98,27 @@ class CreateAgreementTest {
     @Test
     fun `CreateAgreement failed when Agreement title is empty`()
     {
-        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyA\":\"0x743Fb032c0bE976e1178d8157f911a9e825d9E23\",\"PartyB\":\"0x37Ec9a8aBFa094b24054422564e68B08aF3114B4\",\"AgreementTitle\":\"\"}"
+        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyB\":\"0x37Ec9a8aBFa094b24054422564e68B08aF3114B4\",\"AgreementTitle\":\"\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `CreateAgreement userA is equal to userB`(){
-        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyA\":\"0x743Fb032c0bE976e1178d8157f911a9e825d9E23\",\"PartyB\":\"0x743Fb032c0bE976e1178d8157f911a9e825d9E23\",\"AgreementTitle\":\"test agreement\"}"
+        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyB\":\"0x743Fb032c0bE976e1178d8157f911a9e825d9E23\",\"AgreementTitle\":\"test agreement\"}"
 
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
-    fun `CreateAgreement userA does not exist`(){
-        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyA\":\"does not exist\",\"PartyB\":\"0x37Ec9a8aBFa094b24054422564e68B08aF3114B4\",\"AgreementTitle\":\"test agreement\"}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `CreateAgreement userB does not exist`(){
-        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyA\":\"0x743Fb032c0bE976e1178d8157f911a9e825d9E23\",\"PartyB\":\"does not exist\",\"AgreementTitle\":\"test agreement\"}"
+        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyB\":\"does not exist\",\"AgreementTitle\":\"test agreement\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

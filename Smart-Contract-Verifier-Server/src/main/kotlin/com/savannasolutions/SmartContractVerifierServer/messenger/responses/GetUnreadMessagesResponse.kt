@@ -1,0 +1,5 @@
+package com.savannasolutions.SmartContractVerifierServer.messenger.responses
+
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.MessagesByAgreementResponse
+
+data class GetUnreadMessagesResponse(val MessageAgreementList :List<MessagesByAgreementResponse>?= emptyList())

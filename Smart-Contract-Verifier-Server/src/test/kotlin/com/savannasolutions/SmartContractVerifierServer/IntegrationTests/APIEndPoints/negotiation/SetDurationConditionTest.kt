@@ -87,10 +87,10 @@ class SetDurationConditionTest {
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(condition)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(rjson: String, userID: String, agreementID: UUID) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/set-duration-condition")
+            MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/condition/duration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rjson)).andReturn().response
     }
@@ -98,30 +98,20 @@ class SetDurationConditionTest {
     @Test
     fun `SetDurationCondition successful`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Duration\" : 500.0}"
+        val rjson = "{\"Duration\" : 500.0}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, conditionUUID.toString())
     }
 
     @Test
-    fun `SetDurationCondition failed due to proposing user being empty`()
-    {
-        val rjson = "{\"ProposedUser\" : \"\",\"AgreementID\" : \"${agreement.ContractID}\",\"Duration\" : 500.0}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `SetDurationCondition failed due to amount being below 0`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Duration\" : -500.0}"
+        val rjson = "{\"Duration\" : -500.0}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,userA.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -129,9 +119,9 @@ class SetDurationConditionTest {
     @Test
     fun `SetDurationCondition failed agreement does not exist`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userA.publicWalletID}\",\"AgreementID\" : \"12a292bd-43e1-4690-8bdb-6d6cc20c1bb9\",\"Duration\" : 500.0}"
+        val rjson = "{\"Duration\" : 500.0}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"))
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -139,9 +129,9 @@ class SetDurationConditionTest {
     @Test
     fun `SetDurationCondition proposing user not part of agreement`()
     {
-        val rjson = "{\"ProposedUser\" : \"${userC.publicWalletID}\",\"AgreementID\" : \"${agreement.ContractID}\",\"Duration\" : 500.0}"
+        val rjson = "{\"Duration\" : 500.0}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userC.publicWalletID, agreement.ContractID)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
