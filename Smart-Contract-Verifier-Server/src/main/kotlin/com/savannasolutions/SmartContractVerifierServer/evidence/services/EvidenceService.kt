@@ -1,6 +1,9 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.services
 
 import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.configuration.EvidenceConfig
 import com.savannasolutions.SmartContractVerifierServer.evidence.interfaces.EvidenceFileSystem
@@ -42,20 +45,20 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         fileSystem = evidenceConfig.filesystem
     }
 
-    fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidence: MultipartFile): UploadEvidenceResponse {
+    fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidence: MultipartFile): ApiResponse<Objects> {
         //agreement doesn't exist
         if(!agreementsRepository.existsById(agreementId))
-            return UploadEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
         val agreement = agreementsRepository.getById(agreementId)
 
         //user doesn't exist
         if(!userRepository.existsById(userId))
-            return UploadEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
         val user = userRepository.getById(userId)
 
         //user isn't party to the agreement
         if (!agreement.users.contains(user))
-            return UploadEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         //TODO: implement hash calculation
         val hashString = computeHash(uploadEvidence)
@@ -78,7 +81,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
 
         fileSystem.saveFile(uploadEvidence, filename)
 
-        return UploadEvidenceResponse(ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
     fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): LinkEvidenceResponse {
