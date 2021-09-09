@@ -13,9 +13,9 @@ import java.nio.file.Paths
 class EvidenceFileSystemJavaFilesystemImplementation: EvidenceFileSystem {
 
     override fun saveFile(fileToSave: MultipartFile, filename: String) {
-        val path = Paths.get("UnisonEvidence/$filename")
+        val path = Paths.get(System.getProperty("user.dir")+ "\\UnisonEvidence\\$filename")
         try {
-            Files.createFile(path)
+            Files.createFile(path.toAbsolutePath())
             Files.write(path, fileToSave.bytes)
         }catch (e: Exception){
             println(e.message)
@@ -23,10 +23,10 @@ class EvidenceFileSystemJavaFilesystemImplementation: EvidenceFileSystem {
     }
 
     override fun retrieveFile(fileToRetrieve: String): File? {
-        val path = Paths.get("UnisonEvidence/$fileToRetrieve")
+        val path = Paths.get(System.getProperty("user.dir") + "\\UnisonEvidence\\$fileToRetrieve")
         try{
             val tempFile = File.createTempFile("temp", ".txt")
-            tempFile.writeBytes(Files.readAllBytes(path))
+            tempFile.writeBytes(Files.readAllBytes(path.toAbsolutePath()))
             return tempFile
         }catch (e: Exception){
             println(e.message)
@@ -35,9 +35,9 @@ class EvidenceFileSystemJavaFilesystemImplementation: EvidenceFileSystem {
     }
 
     override fun deleteFile(fileToDelete: String) {
-        val path = Paths.get("UnisonEvidence/$fileToDelete")
+        val path = Paths.get(System.getProperty("user.dir") +"\\UnisonEvidence\\$fileToDelete")
         try{
-            Files.deleteIfExists(path)
+            Files.deleteIfExists(path.toAbsolutePath())
         }catch (e: Exception){
             println(e.message)
         }
