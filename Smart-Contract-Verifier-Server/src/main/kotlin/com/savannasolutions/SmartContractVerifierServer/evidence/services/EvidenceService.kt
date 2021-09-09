@@ -234,29 +234,29 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return ApiResponse(status = ResponseStatus.SUCCESSFUL, responseObject = GetAllEvidenceResponse(evidenceList.toList()))
     }
 
-    fun removeEvidence(userId: String, agreementId: UUID, evidenceHash: String): RemoveEvidenceResponse {
+    fun removeEvidence(userId: String, agreementId: UUID, evidenceHash: String): ApiResponse<Objects> {
         //the agreement doesn't exist
         if(!agreementsRepository.existsById(agreementId))
-            return RemoveEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
         val agreement = agreementsRepository.getById(agreementId)
 
         //the user doesn't exist
         if(!userRepository.existsById(userId))
-            return RemoveEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
         val user = userRepository.getById(userId)
 
         //the user isn't party to the agreement
         if(!agreement.users.contains(user))
-            return  RemoveEvidenceResponse(ResponseStatus.FAILED)
+            return  ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         //evidence doesn't exist
         if(!evidenceRepository.existsById(evidenceHash))
-            return RemoveEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.evidenceDoesNotExist)
         val evidence = evidenceRepository.getById(evidenceHash)
 
         //user doesn't own the file
         if(evidence.user != user)
-            return RemoveEvidenceResponse(ResponseStatus.FAILED)
+            return ApiResponse(ResponseStatus.FAILED, message = "User does not own the file")
 
         // delete actual file
         val uploadedEvidence = evidence.uploadedEvidence
@@ -275,7 +275,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         evidence.removed = true
         evidenceRepository.save(evidence)
 
-        return RemoveEvidenceResponse(ResponseStatus.SUCCESSFUL)
+        return ApiResponse(ResponseStatus.SUCCESSFUL)
     }
 
     fun computeHash(file: MultipartFile): String{
