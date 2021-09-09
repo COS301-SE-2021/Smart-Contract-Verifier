@@ -11,7 +11,7 @@ data class LinkEvidenceRequest(@JsonProperty("EvidenceUrl") val url: String,)
     companion object{
         fun request(): ArrayList<FieldDescriptor>{
             val fieldDescriptor = ArrayList<FieldDescriptor>()
-            fieldDescriptor.add(PayloadDocumentation.fieldWithPath("EvidenceUrl"))
+            fieldDescriptor.add(PayloadDocumentation.fieldWithPath("EvidenceUrl").description("This is the url to the evidence that will be submitted").type("String"))
             return fieldDescriptor
         }
     }
