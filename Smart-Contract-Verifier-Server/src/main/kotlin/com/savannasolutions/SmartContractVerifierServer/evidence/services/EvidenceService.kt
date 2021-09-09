@@ -113,19 +113,19 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun fetchEvidence(userId: String, agreementId: UUID, evidenceHash: String): FetchEvidenceResponse {
+    fun fetchEvidence(userId: String, agreementId: UUID, evidenceHash: String): ApiResponse<FetchEvidenceResponse> {
         if(!agreementsRepository.existsById(agreementId))
-            return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
         val agreement = agreementsRepository.getById(agreementId)
 
         //user doesn't exist
         if(!userRepository.existsById(userId))
-            return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
         val user = userRepository.getById(userId)
 
         //evidence doesn't exist
         if(!evidenceRepository.existsById(evidenceHash))
-            return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.evidenceDoesNotExist)
         val evidence = evidenceRepository.getById(evidenceHash)
 
         //user isn't party to the agreement
@@ -140,14 +140,15 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
                 }
             }
             if(!valid)
-                return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
+                return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
         }
 
         val evidenceLink = evidence.evidenceUrl
         if (evidenceLink != null) {
-            return FetchEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceLink.evidenceUrl,)
+            return ApiResponse(status = ResponseStatus.SUCCESSFUL,
+                                responseObject = FetchEvidenceResponse(evidenceLink.evidenceUrl))
         }
-        return FetchEvidenceResponse(ResponseStatus.FAILED, null,)
+        return ApiResponse(status = ResponseStatus.FAILED, message = "Evidence has been removed")
     }
 
     fun downloadEvidence(userId: String, agreementId: UUID, evidenceHash: String): DownloadEvidenceResponse {
