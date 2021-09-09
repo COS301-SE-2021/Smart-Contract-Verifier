@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/user/0x37Ec9a8aBFa094b24054422564e68B08aF3114B4/contactList' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8'
+----

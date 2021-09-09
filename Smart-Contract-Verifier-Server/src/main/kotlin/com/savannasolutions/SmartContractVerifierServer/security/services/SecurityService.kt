@@ -5,10 +5,10 @@ import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects
 import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.security.requests.LoginRequest
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.security.responses.GetNonceResponse
 import com.savannasolutions.SmartContractVerifierServer.security.responses.LoginResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
+import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Service

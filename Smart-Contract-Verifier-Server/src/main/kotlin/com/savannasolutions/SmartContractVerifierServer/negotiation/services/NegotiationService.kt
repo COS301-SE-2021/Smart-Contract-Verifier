@@ -13,7 +13,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.*
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 @Service

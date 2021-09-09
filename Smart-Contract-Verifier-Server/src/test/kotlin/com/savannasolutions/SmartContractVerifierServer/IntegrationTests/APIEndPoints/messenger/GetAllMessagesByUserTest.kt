@@ -1,9 +1,11 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
+import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByUserResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -12,19 +14,24 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs("docs/api/get/user/userid/message")
 class GetAllMessagesByUserTest {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -130,18 +137,30 @@ class GetAllMessagesByUserTest {
         }
     }
 
-    private fun requestSender(userID: String) : MockHttpServletResponse
+    private fun requestSender(userID: String,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/message")
                 .contentType(MediaType.APPLICATION_JSON)
-                ).andReturn().response
+                ).andDo(document(testName,
+            Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+            Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+            PayloadDocumentation.responseFields(responseFieldDescriptors)
+        )).andReturn().response
     }
 
     @Test
     fun `GetAllMessagesByUser successful`()
     {
-        val response = requestSender(userA.publicWalletID)
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(GetAllMessagesByUserResponse.response())
+        //End of documentation
+
+        val response = requestSender(userA.publicWalletID, fieldDescriptorResponse, "GetAllMessagesByUser successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, messageA.messageID.toString())
@@ -155,7 +174,12 @@ class GetAllMessagesByUserTest {
     @Test
     fun `GetAllMessagesByUser failure user does not exist`()
     {
-        val response = requestSender("other user")
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
+        val response = requestSender("other user", fieldDescriptorResponse, "GetAllMessagesByUser failure user does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
