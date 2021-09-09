@@ -217,11 +217,13 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val evidenceList: MutableList<String> = mutableListOf()
         evidenceRepository.getAllByContract(agreement).forEach {
             evidenceInstance ->
-            var evidence: String = evidenceInstance.evidenceHash
-            evidence = if(evidenceInstance.evidenceType == EvidenceType.LINKED){
-                "LINKED:$evidence"
-            }else{
-                "UPLOADED:$evidence"
+            var evidence = ""
+            if (evidenceInstance.removed)
+                evidence = "REMOVED_"
+            evidence += if (evidenceInstance.evidenceType == EvidenceType.LINKED) {
+                "LINKED:${evidenceInstance.evidenceHash}"
+            } else {
+                "UPLOADED:${evidenceInstance.evidenceHash}"
             }
             evidenceList.add(evidence)
         }
