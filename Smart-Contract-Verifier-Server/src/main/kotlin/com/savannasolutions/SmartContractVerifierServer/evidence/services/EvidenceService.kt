@@ -190,15 +190,15 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return DownloadEvidenceResponse(null, "")
     }
 
-    fun getAllEvidence(userId: String, agreementId: UUID): GetAllEvidenceResponse {
+    fun getAllEvidence(userId: String, agreementId: UUID): ApiResponse<GetAllEvidenceResponse> {
         //agreement doesn't exist
         if(!agreementsRepository.existsById(agreementId))
-            return GetAllEvidenceResponse(ResponseStatus.FAILED, emptyList())
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
         val agreement = agreementsRepository.getById(agreementId)
 
         //user doesn't exist
         if(!userRepository.existsById(userId))
-            return GetAllEvidenceResponse(ResponseStatus.FAILED, emptyList())
+            return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userDoesNotExist)
         val user = userRepository.getById(userId)
 
         //user isn't party to the agreement
@@ -213,7 +213,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
                 }
             }
             if(!valid)
-                return GetAllEvidenceResponse(ResponseStatus.FAILED, emptyList())
+                return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
         }
 
         //build list of evidenceHashes
@@ -231,7 +231,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
             evidenceList.add(evidence)
         }
 
-        return GetAllEvidenceResponse(ResponseStatus.SUCCESSFUL, evidenceList.toList())
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL, responseObject = GetAllEvidenceResponse(evidenceList.toList()))
     }
 
     fun removeEvidence(userId: String, agreementId: UUID, evidenceHash: String): RemoveEvidenceResponse {
