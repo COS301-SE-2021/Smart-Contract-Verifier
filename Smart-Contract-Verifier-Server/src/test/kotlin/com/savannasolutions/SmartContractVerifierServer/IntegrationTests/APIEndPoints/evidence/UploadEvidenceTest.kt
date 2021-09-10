@@ -185,7 +185,7 @@ class UploadEvidenceTest {
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
         //End of documentation
 
-        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles",
+        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/",
             "testFile.png",
             "image/png")
 
@@ -205,7 +205,7 @@ class UploadEvidenceTest {
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
         //End of documentation
 
-        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles",
+        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/",
             "testFile.txt",
             "text/Plain")
 
@@ -225,7 +225,7 @@ class UploadEvidenceTest {
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
         //End of documentation
 
-        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles",
+        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/",
             "testFile.txt",
             "text/Plain")
 
@@ -245,7 +245,7 @@ class UploadEvidenceTest {
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
         //End of documentation
 
-        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles",
+        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/",
             "testFile.txt",
             "text/Plain")
 
@@ -265,7 +265,7 @@ class UploadEvidenceTest {
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
         //End of documentation
 
-        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles",
+        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/",
             "testFile.txt",
             "")
 
