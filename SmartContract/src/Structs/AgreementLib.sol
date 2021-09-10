@@ -96,6 +96,7 @@ library AgreementLib{
     function juryVote(Jury storage jury, AgreementLib.Vote vote) external returns(bool){
         // Yes means pay out as normal, no means refund all payments
         require(jury.assigned, "E11");
+        require(jury.deadline > block.timestamp, "E18");
 
         // Get index of juror
         int index = -1;

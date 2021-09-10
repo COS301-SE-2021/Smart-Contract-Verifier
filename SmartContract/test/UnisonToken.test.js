@@ -1,12 +1,35 @@
 const { assert } = require('chai')
 
 const UnisonToken = artifacts.require("UnisonToken")
+const {advanceTimeAndBlock} = require("./helper.js")
 
 require('chai').use(require('chai-as-promised')).should()
 
+const c = BigInt("92592592592592592");
+const m = BigInt("1071673525");
+
+function mintedAtTime(x){
+    x = BigInt(x);
+
+    x += BigInt("86400");
+    if(x > BigInt(86400 * 500))
+        x = BigInt(86400 * 500);
+
+    result = c * x - m*x*x;
+    return BigInt(result);
+}
+
+async function getCurrBlockTime(){
+    var block = await web3.eth.getBlock('latest');
+    var result = BigInt(block.timestamp);
+    console.log("Block time: " + result);
+    return result;
+}
+
+
 contract('UnisonToken', (accounts) =>{
 
-    describe("Unison token unit tests", async () =>{
+    describe("UnisonToken general tests", async () =>{
 
         let token
 
@@ -168,4 +191,77 @@ contract('UnisonToken', (accounts) =>{
         })
 
     })
+
+
+    describe("UnisonToken minting unit tests", async () =>{
+
+        let token
+        let deployTime;
+
+        async function assertSupply(){
+            var currTime = await getCurrBlockTime();
+            token.receiveMinted();
+            var supply = await token.totalSupply();
+            supply = BigInt(supply);
+
+            var expectedSupply = mintedAtTime(currTime - deployTime);
+
+            assert(supply == expectedSupply, "Incorrect balance " + supply + ", expected " + expectedSupply);
+        }
+
+        before(async () =>{
+            deployTime = await getCurrBlockTime();
+
+            token = await UnisonToken.new();
+        })
+
+        it("Initial amount is correct", async ()=>{
+            var acc0Start = await token.totalSupply();
+            acc0Start = BigInt(acc0Start);
+            assert(acc0Start == mintedAtTime(0), "Initial amount is incorrect");
+        })
+
+        it("Testing time passage helper function", async ()=>{
+          
+            var originalBlock = await web3.eth.getBlock('latest');
+            var newBlock = await advanceTimeAndBlock(1000);
+            var timeDiff = newBlock.timestamp - originalBlock.timestamp;
+
+            assert(timeDiff >= 1000, "Block time wasn't adjusted");
+        })
+
+        it("balance after some time passed", async ()=>{
+            await assertSupply();
+        })
+
+        it("balance after more time passed", async ()=>{
+            await advanceTimeAndBlock(15);
+            await assertSupply();
+        })
+
+        it("balance about halfway through", async ()=>{
+            await advanceTimeAndBlock(250 * 86400);
+            await assertSupply();
+        })
+
+        it("balance after 500 days", async ()=>{
+            await advanceTimeAndBlock(250 * 86400);
+            await assertSupply();
+        })
+
+        it("balance some time after minting ended", async ()=>{
+            await advanceTimeAndBlock(50 * 86400);
+            await assertSupply();
+        })
+
+        it("Can't access receiveMinted from oter account", async()=>{
+            try{
+                token.receiveMinted({from:accounts[1]});
+                assert(false, "onlyMinter modifier didn't work");
+            }
+            catch{}
+        })
+
+    })
+
 })

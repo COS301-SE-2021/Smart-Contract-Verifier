@@ -84,6 +84,12 @@ contract Verifier{
         emit AcceptAgreement(agreeID);
     }
 
+    function rejectAgreement(uint agreeID) public inAgreement(agreeID){
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
+        _refundAgreement(agreeID);
+        agreements[agreeID].state = AgreementLib.AgreementState.REJECTED;
+    }
+
     // Each payment must have the allowance ready, it will be transferred immediately
     function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
         require(tokens.length == amount.length, "E3");
@@ -136,6 +142,9 @@ contract Verifier{
                 emit ActiveAgreement(agreeID);
             }
         }
+        else{
+            require(false, "E17");
+        }
 
         feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
@@ -181,14 +190,11 @@ contract Verifier{
     }
 
     function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+        // Cannot be called if other party already voted no
         AgreementLib.voteResolution(agreements[agreeID], vote);
 
         // update state after vote
-        if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
-                agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
-            if(juries[agreeID].assigned)
-                return; //Already has jury
-
+        if(vote == AgreementLib.Vote.NO){
             // If at least one party voted no, agreement becomes contested
             _assignJury(agreeID);
         }
