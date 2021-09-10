@@ -71,7 +71,7 @@ internal class UploadEvidenceUnitTests {
         evidence.contract = agreement
         evidence.uploadedEvidence = uploadedEvidence
         uploadedEvidence.evidence = evidence
-        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/UnitTests/evidence/testFiles/", fileName, fileMimeType)
+        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/", fileName, fileMimeType)
         //when
         whenever(agreementsRepository.existsById(agreement.ContractID)).thenReturn(agreementExists)
         whenever(agreementsRepository.getById(agreement.ContractID)).thenReturn(agreement)
