@@ -11,6 +11,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.models.Uploaded
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
+import com.savannasolutions.SmartContractVerifierServer.evidence.responses.UploadEvidenceResponse
 import com.savannasolutions.SmartContractVerifierServer.evidence.services.EvidenceService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -52,7 +53,7 @@ internal class UploadEvidenceUnitTests {
                                     agreementExists: Boolean,
                                     userPartOfAgreement: Boolean,
                                     fileName: String,
-                                    fileMimeType: String) : ApiResponse<Objects>
+                                    fileMimeType: String) : ApiResponse<UploadEvidenceResponse>
     {
         evidenceConfig.initialise()
         evidenceService.initialise()
