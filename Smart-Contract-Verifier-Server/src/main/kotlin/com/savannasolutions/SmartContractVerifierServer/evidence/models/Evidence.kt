@@ -2,12 +2,14 @@ package com.savannasolutions.SmartContractVerifierServer.evidence.models
 
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
+import java.util.*
 import javax.persistence.*
 
 enum class EvidenceType{LINKED, UPLOADED}
 
 @Entity
-data class Evidence(@Id val evidenceHash: String,
+data class Evidence(@Id @GeneratedValue val evidenceId: UUID,
+                    val evidenceHash: String,
                     val evidenceType: Enum<EvidenceType>,
                     var removed: Boolean = false,)
 {

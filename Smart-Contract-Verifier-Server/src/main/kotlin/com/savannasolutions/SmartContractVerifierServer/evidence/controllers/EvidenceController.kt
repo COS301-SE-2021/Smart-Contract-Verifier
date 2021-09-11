@@ -27,20 +27,20 @@ class EvidenceController constructor(private val evidenceService: EvidenceServic
                      @RequestBody linkEvidenceRequest: LinkEvidenceRequest,) =
         evidenceService.linkEvidence(userId, agreementId, linkEvidenceRequest)
 
-    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}/linked")
+    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceId}/linked")
     fun retrieveEvidence(@PathVariable userId: String,
                          @PathVariable agreementId: UUID,
-                         @PathVariable evidenceHash: String,) =
-        evidenceService.fetchEvidence(userId, agreementId, evidenceHash)
+                         @PathVariable evidenceId: String,) =
+        evidenceService.fetchEvidence(userId, agreementId, evidenceId)
 
-    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}/download",
+    @GetMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceId}/download",
         produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     @ResponseBody
     fun  downloadEvidence(response: HttpServletResponse,
                          @PathVariable userId: String,
                          @PathVariable agreementId: UUID,
-                         @PathVariable evidenceHash: String,){
-        val fileResp = evidenceService.downloadEvidence(userId, agreementId, evidenceHash)
+                         @PathVariable evidenceId: String,){
+        val fileResp = evidenceService.downloadEvidence(userId, agreementId, evidenceId)
         if(fileResp.file != null) {
             response.contentType = fileResp.mimeType
             response.setHeader("Content-Disposition", "attachment; filename=" + fileResp.file.name)
@@ -74,10 +74,10 @@ class EvidenceController constructor(private val evidenceService: EvidenceServic
                        @PathVariable agreementId: UUID,) =
         evidenceService.getAllEvidence(userId, agreementId)
 
-    @DeleteMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceHash}")
+    @DeleteMapping("/user/{userId}/agreement/{agreementId}/evidence/{evidenceId}")
     fun removeEvidence(@PathVariable userId: String,
                        @PathVariable agreementId: UUID,
-                       @PathVariable evidenceHash: String,) =
-        evidenceService.removeEvidence(userId, agreementId, evidenceHash)
+                       @PathVariable evidenceId: String,) =
+        evidenceService.removeEvidence(userId, agreementId, evidenceId)
 
 }

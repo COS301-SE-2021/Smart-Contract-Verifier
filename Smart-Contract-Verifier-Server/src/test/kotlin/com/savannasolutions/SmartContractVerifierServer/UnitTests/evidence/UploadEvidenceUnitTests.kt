@@ -66,8 +66,10 @@ internal class UploadEvidenceUnitTests {
         val uploadedEvidence = UploadedEvidence(UUID.fromString("1981c189-afb4-431a-9fc5-d8e2e48b7110"),
                                             "testFile",
                                             "txt", "testFile")
-        val evidence = Evidence("aUseFulHash",
-                                EvidenceType.UPLOADED)
+        val evidence = Evidence(
+            UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
+            "aUseFulHash",
+            EvidenceType.UPLOADED)
         evidence.user = user
         evidence.contract = agreement
         evidence.uploadedEvidence = uploadedEvidence

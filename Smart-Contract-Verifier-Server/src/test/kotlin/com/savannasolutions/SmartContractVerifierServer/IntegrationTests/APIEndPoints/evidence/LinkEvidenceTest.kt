@@ -81,7 +81,9 @@ class LinkEvidenceTest {
             "TestAgreement",
             CreatedDate = Date())
         agreement.users.add(user)
-        val evidence = Evidence("LinkedHash", EvidenceType.LINKED)
+        val evidence = Evidence( UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
+            "LinkedHash",
+            EvidenceType.LINKED)
         evidence.user = user
         evidence.contract = agreement
         val linkedEvidence = LinkedEvidence(UUID.fromString("bfe3e6c6-da45-4f89-bb99-06a03ebb3e2a"),

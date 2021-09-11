@@ -63,7 +63,8 @@ class RemoveEvidenceUploadedTest {
     @MockBean
     lateinit var judgesRepository: JudgesRepository
 
-    private val evidenceConfig = EvidenceConfig("TEST")
+    @Autowired
+    lateinit var evidenceConfig : EvidenceConfig
 
     private lateinit var user: User
     private lateinit var otherUser : User
@@ -74,7 +75,7 @@ class RemoveEvidenceUploadedTest {
     @BeforeEach
     fun beforeEach(){
         evidenceConfig.initialise()
-        //evidenceService.initialise()
+//        evidenceService.initialise()
         //given
         user = User("test user")
         otherUser = User("other")
@@ -89,7 +90,9 @@ class RemoveEvidenceUploadedTest {
         val uploadedEvidence = UploadedEvidence(
             UUID.fromString("1981c189-afb4-431a-9fc5-d8e2e48b7110"),
             "testFile.txt", "text/plain", "testFile")
-        evidence = Evidence("aUseFulHash",
+        evidence = Evidence(
+            UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
+            "aUseFulHash",
             EvidenceType.UPLOADED)
         evidence.user = user
         evidence.contract = agreement

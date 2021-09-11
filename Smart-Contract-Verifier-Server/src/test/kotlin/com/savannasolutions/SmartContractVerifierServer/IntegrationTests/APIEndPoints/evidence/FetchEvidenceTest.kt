@@ -82,7 +82,9 @@ class FetchEvidenceTest {
         val linkedEvidence = LinkedEvidence(
             UUID.fromString("1981c189-afb4-431a-9fc5-d8e2e48b7110"),
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ",)
-        evidence = Evidence("aUseFulHash",
+        evidence = Evidence(
+            UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
+            "aUseFulHash",
             EvidenceType.UPLOADED)
         evidence.user = user
         evidence.contract = agreement

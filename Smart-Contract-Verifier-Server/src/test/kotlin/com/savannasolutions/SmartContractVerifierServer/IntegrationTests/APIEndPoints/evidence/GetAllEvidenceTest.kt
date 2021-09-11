@@ -82,7 +82,9 @@ class GetAllEvidenceTest {
             "testFile",
             "txt",
             "testFile")
-        val evidence = Evidence("aUseFulHash",
+        evidence = Evidence(
+            UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
+            "aUseFulHash",
             EvidenceType.UPLOADED)
         evidence.user = user
         evidence.contract = agreement

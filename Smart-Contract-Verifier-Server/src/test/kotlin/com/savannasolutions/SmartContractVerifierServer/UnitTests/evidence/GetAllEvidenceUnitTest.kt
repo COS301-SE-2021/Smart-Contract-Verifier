@@ -79,14 +79,16 @@ internal class GetAllEvidenceUnitTest {
             fileName,
             fileMimeType,
             fileName)
-        uploadedEvidence = Evidence("aUseFulHash",
+        val evidence = Evidence(
+            UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
+            "aUseFulHash",
             EvidenceType.UPLOADED)
         uploadedEvidence!!.user = user
         uploadedEvidence!!.contract = agreement
         uploadedEvidence!!.uploadedEvidence = uploadedEvidenceObj
         uploadedEvidenceObj.evidence = uploadedEvidence!!
 
-        linkedEvidence = Evidence("linked evidence", EvidenceType.LINKED)
+        linkedEvidence = Evidence(UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),"linked evidence", EvidenceType.LINKED)
         linkedEvidence!!.user = user
         linkedEvidence!!.contract = agreement
 

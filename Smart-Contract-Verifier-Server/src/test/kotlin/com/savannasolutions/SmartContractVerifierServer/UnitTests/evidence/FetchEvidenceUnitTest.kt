@@ -59,7 +59,9 @@ internal class FetchEvidenceUnitTest {
             CreatedDate = Date()
         )
         agreement.users.add(user)
-        val evidence = Evidence("aUseFulHash",
+        val evidence = Evidence(
+            UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
+            "aUseFulHash",
             EvidenceType.UPLOADED)
         val linkedEvidence = LinkedEvidence(UUID.fromString("523ce05d-aea1-42b4-a405-2ed345e8ecb6"),
                                             "https://dodgy.url")
