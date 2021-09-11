@@ -103,6 +103,7 @@ class UploadEvidenceTest {
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
         whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
     }
 
     private fun convertTextFileToMultipartFile(filePath:String, fileName: String, mimeType: String): MultipartFile {

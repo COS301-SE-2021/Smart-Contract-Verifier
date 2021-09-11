@@ -82,7 +82,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return ApiResponse(status = ResponseStatus.SUCCESSFUL, UploadEvidenceResponse(evidenceHash = hashString))
     }
 
-    fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): ApiResponse<Object> {
+    fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): ApiResponse<Objects> {
         if(!agreementsRepository.existsById(agreementId))
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
 

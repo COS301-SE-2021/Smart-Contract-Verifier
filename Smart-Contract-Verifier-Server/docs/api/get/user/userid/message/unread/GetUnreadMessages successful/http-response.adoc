@@ -11,24 +11,24 @@ Content-Length: 763
   "Status" : "SUCCESSFUL",
   "ResponseObject" : {
     "messageAgreementList" : [ {
+      "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
       "messages" : [ {
         "message" : "Test message",
-        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
         "messageStatuses" : [ {
-          "readDate" : "2021-09-06T22:26:15.343+00:00",
-          "read" : true,
-          "recipientID" : "userB"
+          "recipientID" : "userB",
+          "readDate" : "2021-09-11T16:58:20.966+00:00",
+          "read" : true
         } ],
         "messageID" : "0291184c-036a-457c-a37f-1684c69bd9bb",
-        "sendingDate" : "2021-09-06T22:26:15.335+00:00",
+        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
         "sendingUser" : {
           "publicWalletID" : "userA"
-        }
-      } ],
-      "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86"
+        },
+        "sendingDate" : "2021-09-11T16:58:20.958+00:00"
+      } ]
     }, {
-      "messages" : [ ],
-      "agreementID" : "432cb7d7-a9c5-468c-8c7a-6cc0634b041a"
+      "agreementID" : "432cb7d7-a9c5-468c-8c7a-6cc0634b041a",
+      "messages" : [ ]
     } ]
   }
 }
