@@ -44,7 +44,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         fileSystem = evidenceConfig.filesystem
     }
 
-    fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidence: MultipartFile): ApiResponse<Objects> {
+    fun uploadEvidence(userId: String, agreementId: UUID, uploadEvidence: MultipartFile): ApiResponse<UploadEvidenceResponse> {
         //agreement doesn't exist
         if(!agreementsRepository.existsById(agreementId))
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
@@ -79,7 +79,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
 
         fileSystem.saveFile(uploadEvidence, filename)
 
-        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL, UploadEvidenceResponse(evidenceHash = hashString))
     }
 
     fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): ApiResponse<Object> {
