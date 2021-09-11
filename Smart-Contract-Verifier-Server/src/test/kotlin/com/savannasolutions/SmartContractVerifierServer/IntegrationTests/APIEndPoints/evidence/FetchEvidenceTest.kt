@@ -37,7 +37,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "docs/api/get/user/userID/agreement/agreementID/evidence")
+@AutoConfigureRestDocs(outputDir = "docs/api/get/user/userID/agreement/agreementID/evidence/linked")
 class FetchEvidenceTest {
     @Autowired
     lateinit var mockMvc : MockMvc
