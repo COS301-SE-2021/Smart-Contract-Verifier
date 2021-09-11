@@ -59,7 +59,6 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         if (!agreement.users.contains(user))
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
-        //TODO: implement hash calculation
         val hashString = computeHash(uploadEvidence)
         val nEvidence = Evidence(hashString, EvidenceType.UPLOADED)
         val filename = System.currentTimeMillis().toString() + "_" + uploadEvidence.name
