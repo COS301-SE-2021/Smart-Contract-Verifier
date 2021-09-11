@@ -1,0 +1,16 @@
+|===
+|Path|Type|Description
+
+|`+Status+`
+|`+ENUM+`
+|Will return successful or failed
+
+|`+Status+`
+|`+ENUM+`
+|Will return successful or failed
+
+|`+Message+`
+|`+String+`
+|This will contain an error message if needed
+
+|===
