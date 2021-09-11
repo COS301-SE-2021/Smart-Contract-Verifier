@@ -9,6 +9,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.models.Uploaded
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
+import com.savannasolutions.SmartContractVerifierServer.evidence.responses.UploadEvidenceResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -113,19 +114,18 @@ class UploadEvidenceTest {
         {
             e.printStackTrace()
         }
-        return MockMultipartFile(fileName, fileName, mimeType, byteArr)
+        return MockMultipartFile("uploadEvidence", fileName, mimeType, byteArr)
     }
 
     private fun requestSender(userID: String,
                               agreementID: UUID,
-                              rjson: String,
+                              file: MultipartFile,
                               responseFieldDescriptors: ArrayList<FieldDescriptor>,
                               testName: String) : MockHttpServletResponse
     {
-
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/evidence/upload")
-                .contentType(MediaType.APPLICATION_JSON).content(rjson)
+            MockMvcRequestBuilders.multipart("/user/${userID}/agreement/${agreementID}/evidence/upload").file(file as MockMultipartFile)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -143,19 +143,20 @@ class UploadEvidenceTest {
         //documentation
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
+        fieldDescriptor.addAll(UploadEvidenceResponse.response())
         //End of documentation
 
-        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles",
+        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/",
                                                 "testFile.txt",
                                                 "text/Plain")
 
         val response = requestSender(user.publicWalletID,
                                     agreement.ContractID,
-                                    file.toString(),
+                                    file,
                                     fieldDescriptor,
                                     "UploadEvidence api test successful text file")
 
-        assertContains(response.contentAsString, "\"Status:SUCCESSFUL\"")
+        assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
 
     @Test
@@ -165,13 +166,13 @@ class UploadEvidenceTest {
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
         //End of documentation
 
-        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles",
+        val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/",
             "testFile.pdf",
             "application/pdg")
 
         val response = requestSender(user.publicWalletID,
             agreement.ContractID,
-            file.toString(),
+            file,
             fieldDescriptor,
             "UploadEvidence api test successful pdf")
 
@@ -191,7 +192,7 @@ class UploadEvidenceTest {
 
         val response = requestSender(user.publicWalletID,
             agreement.ContractID,
-            file.toString(),
+            file,
             fieldDescriptor,
             "UploadEvidence api test successful png file")
 
@@ -211,7 +212,7 @@ class UploadEvidenceTest {
 
         val response = requestSender(user.publicWalletID,
             UUID.fromString("4232ff01-9844-4a38-9290-f84c55c211d1"),
-            file.toString(),
+            file,
             fieldDescriptor,
             "UploadEvidence api test failed agreement does not exist")
 
@@ -231,7 +232,7 @@ class UploadEvidenceTest {
 
         val response = requestSender("wrong user",
             agreement.ContractID,
-            file.toString(),
+            file,
             fieldDescriptor,
             "UploadEvidence api test failed user does not exist")
 
@@ -251,7 +252,7 @@ class UploadEvidenceTest {
 
         val response = requestSender(otherUser.publicWalletID,
             agreement.ContractID,
-            file.toString(),
+            file,
             fieldDescriptor,
             "UploadEvidence api test failed user not part of agreement")
 
@@ -271,7 +272,7 @@ class UploadEvidenceTest {
 
         val response = requestSender(user.publicWalletID,
             UUID.fromString("4232ff01-9844-4a38-9290-f84c55c211d1"),
-            file.toString(),
+            file,
             fieldDescriptor,
             "UploadEvidence api test failed file has no mime type")
 
