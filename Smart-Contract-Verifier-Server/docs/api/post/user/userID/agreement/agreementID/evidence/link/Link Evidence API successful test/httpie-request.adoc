@@ -1,0 +1,7 @@
+[source,bash]
+----
+$ echo '{
+  "EvidenceUrl" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+}' | http POST 'http://localhost:8080/user/TestUser1/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/link' \
+    'Content-Type:application/json;charset=UTF-8'
+----

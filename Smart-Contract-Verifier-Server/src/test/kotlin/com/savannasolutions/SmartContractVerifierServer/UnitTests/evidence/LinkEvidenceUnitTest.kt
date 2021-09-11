@@ -60,7 +60,8 @@ internal class LinkEvidenceUnitTest {
         agreement.users.add(user)
         val uploadedEvidence = UploadedEvidence(UUID.fromString("1981c189-afb4-431a-9fc5-d8e2e48b7110"),
             "testFile",
-            "txt")
+            "txt",
+            "testFile")
         val evidence = Evidence("aUseFulHash",
             EvidenceType.UPLOADED)
         evidence.user = user
