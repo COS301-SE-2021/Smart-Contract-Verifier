@@ -1,7 +1,9 @@
 [source,options="nowrap"]
 ----
 {
-  "Status" : "FAILED",
-  "Message" : "Evidence does not exist"
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "EvidenceUrl" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  }
 }
 ----

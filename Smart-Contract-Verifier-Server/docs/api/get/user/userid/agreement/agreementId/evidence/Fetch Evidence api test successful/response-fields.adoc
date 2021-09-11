@@ -5,8 +5,8 @@
 |`+ENUM+`
 |Will return successful or failed
 
-|`+Message+`
-|`+String+`
-|This will contain an error message if needed
+|`+ResponseObject+`
+|`+Object+`
+|If status is successful this will be a populated response object. If status is failed this will be a null object
 
 |===
