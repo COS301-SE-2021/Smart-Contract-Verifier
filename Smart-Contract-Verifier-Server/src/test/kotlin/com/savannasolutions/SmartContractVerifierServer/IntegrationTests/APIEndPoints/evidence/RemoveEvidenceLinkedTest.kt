@@ -37,7 +37,7 @@ import kotlin.test.assertContains
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "docs/api/delete/user/userID/agreement/agreementID/evidence/evidenceHash/linked")
-class RemoveEvidenceTest {
+class RemoveEvidenceLinkedTest {
     @Autowired
     lateinit var mockMvc : MockMvc
 
@@ -147,7 +147,7 @@ class RemoveEvidenceTest {
             UUID.fromString("ad02a8a0-0e91-41ab-9d71-9e6d67c0accc"),
             evidence.evidenceHash,
             fieldDescriptor,
-            "Remove Evidence api test successful Linked")
+            "Remove Evidence api test failed Agreement doesn't exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
