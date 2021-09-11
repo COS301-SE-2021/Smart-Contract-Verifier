@@ -2,12 +2,12 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 118
+Content-Length: 122
 
 {
   "Status" : "SUCCESSFUL",
   "ResponseObject" : {
-    "EvidenceHash" : "d41d8cd98f00b204e9800998ecf8427e"
+    "EvidenceHash" : "6612469d-ffd8-4126-8c5b-9e5873aaf8f3"
   }
 }
 ----
