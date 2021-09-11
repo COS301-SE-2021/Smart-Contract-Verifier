@@ -43,7 +43,7 @@ import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "")
+@AutoConfigureRestDocs(outputDir = "docs/api/post/user/userID/agreement/agreementID/evidence/upload")
 class UploadEvidenceTest {
     @Autowired
     lateinit var mockMvc : MockMvc
