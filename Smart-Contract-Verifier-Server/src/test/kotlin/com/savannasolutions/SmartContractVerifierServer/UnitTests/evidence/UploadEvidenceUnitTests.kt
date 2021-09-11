@@ -81,7 +81,7 @@ internal class UploadEvidenceUnitTests {
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(userExists)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
         whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
-        //whenever(evidenceConfig.filesystem.saveFile(file, "testFile"))
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
 
         //then
         return if(userPartOfAgreement){
@@ -113,6 +113,7 @@ internal class UploadEvidenceUnitTests {
                                         "testFile.txt",
                                         "text/Plain")
 
+        print(response.message)
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
     }
 
