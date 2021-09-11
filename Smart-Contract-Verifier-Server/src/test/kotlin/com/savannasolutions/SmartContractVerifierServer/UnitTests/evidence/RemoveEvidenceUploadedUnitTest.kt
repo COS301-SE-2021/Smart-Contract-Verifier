@@ -76,7 +76,7 @@ internal class RemoveEvidenceUploadedUnitTest {
             fileName,
             fileMimeType,
             fileName)
-        uploadedEvidence = Evidence("aUseFulHash",
+        uploadedEvidence = Evidence(UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),"aUseFulHash",
             EvidenceType.UPLOADED)
         uploadedEvidence!!.user = user
         uploadedEvidence!!.contract = agreement
