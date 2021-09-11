@@ -141,7 +141,7 @@ class FetchEvidenceTest {
             UUID.fromString("ebccbcf4-33ec-40a9-b809-c8311df1f090"),
             evidence.evidenceHash,
             descriptors,
-            "Fetch Evidence api test successful")
+            "Fetch Evidence api test failed Agreement doesn't exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -156,7 +156,7 @@ class FetchEvidenceTest {
             agreement.ContractID,
             evidence.evidenceHash,
             descriptors,
-            "Fetch Evidence api test successful")
+            "Fetch Evidence api test failed User doesn't exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -171,7 +171,7 @@ class FetchEvidenceTest {
             agreement.ContractID,
             "invalid hash",
             descriptors,
-            "Fetch Evidence api test successful")
+            "Fetch Evidence api test failed Evidence doesn't exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -186,7 +186,7 @@ class FetchEvidenceTest {
             agreement.ContractID,
             evidence.evidenceHash,
             descriptors,
-            "Fetch Evidence api test successful")
+            "Fetch Evidence api test failed user not part of agreement")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
