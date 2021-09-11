@@ -131,16 +131,46 @@ class GetAllEvidenceTest {
 
     @Test
     fun `Get All Evidence api test failed Agreement doesn't exist`(){
+        //documentation
+        val fieldDescriptors = ArrayList<FieldDescriptor>()
+        fieldDescriptors.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
 
+        val response = requestSender(user.publicWalletID,
+            UUID.fromString("650de8cd-2711-4018-a888-97d4c6ec7e5a"),
+            "Get All Evidence api test failed Agreement doesn't exist",
+            fieldDescriptors)
+
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Get All Evidence api test failed User doesn't exist`(){
+        //documentation
+        val fieldDescriptors = ArrayList<FieldDescriptor>()
+        fieldDescriptors.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
 
+        val response = requestSender("Invalid user",
+            agreement.ContractID,
+            "Get All Evidence api test failed User doesn't exist",
+            fieldDescriptors)
+
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Get All Evidence api test failed user not part of agreement`(){
+        //documentation
+        val fieldDescriptors = ArrayList<FieldDescriptor>()
+        fieldDescriptors.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
 
+        val response = requestSender(otherUser.publicWalletID,
+            agreement.ContractID,
+            "Get All Evidence api test failed user not part of agreement",
+            fieldDescriptors)
+
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 }
