@@ -185,6 +185,7 @@ class UploadEvidenceTest {
         //documentation
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
+        fieldDescriptor.addAll(UploadEvidenceResponse.response())
         //End of documentation
 
         val file = convertTextFileToMultipartFile("src/test/kotlin/com/savannasolutions/SmartContractVerifierServer/testFiles/",
@@ -197,7 +198,7 @@ class UploadEvidenceTest {
             fieldDescriptor,
             "UploadEvidence api test successful png file")
 
-        assertContains(response.contentAsString, "\"Status:SUCCESSFUL\"")
+        assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
 
     @Test
