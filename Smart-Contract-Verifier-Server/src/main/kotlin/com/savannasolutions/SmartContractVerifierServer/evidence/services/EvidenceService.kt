@@ -67,7 +67,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         //TODO: Check filetype for risk (part of security)
         val nUploadedEvidence = if(uploadEvidence.contentType != null)
             UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
-                filename, uploadEvidence.contentType!!)
+                filename, uploadEvidence.contentType!!, uploadEvidence.name)
         else
             return ApiResponse(status = ResponseStatus.FAILED, message = "File Mime type not provided")
 
