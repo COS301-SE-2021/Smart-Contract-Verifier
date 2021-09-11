@@ -9,7 +9,7 @@
       "ProposingUser" : {
         "publicWalletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
       },
-      "ProposalDate" : "2021-09-11T16:58:04.019+00:00",
+      "ProposalDate" : "2021-09-11T22:32:10.535+00:00",
       "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
       "ConditionStatus" : "PENDING",
       "ConditionTitle" : "Test conditions pending"

@@ -19,7 +19,7 @@ create table messages (messageid uuid not null, message varchar(255), send_date 
 drop table if exists message_status cascade;
 create table message_status (message_statusid uuid not null, read_date timestamp, message_messageid uuid, recipient_public_walletid varchar(255), primary key (message_statusid));
 drop table if exists uploaded_evidence cascade;
-create table uploaded_evidence (evidenceid uuid not null, file_mime_type varchar(255), filename varchar(255), evidence_evidence_hash varchar(255), primary key (evidenceid));
+create table uploaded_evidence (evidenceid uuid not null, file_mime_type varchar(255), filename varchar(255), original_filename varchar(255), evidence_evidence_hash varchar(255), primary key (evidenceid));
 drop table if exists user_agreement cascade;
 create table user_agreement (public_walletid varchar(255) not null, contractid uuid not null, primary key (public_walletid, contractid));
 alter table conditions add constraint FKpr7yy9rgi6w2tupy14o3lpwur foreign key (contract_contractid) references agreements;
