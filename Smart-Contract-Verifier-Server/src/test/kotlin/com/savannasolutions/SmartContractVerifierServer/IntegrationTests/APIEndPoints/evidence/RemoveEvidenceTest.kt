@@ -36,7 +36,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "docs/api/delete/user/userID/agreement/agreementID/evidence/evidenceHash")
+@AutoConfigureRestDocs(outputDir = "docs/api/delete/user/userID/agreement/agreementID/evidence/evidenceHash/linked")
 class RemoveEvidenceTest {
     @Autowired
     lateinit var mockMvc : MockMvc
@@ -139,26 +139,76 @@ class RemoveEvidenceTest {
 
     @Test
     fun `Remove Evidence api test failed Agreement doesn't exist`(){
+        //documentation
+        val fieldDescriptor = ArrayList<FieldDescriptor>()
+        fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender(user.publicWalletID,
+            UUID.fromString("ad02a8a0-0e91-41ab-9d71-9e6d67c0accc"),
+            evidence.evidenceHash,
+            fieldDescriptor,
+            "Remove Evidence api test successful Linked")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Remove Evidence api test failed User doesn't exist`(){
+        //documentation
+        val fieldDescriptor = ArrayList<FieldDescriptor>()
+        fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender("invalid user",
+            agreement.ContractID,
+            evidence.evidenceHash,
+            fieldDescriptor,
+            "Remove Evidence api test failed User doesn't exist")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Remove Evidence api test failed Evidence doesn't exist`(){
+        //documentation
+        val fieldDescriptor = ArrayList<FieldDescriptor>()
+        fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender(user.publicWalletID,
+            agreement.ContractID,
+            "Invalid hash",
+            fieldDescriptor,
+            "Remove Evidence api test failed Evidence doesn't exist")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Remove Evidence api test failed user not part of agreement`(){
+        //documentation
+        val fieldDescriptor = ArrayList<FieldDescriptor>()
+        fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender(thirdParty.publicWalletID,
+            agreement.ContractID,
+            evidence.evidenceHash,
+            fieldDescriptor,
+            "Remove Evidence api test failed user not part of agreement")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Remove Evidence api test failed user not the owner of the evidence`(){
+        //documentation
+        val fieldDescriptor = ArrayList<FieldDescriptor>()
+        fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender(otherUser.publicWalletID,
+            agreement.ContractID,
+            evidence.evidenceHash,
+            fieldDescriptor,
+            "Remove Evidence api test failed user not the owner of the evidence")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 }
