@@ -133,21 +133,61 @@ class FetchEvidenceTest {
 
     @Test
     fun `Fetch Evidence api test failed Agreement doesn't exist`(){
+        //documentation
+        val descriptors = ArrayList<FieldDescriptor>()
+        descriptors.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender(user.publicWalletID,
+            UUID.fromString("ebccbcf4-33ec-40a9-b809-c8311df1f090"),
+            evidence.evidenceHash,
+            descriptors,
+            "Fetch Evidence api test successful")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Fetch Evidence api test failed User doesn't exist`(){
+        //documentation
+        val descriptors = ArrayList<FieldDescriptor>()
+        descriptors.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender("invalid user",
+            agreement.ContractID,
+            evidence.evidenceHash,
+            descriptors,
+            "Fetch Evidence api test successful")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Fetch Evidence api test failed Evidence doesn't exist`(){
+        //documentation
+        val descriptors = ArrayList<FieldDescriptor>()
+        descriptors.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender(user.publicWalletID,
+            agreement.ContractID,
+            "invalid hash",
+            descriptors,
+            "Fetch Evidence api test successful")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `Fetch Evidence api test failed user not part of agreement`(){
+        //documentation
+        val descriptors = ArrayList<FieldDescriptor>()
+        descriptors.addAll(ApiResponse.apiFailedResponse())
+        //end documentation
+        val response = requestSender(otherUser.publicWalletID,
+            agreement.ContractID,
+            evidence.evidenceHash,
+            descriptors,
+            "Fetch Evidence api test successful")
 
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 }
