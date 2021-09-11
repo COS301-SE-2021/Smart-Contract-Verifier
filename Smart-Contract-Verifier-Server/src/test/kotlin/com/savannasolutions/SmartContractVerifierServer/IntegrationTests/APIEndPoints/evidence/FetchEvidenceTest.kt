@@ -1,10 +1,13 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.evidence
 
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
+import com.savannasolutions.SmartContractVerifierServer.evidence.configuration.EvidenceConfig
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
+import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
+import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,6 +41,12 @@ class FetchEvidenceTest {
 
     @MockBean
     lateinit var judgesRepository: JudgesRepository
+
+    private val evidenceConfig = EvidenceConfig("TEST")
+
+    private lateinit var user: User
+    private lateinit var otherUser : User
+    private lateinit var agreement: Agreements
 
     @BeforeEach
     fun beforeEach(){
