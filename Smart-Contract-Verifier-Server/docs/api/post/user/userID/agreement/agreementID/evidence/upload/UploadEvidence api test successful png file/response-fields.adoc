@@ -1,0 +1,12 @@
+|===
+|Path|Type|Description
+
+|`+Status+`
+|`+ENUM+`
+|Will return successful or failed
+
+|`+ResponseObject.EvidenceHash+`
+|`+String+`
+|This is the hash for this evidence
+
+|===
