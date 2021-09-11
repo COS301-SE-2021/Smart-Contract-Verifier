@@ -56,7 +56,8 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val user = userRepository.getById(userId)
 
         //user isn't party to the agreement
-        if (!agreement.users.contains(user))
+        val users = userRepository.getUsersByAgreementsContaining(agreement)
+        if (!users.contains(user))
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val hashString = computeHash(uploadEvidence)
