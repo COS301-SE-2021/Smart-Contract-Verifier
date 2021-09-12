@@ -122,26 +122,22 @@ class Contract with ChangeNotifier {
     notifyListeners();
   }
 
-  //RC: Could this be stored locally rather than on the db? Since it's a user preference
-  //KC: The idea was incase they have multiple devices
-  //    (like mobile and web or 2 different web machines, their favorites would still be there
-  //    favorites regardless of what device or machine they are on)
-  // Future<void> toggleFavoriteStatus(String token, String userId) async {
-  //   // final oldStatus = isFavorite;
-  //   // _setFavValue(!isFavorite);
-  //   final url =
-  //       'https://capstone-testing-a7ee4-default-rtdb.firebaseio.com/userFavorites/$userId/$contractId.json?auth=$token';
-  //   try {
-  //     final response = await http.put(Uri.parse(url),
-  //         body: json.encode(
-  //           // isFavorite,
-  //         ));
-  //     if (response.statusCode >= 400)
-  //       throw HttpException('Couldn\'t toggle favorite');
-  //   } catch (error) {
-  //     _setFavValue(oldStatus);
-  //   }
-  // }
+  ///Generate a string of conditions to send to the blockchain upon agreement creation.
+  String dataToChain() {
+
+    String ret = title + '#' + description + '#{';
+     for (Condition i in conditions) {
+        ret += i.toChain();
+     }
+
+     ret += '}';
+     return ret;
+  }
+
+ ///Generate an instance from the blockchain. This differs from a blockchainagreement, in that it should only be used to verify the state of conditions saved in the smart contract.
+ Contract.fromChain(String data) {
+
+ }
 
   String toString() {
     //A ToString method for debugging purposes

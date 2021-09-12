@@ -31,4 +31,9 @@ class Condition with ChangeNotifier {
         'ConditionTitle': title,
         'ConditionDescription': description,
       };
+
+  ///Generate a string of the condition in the format it will be stored in on the blockchain.
+  String toChain() {
+    String ret = '[' + title + '#' + description + ']';
+  }
 }

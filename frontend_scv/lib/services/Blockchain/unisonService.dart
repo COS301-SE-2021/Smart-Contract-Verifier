@@ -16,7 +16,7 @@ class UnisonService {
   Future<void> saveAgreement(Contract con) async {
     var jsn = con.toJsonChain();
 
-    String data = con.title + '#' + con.description;
+    String data = con.dataToChain();
     //TODO: Should be a better way of doing this, plus adding the conditions to the calldata in a reliable format (title, body)
     String partyB =
         (Global.userAddress == jsn['PartyB']) ? jsn['PartyA'] : jsn['PartyB'];
