@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -136,6 +137,25 @@ class Contract with ChangeNotifier {
 
  ///Generate an instance from the blockchain. This differs from a blockchainagreement, in that it should only be used to verify the state of conditions saved in the smart contract.
  Contract.fromChain(String data) {
+    int hPos = data.indexOf('#');
+    title = data.substring(0, hPos);
+    String next = data.substring(hPos+1);
+    hPos = next.indexOf('#');
+    description = next.substring(0, hPos);
+    next = next.substring(hPos+1);
+    //This method to ensure the last '}' is used in the string. A better method may be used in the future.
+
+    next = next.substring(next.indexOf('{') +1, next.lastIndexOf('}'));
+    //Next is now a list of conditions, each enclosed in []
+    int count = min('['.allMatches(next).length, ']'.allMatches(next).length);
+
+    //This should be safe. The data will be encoded before saving on blockchain.
+    conditions = [];
+    for (int i =0;i<count;i++) {
+        String item = next.substring(next.indexOf('[') +1, next.indexOf(']'));
+        conditions.add(Condition.fromChainData(item));
+        next = next.substring(next.indexOf(']') +1);
+    }
 
  }
 

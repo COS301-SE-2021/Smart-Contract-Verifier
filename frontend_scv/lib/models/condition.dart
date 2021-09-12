@@ -35,5 +35,16 @@ class Condition with ChangeNotifier {
   ///Generate a string of the condition in the format it will be stored in on the blockchain.
   String toChain() {
     String ret = '[' + title + '#' + description + ']';
+    return ret;
+  }
+
+  ///Generate a condition from blockchain data
+  Condition.fromChainData(String data) {
+      title = data.substring(0, data.indexOf('#'));
+      description = data.substring(data.indexOf('#') +1);
+  }
+
+  String toString() {
+    return '(Condition) Title: ' + title + '\n' + '(Condition) Description: ' + description;
   }
 }
