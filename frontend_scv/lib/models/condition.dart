@@ -44,6 +44,11 @@ class Condition with ChangeNotifier {
       description = data.substring(data.indexOf('#') +1);
   }
 
+  ///Ensures that two conditions are equal
+  bool valid(Condition con) {
+    return title == con.title && description == con.description;
+  }
+
   String toString() {
     return '(Condition) Title: ' + title + '\n' + '(Condition) Description: ' + description;
   }

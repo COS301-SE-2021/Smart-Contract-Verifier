@@ -167,4 +167,20 @@ class Contract with ChangeNotifier {
 
     return ret;
   }
+
+  ///A check to ensure the validity of an agreement saved on the blockchain.
+  bool blockchainValid(Contract con) {
+    //TODO: Maybe this could be done using a hash?
+
+    bool ret = true;
+    ret = con.title == title && con.description == description;
+
+    //Check conditions. The two agreements must have their conditions in the same order.
+    for (int i =0;i<conditions.length && ret;i++) {
+        ret = ret && conditions[i].valid(con.conditions[i]);
+    }
+
+    return ret;
+
+  }
 }
