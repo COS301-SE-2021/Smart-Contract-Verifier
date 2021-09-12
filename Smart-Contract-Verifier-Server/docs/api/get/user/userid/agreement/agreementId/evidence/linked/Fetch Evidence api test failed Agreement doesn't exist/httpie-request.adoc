@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ http GET 'http://localhost:8080/user/test%20user/agreement/ebccbcf4-33ec-40a9-b809-c8311df1f090/evidence/aUseFulHash/linked'
+$ http GET 'http://localhost:8080/user/test%20user/agreement/ebccbcf4-33ec-40a9-b809-c8311df1f090/evidence/7d793c67-10e8-419b-8137-be9758594184/linked'
 ----

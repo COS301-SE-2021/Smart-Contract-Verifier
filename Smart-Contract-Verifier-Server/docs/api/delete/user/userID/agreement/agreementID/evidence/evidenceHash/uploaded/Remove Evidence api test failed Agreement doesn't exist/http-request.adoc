@@ -1,6 +1,6 @@
 [source,http,options="nowrap"]
 ----
-DELETE /user/test%20user/agreement/ad02a8a0-0e91-41ab-9d71-9e6d67c0accc/evidence/aUseFulHash/ HTTP/1.1
+DELETE /user/test%20user/agreement/ad02a8a0-0e91-41ab-9d71-9e6d67c0accc/evidence/7d793c67-10e8-419b-8137-be9758594184/ HTTP/1.1
 Host: localhost:8080
 
 ----

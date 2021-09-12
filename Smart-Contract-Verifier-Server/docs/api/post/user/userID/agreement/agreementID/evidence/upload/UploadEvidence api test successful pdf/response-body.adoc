@@ -3,7 +3,7 @@
 {
   "Status" : "SUCCESSFUL",
   "ResponseObject" : {
-    "EvidenceHash" : "6612469d-ffd8-4126-8c5b-9e5873aaf8f3"
+    "EvidenceID" : "7d793c67-10e8-419b-8137-be9758594184"
   }
 }
 ----

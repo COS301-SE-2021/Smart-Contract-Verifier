@@ -5,8 +5,8 @@
 |`+ENUM+`
 |Will return successful or failed
 
-|`+ResponseObject.EvidenceHash+`
-|`+String+`
-|This is the hash for this evidence
+|`+ResponseObject.EvidenceID+`
+|`+UUID+`
+|This is the unique id for this evidence
 
 |===
