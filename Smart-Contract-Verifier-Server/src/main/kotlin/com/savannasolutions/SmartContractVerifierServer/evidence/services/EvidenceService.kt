@@ -65,7 +65,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val filename = agreement.ContractID.toString() + user.publicWalletID + uploadEvidence.originalFilename
 
         //TODO: Check filetype for risk (part of security)
-        val nUploadedEvidence = if(uploadEvidence.contentType != null)
+        var nUploadedEvidence = if(uploadEvidence.contentType != null)
             UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
                 filename, uploadEvidence.contentType!!, uploadEvidence.originalFilename!!)
         else
@@ -74,7 +74,9 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         nEvidence.user = user
         nEvidence.contract = agreement
         nEvidence.uploadedEvidence = nUploadedEvidence
+        nEvidence = evidenceRepository.save(nEvidence)
         nUploadedEvidence.evidence = nEvidence
+        uploadedEvidenceRepository.save(nUploadedEvidence)
         nEvidence = evidenceRepository.save(nEvidence)
 
         fileSystem.saveFile(uploadEvidence, filename)
