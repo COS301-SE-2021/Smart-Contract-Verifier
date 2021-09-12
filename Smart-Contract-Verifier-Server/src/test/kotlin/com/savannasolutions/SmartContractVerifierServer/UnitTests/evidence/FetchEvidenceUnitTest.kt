@@ -89,9 +89,9 @@ internal class FetchEvidenceUnitTest {
 
         //then
         return if(userPartOfAgreement){
-            evidenceService.fetchEvidence(user.publicWalletID, agreement.ContractID, evidence.evidenceHash)
+            evidenceService.fetchEvidence(user.publicWalletID, agreement.ContractID, evidence.evidenceId.toString())
         } else
-            evidenceService.fetchEvidence(otherUser.publicWalletID, agreement.ContractID, evidence.evidenceHash)
+            evidenceService.fetchEvidence(otherUser.publicWalletID, agreement.ContractID, evidence.evidenceId.toString())
     }
 
     @Test
