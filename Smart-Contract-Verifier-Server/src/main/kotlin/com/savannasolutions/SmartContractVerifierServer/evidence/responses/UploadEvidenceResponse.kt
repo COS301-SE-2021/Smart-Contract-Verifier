@@ -12,7 +12,7 @@ data class UploadEvidenceResponse(@JsonProperty("EvidenceID") val evidenceID: UU
         fun response(): ArrayList<FieldDescriptor>
         {
             val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
-            fieldDescriptorResponse.add(PayloadDocumentation.fieldWithPath("ResponseObject.EvidenceHash").description("This is the hash for this evidence").type("String"))
+            fieldDescriptorResponse.add(PayloadDocumentation.fieldWithPath("ResponseObject.EvidenceID").description("This is the unique id for this evidence").type("UUID"))
             return fieldDescriptorResponse
         }
     }
