@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+
+import 'global.dart';
 
 //Condition class, the terms of an agreement
 class Condition with ChangeNotifier {
@@ -34,14 +38,19 @@ class Condition with ChangeNotifier {
 
   ///Generate a string of the condition in the format it will be stored in on the blockchain.
   String toChain() {
-    String ret = '[' + title + '#' + description + ']';
+
+    String bTitle = Global.stringToBase64(title);
+    String bDesc = Global.stringToBase64(description);
+    String ret = '[' + bTitle + '#' + bDesc + ']';
     return ret;
   }
 
   ///Generate a condition from blockchain data
   Condition.fromChainData(String data) {
-      title = data.substring(0, data.indexOf('#'));
-      description = data.substring(data.indexOf('#') +1);
+      String bTitle = data.substring(0, data.indexOf('#'));
+      title = Global.base64ToString(bTitle);
+      String bDesc = data.substring(data.indexOf('#') +1);
+      description = Global.base64ToString(bDesc);
   }
 
   ///Ensures that two conditions are equal

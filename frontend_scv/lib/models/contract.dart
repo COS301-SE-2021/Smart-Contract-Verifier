@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:unison/models/condition.dart';
 
+import 'global.dart';
 import 'http_exception.dart';
 
 class Contract with ChangeNotifier {
@@ -126,7 +127,7 @@ class Contract with ChangeNotifier {
   ///Generate a string of conditions to send to the blockchain upon agreement creation.
   String dataToChain() {
 
-    String ret = title + '#' + description + '#{';
+    String ret = Global.stringToBase64(title) + '#' + Global.stringToBase64(description) + '#{';
      for (Condition i in conditions) {
         ret += i.toChain();
      }
@@ -138,10 +139,10 @@ class Contract with ChangeNotifier {
  ///Generate an instance from the blockchain. This differs from a blockchainagreement, in that it should only be used to verify the state of conditions saved in the smart contract.
  Contract.fromChain(String data) {
     int hPos = data.indexOf('#');
-    title = data.substring(0, hPos);
+    title = Global.base64ToString(data.substring(0, hPos));
     String next = data.substring(hPos+1);
     hPos = next.indexOf('#');
-    description = next.substring(0, hPos);
+    description = Global.base64ToString(next.substring(0, hPos));
     next = next.substring(hPos+1);
     //This method to ensure the last '}' is used in the string. A better method may be used in the future.
 
