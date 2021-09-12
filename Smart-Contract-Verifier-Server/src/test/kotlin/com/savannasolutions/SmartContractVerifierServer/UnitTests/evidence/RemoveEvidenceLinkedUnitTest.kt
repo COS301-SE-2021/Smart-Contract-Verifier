@@ -58,7 +58,8 @@ internal class RemoveEvidenceLinkedUnitTest {
         )
         agreement.users.add(user)
 
-        linkedEvidence = Evidence(UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),"linked evidence", EvidenceType.LINKED)
+        linkedEvidence = Evidence(UUID.fromString("523ce05d-aea1-42b4-a405-2ed345e8ecb6"),
+            "linked evidence", EvidenceType.LINKED)
         linkedEvidence!!.user = user
         linkedEvidence!!.contract = agreement
 
@@ -77,8 +78,8 @@ internal class RemoveEvidenceLinkedUnitTest {
         whenever(userRepository.getById(otherUser.publicWalletID)).thenReturn(otherUser)
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(userExists)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
-        whenever(evidenceRepository.existsById(linkedEvidence!!.evidenceHash)).thenReturn(evidenceExist)
-        whenever(evidenceRepository.getById(linkedEvidence!!.evidenceHash)).thenReturn(linkedEvidence)
+        whenever(evidenceRepository.existsById(linkedEvidence!!.evidenceId)).thenReturn(evidenceExist)
+        whenever(evidenceRepository.getById(linkedEvidence!!.evidenceId)).thenReturn(linkedEvidence)
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
         whenever(evidenceRepository.getAllByContract(agreement)).thenReturn(evidenceList)
 
