@@ -14,12 +14,10 @@ class UnisonService {
       SmartContract("JSON/_src_Verifier_sol_Verifier.abi", 'Verifier');
 
   Future<void> saveAgreement(Contract con) async {
-    //Todo list:
-    //Sort out events, and detecting them.
-
     var jsn = con.toJsonChain();
 
     String data = con.title + '#' + con.description;
+    //TODO: Should be a better way of doing this, plus adding the conditions to the calldata in a reliable format (title, body)
     String partyB =
         (Global.userAddress == jsn['PartyB']) ? jsn['PartyA'] : jsn['PartyB'];
     EthereumAddress partyBA = EthereumAddress.fromHex(partyB);
@@ -30,8 +28,7 @@ class UnisonService {
       con.duration,
       data,
       con.contractId,
-    ]); //Soon, this will be replaced by a spinner in the UI
-    // It will have to check for an event.
+    ]);
 
   }
 
