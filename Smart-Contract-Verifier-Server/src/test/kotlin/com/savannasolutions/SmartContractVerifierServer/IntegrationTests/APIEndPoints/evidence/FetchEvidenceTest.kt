@@ -105,11 +105,11 @@ class FetchEvidenceTest {
 
     fun requestSender(userId: String,
                       agreementId: UUID,
-                      evidenceHash:String,
+                      evidenceID:UUID,
                       fieldDescriptors: ArrayList<FieldDescriptor>,
                       testName: String,): MockHttpServletResponse {
         return mockMvc.perform(MockMvcRequestBuilders
-            .get("/user/${userId}/agreement/${agreementId}/evidence/${evidenceHash}/linked")
+            .get("/user/${userId}/agreement/${agreementId}/evidence/${evidenceID}/linked")
         ).andDo(MockMvcRestDocumentation.document(testName,
             Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
             Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
@@ -126,7 +126,7 @@ class FetchEvidenceTest {
         //end documentation
         val response = requestSender(user.publicWalletID,
             agreement.ContractID,
-            evidence.evidenceHash,
+            evidence.evidenceId,
             descriptors,
             "Fetch Evidence api test successful")
 
@@ -141,7 +141,7 @@ class FetchEvidenceTest {
         //end documentation
         val response = requestSender(user.publicWalletID,
             UUID.fromString("ebccbcf4-33ec-40a9-b809-c8311df1f090"),
-            evidence.evidenceHash,
+            evidence.evidenceId,
             descriptors,
             "Fetch Evidence api test failed Agreement doesn't exist")
 
@@ -156,7 +156,7 @@ class FetchEvidenceTest {
         //end documentation
         val response = requestSender("invalid user",
             agreement.ContractID,
-            evidence.evidenceHash,
+            evidence.evidenceId,
             descriptors,
             "Fetch Evidence api test failed User doesn't exist")
 
@@ -171,7 +171,7 @@ class FetchEvidenceTest {
         //end documentation
         val response = requestSender(user.publicWalletID,
             agreement.ContractID,
-            "invalid hash",
+            UUID.fromString("f8d318fa-aa89-44e1-8023-a1a9ca823110"),
             descriptors,
             "Fetch Evidence api test failed Evidence doesn't exist")
 
@@ -186,7 +186,7 @@ class FetchEvidenceTest {
         //end documentation
         val response = requestSender(otherUser.publicWalletID,
             agreement.ContractID,
-            evidence.evidenceHash,
+            evidence.evidenceId,
             descriptors,
             "Fetch Evidence api test failed user not part of agreement")
 
