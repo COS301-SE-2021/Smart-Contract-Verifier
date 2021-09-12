@@ -90,6 +90,8 @@ class LinkEvidenceTest {
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
         evidence.evidenceUrl = linkedEvidence
         linkedEvidence.evidence = evidence
+        val userList = ArrayList<User>()
+        userList.add(user)
         //when
         whenever(agreementsRepository.existsById(agreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(agreement.ContractID)).thenReturn(agreement)
@@ -98,6 +100,7 @@ class LinkEvidenceTest {
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
         whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
     }
 
     fun requestSender(userId: String,
@@ -123,7 +126,8 @@ class LinkEvidenceTest {
     fun `Link Evidence api test successfully linked`(){
         //documentation
         val fieldDescriptors = ArrayList<FieldDescriptor>()
-        fieldDescriptors.addAll(ApiResponse.apiEmptyResponse())
+        fieldDescriptors.addAll(ApiResponse.apiResponse())
+        fieldDescriptors.addAll(LinkEvidenceResponse.response())
         //end documentation
 
         val json = "{\"EvidenceUrl\" : \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"}"
@@ -139,8 +143,7 @@ class LinkEvidenceTest {
     fun `Link Evidence api test failed agreement doesn't exist`(){
         //documentation
         val fieldDescriptors = ArrayList<FieldDescriptor>()
-        fieldDescriptors.addAll(ApiResponse.apiEmptyResponse())
-        fieldDescriptors.addAll(LinkEvidenceResponse.response())
+        fieldDescriptors.addAll(ApiResponse.apiFailedResponse())
         //end documentation
 
         val json = "{\"EvidenceUrl\" : \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"}"
@@ -156,8 +159,7 @@ class LinkEvidenceTest {
     fun `Link Evidence api test failed user doesn't exist`(){
         //documentation
         val fieldDescriptors = ArrayList<FieldDescriptor>()
-        fieldDescriptors.addAll(ApiResponse.apiEmptyResponse())
-        fieldDescriptors.addAll(LinkEvidenceResponse.response())
+        fieldDescriptors.addAll(ApiResponse.apiFailedResponse())
         //end documentation
 
         val json = "{\"EvidenceUrl\" : \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"}"
@@ -173,8 +175,7 @@ class LinkEvidenceTest {
     fun `Link Evidence api test failed user isn't in agreement`(){
         //documentation
         val fieldDescriptors = ArrayList<FieldDescriptor>()
-        fieldDescriptors.addAll(ApiResponse.apiEmptyResponse())
-        fieldDescriptors.addAll(LinkEvidenceResponse.response())
+        fieldDescriptors.addAll(ApiResponse.apiFailedResponse())
         //end documentation
 
         val json = "{\"EvidenceUrl\" : \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"}"
