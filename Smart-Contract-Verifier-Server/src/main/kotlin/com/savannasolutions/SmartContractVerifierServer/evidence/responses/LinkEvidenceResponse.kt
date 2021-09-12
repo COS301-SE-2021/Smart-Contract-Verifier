@@ -10,8 +10,7 @@ data class LinkEvidenceResponse(@JsonProperty("EvidenceId") val evidenceId: UUID
     companion object{
         fun response(): ArrayList<FieldDescriptor>{
             val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
-            fieldDescriptorResponse.add(PayloadDocumentation.fieldWithPath("Status").description("Will return successful or failed").type("ENUM"))
-            fieldDescriptorResponse.add(PayloadDocumentation.fieldWithPath("Message").description("Contains any error messages").type("String"))
+            fieldDescriptorResponse.add(PayloadDocumentation.fieldWithPath("ResponseObject.EvidenceId").description("This is the unique id for the evidence").type("UUID"))
             return fieldDescriptorResponse
         }
     }
