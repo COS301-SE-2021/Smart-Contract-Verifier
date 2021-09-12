@@ -79,7 +79,7 @@ internal class GetAllEvidenceUnitTest {
             fileName,
             fileMimeType,
             fileName)
-        val evidence = Evidence(
+        uploadedEvidence = Evidence(
             UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
             "aUseFulHash",
             EvidenceType.UPLOADED)
@@ -155,8 +155,8 @@ internal class GetAllEvidenceUnitTest {
         assertNotNull(response.responseObject)
         assertNotNull(response.responseObject!!.evidenceHashes)
         assertFalse(response.responseObject!!.evidenceHashes.isEmpty())
-        assertContains(response.responseObject!!.evidenceHashes, "LINKED:${linkedEvidence!!.evidenceHash}")
-        assertContains(response.responseObject!!.evidenceHashes, "UPLOADED:${uploadedEvidence!!.evidenceHash}")
+        assertContains(response.responseObject!!.evidenceHashes, "LINKED:${linkedEvidence!!.evidenceId},HASH:${linkedEvidence!!.evidenceHash}")
+        assertContains(response.responseObject!!.evidenceHashes, "UPLOADED:${uploadedEvidence!!.evidenceId},HASH:${uploadedEvidence!!.evidenceHash}")
     }
 
     @Test
