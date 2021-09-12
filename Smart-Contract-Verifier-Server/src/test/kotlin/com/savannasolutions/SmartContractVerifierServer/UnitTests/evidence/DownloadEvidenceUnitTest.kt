@@ -77,8 +77,7 @@ internal class DownloadEvidenceUnitTest {
             fileName,
             fileMimeType,
             fileName)
-        val evidence = Evidence(
-            UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
+        val evidence = Evidence(UUID.fromString("523ce05d-aea1-42b4-a405-2ed345e8ecb6"),
             "aUseFulHash",
             EvidenceType.UPLOADED)
         evidence.user = user
@@ -93,8 +92,8 @@ internal class DownloadEvidenceUnitTest {
         whenever(userRepository.getById(otherUser.publicWalletID)).thenReturn(otherUser)
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(userExists)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
-        whenever(evidenceRepository.existsById(evidence.evidenceHash)).thenReturn(evidenceExist)
-        whenever(evidenceRepository.getById(evidence.evidenceHash)).thenReturn(evidence)
+        whenever(evidenceRepository.existsById(evidence.evidenceId)).thenReturn(evidenceExist)
+        whenever(evidenceRepository.getById(evidence.evidenceId)).thenReturn(evidence)
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
         evidenceConfig.filesystem.saveFile(file!!, fileName)
 
