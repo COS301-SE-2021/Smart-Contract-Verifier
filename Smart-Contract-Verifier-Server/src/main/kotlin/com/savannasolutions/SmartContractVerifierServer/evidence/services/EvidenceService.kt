@@ -130,7 +130,8 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         //user isn't party to the agreement
         var valid = false
         val judges = agreement.judges
-        if (!agreement.users.contains(user)) {
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+        if (!userList.contains(user)) {
             if (judges != null) {
                 for(judge in judges){
                     if(judge.judge == user){
