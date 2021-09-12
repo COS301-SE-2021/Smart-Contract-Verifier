@@ -247,7 +247,8 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val user = userRepository.getById(userId)
 
         //the user isn't party to the agreement
-        if(!agreement.users.contains(user))
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+        if(!userList.contains(user))
             return  ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         //evidence doesn't exist
