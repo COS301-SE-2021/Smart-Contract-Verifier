@@ -82,7 +82,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         return ApiResponse(status = ResponseStatus.SUCCESSFUL, UploadEvidenceResponse(evidenceID = nEvidence.evidenceId))
     }
 
-    fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): ApiResponse<Objects> {
+    fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): ApiResponse<LinkEvidenceResponse> {
         if(!agreementsRepository.existsById(agreementId))
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.agreementDoesNotExist)
 
@@ -93,12 +93,13 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
 
         val user = userRepository.getById(userId)
 
-        if(!agreement.users.contains(user))
+        val userList = userRepository.getUsersByAgreementsContaining(agreement)
+        if(!userList.contains(user))
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val hash = userId+"_"+System.currentTimeMillis().toString()
 
-        val nEvidence = Evidence(UUID.randomUUID(), hash , EvidenceType.LINKED)
+        var nEvidence = Evidence(UUID.randomUUID(), hash , EvidenceType.LINKED)
         val linkedEvidence = LinkedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
                                             linkEvidenceRequest.url,)
         nEvidence.evidenceUrl = linkedEvidence
@@ -106,10 +107,10 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         nEvidence.contract = agreement
         linkedEvidence.evidence = nEvidence
 
-        evidenceRepository.save(nEvidence)
+        nEvidence = evidenceRepository.save(nEvidence)
 
 
-        return ApiResponse(status = ResponseStatus.SUCCESSFUL)
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL, responseObject = LinkEvidenceResponse(nEvidence.evidenceId))
     }
 
     fun fetchEvidence(userId: String, agreementId: UUID, evidenceId: String): ApiResponse<FetchEvidenceResponse> {
