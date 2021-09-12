@@ -5,6 +5,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.configuration.E
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.EvidenceType
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.LinkedEvidence
+import com.savannasolutions.SmartContractVerifierServer.evidence.models.UploadedEvidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
@@ -51,7 +52,9 @@ class RemoveEvidenceDatabaseTest {
     lateinit var userB : User
     lateinit var agreement : Agreements
     lateinit var linkedEvidence: LinkedEvidence
-    lateinit var evidence: Evidence
+    lateinit var lEvidence: Evidence
+    lateinit var uploadedEvidence: UploadedEvidence
+    lateinit var uEvidence: Evidence
 
     @BeforeEach
     fun beforeEach()
@@ -82,22 +85,39 @@ class RemoveEvidenceDatabaseTest {
         userB = userB.apply { agreements.add(agreement) }
         userA = userRepository.save(userA)
         userB = userRepository.save(userB)
+        //linked
         linkedEvidence = LinkedEvidence(UUID.fromString("c6671a40-6002-4338-ad2d-a26b51507949"),
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-        evidence = Evidence(UUID.fromString("c6671a40-6002-4338-ad2d-a26b51507949"),
+        lEvidence = Evidence(UUID.fromString("c6671a40-6002-4338-ad2d-a26b51507949"),
             "linkedEvidenceHash",
             EvidenceType.LINKED)
-        evidence.user = userA
-        evidence = evidenceRepository.save(evidence)
-        linkedEvidence.evidence = evidence
+        lEvidence.user = userA
+        lEvidence = evidenceRepository.save(lEvidence)
+        linkedEvidence.evidence = lEvidence
         linkedEvidence = linkedEvidenceRepository.save(linkedEvidence)
-        evidence.evidenceUrl = linkedEvidence
-        evidence = evidenceRepository.save(evidence)
+        lEvidence.evidenceUrl = linkedEvidence
+        lEvidence = evidenceRepository.save(lEvidence)
+
+        //uploaded
+        uploadedEvidence = UploadedEvidence(UUID.fromString("c6671a40-6002-4338-ad2d-a26b51507949"),
+            "testFile.txt",
+            "text/plain",
+            "testFile.txt",)
+        uEvidence = Evidence(UUID.fromString("c6671a40-6002-4338-ad2d-a26b51507949"),
+            "linkedEvidenceHash",
+            EvidenceType.UPLOADED)
+        uEvidence.user = userA
+        uEvidence = evidenceRepository.save(uEvidence)
+        uploadedEvidence.evidence = uEvidence
+        uploadedEvidence = uploadedEvidenceRepository.save(uploadedEvidence)
+        uEvidence.uploadedEvidence = uploadedEvidence
+        uEvidence = evidenceRepository.save(uEvidence)
     }
 
     @AfterEach
     fun afterEach(){
-        evidenceRepository.delete(evidence)
+        evidenceRepository.delete(lEvidence)
+        evidenceRepository.delete(uEvidence)
         userA.agreements.remove(agreement)
         userB.agreements.remove(agreement)
         userA = userRepository.save(userA)
@@ -116,10 +136,13 @@ class RemoveEvidenceDatabaseTest {
         //given
 
         //when
-        evidenceService.removeEvidence(userA.publicWalletID, agreement.ContractID, evidence.evidenceId.toString())
+        evidenceService.removeEvidence(userA.publicWalletID, agreement.ContractID, lEvidence.evidenceId.toString())
+        evidenceService.removeEvidence(userA.publicWalletID, agreement.ContractID, uEvidence.evidenceId.toString())
 
         //then
-        val testEvidence = evidenceRepository.getById(evidence.evidenceId)
-        assertTrue(testEvidence.removed)
+        val testLEvidence = evidenceRepository.getById(lEvidence.evidenceId)
+        val testUEvidence = evidenceRepository.getById(uEvidence.evidenceId)
+        assertTrue(testLEvidence.removed)
+        assertTrue(testUEvidence.removed)
     }
 }
