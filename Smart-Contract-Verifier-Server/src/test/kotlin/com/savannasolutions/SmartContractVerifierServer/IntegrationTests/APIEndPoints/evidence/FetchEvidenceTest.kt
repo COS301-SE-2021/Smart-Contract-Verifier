@@ -98,8 +98,8 @@ class FetchEvidenceTest {
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
         whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
-        whenever(evidenceRepository.getById(evidence.evidenceHash)).thenReturn(evidence)
-        whenever(evidenceRepository.existsById(evidence.evidenceHash)).thenReturn(true)
+        whenever(evidenceRepository.getById(evidence.evidenceId)).thenReturn(evidence)
+        whenever(evidenceRepository.existsById(evidence.evidenceId)).thenReturn(true)
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
     }
 

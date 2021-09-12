@@ -117,8 +117,8 @@ class DownloadEvidenceTest {
         uploadedEvidence.evidence = evidence
 
         whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
-        whenever(evidenceRepository.existsById(evidence.evidenceId.toString())).thenReturn(true)
-        whenever(evidenceRepository.getById(evidence.evidenceId.toString())).thenReturn(evidence)
+        whenever(evidenceRepository.existsById(evidence.evidenceId)).thenReturn(true)
+        whenever(evidenceRepository.getById(evidence.evidenceId)).thenReturn(evidence)
 
     }
 

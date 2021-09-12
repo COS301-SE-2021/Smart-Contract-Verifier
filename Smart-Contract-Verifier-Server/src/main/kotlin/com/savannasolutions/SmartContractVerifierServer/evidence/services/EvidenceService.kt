@@ -123,9 +123,9 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val user = userRepository.getById(userId)
 
         //evidence doesn't exist
-        if(!evidenceRepository.existsById(evidenceId))
+        if(!evidenceRepository.existsById(UUID.fromString(evidenceId)))
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.evidenceDoesNotExist)
-        val evidence = evidenceRepository.getById(evidenceId)
+        val evidence = evidenceRepository.getById(UUID.fromString(evidenceId))
 
         //user isn't party to the agreement
         var valid = false
@@ -161,9 +161,9 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val user = userRepository.getById(userId)
 
         //evidence doesn't exist
-        if(!evidenceRepository.existsById(evidenceId))
+        if(!evidenceRepository.existsById(UUID.fromString(evidenceId)))
             return DownloadEvidenceResponse(null, "")
-        val evidence = evidenceRepository.getById(evidenceId)
+        val evidence = evidenceRepository.getById(UUID.fromString(evidenceId))
 
         //user isn't party to the agreement
         var valid = false
@@ -249,9 +249,9 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
             return  ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         //evidence doesn't exist
-        if(!evidenceRepository.existsById(evidenceId))
+        if(!evidenceRepository.existsById(UUID.fromString(evidenceId)))
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.evidenceDoesNotExist)
-        val evidence = evidenceRepository.getById(evidenceId)
+        val evidence = evidenceRepository.getById(UUID.fromString(evidenceId))
 
         //user doesn't own the file
         if(evidence.user != user)
