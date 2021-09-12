@@ -104,9 +104,9 @@ internal class RemoveEvidenceUploadedUnitTest {
 
         //then
         return if(userPartOfAgreement){
-            evidenceService.removeEvidence(user.publicWalletID, agreement.ContractID, uploadedEvidence!!.evidenceHash)
+            evidenceService.removeEvidence(user.publicWalletID, agreement.ContractID, uploadedEvidence!!.evidenceId.toString())
         } else
-            evidenceService.removeEvidence(otherUser.publicWalletID, agreement.ContractID, uploadedEvidence!!.evidenceHash)
+            evidenceService.removeEvidence(otherUser.publicWalletID, agreement.ContractID, uploadedEvidence!!.evidenceId.toString())
 
     }
 
