@@ -99,9 +99,9 @@ internal class DownloadEvidenceUnitTest {
 
         //then
         return if(userPartOfAgreement){
-            evidenceService.downloadEvidence(user.publicWalletID, agreement.ContractID, evidence.evidenceHash)
+            evidenceService.downloadEvidence(user.publicWalletID, agreement.ContractID, evidence.evidenceId.toString())
         } else
-            evidenceService.downloadEvidence(otherUser.publicWalletID, agreement.ContractID, evidence.evidenceHash)
+            evidenceService.downloadEvidence(otherUser.publicWalletID, agreement.ContractID, evidence.evidenceId.toString())
     }
 
     private fun convertTextFileToMultipartFile(filePath:String, fileName: String, mimeType: String): MultipartFile {
