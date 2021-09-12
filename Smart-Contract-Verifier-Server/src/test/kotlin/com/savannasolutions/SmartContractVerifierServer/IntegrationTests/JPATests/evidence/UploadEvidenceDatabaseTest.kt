@@ -128,10 +128,10 @@ class UploadEvidenceDatabaseTest {
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.responseObject)
-        val evidenceHash = response.responseObject!!.evidenceHash
-        evidence = evidenceRepository.getEvidenceByEvidenceHash(evidenceHash)
+        val evidenceID = response.responseObject!!.evidenceID
+        evidence = evidenceRepository.getById(evidenceID)
         assertNotNull(evidence)
-        assertEquals(evidence!!.evidenceHash, evidenceHash)
+        assertEquals(evidence!!.evidenceId, evidenceID)
     }
 
     @Test
@@ -146,10 +146,10 @@ class UploadEvidenceDatabaseTest {
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.responseObject)
-        val evidenceHash = response.responseObject!!.evidenceHash
-        evidence = evidenceRepository.getEvidenceByEvidenceHash(evidenceHash)
+        val evidenceID = response.responseObject!!.evidenceID
+        evidence = evidenceRepository.getById(evidenceID)
         assertNotNull(evidence)
-        assertEquals(evidence!!.evidenceHash, evidenceHash)
+        assertEquals(evidence!!.evidenceId, evidenceID)
     }
 
     @Test
@@ -164,9 +164,9 @@ class UploadEvidenceDatabaseTest {
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.responseObject)
-        val evidenceHash = response.responseObject!!.evidenceHash
-        evidence = evidenceRepository.getEvidenceByEvidenceHash(evidenceHash)
+        val evidenceID = response.responseObject!!.evidenceID
+        evidence = evidenceRepository.getById(evidenceID)
         assertNotNull(evidence)
-        assertEquals(evidence!!.evidenceHash, evidenceHash)
+        assertEquals(evidence!!.evidenceId, evidenceID)
     }
 }
