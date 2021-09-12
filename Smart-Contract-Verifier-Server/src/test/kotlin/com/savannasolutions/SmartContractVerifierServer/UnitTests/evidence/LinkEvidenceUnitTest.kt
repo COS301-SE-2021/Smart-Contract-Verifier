@@ -79,6 +79,8 @@ internal class LinkEvidenceUnitTest {
         whenever(userRepository.getById(otherUser.publicWalletID)).thenReturn(otherUser)
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(userExists)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
+        whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
 
 
         //then
