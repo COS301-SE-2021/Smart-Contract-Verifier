@@ -11,6 +11,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.Ev
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.requests.LinkEvidenceRequest
+import com.savannasolutions.SmartContractVerifierServer.evidence.responses.LinkEvidenceResponse
 import com.savannasolutions.SmartContractVerifierServer.evidence.services.EvidenceService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -48,7 +49,7 @@ internal class LinkEvidenceUnitTest {
     private fun parameterizeLinkEvidence(userExists: Boolean,
                                         agreementExists : Boolean,
                                         userPartOfAgreement: Boolean,
-                                        evidenceURL: String): ApiResponse<Objects>
+                                        evidenceURL: String): ApiResponse<LinkEvidenceResponse>
     {
         evidenceConfig.initialise()
         evidenceService.initialise()
