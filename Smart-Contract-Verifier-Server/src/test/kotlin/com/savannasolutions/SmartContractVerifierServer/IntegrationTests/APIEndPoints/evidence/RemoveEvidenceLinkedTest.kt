@@ -109,12 +109,12 @@ class RemoveEvidenceLinkedTest {
 
     fun requestSender(userId: String,
                       agreementId: UUID,
-                      evidenceHash:String,
+                      evidenceID:UUID,
                       fieldDescriptors: ArrayList<FieldDescriptor>,
                       testName: String,): MockHttpServletResponse {
         return mockMvc.perform(
             MockMvcRequestBuilders
-            .delete("/user/${userId}/agreement/${agreementId}/evidence/${evidenceHash}/")
+            .delete("/user/${userId}/agreement/${agreementId}/evidence/${evidenceID}/")
         ).andDo(
             MockMvcRestDocumentation.document(testName,
             Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
@@ -132,7 +132,7 @@ class RemoveEvidenceLinkedTest {
         //end documentation
         val response = requestSender(user.publicWalletID,
             agreement.ContractID,
-            evidence.evidenceHash,
+            evidence.evidenceId,
             fieldDescriptor,
             "Remove Evidence api test successful Linked")
 
@@ -147,7 +147,7 @@ class RemoveEvidenceLinkedTest {
         //end documentation
         val response = requestSender(user.publicWalletID,
             UUID.fromString("ad02a8a0-0e91-41ab-9d71-9e6d67c0accc"),
-            evidence.evidenceHash,
+            evidence.evidenceId,
             fieldDescriptor,
             "Remove Evidence api test failed Agreement doesn't exist")
 
@@ -162,7 +162,7 @@ class RemoveEvidenceLinkedTest {
         //end documentation
         val response = requestSender("invalid user",
             agreement.ContractID,
-            evidence.evidenceHash,
+            evidence.evidenceId,
             fieldDescriptor,
             "Remove Evidence api test failed User doesn't exist")
 
@@ -177,7 +177,7 @@ class RemoveEvidenceLinkedTest {
         //end documentation
         val response = requestSender(user.publicWalletID,
             agreement.ContractID,
-            "Invalid hash",
+            UUID.fromString("f8d318fa-aa89-44e1-8023-a1a9ca823110"),
             fieldDescriptor,
             "Remove Evidence api test failed Evidence doesn't exist")
 
@@ -192,7 +192,7 @@ class RemoveEvidenceLinkedTest {
         //end documentation
         val response = requestSender(thirdParty.publicWalletID,
             agreement.ContractID,
-            evidence.evidenceHash,
+            evidence.evidenceId,
             fieldDescriptor,
             "Remove Evidence api test failed user not part of agreement")
 
@@ -207,7 +207,7 @@ class RemoveEvidenceLinkedTest {
         //end documentation
         val response = requestSender(otherUser.publicWalletID,
             agreement.ContractID,
-            evidence.evidenceHash,
+            evidence.evidenceId,
             fieldDescriptor,
             "Remove Evidence api test failed user not the owner of the evidence")
 
