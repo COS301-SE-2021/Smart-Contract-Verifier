@@ -85,9 +85,9 @@ internal class RemoveEvidenceLinkedUnitTest {
 
         //then
         return if(userPartOfAgreement){
-            evidenceService.removeEvidence(user.publicWalletID, agreement.ContractID, linkedEvidence!!.evidenceHash)
+            evidenceService.removeEvidence(user.publicWalletID, agreement.ContractID, linkedEvidence!!.evidenceId.toString())
         } else
-            evidenceService.removeEvidence(otherUser.publicWalletID, agreement.ContractID, linkedEvidence!!.evidenceHash)
+            evidenceService.removeEvidence(otherUser.publicWalletID, agreement.ContractID, linkedEvidence!!.evidenceId.toString())
 
     }
 
