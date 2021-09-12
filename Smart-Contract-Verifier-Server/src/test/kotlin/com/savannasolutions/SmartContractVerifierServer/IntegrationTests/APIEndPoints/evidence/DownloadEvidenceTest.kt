@@ -75,6 +75,7 @@ class DownloadEvidenceTest {
     private lateinit var otherUser: User
     private lateinit var agreement: Agreements
     private lateinit var evidence: Evidence
+    var evidenceID : UUID = UUID.fromString("f8d318fa-aa89-44e1-8023-a1a9ca823110")
 
     @BeforeEach
     fun beforeEach() {
@@ -94,6 +95,10 @@ class DownloadEvidenceTest {
             "testFile.txt",
             "text/Plain")
 
+        evidence = Evidence(evidenceID,
+            "A usefull hash",
+            EvidenceType.UPLOADED)
+
         whenever(agreementsRepository.existsById(agreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(agreement.ContractID)).thenReturn(agreement)
         whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
@@ -101,25 +106,20 @@ class DownloadEvidenceTest {
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
+        whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
+        whenever(evidenceRepository.existsById(evidence.evidenceId)).thenReturn(true)
+        whenever(evidenceRepository.getById(evidence.evidenceId)).thenReturn(evidence)
 
         val response = upload(user.publicWalletID,
             agreement.ContractID,
             file)
 
-        val responseValues = ObjectMapper().readTree(response.contentAsString)
+        //val responseValues = ObjectMapper().readTree(response.contentAsString)
 
-        evidence = Evidence(UUID.fromString(responseValues.get("ResponseObject").get("EvidenceHash").asText()),
-            "A usefull hash",
-            EvidenceType.UPLOADED)
-        val uploadedEvidence = UploadedEvidence(UUID.fromString(responseValues.get("ResponseObject").get("EvidenceHash").asText()), agreement.ContractID.toString()+user.publicWalletID+"testFile.txt", "text/plain", "testFile.txt")
+        val uploadedEvidence = UploadedEvidence(evidenceID, agreement.ContractID.toString()+user.publicWalletID+"testFile.txt", "text/plain", "testFile.txt")
         //when
         evidence.uploadedEvidence = uploadedEvidence
         uploadedEvidence.evidence = evidence
-
-        whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
-        whenever(evidenceRepository.existsById(evidence.evidenceId)).thenReturn(true)
-        whenever(evidenceRepository.getById(evidence.evidenceId)).thenReturn(evidence)
-
     }
 
     private fun convertTextFileToMultipartFile(filePath: String, fileName: String, mimeType: String): MultipartFile {
@@ -149,7 +149,7 @@ class DownloadEvidenceTest {
         val response = requestSender(
             user.publicWalletID,
             agreement.ContractID,
-            evidence.evidenceId,
+            evidenceID,
         )
 
         assertEquals(response.contentAsString, "hello")
@@ -172,7 +172,7 @@ class DownloadEvidenceTest {
         val response = requestSender(
             "invalid user",
             agreement.ContractID,
-            evidence.evidenceId,
+            evidenceID,
         )
 
         assertEquals(response.status, 404)
