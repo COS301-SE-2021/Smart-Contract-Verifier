@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "Status" : "FAILED",
+  "Message" : "User not part of the provided agreement"
+}
+----

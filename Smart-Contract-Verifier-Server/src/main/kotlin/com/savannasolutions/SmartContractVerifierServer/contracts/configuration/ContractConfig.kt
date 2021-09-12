@@ -9,7 +9,7 @@ import org.web3j.abi.datatypes.Uint
 import org.web3j.abi.datatypes.Utf8String
 
 
-@ConfigurationProperties("com.unison")
+@ConfigurationProperties("com.unison.blockchain")
 @ConstructorBinding
 data class ContractConfig(var nodeAddress: String, var contractId: String, var useblockchain: String){
 

@@ -1,0 +1,13 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 128
+
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "EvidenceUrl" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  }
+}
+----
