@@ -76,7 +76,8 @@ internal class RemoveEvidenceUploadedUnitTest {
             fileName,
             fileMimeType,
             fileName)
-        uploadedEvidence = Evidence(UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),"aUseFulHash",
+        uploadedEvidence = Evidence(UUID.fromString("523ce05d-aea1-42b4-a405-2ed345e8ecb6"),
+            "aUseFulHash",
             EvidenceType.UPLOADED)
         uploadedEvidence!!.user = user
         uploadedEvidence!!.contract = agreement
@@ -95,8 +96,8 @@ internal class RemoveEvidenceUploadedUnitTest {
         whenever(userRepository.getById(otherUser.publicWalletID)).thenReturn(otherUser)
         whenever(userRepository.existsById(user.publicWalletID)).thenReturn(userExists)
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
-        whenever(evidenceRepository.existsById(uploadedEvidence!!.evidenceHash)).thenReturn(evidenceExist)
-        whenever(evidenceRepository.getById(uploadedEvidence!!.evidenceHash)).thenReturn(uploadedEvidence)
+        whenever(evidenceRepository.existsById(uploadedEvidence!!.evidenceId)).thenReturn(evidenceExist)
+        whenever(evidenceRepository.getById(uploadedEvidence!!.evidenceId)).thenReturn(uploadedEvidence)
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
         whenever(evidenceRepository.getAllByContract(agreement)).thenReturn(evidenceList)
         evidenceConfig.filesystem.saveFile(uploadedFile!!, fileName)
