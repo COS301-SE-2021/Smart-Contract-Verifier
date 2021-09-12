@@ -61,7 +61,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
             return ApiResponse(status = ResponseStatus.FAILED, message = commonResponseErrorMessages.userNotPartOfAgreement)
 
         val hashString = computeHash(uploadEvidence)
-        val nEvidence = Evidence(UUID.randomUUID(), hashString, EvidenceType.UPLOADED)
+        var nEvidence = Evidence(UUID.randomUUID(), hashString, EvidenceType.UPLOADED)
         val filename = agreement.ContractID.toString() + user.publicWalletID + uploadEvidence.originalFilename
 
         //TODO: Check filetype for risk (part of security)
@@ -75,11 +75,11 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         nEvidence.contract = agreement
         nEvidence.uploadedEvidence = nUploadedEvidence
         nUploadedEvidence.evidence = nEvidence
-        evidenceRepository.save(nEvidence)
+        nEvidence = evidenceRepository.save(nEvidence)
 
         fileSystem.saveFile(uploadEvidence, filename)
 
-        return ApiResponse(status = ResponseStatus.SUCCESSFUL, UploadEvidenceResponse(evidenceHash = nUploadedEvidence.evidenceID.toString()))
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL, UploadEvidenceResponse(evidenceID = nEvidence.evidenceId))
     }
 
     fun linkEvidence(userId: String, agreementId: UUID, linkEvidenceRequest: LinkEvidenceRequest): ApiResponse<Objects> {
