@@ -84,8 +84,8 @@ internal class FetchEvidenceUnitTest {
         whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
         whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(agreement.users.toList())
-        whenever(evidenceRepository.existsById(evidence.evidenceHash)).thenReturn(evidenceExists)
-        whenever(evidenceRepository.getById(evidence.evidenceHash)).thenReturn(evidence)
+        whenever(evidenceRepository.existsById(evidence.evidenceId)).thenReturn(evidenceExists)
+        whenever(evidenceRepository.getById(evidence.evidenceId)).thenReturn(evidence)
 
         //then
         return if(userPartOfAgreement){
