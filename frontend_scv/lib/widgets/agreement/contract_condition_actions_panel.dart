@@ -239,7 +239,7 @@ class _ContractConditionActionsPanelState
                           'characters for the description.';
                     if (value.length > 128)
                       return 'Descriptions cannot be more than 128 characters'
-                          '.'; //TODO: add visible character counter
+                          '.';
                     return null;
                   },
                 ),
