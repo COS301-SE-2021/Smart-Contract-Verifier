@@ -102,7 +102,6 @@ class _EvidenceListPanelState extends State<EvidenceListPanel> {
 
               List<EvidenceData> evs = snapshot.data;
               for (int i =0;i<evs.length;i++) {
-                // print ('Reading ' + i.toString());
                 cards.add(SizedBox(height: 10,));
                 cards.add(EvidenceDisplayItem(evs[i], widget.agreementId));
               }
