@@ -4,6 +4,7 @@ import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 import 'package:unison/widgets/jury/JudgeDetailInfoPanel.dart';
 import 'package:unison/widgets/jury/judge_conditions_panel.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 class ViewAssignmentScreen extends StatefulWidget {
   static const routeName = '/view-assignment';
@@ -27,7 +28,7 @@ class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
         ModalRoute.of(context).settings.arguments as Contract;
     return Scaffold(
       appBar: AppBar(
-        title: Text(loadedContract.title),
+        title: FunkyText('Current Assignment'),
       ),
       body: Column(
         children: [
