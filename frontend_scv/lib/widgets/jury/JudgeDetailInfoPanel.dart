@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/judgeService.dart';
+import 'package:unison/widgets/miscellaneous/jdenticon_svg.dart';
 import '../../models/jury.dart';
 
 import '../../models/contract.dart';
@@ -23,11 +24,12 @@ class _JudgeDetailInfoPanelState extends State<JudgeDetailInfoPanel> {
     return Center(
       child: Card(
         elevation: 15,
+        color: Color.fromRGBO(56, 61, 81, 1),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: Icon(Icons.info),
+              leading: JdenticonSVG(widget._contract.contractId, [150]),
               title: Text(widget._contract.contractId),
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,7 +61,7 @@ class _JudgeDetailInfoPanelState extends State<JudgeDetailInfoPanel> {
                                   },
                                   child: Text('Agreement was fulfilled'),
                                   style: ElevatedButton.styleFrom(
-                                    primary: Colors.green,
+                                    primary: Colors.pink,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 10),
                                   ),
@@ -80,7 +82,7 @@ class _JudgeDetailInfoPanelState extends State<JudgeDetailInfoPanel> {
                                   },
                                   child: Text('Agreement was not fulfilled'),
                                   style: ElevatedButton.styleFrom(
-                                    primary: Colors.red,
+                                    primary: Colors.cyan,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 10),
                                   ),
@@ -128,17 +130,13 @@ class _JudgeDetailInfoPanelState extends State<JudgeDetailInfoPanel> {
                   Text(
                     'Party A: ${widget._contract.partyA}',
                     style: TextStyle(
-                      color: widget._contract.partyA == Global.userAddress
-                          ? Colors.deepOrange
-                          : Colors.cyan,
+                      color: Colors.pink,
                     ),
                   ),
                   Text(
                     'Party B: ${widget._contract.partyB}',
                     style: TextStyle(
-                      color: widget._contract.partyB == Global.userAddress
-                          ? Colors.deepOrange
-                          : Colors.cyan,
+                      color: Colors.cyan,
                     ),
                   ),
                 ],
