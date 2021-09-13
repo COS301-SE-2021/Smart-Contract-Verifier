@@ -240,8 +240,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             if (_loadedBCAgreement.getResolutionVote() == PartyVote.NO) {
               return Text('You have voted dispute');
             }
-            // TODO: if(party has already voted):
-            // return Text('Show Resolution options');
           } else {
             var difference = expiryDate.difference(DateTime.now());
             Duration duration = Duration(seconds: difference.inSeconds);
