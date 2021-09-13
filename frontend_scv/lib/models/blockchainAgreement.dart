@@ -49,9 +49,7 @@ class BlockchainAgreement {
 
   //Return whether or not the current user should make an accept request to an existing agreement
   bool shouldAccept() {
-    print('PARTY B: ' + partyB);
-    print('GLOBAL: ' + Global.userAddress);
-    print('STATE: ' + state.toString());
+
     if (state == 1) {
       //Proposed state
       if (partyB == Global.userAddress) {
