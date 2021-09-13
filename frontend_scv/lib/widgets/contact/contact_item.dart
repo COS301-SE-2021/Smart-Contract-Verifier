@@ -28,18 +28,6 @@ class _ContactItemState extends State<ContactItem> {
 
   @override
   Widget build(BuildContext context) {
-    final String rawSvg = Jdenticon.toSvg(
-      widget._contact.address,
-      colorSaturation: 1.0,
-      grayscaleSaturation: 1.0,
-      colorLightnessMinValue: 0.40,
-      colorLightnessMaxValue: 0.80,
-      grayscaleLightnessMinValue: 0.30,
-      grayscaleLightnessMaxValue: 0.90,
-      backColor: '#ff7800',
-      hues: [205],
-    );
-
     return ListTile(
       title: Text(widget._contact.alias),
       subtitle: Text(widget._contact.address),
