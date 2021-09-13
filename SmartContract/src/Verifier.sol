@@ -113,34 +113,6 @@ contract Verifier{
     }
 
 
-    // Each payment must have the allowance ready, it will be transferred immediately
-    function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
-        require(tokens.length == amount.length, "E3");
-        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
-        uint numPayments = tokens.length;
-
-        address otherParty;
-        if(msg.sender == agreements[agreeID].party1)
-            otherParty = agreements[agreeID].party2;
-        else
-            otherParty = agreements[agreeID].party1;
-
-        for(uint i=0; i<numPayments; i++){
-            uint256 allowed = tokens[i].allowance(msg.sender, address(this));
-            require(allowed >= amount[i], "E5");
-
-            PaymentInfoLib.PaymentInfo memory p;
-            p.token = tokens[i];
-            p.from = msg.sender;
-            p.to = otherParty;
-            p.amount = amount[i];
-
-            tokens[i].transferFrom(msg.sender, address(this), amount[i]);
-            _addPaymentToAgreement(agreeID, p);
-
-        }
-    }
-
     function payPlatformFee(uint agreeID) public{
         // Anyone can pay the platform fee, it does not even have to be one of the
         // parties involved in the agreement
