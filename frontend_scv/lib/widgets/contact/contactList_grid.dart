@@ -63,7 +63,6 @@ class _ContactListGridState extends State<ContactListGrid> {
   Widget build(BuildContext context) {
     ContactService cs = ContactService();
     return Column(
-      // mainAxisSize: MainAxisSize.min,
       children: [
         FutureBuilder(
           future: cs.getContactLists(),
@@ -80,7 +79,6 @@ class _ContactListGridState extends State<ContactListGrid> {
             List<Widget> ch = [];
             print(snap.data);
             for (var i in snap.data) {
-              // ch.add(SizedBox(height: 10));
               ch.add(
                 ContactListItem(i),
               );
