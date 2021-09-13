@@ -13,12 +13,10 @@ class ContactScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: FunkyText('Contact List'),
+        title: FunkyText('Contact Lists'),
       ),
       drawer: AppDrawer(),
-      body: Center(
-        child: ContactListGrid(),
-      ),
+      body: ContactListGrid(),
     );
   }
 }

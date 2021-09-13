@@ -1,6 +1,7 @@
 //This is a grid of contactlists.
 //They should be clickable
 
+import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/services/Server/contactService.dart';
 import 'package:unison/widgets/contact/ContactList_item.dart';
@@ -51,7 +52,7 @@ class _ContactListGridState extends State<ContactListGrid> {
                   return null;
                 }
               },
-              decoration: InputDecoration(labelText: 'Enter Name'),
+              decoration: InputDecoration(labelText: 'List Name'),
               controller: _listNameController,
             ),
           );
@@ -62,40 +63,46 @@ class _ContactListGridState extends State<ContactListGrid> {
   Widget build(BuildContext context) {
     ContactService cs = ContactService();
     return Column(
+      // mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-                style: TextButton.styleFrom(
-                    primary: Color.fromRGBO(163, 27, 180, 1.0),
-                    textStyle: TextStyle(fontSize: 20)),
-                onPressed: _createDial,
-                child: Text('Create new contact list'))
-          ],
+        FutureBuilder(
+          future: cs.getContactLists(),
+          builder: (context, AsyncSnapshot snap) {
+            if (snap.connectionState != ConnectionState.done) {
+              return AwesomeLoader(
+                loaderType: AwesomeLoader.AwesomeLoader4,
+              );
+            }
+            if (snap.data == null) return Text('Big problem');
+
+            List<Widget> ch = [];
+            print(snap.data);
+            for (var i in snap.data) {
+              // ch.add(SizedBox(height: 10));
+              ch.add(
+                ContactListItem(i),
+              );
+            }
+            return ListView(
+              children: ch,
+              shrinkWrap: true,
+            );
+          },
+        ),
+        Expanded(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: FloatingActionButton.extended(
+              onPressed: _createDial,
+              label: Text('New Contact List'),
+              icon: Icon(Icons.add),
+              backgroundColor: Color.fromRGBO(182, 80, 158, 0.8),
+            ),
+          ),
         ),
         SizedBox(
-          height: 10,
-        ),
-        FutureBuilder(
-            future: cs.getContactLists(),
-            builder: (context, AsyncSnapshot snap) {
-              if (snap.connectionState != ConnectionState.done) {
-                return CircularProgressIndicator();
-              }
-              if (snap.data == null) return Text('Big problem');
-
-              List<Widget> ch = [];
-              print(snap.data);
-              for (var i in snap.data) {
-                ch.add(SizedBox(height: 10));
-                ch.add(ContactListItem(i));
-              }
-              return ListView(
-                children: ch,
-                shrinkWrap: true,
-              );
-            }),
+          height: MediaQuery.of(context).size.height * 0.1,
+        )
       ],
     );
   }

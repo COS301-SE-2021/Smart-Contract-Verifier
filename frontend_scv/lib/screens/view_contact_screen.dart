@@ -76,7 +76,11 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
         });
 
     await cs.addUser(
-        _conAddrController.text, _conNameController.text, id); //Get from above
+      _conAddrController.text.toLowerCase(),
+      _conNameController.text,
+      id,
+    ); //Get from
+    // above
   }
 
   Widget build(BuildContext context) {
