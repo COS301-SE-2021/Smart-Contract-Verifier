@@ -125,7 +125,6 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
                     widget.unisonService,
                     _reloadView,
                   ),
-                // TODO: Add Contract Details (ID's etc.)
               ],
             ),
           ),
