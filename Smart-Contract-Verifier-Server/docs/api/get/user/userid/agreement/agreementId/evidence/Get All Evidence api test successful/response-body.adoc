@@ -1,0 +1,10 @@
+[source,options="nowrap"]
+----
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "UploadedEvidenceDetails" : [ ],
+    "LinkedEvidenceDetails" : [ ]
+  }
+}
+----

@@ -1,11 +1,18 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.responses
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.savannasolutions.SmartContractVerifierServer.common.ConditionResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ConditionResponse
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 
-import java.util.*
-
-data class GetConditionDetailsResponse(@JsonProperty("ConditionResponse") val conditionResponse : ConditionResponse? = null,
-                                       @JsonProperty("Status") val status : ResponseStatus,)
+data class GetConditionDetailsResponse(@JsonProperty("ConditionResponse") val conditionResponse : ConditionResponse? = null,)
+{
+    companion object{
+        fun response(): ArrayList<FieldDescriptor>{
+            val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+            fieldDescriptorResponse.add(PayloadDocumentation.subsectionWithPath("ResponseObject.ConditionResponse").description("This is the condition"))
+            fieldDescriptorResponse.addAll(ConditionResponse.response("ResponseObject.ConditionResponse"))
+            return fieldDescriptorResponse
+        }
+    }
+}

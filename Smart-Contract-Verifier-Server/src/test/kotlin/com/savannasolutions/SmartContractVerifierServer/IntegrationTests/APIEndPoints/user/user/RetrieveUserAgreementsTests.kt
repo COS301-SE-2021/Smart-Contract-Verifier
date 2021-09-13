@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.user.user
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -7,23 +8,29 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/get/user/userID/agreement")
 class GetAgreementDetail {
     @Autowired
     lateinit var mockMvc : MockMvc
@@ -109,20 +116,35 @@ class GetAgreementDetail {
         whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/user/retrieve-user-agreements")
+            MockMvcRequestBuilders.get("/user/${userID}/agreement")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors)
+            )
+        ).andReturn().response
     }
 
     @Test
     fun `RetrieveUserAgreementsTests successful`()
     {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\"}"
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(RetrieveUserAgreementsResponse.responseDurationPaymentEmpty())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID,
+            fieldDescriptorResponse,
+            "RetrieveUserAgreementsTests successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, agreementUUID.toString())
@@ -132,21 +154,16 @@ class GetAgreementDetail {
     }
 
     @Test
-    fun `RetrieveUserAgreementsTests failed due to userid being empty in request`()
-    {
-        val rjson = "{\"UserID\" : \"\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `RetrieveUserAgreementsTests failed due to user not existing`()
     {
-        val rjson = "{\"UserID\" : \"wrong user\"}"
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender("other user",
+            fieldDescriptorResponse,
+            "RetrieveUserAgreementsTests failed due to user not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

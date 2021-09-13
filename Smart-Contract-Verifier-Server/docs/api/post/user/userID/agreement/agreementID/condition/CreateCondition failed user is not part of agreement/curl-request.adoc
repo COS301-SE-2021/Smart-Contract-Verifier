@@ -1,0 +1,9 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/user/0x69Ec9a8aBFa094b24054422564e68B08aF311400/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/condition' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "ConditionTitle" : "Test",
+  "ConditionDescription" : "This is a postman test"
+}'
+----

@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
@@ -12,19 +13,24 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/put/user/userID/message/messageID")
 class SetMessageAsReadTest {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -81,54 +87,65 @@ class SetMessageAsReadTest {
 
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID:String, messageID: UUID,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/messenger/set-message-as-read")
+            MockMvcRequestBuilders.put("/user/${userID}/message/${messageID}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                ).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors)
+            )
+        ).andReturn().response
     }
 
     @Test
     fun `SetMessageAsReadTest successful`()
     {
-        val rjson = "{\"MessageID\" : \"${message.messageID}\"," +
-                        "\"RecipientID\" : \"${userB.publicWalletID}\"}"
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiEmptyResponse())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userB.publicWalletID, message.messageID,
+            fieldDescriptorResponse,
+            "SetMessageAsRead successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
 
     @Test
-    fun `SetMessageAsReadTest failed due to recipient is empty`()
-    {
-        val rjson = "{\"MessageID\" : \"${message.messageID}\"," +
-                "\"RecipientID\" : \"\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `SetMessageAsReadTest failed due to user not existing`()
     {
-        val rjson = "{\"MessageID\" : \"${message.messageID}\"," +
-                "\"RecipientID\" : \"other people\"}"
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender("other user", message.messageID,
+            fieldDescriptorResponse,
+            "SetMessageAsReadTest failed due to user not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
-    fun `SetMessageAsReadTest failed due to message not exists`()
+    fun `SetMessageAsReadTest failed due to message not existing`()
     {
-        val rjson = "{\"MessageID\" : \"638496e4-a37a-4095-9a6f-a5b8ce3ccffa\"," +
-                "\"RecipientID\" : \"${userB.publicWalletID}\"}"
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userB.publicWalletID,
+            UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"),
+            fieldDescriptorResponse,
+        "SetMessageAsRead failed due to message not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

@@ -5,43 +5,38 @@ pragma solidity ^0.8.0;
 import "./UnisonToken.sol";
 import "./Structs/AgreementLib.sol";
 import "./JurorStore.sol";
-
+import "./FeeContract.sol";
 
 // pragma experimental ABIEncoderV2;
 
 contract Verifier{
     using AgreementLib for AgreementLib.Agreement;
+    using AgreementLib for AgreementLib.Jury;
 
     uint private nextAgreeID = 0;
+    uint private numActive = 0; //number of active agreements
 
     // Non-existent entries will return a struct filled with 0's
-    mapping(uint => AgreementLib.Agreement) agreements;
-    mapping(uint => AgreementLib.Jury) juries;
+    mapping(uint => AgreementLib.Agreement) private agreements;
+    mapping(uint => AgreementLib.Jury) private juries;
 
-    JurorStore jurorStore;
-    uint jurySeed = 10;
-    UnisonToken unisonToken;
+    JurorStore private jurorStore;
+    uint private jurySeed = 10;
+    UnisonToken private unisonToken;
+    FeeContract private feeContract;
 
-    uint stakingAmount = 10000;
+    // Fraction out of a thousand
+    uint constant controversyRatio = 300;
 
     constructor(UnisonToken token, RandomSource randomSource){
         unisonToken = token;
+        feeContract = new FeeContract(address(this));
         jurorStore = new JurorStore(address(this), randomSource);
     }
 
     // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0
     modifier inAgreement(uint agreeID){
         require(msg.sender == agreements[agreeID].party1 || msg.sender == agreements[agreeID].party2);
-        _;
-    }
-
-    modifier inJury(uint agreeID){
-        require(juries[agreeID].assigned, "Specified agreement has no jury");
-        for(uint i=0; i<juries[agreeID].numJurors; i++){
-            if(juries[agreeID].jurors[i] == msg.sender)
-                return;
-        }
-        require(false, "You are not on this jury");
         _;
     }
 
@@ -72,7 +67,7 @@ contract Verifier{
         agreements[nextAgreeID].resolutionTime = resolutionTime;
         agreements[nextAgreeID].text = text;
         agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
-        agreements[nextAgreeID].platformFee = 1000000000;
+        agreements[nextAgreeID].platformFee = getPlatformFee();
         agreements[nextAgreeID].uuid = uuid;
 
         emit CreateAgreement(msg.sender, party2, nextAgreeID, uuid);
@@ -83,27 +78,27 @@ contract Verifier{
         // if(agreements[agreeID].party1 == address(0))
         //     return;
         require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED);
+        require(msg.sender == agreements[agreeID].party2, "E16");
 
-        if(msg.sender == agreements[agreeID].party2){
-            agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
-            emit AcceptAgreement(agreeID);
-        }
+        agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
+        emit AcceptAgreement(agreeID);
     }
 
     // Each payment must have the allowance ready, it will be transferred immediately
     function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
-        require(tokens.length == amount.length, "mismatch between tokens and amounts");
+        require(tokens.length == amount.length, "E3");
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
         uint numPayments = tokens.length;
 
         address otherParty;
         if(msg.sender == agreements[agreeID].party1)
             otherParty = agreements[agreeID].party2;
         else
-            agreements[agreeID].party2;
+            otherParty = agreements[agreeID].party1;
 
         for(uint i=0; i<numPayments; i++){
             uint256 allowed = tokens[i].allowance(msg.sender, address(this));
-            require(allowed >= amount[i], "Insufficient allowance on a specified payment");
+            require(allowed >= amount[i], "E5");
 
             PaymentInfoLib.PaymentInfo memory p;
             p.token = tokens[i];
@@ -115,15 +110,14 @@ contract Verifier{
             _addPaymentToAgreement(agreeID, p);
 
         }        
-
-
     }
 
     function payPlatformFee(uint agreeID) public{
         // Anyone can pay the platform fee, it does not even have to be one of the
         // parties involved in the agreement
 
-        // BUG: If payment is split up over multiple accounts, the last account will receive the entire refund
+        // Was first intended to be payable by multiple people, but for now it can only be paid by one person.
+        // Front-end doesn't use split platform fees yet, but fixing a bug it had would require an api-change
 
         require(agreements[agreeID].state == AgreementLib.AgreementState.ACCEPTED);
 
@@ -131,20 +125,19 @@ contract Verifier{
         require(payment > 0);
 
         uint256 allowed = unisonToken.allowance(msg.sender, address(this));
-        require(allowed >= payment, "insufficient allowance to pay platform fee");
-
-        if(allowed < payment)
-            payment = allowed;
-
+        require(allowed >= payment, "E5");
 
         if(unisonToken.transferFrom(msg.sender, address(this), payment)){
             agreements[agreeID].feePaid += payment;
             agreements[agreeID].feePayer = msg.sender;
             if(agreements[agreeID].feePaid == agreements[agreeID].platformFee){
                 agreements[agreeID].state = AgreementLib.AgreementState.ACTIVE;
+                numActive++;
                 emit ActiveAgreement(agreeID);
             }
         }
+
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
 
@@ -154,6 +147,15 @@ contract Verifier{
 
     function getJury(uint agreeID) public view returns(AgreementLib.ReturnJury memory){
         return AgreementLib.makeReturnJury(juries[agreeID]);
+    }
+
+    function getEvidence(uint agreeID) external view returns(AgreementLib.ReturnEvidence memory){
+        return AgreementLib.makeReturnEvidence(juries[agreeID]);
+    }
+
+    function addEvidence(uint agreeID, string calldata url, uint256 evidenceHash) public inAgreement(agreeID){
+        require(agreements[agreeID].state == AgreementLib.AgreementState.CONTESTED, "E6");
+        AgreementLib.addEvidence(juries[agreeID], url, evidenceHash);
     }
 
     function _assignJury(uint agreeID) internal{
@@ -168,14 +170,20 @@ contract Verifier{
         for(uint i=0; i<jury.length; i++){
             juries[agreeID].jurors[i] = jury[i];
         }
+        // Deadline is 10 minutes from now
+        juries[agreeID].deadline = block.timestamp + 60000;
+
         juries[agreeID].numJurors = jury.length;
 
         juries[agreeID].assigned = true;
+        agreements[agreeID].state = AgreementLib.AgreementState.CONTESTED;
         emit JuryAssigned(agreeID, jury);
     }
 
-    function _updateStateAfterVote(uint agreeID) internal{
+    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+        AgreementLib.voteResolution(agreements[agreeID], vote);
 
+        // update state after vote
         if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
                 agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
             if(juries[agreeID].assigned)
@@ -196,38 +204,8 @@ contract Verifier{
 
             // Close the agreement
             agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+            numActive--;
             emit CloseAgreement(agreeID);
-        }
-
-    }
-
-    function _partyIndex(uint agreeID, address a) internal view returns(uint){
-        // index starts at 1, 0 means not included
-        if(agreements[agreeID].party1 == a)
-            return 1;
-        if(agreements[agreeID].party2 == a)
-            return 2;
-        return 0;
-    }
-
-    function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
-        require(agreements[agreeID].resolutionTime < block.timestamp, "It's too soon to vote");
-
-        require(agreements[agreeID].state == AgreementLib.AgreementState.ACTIVE
-            || agreements[agreeID].state == AgreementLib.AgreementState.COMPLETED, "Agreement not in valid state for voting");
-
-        uint index = _partyIndex(agreeID, msg.sender);
-        require(index > 0, "You can only vote if you're part of the agreement");
-
-        if(index == 1){
-            require(agreements[agreeID].party1Vote == AgreementLib.Vote.NONE, "You can't vote twice");
-            agreements[agreeID].party1Vote = vote;
-            _updateStateAfterVote(agreeID);
-        }
-        else{
-            require(agreements[agreeID].party2Vote == AgreementLib.Vote.NONE, "You can't vote twice");
-            agreements[agreeID].party2Vote = vote;
-            _updateStateAfterVote(agreeID);
         }
     }
 
@@ -237,53 +215,22 @@ contract Verifier{
         address j = msg.sender;
 
         uint allowed = unisonToken.allowance(j, address(this));
-        require(allowed >= stakingAmount);
-        unisonToken.transferFrom(j, address(this), stakingAmount);
+        require(allowed >= getStakingAmount());
+        unisonToken.transferFrom(j, address(this), getStakingAmount());
 
         jurorStore.addJuror(j);
         emit AddJuror(j);
+
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
     // remove yourself from available jurors list
     function removeJuror() public{
         jurorStore.removeJuror(msg.sender);
-        unisonToken.transfer(msg.sender, stakingAmount);
+        unisonToken.transfer(msg.sender, getStakingAmount());
         emit RemoveJuror(msg.sender);
-    }
 
-    function _jurorIndex(uint agreeID) internal view returns(int){
-        if(!juries[agreeID].assigned)
-            return -1;
-
-        for(uint i=0; i<juries[agreeID].numJurors; i++){
-            if(juries[agreeID].jurors[i] == msg.sender)
-                return int(i);
-        }
-        return -1;
-    }
-
-    function _decisionTime(uint agreeID) internal view returns(bool){
-        // Returns true if it's time to take action on jury's decision
-        // Either when voting deadline has been reached or if all jurors voted
-
-        if(!juries[agreeID].assigned)
-            return false;
-        
-        // True if deadline reached
-        if(juries[agreeID].deadline <= block.timestamp)
-            return true;
-
-        // False if anyone hasn't voted yet
-        for(uint i=0; i < juries[agreeID].numJurors; i++){
-            if(juries[agreeID].votes[i] == AgreementLib.Vote.NO)
-                return false;
-        }
-
-        return true;
-    }
-
-    function _abs(int x) internal pure returns (int) {
-        return x >= 0 ? x : -x;
+        feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }
 
     function _juryMakeDecision(uint agreeID) internal{
@@ -303,19 +250,22 @@ contract Verifier{
 
         AgreementLib.Vote decision;
         uint payPerJuror;
+        uint controversy;
 
         if(no > yes){
             // Jury voted no, do a refund
             decision = AgreementLib.Vote.NO;
             _refundAgreement(agreeID);
-            payPerJuror = stakingAmount / no;
+            payPerJuror = agreements[agreeID].feePaid / no;
+            controversy = (1000 * yes) /(no + yes);
         }
         else{
             // Jury voted yes (even result is counted as yes), pay out as normal
             decision = AgreementLib.Vote.YES;
             _payoutAgreement(agreeID);
-            payPerJuror = stakingAmount / yes;
-
+            if(yes > 0)
+                payPerJuror = agreements[agreeID].feePaid / yes;
+            controversy = (1000 * no) /(no + yes);
         }
 
         // Pay the jurors who voted correctly
@@ -325,9 +275,28 @@ contract Verifier{
             }
         }
 
+        // Currently, abstaining is not punished. You only miss out on your payment if you abstain
+
+        // Punish any malicious jurors
+        if(controversy != 0 && controversy <= controversyRatio){
+            // controversy used to avoid punishing jurors on difficult cases
+            // controversy of 0 means the decision was unanimous and this step isn't needed
+            AgreementLib.Vote wrongVote;
+            if(decision == AgreementLib.Vote.YES)
+                wrongVote = AgreementLib.Vote.NO;
+            else
+                wrongVote =  AgreementLib.Vote.YES;
+
+            for(uint i=0; i<juries[agreeID].numJurors; i++){
+                if(juries[agreeID].votes[i] == wrongVote)
+                    jurorStore.addStrike(juries[agreeID].jurors[i]);
+
+            }
+        }
 
 
         agreements[agreeID].state = AgreementLib.AgreementState.CLOSED;
+        numActive--;
         emit CloseAgreement(agreeID);
     }
 
@@ -335,25 +304,34 @@ contract Verifier{
         return jurorStore.isJuror(a);
     }
 
+    function getStrikes(address a) public view returns(uint){
+        return jurorStore.getStrikes(a);
+    }
+
     function jurorVote(uint agreeID, AgreementLib.Vote vote) public{
-        // Yes means pay out as normal, no means refund all payments
-
-        require(juries[agreeID].assigned, "There is no jury for this agreement");
-
-        int index = _jurorIndex(agreeID);
-
-        require(index >= 0, "You are not on this jury");
-        // If the following two conditions hold, then the agreement can't be closed. So that doesn't need to be checked
-        require(juries[agreeID].deadline > block.timestamp);
-        require(juries[agreeID].votes[uint(index)] == AgreementLib.Vote.NONE, "You already voted");
-
-        // Set vote
-        juries[agreeID].votes[uint(index)] = vote;
-
-        if(_decisionTime(agreeID)){
+        if(AgreementLib.juryVote(juries[agreeID], vote))
             _juryMakeDecision(agreeID);
-        }
 
+    }
+
+    function triggerPayout(uint agreeID) public{
+        // If not all jury members voted, this will be needed to finish the agreement
+        // (since code execution must come from someone)
+
+        require(juries[agreeID].assigned, "E11");
+        require(juries[agreeID].deadline <= block.timestamp, "E14");
+        require(agreements[agreeID].state != AgreementLib.AgreementState.CLOSED, "E15");
+
+        _juryMakeDecision(agreeID);
+
+    }
+
+    function getPlatformFee() public view returns(uint){
+        return feeContract.getPlatformFee();
+    }
+
+    function getStakingAmount() public view returns(uint){
+        return feeContract.getStakingAmount();
     }
 
     event CreateAgreement(address party1, address party2, uint agreeID, string uuid);

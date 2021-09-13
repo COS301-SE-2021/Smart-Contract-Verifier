@@ -1,6 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
@@ -13,7 +13,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa
 import org.springframework.boot.test.context.SpringBootTest
@@ -86,18 +85,19 @@ class CreateConditionDatabaseTest {
     @Test
     fun `CreateCondition successful`()
     {
-        val request = CreateConditionRequest(userA.publicWalletID,
-                                                "Test title",
-                                                agreement.ContractID,
+        val request = CreateConditionRequest("Test title",
                                                 "Test description")
 
-        val response = negotiationService.createCondition(request)
+        val response = negotiationService.createCondition(userA.publicWalletID,
+            agreement.ContractID,
+            request)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.conditionID)
-        conditions = conditionsRepository.getById(response.conditionID!!)
-        assertEquals(request.AgreementID, conditions.contract.ContractID)
-        assertEquals(request.PreposedUser, conditions.proposingUser.publicWalletID)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.conditionID)
+        conditions = conditionsRepository.getById(response.responseObject!!.conditionID!!)
+        assertEquals(agreement.ContractID, conditions.contract.ContractID)
+        assertEquals(userA.publicWalletID, conditions.proposingUser.publicWalletID)
         assertEquals(request.Title, conditions.conditionTitle)
         assertEquals(request.ConditionDescription, conditions.conditionDescription)
 

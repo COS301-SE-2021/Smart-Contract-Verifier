@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "Payment" : 500.0,
+  "PayingUser" : ""
+}
+----

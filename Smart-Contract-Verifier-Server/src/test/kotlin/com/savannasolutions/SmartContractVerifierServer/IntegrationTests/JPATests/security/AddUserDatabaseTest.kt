@@ -1,11 +1,11 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.security
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
-import com.savannasolutions.SmartContractVerifierServer.user.models.User
-import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.security.requests.AddUserRequest
 import com.savannasolutions.SmartContractVerifierServer.security.services.SecurityService
+import com.savannasolutions.SmartContractVerifierServer.user.models.User
+import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

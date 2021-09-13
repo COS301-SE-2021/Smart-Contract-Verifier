@@ -41,36 +41,27 @@ class SecurityService(val userRepository: UserRepository,
         return GetNonceResponse(0, ResponseStatus.FAILED)
     }
 
-    fun userExists(userExistsRequest: UserExistsRequest): UserExistsResponse {
-        if(userExistsRequest.walletID.isEmpty())
-            return UserExistsResponse(status = ResponseStatus.FAILED)
-
-        return if(userRepository.existsById(userExistsRequest.walletID))
-            UserExistsResponse(true, ResponseStatus.SUCCESSFUL)
-        else
-            UserExistsResponse(status = ResponseStatus.SUCCESSFUL)
-    }
-
-    fun addUser(addUserRequest: AddUserRequest): AddUserResponse {
+    fun addUser(addUserRequest: AddUserRequest): ApiResponse<Objects> {
         val wID = addUserRequest.WalletID
         if(userRepository.existsById(wID))
-            return AddUserResponse(status = ResponseStatus.FAILED)
+            return ApiResponse(status = ResponseStatus.FAILED,
+            message = "User exists in database")
 
         val user = User(publicWalletID = addUserRequest.WalletID, alias = addUserRequest.Alias)
 
         userRepository.save(user)
 
-        return  AddUserResponse(status = ResponseStatus.SUCCESSFUL)
+        return  ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun login(loginRequest: LoginRequest): LoginResponse {
+    fun login(userId: String, loginRequest: LoginRequest): LoginResponse {
         var match = false
-        if(userRepository.existsById(loginRequest.userId)){
-            //----------------------------------------------------------------------------------------------------------
-            val nonce = userRepository.getById(loginRequest.userId).nonce.toString()
-            val prefix = "\u0019Ethereum Signed Message:\n10"
-            val message = digest((prefix+nonce).toByteArray(), KeccakParameter.KECCAK_256)
+        val prefix = "\u0019Ethereum Signed Message:\n10"
+        if(userRepository.existsById(userId)){
+            val nonce = userRepository.getById(userId).nonce.toString()
+            val message = digest((prefix + nonce).toByteArray(), KeccakParameter.KECCAK_256)
             val signatureBytes = Numeric.hexStringToByteArray(loginRequest.signedNonce)
+
             val v = signatureBytes[64]
             if(v < 27)
                 v.plus(27)
@@ -89,17 +80,18 @@ class SecurityService(val userRepository: UserRepository,
 
                 if(publicKey != null){
                     recoveredAddress = "0x" + org.web3j.crypto.Keys.getAddress(publicKey)
-                    if(recoveredAddress == loginRequest.userId.lowercase()){
+                    if(recoveredAddress == userId.lowercase()){
                         match = true
                         break
                     }
                 }
             }
+
             if(match){
                 //val secretKey = Keys.hmacShaKeyFor(securityConfig.secretKey.encodeToByteArray())
-                val jwtToken = Jwts.builder().setSubject(loginRequest.userId).setExpiration(Date(System.currentTimeMillis() + 10800000)).compact()
+                val jwtToken = Jwts.builder().setSubject(userId).setExpiration(Date(System.currentTimeMillis() + 10800000)).compact()
                 val newNonce = ThreadLocalRandom.current().nextLong(1000000000, 9999999999)
-                val user = userRepository.getById(loginRequest.userId)
+                val user = userRepository.getById(userId)
                 user.nonce = newNonce
                 userRepository.save(user)
                 return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)

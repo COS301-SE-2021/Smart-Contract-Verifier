@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.models
 
+import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.contracts.models.Judges
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -28,6 +29,9 @@ data class Agreements(@Id @GeneratedValue val ContractID:UUID,
 
     @ManyToMany(mappedBy = "agreements", cascade = [CascadeType.PERSIST])
     val users: MutableSet<User> = mutableSetOf()
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contract", orphanRemoval = true, cascade = [CascadeType.ALL])
+    var evidence: List<Evidence>? = emptyList()
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "agreement", orphanRemoval = true, cascade = [CascadeType.ALL])
     var judges: List<Judges>?= emptyList()

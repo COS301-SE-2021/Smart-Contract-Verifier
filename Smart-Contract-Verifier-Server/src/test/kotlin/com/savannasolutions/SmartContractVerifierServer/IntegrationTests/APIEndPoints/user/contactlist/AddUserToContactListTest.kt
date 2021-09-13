@@ -1,5 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.user.contactlist
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactListProfile
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -11,11 +12,16 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
@@ -23,6 +29,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/put/user/userID/contactList/contactListID")
 class AddUserToContactListTest {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -86,21 +93,41 @@ class AddUserToContactListTest {
         whenever(contactListProfileRepository.save(any<ContactListProfile>())).thenReturn(contactListProfile)
     }
 
-    private fun requestSender(rjson: String): MockHttpServletResponse {
+    private fun requestSender(rjson: String,
+                              userID: String,
+                              contactListID: UUID,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String): MockHttpServletResponse {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/contactlist/add-user-to-contact-list")
+            MockMvcRequestBuilders.put("/user/${userID}/contactList/${contactListID}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(rjson)
+        ).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors)
+            )
         ).andReturn().response
     }
 
     @Test
     fun `AddUserToContactList successful`()
     {
-        val rjson = "{\"NewUserID\" : \"${userB.publicWalletID}\",\"ContactListID\" : \"${contactList.contactListID}\"," +
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiEmptyResponse())
+        //End of documentation
+
+        val rjson = "{\"NewUserID\" : \"${userB.publicWalletID}\"," +
                 "    \"NewUserAlias\" : \"TestAlias\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            contactList.contactListID!!,
+            fieldDescriptorResponse,
+            "AddUserToContactList successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
@@ -108,10 +135,20 @@ class AddUserToContactListTest {
     @Test
     fun `AddUserToContactList failed due to user alias being empty`()
     {
-        val rjson = "{\"NewUserID\" : \"${userB.publicWalletID}\",\"ContactListID\" : \"${contactList.contactListID}\"," +
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
+
+        val rjson = "{\"NewUserID\" : \"${userB.publicWalletID}\"," +
                 "    \"NewUserAlias\" : \"\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            contactList.contactListID!!,
+            fieldDescriptorResponse,
+            "AddUserToContactList failed due to user alias being empty")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -119,21 +156,39 @@ class AddUserToContactListTest {
     @Test
     fun `AddUserToContactList failed due to NewUserID being empty`()
     {
-        val rjson = "{\"NewUserID\" : \"\",\"ContactListID\" : \"${contactList.contactListID}\"," +
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
+        val rjson = "{\"NewUserID\" : \"\"," +
                 "    \"NewUserAlias\" : \"TestAlias\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            contactList.contactListID!!,
+            fieldDescriptorResponse,
+            "AddUserToContactList failed due to NewUserID being empty")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
-    fun `AddUserToContactList failed due to user not exisiting`()
+    fun `AddUserToContactList failed due to user not existing`()
     {
-        val rjson = "{\"NewUserID\" : \"not correct user\",\"ContactListID\" : \"${contactList.contactListID}\"," +
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
+        val rjson = "{\"NewUserID\" : \"not correct user\"," +
                 "    \"NewUserAlias\" : \"TestAlias\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            contactList.contactListID!!,
+            fieldDescriptorResponse,
+            "AddUserToContactList failed due to user not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -141,11 +196,42 @@ class AddUserToContactListTest {
     @Test
     fun `AddUserToContactList failed contact list does not exist`()
     {
-        val rjson = "{\"NewUserID\" : \"${userB.publicWalletID}\",\"ContactListID\" : \""+UUID.fromString("310deb0e-e828-44c9-b9c0-ca35b4142913")+"\"," +
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
+        val rjson = "{\"NewUserID\" : \"${userB.publicWalletID}\"," +
                 "    \"NewUserAlias\" : \"TestAlias\"}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            UUID.fromString("310deb0e-e828-44c9-b9c0-ca35b4142913"),
+            fieldDescriptorResponse,
+            "AddUserToContactList failed contact list does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
+
+    @Test
+    fun `AddUserToContactList failed user trying to add himself`()
+    {
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
+        val rjson = "{\"NewUserID\" : \"${userA.publicWalletID}\"," +
+                "    \"NewUserAlias\" : \"TestAlias\"}"
+
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            contactList.contactListID!!,
+            fieldDescriptorResponse,
+            "AddUserToContactList failed user trying to add himself")
+
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+
+    }
+
 }

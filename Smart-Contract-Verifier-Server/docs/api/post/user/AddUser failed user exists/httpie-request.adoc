@@ -1,0 +1,8 @@
+[source,bash]
+----
+$ echo '{
+  "WalletID" : "broken",
+  "Alias" : "test"
+}' | http POST 'http://localhost:8080/user' \
+    'Content-Type:application/json;charset=UTF-8'
+----

@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "Payment" : 500.0,
+  "PayingUser" : "0x69Ec9a8aBFa094b24054422564e68B08aF311400"
+}
+----

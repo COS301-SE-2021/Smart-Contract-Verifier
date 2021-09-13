@@ -1,0 +1,92 @@
+|===
+|Path|Type|Description
+
+|`+Status+`
+|`+ENUM+`
+|Will return successful or failed
+
+|`+ResponseObject+`
+|`+Object+`
+|If status is successful this will be a populated response object. If status is failed this will be a null object
+
+|`+ResponseObject.agreements[]+`
+|`+Array+`
+|This is the list of agreements the user currently has
+
+|`+ResponseObject.agreements[].AgreementID+`
+|`+UUID+`
+|This is the unique ID of the agreement
+
+|`+ResponseObject.agreements[].AgreementTitle+`
+|`+String+`
+|This is the title of the agreement
+
+|`+ResponseObject.agreements[].AgreementDescription+`
+|`+String+`
+|This is the description of the agreement
+
+|`+ResponseObject.agreements[].PartyA+`
+|`+Object+`
+|This is the public wallet id of party A
+
+|`+ResponseObject.agreements[].PartyA.publicWalletID+`
+|`+String+`
+|This is the public wallet of the user
+
+|`+ResponseObject.agreements[].PartyB+`
+|`+Object+`
+|This is the public wallet id of party B
+
+|`+ResponseObject.agreements[].CreatedDate+`
+|`+Date+`
+|This is the date that the agreement was initially proposed
+
+|`+ResponseObject.agreements[].SealedDate+`
+|`+Date+`
+|This is the date that the agreement was sealed on the backend
+
+|`+ResponseObject.agreements[].MovedToBlockChain+`
+|`+Boolean+`
+|This flag indicates if the agreement has been moved to the blockchain
+
+|`+ResponseObject.agreements[].Conditions[]+`
+|`+Array+`
+|This is the possibly empty list of conditions for the agreement
+
+|`+ResponseObject.agreements[].Conditions[].ConditionID+`
+|`+UUID+`
+|This is the unique ID for the condition
+
+|`+ResponseObject.agreements[].Conditions[].ConditionDescription+`
+|`+String+`
+|This is the description for the condition
+
+|`+ResponseObject.agreements[].Conditions[].ProposingUser+`
+|`+Object+`
+|This is the public wallet address for the user who proposed the condition
+
+|`+ResponseObject.agreements[].Conditions[].ProposingUser.publicWalletID+`
+|`+String+`
+|This is the public wallet of the user
+
+|`+ResponseObject.agreements[].Conditions[].AgreementID+`
+|`+UUID+`
+|This is the unique id for the agreement this condition is attached to
+
+|`+ResponseObject.agreements[].Conditions[].ConditionStatus+`
+|`+ENUM+`
+|This is the status of the condition. It can be PENDING, ACCEPTED or REJECTED
+
+|`+ResponseObject.agreements[].Conditions[].ConditionTitle+`
+|`+String+`
+|This is the title for the condition
+
+|`+ResponseObject.agreements[].AgreementImageURL+`
+|`+String+`
+|This is the url to the image associated with the agreement
+
+|`+ResponseObject.agreements[].BlockchainID+`
+|`+Long Int+`
+|This is the blockchain id for when the agreement has been moved to the blockchain
+
+|===

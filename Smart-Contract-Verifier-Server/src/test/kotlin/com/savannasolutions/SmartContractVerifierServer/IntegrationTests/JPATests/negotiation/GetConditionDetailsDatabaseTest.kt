@@ -1,13 +1,12 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
-import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.GetConditionDetailsRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -99,17 +98,18 @@ class GetConditionDetailsDatabaseTest {
     @Test
     fun `GetConditionDetails successful`()
     {
-        val request = GetConditionDetailsRequest(condition.conditionID)
-
-        val response = negotiationService.getConditionDetails(request)
+        val response = negotiationService.getConditionDetails(userA.publicWalletID,
+            agreement.ContractID,
+            condition.conditionID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.conditionResponse)
-        assertEquals(response.conditionResponse!!.conditionID, condition.conditionID)
-        assertNotNull(response.conditionResponse!!.conditionTitle)
-        assertEquals(response.conditionResponse!!.conditionTitle!!, condition.conditionTitle)
-        assertNotNull(response.conditionResponse!!.conditionDescription)
-        assertEquals(response.conditionResponse!!.conditionDescription!!, condition.conditionDescription)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.conditionResponse)
+        assertEquals(response.responseObject!!.conditionResponse!!.conditionID, condition.conditionID)
+        assertNotNull(response.responseObject!!.conditionResponse!!.conditionTitle)
+        assertEquals(response.responseObject!!.conditionResponse!!.conditionTitle!!, condition.conditionTitle)
+        assertNotNull(response.responseObject!!.conditionResponse!!.conditionDescription)
+        assertEquals(response.responseObject!!.conditionResponse!!.conditionDescription!!, condition.conditionDescription)
     }
 
 }

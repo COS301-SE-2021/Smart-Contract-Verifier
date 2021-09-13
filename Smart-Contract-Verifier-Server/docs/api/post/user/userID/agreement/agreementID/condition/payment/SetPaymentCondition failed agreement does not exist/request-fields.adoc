@@ -1,0 +1,12 @@
+|===
+|Path|Type|Description
+
+|`+Payment+`
+|`+Double+`
+|This is the amount needed to be paid
+
+|`+PayingUser+`
+|`+String+`
+|This is the user public wallet address who will be paying
+
+|===

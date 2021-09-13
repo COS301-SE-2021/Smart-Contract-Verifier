@@ -1,10 +1,13 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
+import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.CreateConditionRequest
+import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.CreateConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import org.junit.jupiter.api.BeforeEach
@@ -12,20 +15,24 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/post/user/userID/agreement/agreementID/condition")
 class CreateConditionTest {
     @Autowired
     lateinit var mockMvc : MockMvc
@@ -84,94 +91,126 @@ class CreateConditionTest {
         whenever(conditionsRepository.save(any<Conditions>())).thenReturn(condition)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(rjson: String,
+                              userID: String,
+                              agreementID: UUID,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/create-condition")
+            MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/condition")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(rjson)).andReturn().response
+            .content(rjson)).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors),
+                PayloadDocumentation.requestFields(CreateConditionRequest.request())
+            )
+        ).andReturn().response
     }
 
     @Test
     fun `CreateCondition successful`(){
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(CreateConditionResponse.response())
+        //End of documentation
+
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userA.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
                 "    \"ConditionDescription\" : \"This is a postman test\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson, userA.publicWalletID,
+            agreement.ContractID,
+            fieldDescriptorResponse,
+            "CreateCondition successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }
 
     @Test
     fun `CreateCondition failed agreement does not exist`(){
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userA.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"6968236f-6020-4ed5-8167-0941648c5365\",\n" +
                 "    \"ConditionDescription\" : \"This is a postman test\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"),
+            fieldDescriptorResponse,
+            "CreateCondition failed agreement does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `CreateCondition failed condition description `(){
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userA.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
                 "    \"ConditionDescription\" : \"\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
-    fun `CreateCondition failed when proposed user is empty`(){
-        val rjson = "{\n" +
-                "    \"ProposedUser\" : \"\", \n" +
-                "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
-                "    \"ConditionDescription\" : \"This is a postman test\"\n" +
-                "}"
-
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            agreement.ContractID,fieldDescriptorResponse,
+            "CreateCondition failed due to empty condition description")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `CreateCondition failed title is empty`(){
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userA.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
                 "    \"ConditionDescription\" : \"This is a postman test\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userA.publicWalletID,
+            agreement.ContractID,
+            fieldDescriptorResponse,
+            "CreateCondition failed due to title being empty")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
     fun `CreateCondition failed user is not part of agreement`(){
+        //documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
+
         val rjson = "{\n" +
-                "    \"ProposedUser\" : \"${userC.publicWalletID}\", \n" +
                 "    \"ConditionTitle\" : \"Test\",\n" +
-                "    \"AgreementID\" : \"${agreement.ContractID}\",\n" +
                 "    \"ConditionDescription\" : \"This is a postman test\"\n" +
                 "}"
 
-        val response = requestSender(rjson)
+        val response = requestSender(rjson,
+            userC.publicWalletID,
+            agreement.ContractID,
+            fieldDescriptorResponse,
+            "CreateCondition failed user is not part of agreement")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

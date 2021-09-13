@@ -1,9 +1,11 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.messenger
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
+import com.savannasolutions.SmartContractVerifierServer.messenger.responses.GetAllMessagesByAgreementResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
@@ -12,18 +14,23 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.operation.preprocess.Preprocessors.*
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
 
 @SpringBootTest
+@AutoConfigureRestDocs(outputDir = "docs/api/get/user/userid/agreement/agreementId/message")
 @AutoConfigureMockMvc
 class GetAllMessagesByAgreementTest {
     @Autowired
@@ -109,20 +116,32 @@ class GetAllMessagesByAgreementTest {
         }
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String,
+                              agreementID: UUID,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
+
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/messenger/get-all-messages-by-agreement")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                MockMvcRequestBuilders.get("/user/${userID}/agreement/${agreementID}/message")
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andDo(document(testName,
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                responseFields(responseFieldDescriptors
+                ))).andReturn().response
     }
 
     @Test
     fun `GetAllMessagesByAgreementTest successful with messages`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementAUUID.toString()}\",\"RequestingUser\" : \"${userA.publicWalletID}\"}"
+        //documentation
+        val responseFieldDescriptors = ArrayList<FieldDescriptor>()
+        responseFieldDescriptors.addAll(ApiResponse.apiResponse())
+        responseFieldDescriptors.addAll(GetAllMessagesByAgreementResponse.response())
+        //end of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementAUUID, responseFieldDescriptors, "GetAllMessagesByAgreement successful with message")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, messageA.messageID.toString())
@@ -136,9 +155,13 @@ class GetAllMessagesByAgreementTest {
     @Test
     fun `GetAllMessagesByAgreementTest successful without messages`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementBUUID.toString()}\",\"RequestingUser\" : \"${userA.publicWalletID}\"}"
+        //documentation
+        val responseFieldDescriptors = ArrayList<FieldDescriptor>()
+        responseFieldDescriptors.addAll(ApiResponse.apiResponse())
+        responseFieldDescriptors.addAll(GetAllMessagesByAgreementResponse.emptyResponse())
+        //end of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, agreementBUUID,responseFieldDescriptors,"GetAllMessagesByAgreement successful without messages")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, "\"Messages\":[]")
@@ -147,9 +170,12 @@ class GetAllMessagesByAgreementTest {
     @Test
     fun `GetAllMessagesByAgreementTest user does not exist`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementBUUID.toString()}\",\"RequestingUser\" : \"\"}"
+        //documentation
+        val responseFieldDescriptors = ArrayList<FieldDescriptor>()
+        responseFieldDescriptors.addAll(ApiResponse.apiFailedResponse())
+        //end of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender("other user", agreementAUUID, responseFieldDescriptors, "GetAllMessagesByAgreement failed user does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -157,9 +183,12 @@ class GetAllMessagesByAgreementTest {
     @Test
     fun `GetAllMessagesByAgreementTest failed agreement does not exist`()
     {
-        val rjson = "{\"AgreementID\" : \"4285318d-c845-4324-9b8f-0ef915cca8dd\",\"RequestingUser\" : \"${userA.publicWalletID}\"}"
+        //documentation
+        val responseFieldDescriptors = ArrayList<FieldDescriptor>()
+        responseFieldDescriptors.addAll(ApiResponse.apiFailedResponse())
+        //end of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID, UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"), responseFieldDescriptors, "GetAllMessagesByAgreement failed agreement does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }

@@ -2,7 +2,6 @@ package com.savannasolutions.SmartContractVerifierServer.negotiation.repositorie
 
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
-import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*
