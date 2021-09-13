@@ -13,7 +13,7 @@ class ContractConditionsPanel extends StatelessWidget {
     NegotiationService _negotiationService = NegotiationService();
     return Expanded(
       child: Container(
-        child: _contract.conditions.isEmpty //TODO handle empty conditions
+        child: _contract.conditions.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
