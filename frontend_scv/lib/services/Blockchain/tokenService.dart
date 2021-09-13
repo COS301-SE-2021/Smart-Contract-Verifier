@@ -10,11 +10,11 @@ class TokenService {
 
   SmartContract _smC = SmartContract("JSON/_src_UnisonToken_sol_UnisonToken.abi", 'UnisonToken');
 
+
   Future<void> setStake(BigInt stake) async { //Let the user stake an amount on UnisonToken.
 
     try {
       String id = await Global.getContractId('Verifier');
-      print ('ID: ' + id);
      await _smC.makeWriteCall(
           'approve', [EthereumAddress.fromHex(id), stake]);
     }
@@ -25,7 +25,7 @@ class TokenService {
 
   }
 
-  //Sets the Verifier allowance of UnisonToken
+  ///Sets the Verifier allowance of UnisonToken
   Future<void> setAllowance(BigInt amount) async {
 
     try {
@@ -39,6 +39,7 @@ class TokenService {
 
   }
 
+  ///Get the allowance that Verifier has of UnisonToken
   Future<BigInt> getAllowance() async {
 
     final res = await _smC.makeReadCall('allowance', [EthereumAddress.fromHex(Global.userAddress), EthereumAddress.fromHex(await Global.getContractId('Verifier'))]);
