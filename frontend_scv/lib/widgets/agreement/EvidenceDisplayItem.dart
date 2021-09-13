@@ -13,6 +13,6 @@ class EvidenceDisplayItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold();
+    return Center(child: ListTile(title: Text('Evidence ID' +metaData.id), tileColor: Colors.purple,),);
   }
 }

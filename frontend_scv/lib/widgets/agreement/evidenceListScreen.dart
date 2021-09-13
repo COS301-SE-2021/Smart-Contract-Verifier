@@ -24,22 +24,22 @@ class _EvidenceListPanelState extends State<EvidenceListPanel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          FutureBuilder(
-              future: evServe.getEvidenceData(widget.agreementId), builder: (context, snapshot) {
-                List<EvidenceDisplayItem> cards = [];
-                if (!snapshot.hasData) {
-                 return CircularProgressIndicator();
-                }
+      body: Container(
 
-                List<EvidenceData> evs = snapshot.data;
-                for (EvidenceData i in evs) {
-                  cards.add(EvidenceDisplayItem(i));
-                }
-                return Column(children: cards,);
-          })
-        ],
+        child: FutureBuilder(
+            future: evServe.getEvidenceData(widget.agreementId), builder: (context, snapshot) {
+              List<EvidenceDisplayItem> cards = [];
+              if (snapshot.connectionState != ConnectionState.done) {
+               return CircularProgressIndicator();
+              }
+
+              List<EvidenceData> evs = snapshot.data;
+              for (int i =0;i<evs.length;i++) {
+                // print ('Reading ' + i.toString());
+                cards.add(EvidenceDisplayItem(evs[i]));
+              }
+              return Column(children: cards,);
+        }),
       ),
     );
   }
