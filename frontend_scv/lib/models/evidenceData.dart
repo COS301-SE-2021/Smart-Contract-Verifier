@@ -1,6 +1,8 @@
 //This class is used to model evidence data from the backend.
 //This includes the backend id, and hash
 
+import 'package:unison/models/evidence.dart';
+
 enum EvidenceType {
   UPLOADED, LINKED
 }
@@ -9,10 +11,34 @@ class EvidenceData {
   String hash;
   String id;
   EvidenceType type;
+  String owner;
+
+  //In case of an uploaded file
+  String fileName;
+  String mimeType;
+
+  //In case of a linked file
+  String url;
 
   //Should include an agreementid soon
 
-  EvidenceData.fromJSON(Map<String, String> jsn) {
+  ///Generate and instance from data provided by the server
+  EvidenceData.fromJSON(Map<String, dynamic> jsn) {
+      hash = jsn['EvidenceHash'];
+      id = jsn['EvidenceID'];
+      String ow = (jsn['EvidenceOwner']['publicWalletID']);
+      owner = ow.toLowerCase();
+      var specific = jsn['EvidenceSpecificDetail'];
+
+      if (jsn['EvidenceType'] == 'UPLOADED') {
+        type = EvidenceType.UPLOADED;
+        fileName = specific['OriginalFileName'];
+        mimeType = specific['FileMimeType'];
+      }
+      else {
+        type = EvidenceType.LINKED;
+        url = specific['EvidenceURL'];
+      }
 
   }
 
