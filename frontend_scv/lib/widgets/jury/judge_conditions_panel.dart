@@ -30,6 +30,8 @@ class JudgeConditionsPanel extends StatelessWidget {
                         _contract.partyA == _contract.conditions[i].proposedBy
                             ? 'A'
                             : 'B',
+                    durationId: _contract.durationID,
+                    paymentId: _contract.paymentID,
                   ),
                   Divider(),
                 ],
