@@ -57,7 +57,7 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                         builder: (context, snap) {
                           Image ret = Image.network(widget.metaData.url,
                             errorBuilder: (context, error, stackTrace) {
-                              return SizedBox(height: 5, child: ListTile(shape: RoundedRectangleBorder(
+                              return ListTile(shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ), title: Text(
                                   'Could not load preview. Proceed at your own risk!', style: TextStyle(color: Colors.white),),
@@ -75,8 +75,7 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                                 ),
                                 tileColor: Color.fromRGBO(
                                     2, 8, 24, 0.7294117647058823),
-                              ),
-                               );
+                              );
                             },);
                           //ret.ori
                           return SizedBox(child: ret, height: 500,);

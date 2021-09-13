@@ -87,11 +87,14 @@ class _EvidenceListPanelState extends State<EvidenceListPanel> {
 
         child: FutureBuilder(
             future: evServe.getEvidenceData(widget.agreementId), builder: (context, snapshot) {
-              List<Widget> cards = [Row(
-                children: [
-                  Center(child: TextButton(child: Text('Upload Evidence to UniServer(TM)'), onPressed: uploadEvidence,)),
-                  Center(child: TextButton(child: Text('Provide a link to evidence (url)'), onPressed: linkEvidence,)),
-                ],
+              List<Widget> cards = [Center(
+                child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(child: TextButton(child: Text('Upload Evidence to UniServer(TM)'), onPressed: uploadEvidence,)),
+                    SizedBox(width: 100),
+                    Center(child: TextButton(child: Text('Provide a link to evidence (url)'), onPressed: linkEvidence,)),
+                  ],
+                ),
               )];
               if (snapshot.connectionState != ConnectionState.done) {
                return AwesomeLoader();
