@@ -1,11 +1,9 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:intl/intl.dart';
 import 'package:unison/models/condition.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class ContractConditionActionsPanel extends StatefulWidget {
   final _agreementId;
