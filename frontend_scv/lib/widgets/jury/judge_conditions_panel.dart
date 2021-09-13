@@ -17,7 +17,7 @@ class JudgeConditionsPanel extends StatelessWidget {
     print(_contract.conditions);
     return Container(
       // padding: EdgeInsets.all(8),
-      child: _contract.conditions.isEmpty //TODO handle empty conditions
+      child: _contract.conditions.isEmpty
           ? Text('No Conditions Set!')
           : ListView.builder(
               itemCount: _contract.conditions.length,
