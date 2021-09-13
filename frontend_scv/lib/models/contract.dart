@@ -11,13 +11,13 @@ import 'http_exception.dart';
 
 class Contract with ChangeNotifier {
   String contractId; //agreementID
-  BigInt blockchainId; //TODO: remove ples
+  BigInt blockchainId;
   String partyA;
   String partyB;
   DateTime createdDate;
   DateTime sealedDate;
   bool movedToBlockchain;
-  List<Condition> conditions; //TODO Handle empty/initial conditions
+  List<Condition> conditions;
   String title;
 
   String description;
@@ -45,13 +45,9 @@ class Contract with ChangeNotifier {
 
   //JSON constructor. Uses response from getAgreement. RC: Should be revised
   Contract.fromJson(Map jsn) {
-    //TODO: publicWalletID will be upper case soon
     contractId = jsn['AgreementID'];
     partyA = jsn['PartyA']['publicWalletID'];
     partyB = jsn['PartyB']['publicWalletID'];
-    // createdDate = null;
-    // sealedDate = null;
-    //status = json['status'],
 
     //Try to get items that may not exist yet
     try {
@@ -84,27 +80,22 @@ class Contract with ChangeNotifier {
 
     var payment = jsn['PaymentCondition'];
     try {
-
-        paymentID = payment['ID'];
-        paymentAmount = payment['Amount'];
-        payingUser = payment['Payer'];
-
+      paymentID = payment['ID'];
+      paymentAmount = payment['Amount'];
+      payingUser = payment['Payer'];
     } catch (_) {} //Payment condition not set
 
     var durationCond = jsn['DurationCondition'];
     try {
-
       durationID = durationCond['ID'];
       duration = durationCond['Amount'];
-
     } catch (_) {} //Duration condition not set
-
   }
 
   Map<String, String> toJson() {
     return {
       //This is used in the initial save to the backend, hence not all fields being present.
-    //  'PartyA': partyA,
+      //  'PartyA': partyA,
       'PartyB': partyB,
       'AgreementTitle': title,
       'AgreementDescription': description,
@@ -146,39 +137,40 @@ class Contract with ChangeNotifier {
 
   ///Generate a string of conditions to send to the blockchain upon agreement creation.
   String dataToChain() {
+    String ret = Global.stringToBase64(title) +
+        '#' +
+        Global.stringToBase64(description) +
+        '#{';
+    for (Condition i in conditions) {
+      ret += i.toChain();
+    }
 
-    String ret = Global.stringToBase64(title) + '#' + Global.stringToBase64(description) + '#{';
-     for (Condition i in conditions) {
-        ret += i.toChain();
-     }
-
-     ret += '}';
-     return ret;
+    ret += '}';
+    return ret;
   }
 
- ///Generate an instance from the blockchain. This differs from a blockchainagreement, in that it should only be used to verify the state of conditions saved in the smart contract.
- Contract.fromChain(String data) {
+  ///Generate an instance from the blockchain. This differs from a blockchainagreement, in that it should only be used to verify the state of conditions saved in the smart contract.
+  Contract.fromChain(String data) {
     int hPos = data.indexOf('#');
     title = Global.base64ToString(data.substring(0, hPos));
-    String next = data.substring(hPos+1);
+    String next = data.substring(hPos + 1);
     hPos = next.indexOf('#');
     description = Global.base64ToString(next.substring(0, hPos));
-    next = next.substring(hPos+1);
+    next = next.substring(hPos + 1);
     //This method to ensure the last '}' is used in the string. A better method may be used in the future.
 
-    next = next.substring(next.indexOf('{') +1, next.lastIndexOf('}'));
+    next = next.substring(next.indexOf('{') + 1, next.lastIndexOf('}'));
     //Next is now a list of conditions, each enclosed in []
     int count = min('['.allMatches(next).length, ']'.allMatches(next).length);
 
     //This should be safe. The data will be encoded before saving on blockchain.
     conditions = [];
-    for (int i =0;i<count;i++) {
-        String item = next.substring(next.indexOf('[') +1, next.indexOf(']'));
-        conditions.add(Condition.fromChainData(item));
-        next = next.substring(next.indexOf(']') +1);
+    for (int i = 0; i < count; i++) {
+      String item = next.substring(next.indexOf('[') + 1, next.indexOf(']'));
+      conditions.add(Condition.fromChainData(item));
+      next = next.substring(next.indexOf(']') + 1);
     }
-
- }
+  }
 
   String toString() {
     //A ToString method for debugging purposes
@@ -191,17 +183,14 @@ class Contract with ChangeNotifier {
 
   ///A check to ensure the validity of an agreement saved on the blockchain.
   bool blockchainValid(Contract con) {
-    //TODO: Maybe this could be done using a hash?
-
     bool ret = true;
     ret = con.title == title && con.description == description;
 
     //Check conditions. The two agreements must have their conditions in the same order.
-    for (int i =0;i<conditions.length && ret;i++) {
-        ret = ret && conditions[i].valid(con.conditions[i]);
+    for (int i = 0; i < conditions.length && ret; i++) {
+      ret = ret && conditions[i].valid(con.conditions[i]);
     }
 
     return ret;
-
   }
 }
