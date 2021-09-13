@@ -2,7 +2,10 @@
 //Clicking on evidence should display the actual file.
 
 import 'package:flutter/material.dart';
+import 'package:unison/models/evidenceData.dart';
 import 'package:unison/services/Server/evidenceService.dart';
+
+import 'EvidenceDisplayItem.dart';
 
 class EvidenceListPanel extends StatefulWidget {
 
@@ -25,9 +28,16 @@ class _EvidenceListPanelState extends State<EvidenceListPanel> {
         children: [
           FutureBuilder(
               future: evServe.getEvidenceData(widget.agreementId), builder: (context, snapshot) {
+                List<EvidenceDisplayItem> cards = [];
+                if (!snapshot.hasData) {
+                 return CircularProgressIndicator();
+                }
 
-
-                return Text('');
+                List<EvidenceData> evs = snapshot.data;
+                for (EvidenceData i in evs) {
+                  cards.add(EvidenceDisplayItem(i));
+                }
+                return Column(children: cards,);
           })
         ],
       ),
