@@ -96,6 +96,23 @@ contract Verifier{
         agreements[agreeID].state = AgreementLib.AgreementState.REJECTED;
     }
 
+    // Call this method to pay all of your payment conditions, you must set the appropriate allowances before calling it
+    function payIn(uint agreeID) external{
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
+
+        for(uint i=0; i<agreements[agreeID].numPayments; i++){
+            if(agreements[agreeID].payments[i].from != tx.origin)
+                continue;
+
+            // Check allowance and then call transferFrom
+            uint256 allowed = agreements[agreeID].payments[i].token.allowance(tx.origin, address(this));
+            require(allowed >= agreements[agreeID].payments[i].amount, "E5");
+            agreements[agreeID].payments[i].token.transferFrom(tx.origin, address(this), agreements[agreeID].payments[i].amount);
+            agreements[agreeID].payments[i].paidIn = true;            
+        }
+    }
+
+
     // Each payment must have the allowance ready, it will be transferred immediately
     function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
         require(tokens.length == amount.length, "E3");
