@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/global.dart';
-import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';
 import 'package:unison/widgets/messaging/message_input_panel.dart';
 import 'package:unison/widgets/messaging/messages_panel.dart';
