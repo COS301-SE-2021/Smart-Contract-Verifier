@@ -36,7 +36,6 @@ class UnisonService {
 
   Future<BlockchainAgreement> getAgreement(BigInt id) async {
     if (id == null)
-//      return null;
       print('Was null');
 
     final res = await _smC.makeReadCall('getAgreement', [id]);
