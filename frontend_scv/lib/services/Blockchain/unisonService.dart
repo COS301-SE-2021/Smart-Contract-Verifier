@@ -28,17 +28,9 @@ class UnisonService {
       data,
       con.contractId,
     ]);
-
   }
 
   Future<void> acceptAgreement(Contract con) async {
-    //This should probably be called immediately after the contract is sealed on backend.
-    print(con.movedToBlockchain);
-    print('ACCEPT AGREEMENT:' + con.blockchainId.toString());
-    // if (!con.movedToBlockchain) {
-    //   throw Exception('Agreement is not on blockchain yet');
-    // }TODO
-
     final res = await _smC.makeWriteCall('acceptAgreement', [con.blockchainId]);
   }
 
@@ -92,7 +84,6 @@ class UnisonService {
     print(res);
     return res[0];
   }
-
 
   //A party can pay into the agreement, after it has been moved to the blockchain
   Future<void> addPaymentConditions(
