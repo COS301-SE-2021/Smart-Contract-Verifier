@@ -661,5 +661,35 @@ contract('Verifier', (accounts) =>{
             assert(agree.state == 2, "Agreement not in REJECTED state");
         })
 
+        it("Reject an agreement that's paid in", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", 
+                [token.address, token.address], [amount, amount * 5], [true, false]);
+
+            // Pre balance is checked before paid in
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            await token.approve(verifier.address, amount);
+            verifier.payIn(3);
+
+            verifier.rejectAgreement(3);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(3);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been paid out");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
     })
 })
