@@ -33,6 +33,6 @@ class _ContractItemState extends State<ContractItem> {
       ),
     );
 
-    return GlowOnHover(agreementItem);
+    return GlowOnHover(agreementItem, false);
   }
 }
