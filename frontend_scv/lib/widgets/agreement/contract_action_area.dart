@@ -152,7 +152,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                   Navigator.of(context).pop();
                   setState(() {});
                 } catch (error) {
-                  //TODO: make dialog throw handler in parent
                   Navigator.of(context).pop();
                   setState(() {});
                 }
@@ -176,7 +175,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                 Navigator.of(context).pop();
                 setState(() {});
               } catch (error) {
-                //TODO: make dialog throw handler in parent
                 Navigator.of(context).pop();
                 setState(() {});
               }
@@ -189,7 +187,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
           var expiryDate = DateTime.fromMillisecondsSinceEpoch(
               _loadedBCAgreement.resTime.toInt() * 1000);
           if (expiryDate.compareTo(DateTime.now()) < 0) {
-            // if(party has already voted): TODO
+            // TODO: if(party has already voted):
             // return Text('Show Resolution options');
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -207,7 +205,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                       Navigator.of(context).pop();
                       setState(() {});
                     } catch (error) {
-                      //TODO: make dialog throw handler in parent
                       Navigator.of(context).pop();
                       setState(() {});
                     }
@@ -229,7 +226,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                       Navigator.of(context).pop();
                       setState(() {});
                     } catch (error) {
-                      //TODO: make dialog throw handler in parent
                       Navigator.of(context).pop();
                       setState(() {});
                     }
