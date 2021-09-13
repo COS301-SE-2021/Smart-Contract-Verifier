@@ -37,7 +37,7 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                    child: FutureBuilder(
+                    child: widget.metaData.type == EvidenceType.UPLOADED? FutureBuilder(
                         future: evs.getEvidenceU(
                             widget.metaData, widget.agreementID),
                         builder: (context, snap) {
@@ -49,7 +49,15 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                           Image ret = Image.memory(ev.baseFile.bytes);
                           return SizedBox(child: ret, height: 500,);
                           //return ret;
-                        }))
+                        }) :
+                    FutureBuilder(
+                        builder: (context, snap) {
+                          Image ret = Image.network(widget.metaData.url, );
+                          //ret.ori
+                          return SizedBox(child: ret, height: 500,);
+                          //return ret;
+                        })
+                )
               ],
             ),
           )

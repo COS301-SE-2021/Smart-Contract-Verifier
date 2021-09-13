@@ -18,18 +18,25 @@ class EvidenceService {
     ApiResponse res = await _api.filePost('/user/${Global.userAddress}/agreement/${ev.agreementID}/evidence/upload', ev.evidenceFile);
   }
 
+  Future<void> linkEvidence(String url, String id) async {
+    var body = {'EvidenceUrl' : url};
+    ApiResponse res = await _api.postData('/user/${Global.userAddress}/agreement/$id/evidence/link', body);
+  }
+
   ///Get the evidence IDs and hashes for an agreement
   Future<List<EvidenceData>> getEvidenceData(String id) async {
 
     print ('One');
     ApiResponse res = await _api.getData('/user/${Global.userAddress}/agreement/$id/evidence/');
     print ('Two');
-    List<dynamic> evs = res.result['evidenceHashes'];
+    List<dynamic> evs = res.result['UploadedEvidenceDetails'];
+    evs.addAll(res.result['LinkedEvidenceDetails']);
     print ('Three');
     List<EvidenceData> ret = [];
     print ('About to start');
-    for (String i in evs) {
-      ret.add(EvidenceData.fromString(i));
+    for (var i in evs) {
+      //ret.add(EvidenceData.fromString(i));
+      ret.add(EvidenceData.fromJSON(i));
     }
 
     return ret;
