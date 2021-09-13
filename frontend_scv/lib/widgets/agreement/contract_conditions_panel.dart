@@ -54,6 +54,8 @@ class ContractConditionsPanel extends StatelessWidget {
                       contractCondition: _contract.conditions[i],
                       negotiationService: _negotiationService,
                       reloadParent: _reloadMyParent,
+                      paymentId: _contract.paymentID,
+                      durationId: _contract.durationID,
                     ),
                     Divider(),
                   ],

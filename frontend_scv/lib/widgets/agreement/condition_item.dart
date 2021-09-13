@@ -7,11 +7,15 @@ class ConditionItem extends StatefulWidget {
   final Condition contractCondition;
   final NegotiationService negotiationService;
   final Function reloadParent;
+  final String durationId;
+  final String paymentId;
 
   ConditionItem({
     @required this.contractCondition,
     @required this.negotiationService,
     @required this.reloadParent,
+    this.durationId,
+    this.paymentId,
   });
 
   @override
@@ -52,7 +56,11 @@ class _ConditionItemState extends State<ConditionItem> {
                   : widget.contractCondition.title,
             ),
             leading: Icon(
-              Icons.face,
+              widget.contractCondition.conditionId == widget.paymentId
+                  ? Icons.paid
+                  : widget.contractCondition.conditionId == widget.durationId
+                      ? Icons.today
+                      : Icons.face,
               color: Colors.white70,
             ),
 
@@ -88,7 +96,11 @@ class _ConditionItemState extends State<ConditionItem> {
                   : widget.contractCondition.title,
             ),
             leading: Icon(
-              Icons.perm_identity,
+              widget.contractCondition.conditionId == widget.paymentId
+                  ? Icons.paid
+                  : widget.contractCondition.conditionId == widget.durationId
+                      ? Icons.today
+                      : Icons.perm_identity,
               color: Colors.cyan,
             ),
             subtitle: Text(widget.contractCondition.description),
@@ -125,10 +137,8 @@ class _ConditionItemState extends State<ConditionItem> {
                         ),
                         onPressed: () async {
                           try {
-                            await widget.negotiationService.rejectCondition(
-
-                                widget.contractCondition);
-
+                            await widget.negotiationService
+                                .rejectCondition(widget.contractCondition);
                           } catch (error) {
                             await showDialog(
                               context: context,
@@ -158,10 +168,8 @@ class _ConditionItemState extends State<ConditionItem> {
                         ),
                         onPressed: () async {
                           try {
-                            await widget.negotiationService.acceptCondition(
-
-                                widget.contractCondition);
-                            
+                            await widget.negotiationService
+                                .acceptCondition(widget.contractCondition);
                           } catch (error) {
                             await showDialog(
                               context: context,
