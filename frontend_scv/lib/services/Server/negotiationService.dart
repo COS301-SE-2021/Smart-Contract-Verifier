@@ -80,11 +80,14 @@ class NegotiationService {
 
   }
 
-  Future<void> setDuration(String con, double dur) async {
+  ///Set the deadline for an agreement
+  Future<void> setDuration(String con, DateTime deadline) async {
     //Set the duration condition of an agreement.
 
+    int millis = deadline.millisecondsSinceEpoch;
+    int seconds = (millis/1000).round();
     Map<String, dynamic> body = {
-      'Duration': dur,
+      'Duration': seconds,
     };
     ApiResponse response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/duration', body);
 
