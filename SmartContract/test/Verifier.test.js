@@ -564,4 +564,132 @@ contract('Verifier', (accounts) =>{
         })
         
     })
+
+    describe("Verifier unit tests 6", async () =>{
+
+        var verifier;
+        var token;
+
+        before(async () =>{
+            token = await UnisonToken.new()
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
+
+            needCoins = [];
+            for(var i = 1; i<9; i++){
+                needCoins.push(accounts[i]);
+            }
+            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+        })
+
+        it("Reject an agreement 1", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [false]);
+
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            verifier.rejectAgreement(0);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(0);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been refunded");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been paid out");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
+        it("Reject an agreement 2", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [true]);
+
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            verifier.rejectAgreement(1);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(1);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been paid out");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
+        it("Reject an agreement that's paid in", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [true]);
+
+            // Pre balance is checked before paid in
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            await token.approve(verifier.address, amount);
+            verifier.payIn(2);
+
+            verifier.rejectAgreement(2);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(2);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been paid out");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
+        it("Reject an agreement that's paid in", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", 
+                [token.address, token.address], [amount, amount * 5], [true, false]);
+
+            // Pre balance is checked before paid in
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            await token.approve(verifier.address, amount);
+            verifier.payIn(3);
+
+            verifier.rejectAgreement(3);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(3);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been paid out");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
+    })
 })
