@@ -38,6 +38,6 @@ class ContactListItem extends StatelessWidget {
       ),
     );
 
-    return GlowOnHover(contactListItem);
+    return GlowOnHover(contactListItem, false);
   }
 }
