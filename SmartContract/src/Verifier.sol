@@ -94,7 +94,15 @@ contract Verifier{
 
     function rejectAgreement(uint agreeID) public inAgreement(agreeID){
         require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
-        _refundAgreement(agreeID);
+
+        for(uint i=0; i<agreements[agreeID].numPayments; i++){
+            // Doesn't use _rejectAgreement, since that function assumes paidIn == true
+            if(agreements[agreeID].payments[i].paidIn){
+                PaymentInfoLib.PaymentInfo memory payment = agreements[agreeID].payments[i];
+                payment.token.transfer(payment.from, payment.amount);
+            }
+        }
+
         agreements[agreeID].state = AgreementLib.AgreementState.REJECTED;
     }
 
