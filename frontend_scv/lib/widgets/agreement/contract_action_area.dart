@@ -187,53 +187,61 @@ class _ContractActionAreaState extends State<ContractActionArea> {
           var expiryDate = DateTime.fromMillisecondsSinceEpoch(
               _loadedBCAgreement.resTime.toInt() * 1000);
           if (expiryDate.compareTo(DateTime.now()) < 0) {
+            if (_loadedBCAgreement.getResolutionVote() == PartyVote.NONE) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      showLoaderDialog(context);
+                      try {
+                        print('Conclude Agreement');
+                        await widget._unisonService.agreementFulfilled(
+                          widget._agreement,
+                          true,
+                        );
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      } catch (error) {
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      }
+                    },
+                    child: Text('Conclude Agreement'),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      showLoaderDialog(context);
+                      try {
+                        print('Dispute Agreement');
+                        await widget._unisonService.agreementFulfilled(
+                          widget._agreement,
+                          false,
+                        );
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      } catch (error) {
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      }
+                    },
+                    child: Text('Dispute Agreement'),
+                  ),
+                ],
+              );
+            }
+            if (_loadedBCAgreement.getResolutionVote() == PartyVote.YES) {
+              return Text('You have voted conclude');
+            }
+            if (_loadedBCAgreement.getResolutionVote() == PartyVote.NO) {
+              return Text('You have voted dispute');
+            }
             // TODO: if(party has already voted):
             // return Text('Show Resolution options');
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(
-                  onPressed: () async {
-                    showLoaderDialog(context);
-                    try {
-                      print('Conclude Agreement');
-                      await widget._unisonService.agreementFulfilled(
-                        widget._agreement,
-                        true,
-                      );
-                      Navigator.of(context).pop();
-                      setState(() {});
-                    } catch (error) {
-                      Navigator.of(context).pop();
-                      setState(() {});
-                    }
-                  },
-                  child: Text('Conclude Agreement'),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                TextButton(
-                  onPressed: () async {
-                    showLoaderDialog(context);
-                    try {
-                      print('Dispute Agreement');
-                      await widget._unisonService.agreementFulfilled(
-                        widget._agreement,
-                        false,
-                      );
-                      Navigator.of(context).pop();
-                      setState(() {});
-                    } catch (error) {
-                      Navigator.of(context).pop();
-                      setState(() {});
-                    }
-                  },
-                  child: Text('Dispute Agreement'),
-                ),
-              ],
-            );
           } else {
             var difference = expiryDate.difference(DateTime.now());
             Duration duration = Duration(seconds: difference.inSeconds);
