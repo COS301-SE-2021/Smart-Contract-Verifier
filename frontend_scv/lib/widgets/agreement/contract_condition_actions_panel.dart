@@ -293,7 +293,8 @@ class _ContractConditionActionsPanelState
       } else if (type == ConditionType.Duration) {
         await negotiationService.setDuration(
           aId,
-          (60 * 60 * double.parse(_durationConditionAmountController.text)),
+          //(60 * 60 * double.parse(_durationConditionAmountController.text)),
+          DateTime.now()
         );
       } else {
         await negotiationService.saveCondition(newCondition);
