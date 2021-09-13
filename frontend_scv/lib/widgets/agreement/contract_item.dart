@@ -12,8 +12,6 @@ class ContractItem extends StatefulWidget {
 }
 
 class _ContractItemState extends State<ContractItem> {
-  bool isHovering = false;
-
   @override
   Widget build(BuildContext context) {
     final contract = Provider.of<Contract>(context);
@@ -27,10 +25,10 @@ class _ContractItemState extends State<ContractItem> {
       },
       child: Card(
         color: Color.fromRGBO(56, 61, 81, 1),
-        elevation: isHovering ? 10 : 5,
+        elevation: 10,
         child: ListTile(
           title: Text(contract.title),
-          leading: JdenticonSVG(contract.contractId, [205]),
+          leading: JdenticonSVG(contract.contractId, [205]), //205
         ),
       ),
     );
