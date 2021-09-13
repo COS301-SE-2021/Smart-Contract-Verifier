@@ -2,18 +2,23 @@
 //An evidence, if you will.
 
 import 'dart:io';
-import 'package:http/http.dart';
+//import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart';// hide MultipartFile;
 
 class Evidence {
 
   //The party that owns the evidence
   String owningParty;
   MultipartFile evidenceFile;
+  PlatformFile baseFile;
+
   //More members may be implemented soon
 
-  Future<void> setFile(File f) async {
-    evidenceFile = await MultipartFile('UploadFile', f.readAsBytes().asStream(), f.lengthSync());
+  Future<void> setFile(PlatformFile f) async {
 
+    baseFile = f;
+    evidenceFile = await MultipartFile.fromBytes('uploadEvidence', f.bytes, filename: f.name + DateTime.now().millisecondsSinceEpoch.toString());
   }
 
 }

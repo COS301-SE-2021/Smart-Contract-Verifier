@@ -5,7 +5,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart';
+//import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart';// hide MultipartFile;
 import 'package:retry/retry.dart';
 import 'package:unison/services/Server/apiResponse.dart';
 
@@ -94,14 +96,42 @@ class ApiInteraction {
     return ApiResponse.fromJSON(jsonDecode(response.body));
   }
 
-  Future</*ApiResponse*/void> filePost(String url, MultipartFile file) async {
+  Future<ApiResponse> filePost(String url, MultipartFile file) async {
 
-    var req = MultipartRequest('POST', Uri.parse(_baseUrl + url));
+    var req = await MultipartRequest('POST', Uri.parse(_baseUrl + url));
     req.files.add(
-      file,
+      file
     );
 
-    final res = await req.send();
-    //TODO: Implement response based on what res is.
+    String body;
+    try {
+      final res = await req.send();
+      Response r = await Response.fromStream(res);
+      print ("RES: " + r.body);
+      body = r.body;
+    }
+    catch (e) {
+      return ApiResponse.fromError(e);
+    }
+
+    return ApiResponse.fromJSON(jsonDecode(body));
+
+  }
+
+  Future<PlatformFile> fileGet(String url) async {
+
+    var headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    var response = await RetryOptions(maxAttempts: 5).retry(
+          () => get(Uri.parse(_baseUrl + url),
+        headers: headers,)
+          .timeout(Duration(seconds: 3)),
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+    );
+
+    return PlatformFile(name: 'Test', bytes: response.bodyBytes, size: response.bodyBytes.lengthInBytes);
+
   }
 }

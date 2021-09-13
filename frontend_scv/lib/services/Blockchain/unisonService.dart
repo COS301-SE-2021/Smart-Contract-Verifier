@@ -17,7 +17,6 @@ class UnisonService {
     var jsn = con.toJsonChain();
 
     String data = con.dataToChain();
-    //TODO: Should be a better way of doing this, plus adding the conditions to the calldata in a reliable format (title, body)
     String partyB =
         (Global.userAddress == jsn['PartyB']) ? jsn['PartyA'] : jsn['PartyB'];
     EthereumAddress partyBA = EthereumAddress.fromHex(partyB);

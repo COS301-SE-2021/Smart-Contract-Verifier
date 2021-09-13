@@ -41,6 +41,7 @@ dependencies:
   flutter_dropzone: ^2.0.1
   file_picker: ^4.0.1
   mime: ^1.0.0
+  permission_handler: ^3.1.0+2
   grouped_buttons: ^1.0.4
 
 dev_dependencies:

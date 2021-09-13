@@ -2,8 +2,11 @@
 //Evidence must be retrieved and stored on both the backend and possible blockchain.
 //A second, contemporary service may be added in blockchain services.
 
+import 'package:file_picker/file_picker.dart';
 import 'package:unison/models/evidence.dart';
+import 'package:unison/models/evidenceData.dart';
 import 'package:unison/models/global.dart';
+import 'package:unison/services/Server/apiResponse.dart';
 import 'package:unison/services/Server/backendAPI.dart';
 
 class EvidenceService {
@@ -12,13 +15,33 @@ class EvidenceService {
   ///Store evidence for an agreement on the server
   Future<void> storeEvidence(Evidence ev, String id) async {
 
-    await _api.filePost('/user/${Global.userAddress}/agreement/$id/evidence/upload', ev.evidenceFile);
-    return;
+    ApiResponse res = await _api.filePost('/user/${Global.userAddress}/agreement/$id/evidence/upload', ev.evidenceFile);
   }
 
-  ///Get the evidence for an agreement
-  Future<List<Evidence>> getEvidence(String id) async {
+  ///Get the evidence IDs and hashes for an agreement
+  Future<List<EvidenceData>> getEvidenceData(String id) async {
 
-    return [];
+    ApiResponse res = await _api.getData('/user/${Global.userAddress}/agreement/$id/evidence/');
+    List<String> evs = res.result['evidenceHashes'];
+    List<EvidenceData> ret = [];
+    for (String i in evs) {
+      ret.add(EvidenceData.fromString(i));
+    }
+
+    return ret;
+  }
+
+  ///Get the Evidence file for a given evidenceData (Uploaded type)
+  Future<Evidence> getEvidenceU(EvidenceData evd, String id) async {
+    PlatformFile res = await _api.fileGet('/user/${Global.userAddress}/agreement/$id/evidence/${evd.id}/download');
+    //print ('File :' + res.name);
+    Evidence ev = Evidence();
+    ev.baseFile = res;
+    return ev;
+  }
+
+  ///Get the Evidence file for a given evidenceData (Linked type)
+  Future<Evidence> getEvidenceL(EvidenceData evd, String id) async {
+    return Evidence();
   }
 }
