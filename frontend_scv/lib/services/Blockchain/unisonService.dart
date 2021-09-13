@@ -64,10 +64,6 @@ class UnisonService {
   //Does the party believe the agreement was fulfilled.
   //Must happen after contract expiration
   Future<void> agreementFulfilled(Contract con, bool vote) async {
-    //If contract has not reached resolution date yet.
-    // if (con.sealedDate.millisecondsSinceEpoch + con.duration.toInt()*1000< DateTime.now().millisecondsSinceEpoch) {
-    //   throw Exception('Contract has not reached resolution date');
-    // }
 
     await _voteResolution(con.blockchainId, vote ? 2 : 1);
   }
