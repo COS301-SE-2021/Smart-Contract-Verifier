@@ -22,6 +22,7 @@ class EvidenceListPanel extends StatefulWidget {
 
 class _EvidenceListPanelState extends State<EvidenceListPanel> {
 
+  TextEditingController _urlLinkController = new TextEditingController();
   EvidenceService evServe = EvidenceService();
 
   Future<void> uploadEvidence() async {
@@ -37,6 +38,48 @@ class _EvidenceListPanelState extends State<EvidenceListPanel> {
       });
   }
 
+  Future<void> linkEvidence() async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Link evidence'),
+            actions: [
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  _urlLinkController.clear();
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Save'),
+                onPressed: () async {
+                  await evServe.linkEvidence(_urlLinkController.text, widget.agreementId);
+
+                  _urlLinkController.clear();
+                  Navigator.of(context).pop();
+                  setState(() {
+                    build(context);
+                  });
+                },
+              ),
+            ],
+            content: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Url:';
+                } else {
+                  return null;
+                }
+              },
+              decoration: InputDecoration(labelText: 'Evidence Url'),
+              controller: _urlLinkController,
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +87,12 @@ class _EvidenceListPanelState extends State<EvidenceListPanel> {
 
         child: FutureBuilder(
             future: evServe.getEvidenceData(widget.agreementId), builder: (context, snapshot) {
-              List<Widget> cards = [Center(child: TextButton(child: Text('Add Evidence'), onPressed: uploadEvidence,))];
+              List<Widget> cards = [Row(
+                children: [
+                  Center(child: TextButton(child: Text('Upload Evidence to UniServer(TM)'), onPressed: uploadEvidence,)),
+                  Center(child: TextButton(child: Text('Provide a link to evidence (url)'), onPressed: linkEvidence,)),
+                ],
+              )];
               if (snapshot.connectionState != ConnectionState.done) {
                return AwesomeLoader();
               }

@@ -1,6 +1,9 @@
 //This is an item to be displayed in a list.
 //Should be clickable to display the actual evidence file
 
+
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +55,29 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                         }) :
                     FutureBuilder(
                         builder: (context, snap) {
-                          Image ret = Image.network(widget.metaData.url, );
+                          Image ret = Image.network(widget.metaData.url,
+                            errorBuilder: (context, error, stackTrace) {
+                              return SizedBox(height: 5, child: ListTile(shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ), title: Text(
+                                  'Could not load preview. Proceed at your own risk!', style: TextStyle(color: Colors.white),),
+                                subtitle: Linkify(
+                                  onOpen: (link) async {
+                                    //print("Linkify link = ${link.url}");
+                                    if (await canLaunch (link.url)) {
+
+                                      await launch(link.url);
+                                    }
+                                  },
+                                  text: "Url: " + widget.metaData.url,
+                                  style: TextStyle(color: Colors.white),
+                                  linkStyle: TextStyle(color: Colors.red),
+                                ),
+                                tileColor: Color.fromRGBO(
+                                    2, 8, 24, 0.7294117647058823),
+                              ),
+                               );
+                            },);
                           //ret.ori
                           return SizedBox(child: ret, height: 500,);
                           //return ret;
