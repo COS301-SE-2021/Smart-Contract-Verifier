@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class GlowOnHover extends StatefulWidget {
   final Widget child;
-  GlowOnHover(this.child);
+  final bool assignment;
+  GlowOnHover(this.child, this.assignment);
   @override
   _GlowOnHoverState createState() => _GlowOnHoverState();
 }
@@ -23,7 +24,9 @@ class _GlowOnHoverState extends State<GlowOnHover> {
                 ? null
                 : [
                     BoxShadow(
-                      color: Color.fromRGBO(182, 80, 158, 0.8),
+                      color: !widget.assignment
+                          ? Color.fromRGBO(182, 80, 158, 0.8)
+                          : Color.fromRGBO(0, 128, 57, 1),
                       blurRadius: 5.0,
                       spreadRadius: 0.1,
                     ),
