@@ -21,9 +21,13 @@ class EvidenceService {
   ///Get the evidence IDs and hashes for an agreement
   Future<List<EvidenceData>> getEvidenceData(String id) async {
 
+    print ('One');
     ApiResponse res = await _api.getData('/user/${Global.userAddress}/agreement/$id/evidence/');
-    List<String> evs = res.result['evidenceHashes'];
+    print ('Two');
+    List<dynamic> evs = res.result['evidenceHashes'];
+    print ('Three');
     List<EvidenceData> ret = [];
+    print ('About to start');
     for (String i in evs) {
       ret.add(EvidenceData.fromString(i));
     }
