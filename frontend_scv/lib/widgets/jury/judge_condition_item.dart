@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:unison/models/condition.dart';
-import 'package:unison/models/contracts.dart';
-import 'package:unison/models/global.dart';
-import 'package:unison/services/Server/negotiationService.dart';
 
 class JudgeConditionItem extends StatefulWidget {
   final Condition contractCondition;
   final String party;
+  final String durationId;
+  final String paymentId;
 
   JudgeConditionItem({
     @required this.contractCondition,
     @required this.party,
+    this.durationId,
+    this.paymentId,
   });
 
   @override
@@ -19,11 +19,8 @@ class JudgeConditionItem extends StatefulWidget {
 }
 
 class _JudgeConditionItemState extends State<JudgeConditionItem> {
-  var _isLoading = false;
-
   @override
   void initState() {
-    // print('InitState()');
     super.initState();
   }
 
@@ -54,13 +51,15 @@ class _JudgeConditionItemState extends State<JudgeConditionItem> {
                   ? 'Couldn\'t load title'
                   : widget.contractCondition.title,
             ),
-            leading: CircleAvatar(
-              backgroundColor: Colors.deepOrange,
+            leading: Icon(
+              widget.contractCondition.conditionId == widget.paymentId
+                  ? Icons.paid
+                  : widget.contractCondition.conditionId == widget.durationId
+                      ? Icons.today
+                      : Icons.face,
+              color: Colors.pinkAccent,
             ),
-            // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
-            //     '${contractCondition.proposedBy}'),
-            // subtitle: Text('Status: ${contractCondition.status}\nProposed by: '
-            //     '${contractCondition.proposedBy}'),
+            subtitle: Text('${widget.contractCondition.description}'),
             onTap: () => _showConditionDialog(widget.contractCondition),
             trailing: Row(
               //The currently logged in user created the condition
@@ -92,9 +91,15 @@ class _JudgeConditionItemState extends State<JudgeConditionItem> {
                   ? 'Couldn\'t load title'
                   : widget.contractCondition.title,
             ),
-            leading: CircleAvatar(
-              backgroundColor: Colors.cyan,
+            leading: Icon(
+              widget.contractCondition.conditionId == widget.paymentId
+                  ? Icons.paid
+                  : widget.contractCondition.conditionId == widget.durationId
+                      ? Icons.today
+                      : Icons.perm_identity,
+              color: Colors.cyan,
             ),
+            subtitle: Text('${widget.contractCondition.description}'),
             onTap: () => _showConditionDialog(widget.contractCondition),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
