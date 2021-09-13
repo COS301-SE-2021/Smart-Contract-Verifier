@@ -22,10 +22,12 @@ class Contract with ChangeNotifier {
 
   String description;
   String payingUser;
-  double price;
+  double paymentAmount;
+  String paymentID; //Used to cross-reference with all conditions
   String imageUrl;
-  String partyBId;
+  //String partyBId;
   BigInt duration;
+  String durationID;
 
   Contract({
     this.contractId,
@@ -37,7 +39,7 @@ class Contract with ChangeNotifier {
     this.conditions,
     this.title,
     this.description,
-    this.price,
+    this.paymentAmount,
     this.imageUrl,
   });
 
@@ -56,7 +58,7 @@ class Contract with ChangeNotifier {
       duration = BigInt.from(jsn['DurationCondition']['Amount']);
     } catch (_) {}
     try {
-      price = jsn['PaymentCondition']['Amount'];
+      paymentAmount = jsn['PaymentCondition']['Amount'];
     } catch (_) {}
     try {
       createdDate = DateTime.parse(jsn['CreatedDate']);
@@ -74,11 +76,29 @@ class Contract with ChangeNotifier {
     movedToBlockchain = jsn['MovedToBlockchain'];
     description = jsn['AgreementDescription'];
     imageUrl = jsn['AgreementImageURL'];
-    partyBId = '';
+    //partyBId = '';
     title = jsn['AgreementTitle'];
     conditions = (jsn['Conditions'])
         .map<Condition>((i) => Condition.fromJson(i))
         .toList();
+
+    var payment = jsn['PaymentCondition'];
+    try {
+
+        paymentID = payment['ID'];
+        paymentAmount = payment['Amount'];
+        payingUser = payment['Payer'];
+
+    } catch (_) {} //Payment condition not set
+
+    var durationCond = jsn['DurationCondition'];
+    try {
+
+      durationID = durationCond['ID'];
+      duration = durationCond['Amount'];
+
+    } catch (_) {} //Duration condition not set
+
   }
 
   Map<String, String> toJson() {

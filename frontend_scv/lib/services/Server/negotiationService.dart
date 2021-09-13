@@ -67,6 +67,8 @@ class NegotiationService {
   Future<void> setPayment(String con, String payingUser, double price) async {
     //Set the payment condition of an agreement.
 
+
+
     Map<String, dynamic> body = {
       'Payment' : price,
       'PayingUser' : payingUser,

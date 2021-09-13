@@ -35,13 +35,13 @@ class EvidenceService {
   Future<Evidence> getEvidenceU(EvidenceData evd, String id) async {
     PlatformFile res = await _api.fileGet('/user/${Global.userAddress}/agreement/$id/evidence/${evd.id}/download');
     //print ('File :' + res.name);
-    Evidence ev = Evidence();
+    Evidence ev = Evidence(id);
     ev.baseFile = res;
     return ev;
   }
 
   ///Get the Evidence file for a given evidenceData (Linked type)
   Future<Evidence> getEvidenceL(EvidenceData evd, String id) async {
-    return Evidence();
+    return Evidence(id);
   }
 }

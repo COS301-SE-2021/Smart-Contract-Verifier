@@ -12,7 +12,11 @@ class Evidence {
   String owningParty;
   MultipartFile evidenceFile;
   PlatformFile baseFile;
+  String agreementID;
 
+  Evidence(String agId) {
+    agreementID = agId;
+  }
   //More members may be implemented soon
 
   Future<void> setFile(PlatformFile f) async {

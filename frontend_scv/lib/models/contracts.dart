@@ -73,8 +73,8 @@ class Contracts with ChangeNotifier {
             'title': newContract.title,
             'description': newContract.description,
             'imageUrl': newContract.imageUrl,
-            'price': newContract.price,
-            'partyBId': newContract.partyBId,
+            'price': newContract.paymentAmount,
+            //'partyBId': newContract.partyBId,
             'conditions': newContract.conditions,
           }));
       _items[contIndex] = newContract;

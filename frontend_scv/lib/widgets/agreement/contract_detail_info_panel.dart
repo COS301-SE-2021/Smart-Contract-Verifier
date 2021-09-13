@@ -92,7 +92,7 @@ class _ContractDetailInfoPanelState extends State<ContractDetailInfoPanel> {
       stillPending = true;
       pendingMessage = 'Please Add a Duration Condition';
     }
-    if (widget._contract.price == null) {
+    if (widget._contract.paymentAmount == null) {
       stillPending = true;
       pendingMessage = 'Please Add a Payment Condition';
     }
