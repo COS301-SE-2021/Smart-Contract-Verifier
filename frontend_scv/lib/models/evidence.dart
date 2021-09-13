@@ -1,10 +1,8 @@
 //This models an item of evidence that a user may send.
 //An evidence, if you will.
 
-import 'dart:io';
-//import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart';// hide MultipartFile;
+import 'package:http/http.dart';
 
 class Evidence {
 
