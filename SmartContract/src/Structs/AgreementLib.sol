@@ -77,6 +77,7 @@ library AgreementLib{
             uint256[] calldata amount, bool[] calldata direction) external{
         require(tokens.length == amount.length, "E3"); //implicitly covers amount = direction
         require(tokens.length == direction.length, "E3");
+        require(tokens.length > 0, "E20");
 
         // Payment conditions
         for(uint i=0; i<tokens.length; i++){
