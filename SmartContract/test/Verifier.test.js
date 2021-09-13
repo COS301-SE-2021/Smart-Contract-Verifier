@@ -564,4 +564,41 @@ contract('Verifier', (accounts) =>{
         })
         
     })
+
+    describe("Verifier unit tests", async () =>{
+
+        var verifier;
+        var token;
+
+        before(async () =>{
+            token = await UnisonToken.new()
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
+
+            needCoins = [];
+            for(var i = 1; i<9; i++){
+                needCoins.push(accounts[i]);
+            }
+            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+        })
+
+        it("Reject an agreement", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [false]);
+
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            verifier.rejectAgreement(0);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            agree = await verifier.getAgreement(0);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
+    })
 })
