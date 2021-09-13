@@ -20,7 +20,6 @@ class UnisonService {
     String partyB =
         (Global.userAddress == jsn['PartyB']) ? jsn['PartyA'] : jsn['PartyB'];
     EthereumAddress partyBA = EthereumAddress.fromHex(partyB);
-    print('A: ' + Global.userAddress);
 
     final res = await _smC.makeWriteCall("createAgreement", [
       partyBA,
@@ -35,8 +34,6 @@ class UnisonService {
   }
 
   Future<BlockchainAgreement> getAgreement(BigInt id) async {
-    if (id == null)
-      print('Was null');
 
     final res = await _smC.makeReadCall('getAgreement', [id]);
     return BlockchainAgreement.fromCHAIN(res[0]);
@@ -92,7 +89,6 @@ class UnisonService {
   //Pay the platform fee for an agreement
   //Someone (anyone) has to pay the platform fee after the agreement is accepted, and that will make it active.
   Future<void> payPlatformFee(BigInt id) async {
-    //print('Paying fee for ' + id.toString());
     await _smC.makeWriteCall('payPlatformFee', [id]);
   }
 
