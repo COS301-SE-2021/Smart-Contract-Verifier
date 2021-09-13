@@ -51,7 +51,6 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                           Evidence ev = snap.data;
                           Image ret = Image.memory(ev.baseFile.bytes);
                           return SizedBox(child: ret, height: 500,);
-                          //return ret;
                         }) :
                     FutureBuilder(
                         builder: (context, snap) {
@@ -77,7 +76,6 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                               );
                             },);
                           return SizedBox(child: ret, height: 500,);
-                          //return ret;
                         })
                 )
               ],
