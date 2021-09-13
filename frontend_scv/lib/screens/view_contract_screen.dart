@@ -1,6 +1,7 @@
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/models/contract.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/screens/evidence_screen.dart';
 import 'package:unison/services/Server/commonService.dart';
 import 'package:unison/widgets/agreement/contract_condition_actions_panel.dart';
@@ -85,7 +86,11 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                       ),
                     ),
                     if (!agreementSnap.data.movedToBlockchain)
-                      ContractConditionActionsPanel(agreementId, _reloadView),
+                      ContractConditionActionsPanel(
+                        agreementId,
+                        _reloadView,
+                        pA == Global.userAddress ? pB : pA,
+                      ),
                     ContractConditionsPanel(agreementSnap.data, _reloadView),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.1,

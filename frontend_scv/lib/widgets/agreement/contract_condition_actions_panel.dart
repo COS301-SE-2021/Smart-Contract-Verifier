@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:unison/models/condition.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/negotiationService.dart';
@@ -6,7 +7,9 @@ import 'package:unison/services/Server/negotiationService.dart';
 class ContractConditionActionsPanel extends StatefulWidget {
   final _agreementId;
   final Function _resetMyParent;
-  ContractConditionActionsPanel(this._agreementId, this._resetMyParent);
+  final String _otherParty;
+  ContractConditionActionsPanel(
+      this._agreementId, this._resetMyParent, this._otherParty);
 
   @override
   _ContractConditionActionsPanelState createState() =>
@@ -70,6 +73,7 @@ class _ContractConditionActionsPanelState
   final _conditionDescriptionController = TextEditingController();
   final _paymentConditionAmountController = TextEditingController();
   final _durationConditionAmountController = TextEditingController();
+  String _payerController = '';
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   //Add a new duration condition
@@ -144,6 +148,16 @@ class _ContractConditionActionsPanelState
                     return null;
                   },
                 ),
+                RadioButtonGroup(
+                  activeColor: Color.fromRGBO(182, 80, 158, 1),
+                  labels: <String>[
+                    "I will be paying",
+                    "The other party will pay",
+                  ],
+                  onSelected: (String selected) {
+                    _payerController = selected;
+                  },
+                ),
               ],
             ),
           ),
@@ -159,7 +173,9 @@ class _ContractConditionActionsPanelState
             TextButton(
               child: Text('Add'),
               onPressed: () {
-                _saveForm(contId, ConditionType.Payment);
+                _payerController == ''
+                    ? null
+                    : _saveForm(contId, ConditionType.Payment);
               },
             ),
           ],
@@ -268,9 +284,12 @@ class _ContractConditionActionsPanelState
       if (type == ConditionType.Payment) {
         await negotiationService.setPayment(
           aId,
-          Global.userAddress, //TODO: change this to Party Input
+          _payerController == "I will be paying"
+              ? Global.userAddress
+              : widget._otherParty,
           double.parse(_paymentConditionAmountController.text),
         );
+        _payerController = '';
       } else if (type == ConditionType.Duration) {
         await negotiationService.setDuration(
           aId,
