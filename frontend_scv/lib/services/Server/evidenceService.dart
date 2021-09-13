@@ -13,9 +13,9 @@ class EvidenceService {
   ApiInteraction _api = ApiInteraction();
 
   ///Store evidence for an agreement on the server
-  Future<void> storeEvidence(Evidence ev, String id) async {
+  Future<void> storeEvidence(Evidence ev) async {
 
-    ApiResponse res = await _api.filePost('/user/${Global.userAddress}/agreement/$id/evidence/upload', ev.evidenceFile);
+    ApiResponse res = await _api.filePost('/user/${Global.userAddress}/agreement/${ev.agreementID}/evidence/upload', ev.evidenceFile);
   }
 
   ///Get the evidence IDs and hashes for an agreement
