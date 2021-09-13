@@ -59,9 +59,12 @@ contract Verifier{
         }
     }
 
-    function createAgreement(address party2, uint resolutionTime, string calldata text, string memory uuid) public{
+    function createAgreement(address party2, uint resolutionTime, string calldata text, string memory uuid,
+             IERC20[] calldata tokens, uint256[] calldata amount, bool[] calldata direction) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
+        // direction is true if from party1 to party2, false otherwise
 
+        // General agreement terms
         agreements[nextAgreeID].party1 = msg.sender;
         agreements[nextAgreeID].party2 = party2;
         agreements[nextAgreeID].resolutionTime = resolutionTime;
@@ -69,6 +72,9 @@ contract Verifier{
         agreements[nextAgreeID].state = AgreementLib.AgreementState.PROPOSED;
         agreements[nextAgreeID].platformFee = getPlatformFee();
         agreements[nextAgreeID].uuid = uuid;
+
+
+        AgreementLib.addPayments(agreements[nextAgreeID], party2, tokens, amount, direction);
 
         emit CreateAgreement(msg.sender, party2, nextAgreeID, uuid);
         nextAgreeID++;
@@ -115,7 +121,7 @@ contract Verifier{
             tokens[i].transferFrom(msg.sender, address(this), amount[i]);
             _addPaymentToAgreement(agreeID, p);
 
-        }        
+        }
     }
 
     function payPlatformFee(uint agreeID) public{
