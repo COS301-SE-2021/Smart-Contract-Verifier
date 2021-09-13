@@ -44,29 +44,67 @@ contract('Verifier', (accounts) =>{
 
     describe("Verifier unit tests", async () =>{
 
-        var verifier
+        var verifier;
+        var token;
 
         before(async () =>{
             token = await UnisonToken.new()
             r = await RandomSource.new();
             verifier = await Verifier.new(token.address, r.address);
 
-                needCoins = [];
-                for(var i = 1; i<9; i++){
-                    needCoins.push(accounts[i]);
-                }
-                giveJurorsCoins(token, accounts[0], needCoins, 100000);
+            needCoins = [];
+            for(var i = 1; i<9; i++){
+                needCoins.push(accounts[i]);
+            }
+            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+        })
+
+        it("Can't create agreement without payment", async () =>{
+
+            // try{
+            //     verifier.createAgreement(accounts[1], 0, "this agreement shouldn't exist", "", [], [], []);
+            //     assert(false, "Managed to create an agreement with no payments");       
+            // }
+            // catch{}
+            // var agree = await verifier.getAgreement(0);
+
+            // assert(agree.party1 == "0x0000000000000000000000000000000000000000");
         })
 
         it("Can create agreement", async () =>{
 
-            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "", [], [], []);
+            var amount = 1000;
+            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "", [token.address], [amount], [true]);
 
             var agree = await verifier.getAgreement(0)
 
             assert.equal(agree.party1, accounts[0])
             assert.equal(agree.party2, accounts[1])
             assert.equal(agree.state, 1)
+
+            var payment = agree.payments[0];
+            assert(payment.token == token.address, "Payment has wrong token");
+            assert(payment.from == accounts[0], "Payment from wrong address");
+            assert(payment.to == accounts[1], "Payment to wrong address");
+            var amountInPayment = BigInt(payment.amount);
+            assert(amountInPayment == BigInt(1000), "Payment has wrong amount");
+            assert(payment.paidIn == false, "Payment marked as paid in");
+
+            await token.approve(verifier.address, amount);
+            await verifier.payIn(0);
+
+        })
+
+        it("pay in", async () =>{
+            var agree = await verifier.getAgreement(0);
+            var payment = agree.payments[0];
+            
+            await token.approve(verifier.address, payment.amount);
+            await verifier.payIn(0);
+
+            var agree = await verifier.getAgreement(0);
+            var payment = agree.payments[0];
+            assert(payment.paidIn == true, "Payment wasn't registered");
 
         })
 
