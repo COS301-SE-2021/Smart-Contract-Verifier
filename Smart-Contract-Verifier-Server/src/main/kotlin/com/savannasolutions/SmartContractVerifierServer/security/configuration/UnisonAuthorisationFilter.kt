@@ -1,5 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.security.configuration
 
+import io.jsonwebtoken.JwtException
+import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.stereotype.Component
@@ -34,7 +36,23 @@ class UnisonAuthorisationFilter(var securityConfig: SecurityConfig): OncePerRequ
             claimedUser = claimedUser.subSequence(0,42) as String
 
             //jwt authentication
+            try{
+                val jws = Jwts.parserBuilder()
+                    .setSigningKey(securityConfig.signingKey)
+                    .build()
+                    .parseClaimsJws(token)
 
+                if(jws.body["sub"]?.equals(claimedUser) == true){
+                    chain.doFilter(request, response)
+                    return
+                }else{
+                    response.sendError(403)
+                    return
+                }
+            }catch (ex: JwtException){
+                response.sendError(404)
+                return
+            }
         }
         response.sendError(403)
         return
