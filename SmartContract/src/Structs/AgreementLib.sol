@@ -101,6 +101,12 @@ library AgreementLib{
 
     }
 
+    function requirePaidIn(Agreement storage agreement) view external{
+        for(uint i=0; i<agreement.numPayments; i++){
+            require(agreement.payments[i].paidIn, "E19");
+        }
+    }
+
     struct Jury{
         bool assigned;
         uint deadline;
