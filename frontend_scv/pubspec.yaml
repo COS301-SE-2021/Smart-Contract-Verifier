@@ -43,6 +43,9 @@ dependencies:
   mime: ^1.0.0
   permission_handler: ^3.1.0+2
   grouped_buttons: ^1.0.4
+  datetime_picker_formfield: ^1.0.0
+  date_field: ^1.0.5
+
 
 dev_dependencies:
   flutter_test:

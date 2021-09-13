@@ -1,8 +1,11 @@
+import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:intl/intl.dart';
 import 'package:unison/models/condition.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/negotiationService.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class ContractConditionActionsPanel extends StatefulWidget {
   final _agreementId;
@@ -20,6 +23,8 @@ enum ConditionType { Normal, Payment, Duration }
 
 class _ContractConditionActionsPanelState
     extends State<ContractConditionActionsPanel> {
+  DateTime selectedDate;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -83,23 +88,31 @@ class _ContractConditionActionsPanelState
       builder: (context) {
         return AlertDialog(
           title: Text('Add New Duration'),
-          content: Form(
+          content:
+              // DateTimeForm(),
+              Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
-                  //TODO: make a datepicker
-                  decoration: InputDecoration(
-                    labelText: 'Enter Duration (in hours)'
-                        ' from the seal time',
+                DateTimeFormField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.event_note),
+                    labelText: 'Expiry Date',
                   ),
-                  keyboardType: TextInputType.number,
-                  controller: _durationConditionAmountController,
-                  validator: (value) {
-                    if (value.isEmpty) return 'Please enter an amount.';
-                    if (!isNumeric(value)) return 'Please enter a double.';
-                    return null;
+                  firstDate: DateTime.now(),
+                  mode: DateTimeFieldPickerMode.dateAndTime,
+                  autovalidateMode: AutovalidateMode.always,
+                  validator: (e) {
+                    return (e?.day ?? 0) == 1
+                        ? 'Please not the first day'
+                        : null;
+                  },
+                  onDateSelected: (DateTime value) {
+                    selectedDate = value;
+
+                    print(value);
                   },
                 ),
               ],
@@ -293,7 +306,7 @@ class _ContractConditionActionsPanelState
       } else if (type == ConditionType.Duration) {
         await negotiationService.setDuration(
           aId,
-          (60 * 60 * double.parse(_durationConditionAmountController.text)),
+          selectedDate,
         );
       } else {
         await negotiationService.saveCondition(newCondition);
