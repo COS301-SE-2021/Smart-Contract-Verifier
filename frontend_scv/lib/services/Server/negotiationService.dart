@@ -20,21 +20,18 @@ class NegotiationService {
   }
 
   Future<void> saveAgreement(Contract agr) async {
-
-    ApiResponse response =
-          await _api.postData('$_reqPath/${Global.userAddress}/agreement', agr.toJson());
-    if (!response.successful)
-      throw Exception('Agreement could not be saved');
-
+    ApiResponse response = await _api.postData(
+        '$_reqPath/${Global.userAddress}/agreement', agr.toJson());
+    if (!response.successful) throw Exception('Agreement could not be saved');
   }
 
   Future<void> saveCondition(Condition cond) async {
     //Save a condition associated with a contract
-    ApiResponse response = await _api.postData('$_reqPath/${Global.userAddress}/agreement/${cond.agreementId}/condition', cond.toJson());
+    ApiResponse response = await _api.postData(
+        '$_reqPath/${Global.userAddress}/agreement/${cond.agreementId}/condition',
+        cond.toJson());
 
-    if (!response.successful)
-      throw Exception('Condition could not be saved');
-
+    if (!response.successful) throw Exception('Condition could not be saved');
   }
 
   void acceptCondition(Condition con) async {
@@ -54,30 +51,27 @@ class NegotiationService {
 
     String path = acc ? 'accept' : 'reject';
 
-    //TODO DANGER WARNING ALERT AND EVERYTHING ELSE, THIS WILL BREAK
     //The ui needs to change the way it calls the function
-    ApiResponse response = await _api.putData('/user/${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
+    ApiResponse response = await _api.putData(
+        '/user/${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
 
     if (!response.successful)
       throw Exception(
-            'Condition could not be ' + (acc ? 'accepted' : 'rejected'));
-
+          'Condition could not be ' + (acc ? 'accepted' : 'rejected'));
   }
 
   Future<void> setPayment(String con, String payingUser, double price) async {
     //Set the payment condition of an agreement.
 
-
-
     Map<String, dynamic> body = {
-      'Payment' : price,
-      'PayingUser' : payingUser,
+      'Payment': price,
+      'PayingUser': payingUser,
     };
-    ApiResponse response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/payment', body);
+    ApiResponse response = await _api.postData(
+        '/user/${Global.userAddress}/agreement/$con/condition/payment', body);
 
     if (!response.successful)
-       throw Exception('Payment info could not be saved');
-
+      throw Exception('Payment info could not be saved');
   }
 
   ///Set the deadline for an agreement
@@ -85,15 +79,15 @@ class NegotiationService {
     //Set the duration condition of an agreement.
 
     int millis = deadline.millisecondsSinceEpoch;
-    int seconds = (millis/1000).round();
+    int seconds = (millis / 1000).round();
     Map<String, dynamic> body = {
       'Duration': seconds,
     };
-    ApiResponse response = await _api.postData('/user/${Global.userAddress}/agreement/$con/condition/duration', body);
+    ApiResponse response = await _api.postData(
+        '/user/${Global.userAddress}/agreement/$con/condition/duration', body);
 
     if (!response.successful)
-       throw Exception('Duration info could not be saved');
-
+      throw Exception('Duration info could not be saved');
   }
 
   // Future<void> _handlePayDuration(String con, double val, bool price) async {
@@ -119,7 +113,6 @@ class NegotiationService {
   //     throw e;
   //   }
   // }
-
 
   //The api will be updated with a new 'seal flow'
   Future<void> sealAgreement(Contract con) async {
