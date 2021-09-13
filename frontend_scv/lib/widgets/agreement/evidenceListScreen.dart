@@ -44,7 +44,7 @@ class _EvidenceListPanelState extends State<EvidenceListPanel> {
 
         child: FutureBuilder(
             future: evServe.getEvidenceData(widget.agreementId), builder: (context, snapshot) {
-              List<Widget> cards = [TextButton(child: Text('Add Evidence'), onPressed: uploadEvidence,)];
+              List<Widget> cards = [Center(child: TextButton(child: Text('Add Evidence'), onPressed: uploadEvidence,))];
               if (snapshot.connectionState != ConnectionState.done) {
                return AwesomeLoader();
               }

@@ -35,7 +35,8 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                Center(
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                     child: FutureBuilder(
                         future: evs.getEvidenceU(
                             widget.metaData, widget.agreementID),
@@ -46,7 +47,7 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
 
                           Evidence ev = snap.data;
                           Image ret = Image.memory(ev.baseFile.bytes);
-                          return SizedBox(child: ret, width: 700, height: 700,);
+                          return SizedBox(child: ret, height: 500,);
                           //return ret;
                         }))
               ],
