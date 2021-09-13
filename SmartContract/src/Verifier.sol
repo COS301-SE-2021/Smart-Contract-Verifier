@@ -86,6 +86,8 @@ contract Verifier{
         require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED);
         require(tx.origin == agreements[agreeID].party2, "E16");
 
+        AgreementLib.requirePaidIn(agreements[agreeID]);
+
         agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
         emit AcceptAgreement(agreeID);
     }
