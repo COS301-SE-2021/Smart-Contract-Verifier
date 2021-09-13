@@ -7,14 +7,14 @@ class AgreementMessagesPanel extends StatelessWidget {
   final List<Message> _messages;
 
   AgreementMessagesPanel(this._messages);
-
+  //MODULE IS NOT USED - REMOVE WHEN CERTAIN
   @override
   Widget build(BuildContext context) {
     print(_messages);
     return Container(
       // padding: EdgeInsets.all(8),
       child: _messages.isEmpty //handle no messages
-          ? Text('No Messages Have Been Sent.') //TODO: Make neater
+          ? Text('No Messages Have Been Sent.') //Make neater
           : ListView.builder(
               itemCount: _messages.length,
               itemBuilder: (_, index) {
@@ -34,7 +34,7 @@ class AgreementMessagesPanel extends StatelessWidget {
                             CircleAvatar(
                               radius: 15,
                               // backgroundImage: AssetImage(user.avatar),
-                              //TODO: use Jdicons here
+                              //use Jdicons here
                             ),
                           SizedBox(
                             width: 10,
