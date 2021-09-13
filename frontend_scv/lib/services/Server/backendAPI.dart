@@ -5,9 +5,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-//import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart';// hide MultipartFile;
+import 'package:http/http.dart';
 import 'package:retry/retry.dart';
 import 'package:unison/services/Server/apiResponse.dart';
 
@@ -51,7 +50,6 @@ class ApiInteraction {
     return _baseRequest(url, ReqType.DELETE, jsn);
   }
 
-  //An attempt at re-organising the services.
   Future<ApiResponse> _baseRequest(String url, ReqType method, [Map<dynamic, dynamic> jsn]) async {
     jsn ??= {}; //If null, make empty
 
@@ -68,7 +66,6 @@ class ApiInteraction {
       break; }
     }
 
-    print ('Here 1');
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -92,7 +89,6 @@ class ApiInteraction {
           'An error occurred while making the request. The server responded with status code ' +
               response.statusCode.toString()); //Failed http request
 
-    //print (response.body);
     return ApiResponse.fromJSON(jsonDecode(response.body));
   }
 
@@ -107,7 +103,6 @@ class ApiInteraction {
     try {
       final res = await req.send();
       Response r = await Response.fromStream(res);
-      print ("RES: " + r.body);
       body = r.body;
     }
     catch (e) {
