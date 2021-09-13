@@ -1,25 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/effects/glow_on_hover.dart';
 import 'package:unison/widgets/miscellaneous/jdenticon_svg.dart';
 
 import '../../models/contract.dart';
 import '../../screens/view_contract_screen.dart';
 
-class ContractItem extends StatelessWidget {
+class ContractItem extends StatefulWidget {
+  @override
+  _ContractItemState createState() => _ContractItemState();
+}
+
+class _ContractItemState extends State<ContractItem> {
+  bool isHovering = false;
+
   @override
   Widget build(BuildContext context) {
     final contract = Provider.of<Contract>(context);
-    return GestureDetector(
+
+    Widget agreementItem = GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(
           ViewContractScreen.routeName,
           arguments: contract.contractId,
         );
       },
-      child: ListTile(
-        title: Text(contract.title),
-        leading: JdenticonSVG(contract.contractId, [205]),
+      child: Card(
+        color: Color.fromRGBO(56, 61, 81, 1),
+        elevation: isHovering ? 10 : 5,
+        child: ListTile(
+          title: Text(contract.title),
+          leading: JdenticonSVG(contract.contractId, [205]),
+        ),
       ),
     );
+
+    return GlowOnHover(agreementItem);
   }
 }
