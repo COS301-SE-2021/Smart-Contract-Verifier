@@ -25,6 +25,10 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
     super.initState();
   }
 
+  void reset() {
+    setState(() {});
+  }
+
   Future<void> _createDial() async {
     await showDialog(
         context: context,
@@ -110,7 +114,10 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
 
               List<Widget> ch = [];
               for (var i in snap.data) {
-                ch.add(ContactItem(i, id));
+                ch.add(ContactItem(i, id, reset));
+              }
+              if (snap.data.length == 0) {
+                return Text('No Contacts');
               }
               return ListView(
                 children: ch,
