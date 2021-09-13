@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:unison/models/condition.dart';
 import 'package:unison/models/contract.dart';
-import 'package:unison/models/global.dart';
 import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 import 'package:unison/widgets/jury/JudgeDetailInfoPanel.dart';
 import 'package:unison/widgets/jury/judge_conditions_panel.dart';
-
-import '../models/contracts.dart';
-import '../widgets/agreement/contract_conditions_panel.dart';
-import '../widgets/agreement/contract_detail_info_panel.dart';
 
 class ViewAssignmentScreen extends StatefulWidget {
   static const routeName = '/view-assignment';
@@ -67,9 +60,7 @@ class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
-                // TODO: More Information or actions here?
-                ),
+            child: Container(),
           )
         ],
       ),
