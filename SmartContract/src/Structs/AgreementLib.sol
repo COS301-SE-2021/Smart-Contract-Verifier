@@ -92,6 +92,7 @@ library AgreementLib{
             }
 
             agreement.payments[agreement.numPayments].token = tokens[i];
+            agreement.payments[agreement.numPayments].amount = amount[i];
             agreement.payments[agreement.numPayments].from = from;
             agreement.payments[agreement.numPayments].to = to;
             agreement.numPayments++;
