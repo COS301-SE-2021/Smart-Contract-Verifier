@@ -107,7 +107,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                   Navigator.of(context).pop();
                   setState(() {});
                 } catch (error) {
-                  //TODO: make dialog throw handler in parent
                   Navigator.of(context).pop();
                   setState(() {});
                 }
@@ -134,7 +133,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
           print('CONN STATE: BCA Snap: ' +
               bcAgreementSnap.connectionState.toString());
           // setState(() {});
-          return Text('Oops - Something went wrong'); //TODO: Blockchain ID
+          return Text('Oops - Something went wrong');
           // does not persist
         }
         AgreementState currentState = _loadedBCAgreement.getAgreementState();
