@@ -63,7 +63,6 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                                   'Could not load preview. Proceed at your own risk!', style: TextStyle(color: Colors.white),),
                                 subtitle: Linkify(
                                   onOpen: (link) async {
-                                    //print("Linkify link = ${link.url}");
                                     if (await canLaunch (link.url)) {
 
                                       await launch(link.url);
@@ -77,7 +76,6 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
                                     2, 8, 24, 0.7294117647058823),
                               );
                             },);
-                          //ret.ori
                           return SizedBox(child: ret, height: 500,);
                           //return ret;
                         })
@@ -87,7 +85,6 @@ class _EvidenceDisplayItemState extends State<EvidenceDisplayItem> {
           )
         : GestureDetector( //File is not displayed
             onTap: () {
-              print("Tapped....");
               displayItem = true;
               setState(() {
                 build(context);
