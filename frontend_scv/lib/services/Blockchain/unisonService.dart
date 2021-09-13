@@ -58,7 +58,6 @@ class UnisonService {
 
   Future<bool> isJuror(EthereumAddress add) async {
     final res = await _smC.makeReadCall('isJuror', [add]);
-    //print('Actual res: ' + res.toString());
     return res[0]; //Temporary
   }
 
