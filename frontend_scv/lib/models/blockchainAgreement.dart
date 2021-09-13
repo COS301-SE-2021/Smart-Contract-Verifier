@@ -6,6 +6,11 @@ import 'package:unison/models/global.dart';
 enum AgreementState {
   PENDING, PROPOSED, REJECTED, ACCEPTED, ACTIVE, COMPLETED, SETTLED, CONTESTED, DECIDED, CLOSED
 }
+
+//A party's vote on the success of the agreement
+enum PartyVote {
+  NONE, NO, YES
+}
 //Explanation of some states:
 //PENDING: The agreement basically does not exist
 //PROPOSED: Someone has created an agreement on the blockchain, awaiting acceptance
@@ -23,6 +28,7 @@ class BlockchainAgreement {
   BigInt resTime; //ResolutionTime
   int state;
   AgreementState stateEnum;
+  PartyVote voteEnum;
 
   BlockchainAgreement.fromCHAIN(dynamic res) {
     //Generate from smartContract response
@@ -33,6 +39,11 @@ class BlockchainAgreement {
     resTime = res[3];
     state = res[8].toInt();
     stateEnum = AgreementState.values[state];
+
+    int ind = 9;
+    if (Global.userAddress == partyB)
+      ind = 10;
+    voteEnum = PartyVote.values[res[ind].toInt()];
 
   }
 
@@ -55,6 +66,10 @@ class BlockchainAgreement {
 
   AgreementState getAgreementState() {
     return stateEnum;
+  }
+
+  PartyVote getResolutionVote() {
+    return voteEnum;
   }
 
 
