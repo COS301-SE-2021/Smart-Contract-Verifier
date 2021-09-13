@@ -589,14 +589,21 @@ contract('Verifier', (accounts) =>{
             var balPre = await token.balanceOf(accounts[0]);
             balPre = BigInt(balPre);
 
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
             verifier.rejectAgreement(0);
 
             var balPost = await token.balanceOf(accounts[0]);
             balPost = BigInt(balPost);
 
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
             agree = await verifier.getAgreement(0);
 
             assert(balPre == balPost, "Payment condition that was never paid has been refunded");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been paid out");
             assert(agree.state == 2, "Agreement not in REJECTED state");
         })
 
@@ -604,17 +611,24 @@ contract('Verifier', (accounts) =>{
             var amount = 100;
             await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [true]);
 
-            var balPre = await token.balanceOf(accounts[1]);
+            var balPre = await token.balanceOf(accounts[0]);
             balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
 
             verifier.rejectAgreement(1);
 
-            var balPost = await token.balanceOf(accounts[1]);
+            var balPost = await token.balanceOf(accounts[0]);
             balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
 
             agree = await verifier.getAgreement(1);
 
-            assert(balPre == balPost, "Payment condition that was never paid has been refunded");
+            assert(balPre == balPost, "Payment condition that was never paid has been paid out");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been refunded");
             assert(agree.state == 2, "Agreement not in REJECTED state");
         })
     })
