@@ -582,7 +582,7 @@ contract('Verifier', (accounts) =>{
             giveJurorsCoins(token, accounts[0], needCoins, 100000);
         })
 
-        it("Reject an agreement", async () =>{
+        it("Reject an agreement 1", async () =>{
             var amount = 100;
             await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [false]);
 
@@ -600,5 +600,22 @@ contract('Verifier', (accounts) =>{
             assert(agree.state == 2, "Agreement not in REJECTED state");
         })
 
+        it("Reject an agreement 2", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [true]);
+
+            var balPre = await token.balanceOf(accounts[1]);
+            balPre = BigInt(balPre);
+
+            verifier.rejectAgreement(1);
+
+            var balPost = await token.balanceOf(accounts[1]);
+            balPost = BigInt(balPost);
+
+            agree = await verifier.getAgreement(1);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
     })
 })
