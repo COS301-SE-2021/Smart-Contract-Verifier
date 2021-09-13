@@ -28,7 +28,7 @@ class BlockchainAgreement {
   BigInt resTime; //ResolutionTime
   int state;
   AgreementState stateEnum;
-  PartyVote voteEnum;
+  PartyVote voteEnum; //What the current user voted
 
   BlockchainAgreement.fromCHAIN(dynamic res) {
     //Generate from smartContract response

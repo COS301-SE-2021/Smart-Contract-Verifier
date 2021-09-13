@@ -1,5 +1,7 @@
 //This file is the service used for interacting with the UnisonToken smart contract.
 
+import 'dart:math';
+
 import 'package:unison/models/global.dart';
 import 'package:web3dart/credentials.dart';
 import 'smartContract.dart';
@@ -42,7 +44,7 @@ class TokenService {
     final res = await _smC.makeReadCall('allowance', [EthereumAddress.fromHex(Global.userAddress), EthereumAddress.fromHex(await Global.getContractId('Verifier'))]);
     if (res[0] == null)
       return BigInt.from(0);
-    return res[0];
+    return res[0]/pow(10, 18); //Division to return in eth, not gwei
 
   }
 
