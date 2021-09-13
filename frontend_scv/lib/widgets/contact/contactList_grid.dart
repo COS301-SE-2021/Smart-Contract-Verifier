@@ -73,7 +73,9 @@ class _ContactListGridState extends State<ContactListGrid> {
                 loaderType: AwesomeLoader.AwesomeLoader4,
               );
             }
-            if (snap.data == null) return Text('Big problem');
+            if (snap.data == null)
+              return Text('Could not retrieve '
+                  'contact lists, please refresh.');
 
             List<Widget> ch = [];
             print(snap.data);
