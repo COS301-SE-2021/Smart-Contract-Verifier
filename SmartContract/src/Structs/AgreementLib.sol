@@ -73,6 +73,41 @@ library AgreementLib{
         }
     }
 
+    function addPayments(Agreement storage agreement, address party2, IERC20[] calldata tokens,
+            uint256[] calldata amount, bool[] calldata direction) external{
+        require(tokens.length == amount.length, "E3"); //implicitly covers amount = direction
+        require(tokens.length == direction.length, "E3");
+        require(tokens.length > 0, "E20");
+
+        // Payment conditions
+        for(uint i=0; i<tokens.length; i++){
+            address to;
+            address from;
+            if(direction[i]){
+                to = party2;
+                from = tx.origin;
+            }
+            else{
+                to = tx.origin;
+                from = party2;
+            }
+
+            agreement.payments[agreement.numPayments].token = tokens[i];
+            agreement.payments[agreement.numPayments].amount = amount[i];
+            agreement.payments[agreement.numPayments].from = from;
+            agreement.payments[agreement.numPayments].to = to;
+            agreement.numPayments++;
+
+        }
+
+    }
+
+    function requirePaidIn(Agreement storage agreement) view external{
+        for(uint i=0; i<agreement.numPayments; i++){
+            require(agreement.payments[i].paidIn, "E19");
+        }
+    }
+
     struct Jury{
         bool assigned;
         uint deadline;
