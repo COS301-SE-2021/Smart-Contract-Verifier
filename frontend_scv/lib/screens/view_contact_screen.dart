@@ -1,5 +1,6 @@
 //Not to be confused with view contract screen
 //
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/services/Server/contactService.dart';
@@ -117,7 +118,37 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
                 ch.add(ContactItem(i, id, reset));
               }
               if (snap.data.length == 0) {
-                return Text('No Contacts');
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    child: DefaultTextStyle(
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.pinkAccent,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 7.0,
+                            color: Colors.pinkAccent,
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: AnimatedTextKit(
+                        repeatForever: true,
+                        animatedTexts: [
+                          FlickerAnimatedText(
+                            'No Contacts in this list.',
+                            textAlign: TextAlign.center,
+                          ),
+                          FlickerAnimatedText(
+                            'You can add contacts with the button below.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               }
               return ListView(
                 children: ch,
