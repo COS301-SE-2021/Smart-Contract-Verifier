@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/widgets/miscellaneous/jdenticon_svg.dart';
-import '../../models/jury.dart';
-
 import '../../models/contract.dart';
 
 class JudgeDetailInfoPanel extends StatefulWidget {
@@ -30,10 +27,13 @@ class _JudgeDetailInfoPanelState extends State<JudgeDetailInfoPanel> {
           children: <Widget>[
             ListTile(
               leading: JdenticonSVG(widget._contract.contractId, [150]),
-              title: Text(widget._contract.contractId),
+              title: Text(widget._contract.title),
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(widget._contract.description)),
                   Text('Created: ${widget._contract.createdDate}'),
                   FutureBuilder(
                       future:
@@ -41,8 +41,6 @@ class _JudgeDetailInfoPanelState extends State<JudgeDetailInfoPanel> {
                       builder: (context, jurySnapShot) {
                         if (jurySnapShot.connectionState ==
                             ConnectionState.done) {
-                          print('Jury fetched');
-                          print(jurySnapShot.data.getMyVoteNumber());
                           if (jurySnapShot.data.getMyVoteNumber() == 0) {
                             //JUROR HAS NOT VOTED
                             return Column(
@@ -92,21 +90,25 @@ class _JudgeDetailInfoPanelState extends State<JudgeDetailInfoPanel> {
                           }
                           if (jurySnapShot.data.getMyVoteNumber() == 1) {
                             //JUROR HAS VOTED NO
-                            return Text('You voted that the agreement was not'
-                                ' fulfilled'); //TODO:make nice
+                            return Text(
+                              'You voted that the agreement was not'
+                              ' fulfilled',
+                              style: TextStyle(color: Colors.cyan),
+                            );
                           }
                           if (jurySnapShot.data.getMyVoteNumber() == 2) {
                             //JUROR HAS VOTED YES
-                            return Text('You voted that the agreement was'
-                                ' fulfilled'); //TODO:make nice
+                            return Text(
+                              'You voted that the agreement was'
+                              ' fulfilled',
+                              style: TextStyle(color: Colors.pink),
+                            );
                           }
                           if (jurySnapShot.data.getMyVoteNumber() == -1) {
                             //CURRENT USER NOT IN JURY
-                            return Text(
-                                'You are not part of this jury'); //TODO:make nice
+                            return Text('You are not part of this jury');
                           }
-                          return Text('Awaiting Elon Approval'); //TODO: We
-                          // should not see this
+                          return Text('Awaiting Elon Approval');
                         }
                         return CircularProgressIndicator();
                       }),
