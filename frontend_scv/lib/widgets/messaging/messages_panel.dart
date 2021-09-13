@@ -31,10 +31,7 @@ class _MessagesPanelState extends State<MessagesPanel> {
             child: CircularProgressIndicator(),
           );
         }
-        //TODO: something for loading?
         final messages = streamSnapshot.data;
-        print ('Thing: ' + messages.toString());
-        print (streamSnapshot.connectionState);
         return ListView.builder(
           itemCount: messages.length,
           itemBuilder: (ctx, index) => Container(
