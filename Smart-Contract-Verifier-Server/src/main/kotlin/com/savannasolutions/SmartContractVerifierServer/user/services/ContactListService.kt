@@ -46,6 +46,11 @@ class ContactListService(   val contactListRepository: ContactListRepository,
         val tempContactList = contactListRepository.getById(contactListID)
         val tempUser = userRepository.getById(addUserToContactListRequest.UserID)
 
+        if(contactListProfileRepository.getByContactListAndUser(tempContactList, tempUser) != null)
+        {
+            return ApiResponse(status = ResponseStatus.FAILED, message = "User has already been added")
+        }
+
         if(contactListProfileRepository.getAllByContactListAndUser(tempContactList,tempUser) != null)
         {
             if(contactListProfileRepository.getAllByContactListAndUser(tempContactList,tempUser)!!.size > 1)
