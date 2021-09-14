@@ -73,4 +73,13 @@ class BlockchainAgreement {
     return voteEnum;
   }
 
+  ///Is the current user the one who should pay? This does not account for the payment already being made. Use shouldPay to check if payment has been made
+  bool amIPaying() {
+    return (paymentInfo.infoSet && paymentInfo.payingUser == Global.userAddress);
+  }
+
+  ///Has the required payment been made? This method returns true if it is still outstanding
+  bool shouldPay() {
+    return (paymentInfo.infoSet && paymentInfo.hasBeenPayed);
+  }
 }
