@@ -88,7 +88,7 @@ class Contract with ChangeNotifier {
     var durationCond = jsn['DurationCondition'];
     try {
       durationID = durationCond['ID'];
-      duration = durationCond['Amount'];
+      duration = BigInt.from(durationCond['Amount']);
       print ('Duration: ' + duration.toString());
     } catch (e) {
       print ('Could not get duration: ' + e.toString());
