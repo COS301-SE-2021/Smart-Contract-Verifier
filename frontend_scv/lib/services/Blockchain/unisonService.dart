@@ -21,13 +21,24 @@ class UnisonService {
     String partyB =
         (Global.userAddress == jsn['PartyB']) ? jsn['PartyA'] : jsn['PartyB'];
     EthereumAddress partyBA = EthereumAddress.fromHex(partyB);
+    bool direction = con.payingUser == Global.userAddress;;
 
-    final res = await _smC.makeWriteCall("createAgreement", [
-      partyBA,
-      con.duration,
-      data,
-      con.contractId,
-    ]);
+    print ('ID: ' + con.contractId);
+    try {
+      print ('About to seal');
+      final res = await _smC.makeWriteCall("createAgreement", [
+        partyBA,
+        con.duration,
+        data,
+        con.contractId,
+        [Global.getContractId('UnisonToken')],
+        [con.paymentAmount],
+        [direction]
+      ]);
+      print (res);
+    } catch (e) {
+      print ('ERROR: ' +e);
+    }
   }
 
   ///Accept an agreement saved on the blockchain
