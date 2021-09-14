@@ -287,7 +287,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             builder: (context, jurySnapshot) {
               if (jurySnapshot.connectionState == ConnectionState.done) {
                 var juryConclusion = DateTime.fromMillisecondsSinceEpoch(
-                    jurySnapshot.data.resTime.toInt() * 1000);
+                    jurySnapshot.data.deadline.toInt() * 1000);
                 var timeDifference = juryConclusion.difference(DateTime.now());
                 Duration duration = Duration(seconds: timeDifference.inSeconds);
                 String sJuryConclusion =
