@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unison/models/contract.dart';
 import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/jury/JudgeDetailInfoPanel.dart';
+import 'package:unison/widgets/jury/judge_detail_info_panel.dart';
 import 'package:unison/widgets/jury/judge_conditions_panel.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
