@@ -1,6 +1,7 @@
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/services/Blockchain/faucetService.dart';
 import 'package:unison/services/Blockchain/tokenService.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
@@ -49,6 +50,7 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     TokenService tokServ = TokenService();
+    FaucetService _faucetService = FaucetService();
 
     return Scaffold(
       appBar: AppBar(
@@ -93,6 +95,10 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Row(children: [
+                                FutureBuilder(future: tokServ.getBalance(),builder: (context, snapshot) {
+                                  return Text('UNT Balance: ' + snapshot.data.toString());
+                                }),
+                                TextButton(onPressed: () async { await _faucetService.getToken(); }, child: Text('Get UNT from Faucet'),),
                                 Text(
                                   'Token allowance: ' + snap.data.toString(),
                                   style: TextStyle(color: Colors.white70),

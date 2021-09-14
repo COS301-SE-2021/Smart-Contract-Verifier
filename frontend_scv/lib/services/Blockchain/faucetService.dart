@@ -10,4 +10,5 @@ class FaucetService {
     await _smC.makeWriteCall('getToken', []);
   }
 
+
 }

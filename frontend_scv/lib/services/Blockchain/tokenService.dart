@@ -53,4 +53,11 @@ class TokenService {
 
   }
 
+  ///Get the UNT balance of the current user
+  Future<BigInt> getBalance() async {
+    final res =  await _smC.makeReadCall('balanceOf', [EthereumAddress.fromHex(Global.userAddress)]);
+    return res[0];
+  }
+
+
 }
