@@ -89,10 +89,7 @@ class Contract with ChangeNotifier {
     try {
       durationID = durationCond['ID'];
       duration = BigInt.from(durationCond['Amount']);
-      print ('Duration: ' + duration.toString());
-    } catch (e) {
-      print ('Could not get duration: ' + e.toString());
-    } //Duration condition not set
+    } catch (_) {} //Duration condition not set
   }
 
   Map<String, String> toJson() {
