@@ -89,6 +89,7 @@ class Contract with ChangeNotifier {
     try {
       durationID = durationCond['ID'];
       duration = durationCond['Amount'];
+      print ('Duration: ' + duration.toString());
     } catch (_) {} //Duration condition not set
   }
 
