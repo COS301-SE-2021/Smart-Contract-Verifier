@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/judgeService.dart';
-import 'package:unison/services/Server/loginService.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:awesome_loader/awesome_loader.dart';
 
