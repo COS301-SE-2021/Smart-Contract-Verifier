@@ -5,6 +5,6 @@
 * Evidence - Current Goal
 * Add payment condition to blockchain (Based on backend payment condition)
 * Fix Duration Condition Item (display it as a formatted date, SSE)
-* Touch Juror screen's Action Area
+* Remove prints to console
 * TODO: Go through all TODOs
 * */
