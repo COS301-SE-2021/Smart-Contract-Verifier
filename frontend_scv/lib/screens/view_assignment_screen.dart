@@ -6,6 +6,8 @@ import 'package:unison/widgets/jury/judge_detail_info_panel.dart';
 import 'package:unison/widgets/jury/judge_conditions_panel.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
+import 'evidence_screen.dart';
+
 class ViewAssignmentScreen extends StatefulWidget {
   static const routeName = '/view-assignment';
 
@@ -66,20 +68,44 @@ class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.of(context).pushNamed(
-            MessagingScreen.routeName,
-            arguments: {
-              'agreementId': loadedContract.contractId,
-              'partyA': loadedContract.partyA,
-              'partyB': loadedContract.partyB,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                EvidenceScreen.routeName,
+                arguments: {
+                  'agreementId': loadedContract.contractId,
+                  'partyA': loadedContract.partyA,
+                  'partyB': loadedContract.partyB,
+                },
+              );
             },
-          );
-        },
-        label: Text('Agreement Chat'),
-        icon: Icon(Icons.chat),
-        backgroundColor: Color.fromRGBO(182, 80, 158, 1),
+            label: Text('Evidence'),
+            icon: Icon(Icons.inventory_2),
+            backgroundColor: Color.fromRGBO(50, 183, 196, 1),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                MessagingScreen.routeName,
+                arguments: {
+                  'agreementId': loadedContract.contractId,
+                  'partyA': loadedContract.partyA,
+                  'partyB': loadedContract.partyB,
+                },
+              );
+            },
+            label: Text('Agreement Chat'),
+            icon: Icon(Icons.chat),
+            backgroundColor: Color.fromRGBO(182, 80, 158, 1),
+          ),
+        ],
       ),
     );
   }
