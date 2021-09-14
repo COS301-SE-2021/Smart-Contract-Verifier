@@ -66,8 +66,10 @@ class _ContractActionAreaState extends State<ContractActionArea> {
       );
     }
 
-    if (widget._agreement.movedToBlockchain == false || //TODO: Ronan thinks Kevin should change this (Maybe to a null check?)
-        widget._agreement.blockchainId == BigInt.from(-1)) { //TODO: The second condition will always fail, an exception will be thrown since Bigints are always positive
+    if (widget._agreement.movedToBlockchain ==
+            false || //TODO: Ronan thinks Kevin should change this (Maybe to a null check?)
+        widget._agreement.blockchainId == BigInt.from(-1)) {
+      //TODO: The second condition will always fail, an exception will be thrown since Bigints are always positive
       //Show SEAL button:
       return TextButton(
         onPressed: _disabled
@@ -139,25 +141,26 @@ class _ContractActionAreaState extends State<ContractActionArea> {
         AgreementState currentState = _loadedBCAgreement.getAgreementState();
 
         if (currentState == AgreementState.PROPOSED) {
-
           //Check if payment needs to be made first
-
+          print('SHOULD PAY: ' + _loadedBCAgreement.shouldPay().toString());
           if (_loadedBCAgreement.shouldPay()) {
-            return _loadedBCAgreement.amIPaying()? TextButton(
-              onPressed: () async {
-                showLoaderDialog(context);
-                try {
-                    await widget._unisonService.payAgreementMoney(widget._agreement.blockchainId);
-                    Navigator.of(context).pop();
-                    setState(() {});
-                } catch (error) {
-                  Navigator.of(context).pop();
-                  setState(() {});
-                }
-              },
-              child: Text('Fulfill Payment'),
-            ) :
-                Text('The other party needs to make their promised payment');
+            return _loadedBCAgreement.amIPaying()
+                ? TextButton(
+                    onPressed: () async {
+                      showLoaderDialog(context);
+                      try {
+                        await widget._unisonService
+                            .payAgreementMoney(widget._agreement.blockchainId);
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      } catch (error) {
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      }
+                    },
+                    child: Text('Fulfill Payment'),
+                  )
+                : Text('The other party needs to make their promised payment');
           }
 
           //Check if the current user needs to Accept move to Blockchain:
@@ -265,7 +268,10 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             var difference = expiryDate.difference(DateTime.now());
             Duration duration = Duration(seconds: difference.inSeconds);
             String sDuration =
-                "Hours: ${duration.inHours} Minutes: ${duration.inMinutes.remainder(60)}"; //:${(duration.inSeconds.remainder(60))}
+                "Agreement Deadline is in ${duration.inHours} Hours "
+                "and "
+                "${duration.inMinutes.remainder(60)} Minutes"; //:${(duration.inSeconds
+            // .remainder(60))}
             // for later
             return Text('Concludes in ' + sDuration);
           }
