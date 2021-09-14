@@ -19,7 +19,7 @@ class Contract with ChangeNotifier {
 
   String description;
   String payingUser;
-  double paymentAmount;
+  double paymentAmount; //In UNT
   String paymentID; //Used to cross-reference with all conditions
   String imageUrl;
   //String partyBId;
