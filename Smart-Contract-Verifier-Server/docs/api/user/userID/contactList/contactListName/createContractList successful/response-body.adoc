@@ -1,0 +1,9 @@
+[source,options="nowrap"]
+----
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "contactListID" : "e111bc8f-ef5a-46fb-89ab-bff8b4aa4f33"
+  }
+}
+----

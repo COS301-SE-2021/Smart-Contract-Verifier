@@ -1,0 +1,16 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 121
+
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503"
+  }
+}
+----

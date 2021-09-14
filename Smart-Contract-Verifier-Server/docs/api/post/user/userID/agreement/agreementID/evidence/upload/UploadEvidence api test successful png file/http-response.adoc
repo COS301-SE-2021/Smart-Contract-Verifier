@@ -1,0 +1,13 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 120
+
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "EvidenceID" : "7d793c67-10e8-419b-8137-be9758594184"
+  }
+}
+----

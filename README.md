@@ -72,3 +72,6 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 [Coding Standards Demo 2](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
 
 
+### Kumospace Virtual Room
+_Click on the image below to join our Virtual Room:_
+[![Savanna Solutions Virtual Room](https://user-images.githubusercontent.com/41339070/132300480-843c3647-cde0-49f8-b804-ce8ef294ecd5.png "Savanna Solutions Kumospace Virtual Room")](https://www.kumospace.com/cos301-se-2021?roomId=Bx52g8joslYH5bImswYa)

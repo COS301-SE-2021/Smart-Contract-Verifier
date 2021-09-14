@@ -1,0 +1,15 @@
+[source,options="nowrap"]
+----
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "walletAndAlias" : [ {
+      "walletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+      "alias" : "AliasA"
+    }, {
+      "walletID" : "0x37Ec9a77BFa094b24054422564e68B08aF3114B4",
+      "alias" : "AliasB"
+    } ]
+  }
+}
+----

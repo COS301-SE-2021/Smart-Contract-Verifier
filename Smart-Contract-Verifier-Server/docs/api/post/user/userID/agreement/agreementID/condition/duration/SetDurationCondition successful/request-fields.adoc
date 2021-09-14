@@ -1,0 +1,8 @@
+|===
+|Path|Type|Description
+
+|`+Duration+`
+|`+Duration+`
+|This is the duration of the agreement
+
+|===

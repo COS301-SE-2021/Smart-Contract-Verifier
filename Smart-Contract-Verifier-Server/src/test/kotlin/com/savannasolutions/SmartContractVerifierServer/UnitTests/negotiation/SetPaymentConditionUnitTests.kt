@@ -19,7 +19,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.*
-import kotlin.collections.ArrayList
 
 internal class SetPaymentConditionUnitTests {
     private val conditionsRepository : ConditionsRepository = mock()

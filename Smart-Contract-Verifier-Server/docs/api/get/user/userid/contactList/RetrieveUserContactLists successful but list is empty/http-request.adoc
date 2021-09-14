@@ -1,0 +1,7 @@
+[source,http,options="nowrap"]
+----
+GET /user/0x37Ec9a8aBFa094b24054422564e68B08aF3114B4/contactList HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Host: localhost:8080
+
+----

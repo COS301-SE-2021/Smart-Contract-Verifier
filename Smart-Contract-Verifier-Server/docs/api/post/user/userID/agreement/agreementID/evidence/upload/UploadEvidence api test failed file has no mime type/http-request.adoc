@@ -1,0 +1,12 @@
+[source,http,options="nowrap"]
+----
+POST /user/test%20user/agreement/4232ff01-9844-4a38-9290-f84c55c211d1/evidence/upload HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=uploadEvidence; filename=testFile.txt
+
+hello
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--
+----

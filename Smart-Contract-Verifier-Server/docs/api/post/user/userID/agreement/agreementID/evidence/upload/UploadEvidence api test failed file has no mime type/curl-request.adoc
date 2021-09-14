@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/user/test%20user/agreement/4232ff01-9844-4a38-9290-f84c55c211d1/evidence/upload' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'uploadEvidence=@testFile.txt'
+----

@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ http GET 'http://localhost:8080/user/other%20user/contactList' \
+    'Content-Type:application/json;charset=UTF-8'
+----

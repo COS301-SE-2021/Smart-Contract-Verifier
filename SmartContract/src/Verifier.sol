@@ -34,9 +34,9 @@ contract Verifier{
         jurorStore = new JurorStore(address(this), randomSource);
     }
 
-    // If agreements[agreeID] is null, this will also fail since msg.sender will never be 0
+    // If agreements[agreeID] is null, this will also fail since tx.origin will never be 0
     modifier inAgreement(uint agreeID){
-        require(msg.sender == agreements[agreeID].party1 || msg.sender == agreements[agreeID].party2);
+        require(tx.origin == agreements[agreeID].party1 || tx.origin == agreements[agreeID].party2);
         _;
     }
 
@@ -59,10 +59,13 @@ contract Verifier{
         }
     }
 
-    function createAgreement(address party2, uint resolutionTime, string calldata text, string memory uuid) public{
+    function createAgreement(address party2, uint resolutionTime, string calldata text, string memory uuid,
+             IERC20[] calldata tokens, uint256[] calldata amount, bool[] calldata direction) public{
         // A resolution time in the past is allowed and will mean that the agreement can be resolved at an time after its creation
+        // direction is true if from party1 to party2, false otherwise
 
-        agreements[nextAgreeID].party1 = msg.sender;
+        // General agreement terms
+        agreements[nextAgreeID].party1 = tx.origin;
         agreements[nextAgreeID].party2 = party2;
         agreements[nextAgreeID].resolutionTime = resolutionTime;
         agreements[nextAgreeID].text = text;
@@ -70,7 +73,10 @@ contract Verifier{
         agreements[nextAgreeID].platformFee = getPlatformFee();
         agreements[nextAgreeID].uuid = uuid;
 
-        emit CreateAgreement(msg.sender, party2, nextAgreeID, uuid);
+
+        AgreementLib.addPayments(agreements[nextAgreeID], party2, tokens, amount, direction);
+
+        emit CreateAgreement(tx.origin, party2, nextAgreeID, uuid);
         nextAgreeID++;
     }
 
@@ -78,39 +84,44 @@ contract Verifier{
         // if(agreements[agreeID].party1 == address(0))
         //     return;
         require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED);
-        require(msg.sender == agreements[agreeID].party2, "E16");
+        require(tx.origin == agreements[agreeID].party2, "E16");
+
+        AgreementLib.requirePaidIn(agreements[agreeID]);
 
         agreements[agreeID].state = AgreementLib.AgreementState.ACCEPTED;
         emit AcceptAgreement(agreeID);
     }
 
-    // Each payment must have the allowance ready, it will be transferred immediately
-    function addPaymentConditions(uint agreeID, IERC20[] calldata tokens, uint256[] calldata amount) inAgreement(agreeID) public{
-        require(tokens.length == amount.length, "E3");
+    function rejectAgreement(uint agreeID) public inAgreement(agreeID){
         require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
-        uint numPayments = tokens.length;
 
-        address otherParty;
-        if(msg.sender == agreements[agreeID].party1)
-            otherParty = agreements[agreeID].party2;
-        else
-            otherParty = agreements[agreeID].party1;
+        for(uint i=0; i<agreements[agreeID].numPayments; i++){
+            // Doesn't use _rejectAgreement, since that function assumes paidIn == true
+            if(agreements[agreeID].payments[i].paidIn){
+                PaymentInfoLib.PaymentInfo memory payment = agreements[agreeID].payments[i];
+                payment.token.transfer(payment.from, payment.amount);
+            }
+        }
 
-        for(uint i=0; i<numPayments; i++){
-            uint256 allowed = tokens[i].allowance(msg.sender, address(this));
-            require(allowed >= amount[i], "E5");
-
-            PaymentInfoLib.PaymentInfo memory p;
-            p.token = tokens[i];
-            p.from = msg.sender;
-            p.to = otherParty;
-            p.amount = amount[i];
-
-            tokens[i].transferFrom(msg.sender, address(this), amount[i]);
-            _addPaymentToAgreement(agreeID, p);
-
-        }        
+        agreements[agreeID].state = AgreementLib.AgreementState.REJECTED;
     }
+
+    // Call this method to pay all of your payment conditions, you must set the appropriate allowances before calling it
+    function payIn(uint agreeID) external{
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
+
+        for(uint i=0; i<agreements[agreeID].numPayments; i++){
+            if(agreements[agreeID].payments[i].from != tx.origin)
+                continue;
+
+            // Check allowance and then call transferFrom
+            uint256 allowed = agreements[agreeID].payments[i].token.allowance(tx.origin, address(this));
+            require(allowed >= agreements[agreeID].payments[i].amount, "E5");
+            agreements[agreeID].payments[i].token.transferFrom(tx.origin, address(this), agreements[agreeID].payments[i].amount);
+            agreements[agreeID].payments[i].paidIn = true;            
+        }
+    }
+
 
     function payPlatformFee(uint agreeID) public{
         // Anyone can pay the platform fee, it does not even have to be one of the
@@ -124,17 +135,20 @@ contract Verifier{
         uint256 payment = agreements[agreeID].platformFee - agreements[agreeID].feePaid;
         require(payment > 0);
 
-        uint256 allowed = unisonToken.allowance(msg.sender, address(this));
+        uint256 allowed = unisonToken.allowance(tx.origin, address(this));
         require(allowed >= payment, "E5");
 
-        if(unisonToken.transferFrom(msg.sender, address(this), payment)){
+        if(unisonToken.transferFrom(tx.origin, address(this), payment)){
             agreements[agreeID].feePaid += payment;
-            agreements[agreeID].feePayer = msg.sender;
+            agreements[agreeID].feePayer = tx.origin;
             if(agreements[agreeID].feePaid == agreements[agreeID].platformFee){
                 agreements[agreeID].state = AgreementLib.AgreementState.ACTIVE;
                 numActive++;
                 emit ActiveAgreement(agreeID);
             }
+        }
+        else{
+            require(false, "E17");
         }
 
         feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
@@ -181,14 +195,11 @@ contract Verifier{
     }
 
     function voteResolution(uint agreeID, AgreementLib.Vote vote) public{
+        // Cannot be called if other party already voted no
         AgreementLib.voteResolution(agreements[agreeID], vote);
 
         // update state after vote
-        if(agreements[agreeID].party1Vote == AgreementLib.Vote.NO ||
-                agreements[agreeID].party2Vote == AgreementLib.Vote.NO){
-            if(juries[agreeID].assigned)
-                return; //Already has jury
-
+        if(vote == AgreementLib.Vote.NO){
             // If at least one party voted no, agreement becomes contested
             _assignJury(agreeID);
         }
@@ -212,7 +223,7 @@ contract Verifier{
     // Sign yourself up to become a juror
     // You have to approve an allowance for the staked coins
     function addJuror() public{
-        address j = msg.sender;
+        address j = tx.origin;
 
         uint allowed = unisonToken.allowance(j, address(this));
         require(allowed >= getStakingAmount());
@@ -226,9 +237,9 @@ contract Verifier{
 
     // remove yourself from available jurors list
     function removeJuror() public{
-        jurorStore.removeJuror(msg.sender);
-        unisonToken.transfer(msg.sender, getStakingAmount());
-        emit RemoveJuror(msg.sender);
+        jurorStore.removeJuror(tx.origin);
+        unisonToken.transfer(tx.origin, getStakingAmount());
+        emit RemoveJuror(tx.origin);
 
         feeContract.updatePlatformFee(numActive, jurorStore.getNumJurors());
     }

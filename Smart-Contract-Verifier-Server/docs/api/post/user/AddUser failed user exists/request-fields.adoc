@@ -1,0 +1,12 @@
+|===
+|Path|Type|Description
+
+|`+WalletID+`
+|`+String+`
+|This is the public wallet address of the new user
+
+|`+Alias+`
+|`+String+`
+|This is the alias of the new user
+
+|===

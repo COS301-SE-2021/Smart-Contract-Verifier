@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ http POST 'http://localhost:8080/user/other%20user/contactList/test%20name' \
+    'Content-Type:application/json;charset=UTF-8'
+----

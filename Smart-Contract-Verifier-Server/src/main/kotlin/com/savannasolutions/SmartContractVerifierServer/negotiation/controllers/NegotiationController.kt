@@ -1,6 +1,9 @@
 package com.savannasolutions.SmartContractVerifierServer.negotiation.controllers
 
-import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.*
+import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.CreateAgreementRequest
+import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.CreateConditionRequest
+import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SetDurationConditionRequest
+import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SetPaymentConditionRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import org.springframework.web.bind.annotation.*
 import java.util.*

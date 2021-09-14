@@ -8,7 +8,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
 import org.springframework.stereotype.Service
-import kotlin.collections.ArrayList
 
 @Service
 class UserService(  val userRepository: UserRepository,

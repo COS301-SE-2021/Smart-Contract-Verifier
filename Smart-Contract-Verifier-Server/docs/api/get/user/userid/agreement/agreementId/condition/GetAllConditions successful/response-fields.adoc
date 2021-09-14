@@ -1,0 +1,44 @@
+|===
+|Path|Type|Description
+
+|`+Status+`
+|`+ENUM+`
+|Will return successful or failed
+
+|`+ResponseObject+`
+|`+Object+`
+|If status is successful this will be a populated response object. If status is failed this will be a null object
+
+|`+ResponseObject.Conditions[]+`
+|`+Array+`
+|This is the list of conditions
+
+|`+ResponseObject.Conditions[].ConditionID+`
+|`+UUID+`
+|This is the unique ID for the condition
+
+|`+ResponseObject.Conditions[].ConditionDescription+`
+|`+String+`
+|This is the description for the condition
+
+|`+ResponseObject.Conditions[].ProposingUser+`
+|`+Object+`
+|This is the public wallet address for the user who proposed the condition
+
+|`+ResponseObject.Conditions[].ProposingUser.publicWalletID+`
+|`+String+`
+|This is the public wallet of the user
+
+|`+ResponseObject.Conditions[].AgreementID+`
+|`+UUID+`
+|This is the unique id for the agreement this condition is attached to
+
+|`+ResponseObject.Conditions[].ConditionStatus+`
+|`+ENUM+`
+|This is the status of the condition. It can be PENDING, ACCEPTED or REJECTED
+
+|`+ResponseObject.Conditions[].ConditionTitle+`
+|`+String+`
+|This is the title for the condition
+
+|===

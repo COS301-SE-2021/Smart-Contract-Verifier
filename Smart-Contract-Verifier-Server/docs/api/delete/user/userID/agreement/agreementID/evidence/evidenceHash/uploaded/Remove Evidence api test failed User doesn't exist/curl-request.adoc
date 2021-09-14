@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/user/invalid%20user/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/7d793c67-10e8-419b-8137-be9758594184/' -i -X DELETE
+----
