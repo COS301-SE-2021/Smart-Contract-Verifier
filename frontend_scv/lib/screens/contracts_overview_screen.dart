@@ -98,7 +98,9 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
                                 FutureBuilder(future: tokServ.getBalance(),builder: (context, snapshot) {
                                   return Text('UNT Balance: ' + snapshot.data.toString());
                                 }),
+                                SizedBox(width: 2,),
                                 TextButton(onPressed: () async { await _faucetService.getToken(); }, child: Text('Get UNT from Faucet'),),
+                                SizedBox(width: 5 ),
                                 Text(
                                   'Token allowance: ' + snap.data.toString(),
                                   style: TextStyle(color: Colors.white70),
