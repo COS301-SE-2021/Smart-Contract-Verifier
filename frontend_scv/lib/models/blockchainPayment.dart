@@ -8,8 +8,18 @@ class BlockChainPayment {
   String payedUser;
   BigInt amount;
   bool hasBeenPayed;
+  bool infoSet; //Is there payment information?
 
   BlockChainPayment.fromArray(List<dynamic> data) {
+
+    //No payment set
+    if (data.length == 0) {
+      infoSet = false;
+      return;
+    }
+
+    infoSet = true;
+
     //data[0] is the address of the coin
     amount = data[1];
     payingUser = data[2];

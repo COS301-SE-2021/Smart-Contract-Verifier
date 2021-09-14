@@ -1,6 +1,7 @@
 //This class models an agreement already put on the blockchain.
 //Not all of the features of the agreement are present here.
 
+import 'package:unison/models/blockchainPayment.dart';
 import 'package:unison/models/global.dart';
 
 enum AgreementState {
@@ -22,6 +23,7 @@ enum PartyVote {
 
 
 class BlockchainAgreement {
+
   String serverID;
   String partyA;
   String partyB;
@@ -29,6 +31,7 @@ class BlockchainAgreement {
   int state;
   AgreementState stateEnum;
   PartyVote voteEnum; //What the current user voted
+  BlockChainPayment paymentInfo;
 
   BlockchainAgreement.fromCHAIN(dynamic res) {
     //Generate from smartContract response
