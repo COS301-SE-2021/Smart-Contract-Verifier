@@ -4,7 +4,6 @@
 import 'dart:async';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/apiResponse.dart';
-import 'package:web3dart/credentials.dart';
 import '../../models/condition.dart';
 import '../../models/contract.dart';
 import '../../models/global.dart';
