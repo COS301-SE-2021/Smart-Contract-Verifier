@@ -54,9 +54,10 @@ class TokenService {
   }
 
   ///Get the UNT balance of the current user
-  Future<BigInt> getBalance() async {
+  Future<double> getBalance() async {
     final res =  await _smC.makeReadCall('balanceOf', [EthereumAddress.fromHex(Global.userAddress)]);
-    return res[0];
+    double balance =  res[0].toDouble()/pow(10, 18);
+    return balance;
   }
 
 
