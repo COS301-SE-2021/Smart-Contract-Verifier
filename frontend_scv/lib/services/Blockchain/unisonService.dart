@@ -31,8 +31,8 @@ class UnisonService {
         con.duration,
         data,
         con.contractId,
-        [Global.getContractId('UnisonToken')],
-        [con.paymentAmount],
+        [EthereumAddress.fromHex(await Global.getContractId('UnisonToken'))],
+        [BigInt.from(con.paymentAmount)],
         [direction]
       ]);
       print (res);

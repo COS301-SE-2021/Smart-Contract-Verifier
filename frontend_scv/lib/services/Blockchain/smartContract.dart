@@ -49,8 +49,8 @@ class SmartContract {
     //Read from contract
     final theContract = await _getContract();
     final fun = theContract.function(function);
-    List<dynamic> theResult =
-        await _smC.call(contract: theContract, function: fun, params: args);
+    List<dynamic> theResult = await _smC.call(contract: theContract, function: fun, params: args);
+
     return theResult;
   }
 
@@ -61,13 +61,13 @@ class SmartContract {
     final fun = theContract.function(funct);
 
     _wallet.getCredentials();
-    print ('About to call');
-    final theResult = await _smC.sendTransaction(
-        _wallet.getCredentials(),
-        Transaction.callContract(
-            contract: theContract, function: fun, parameters: args));
 
-    print('First res: ' +theResult.toString()); //Debug
+    var theResult = await _smC.sendTransaction(
+          _wallet.getCredentials(),
+          Transaction.callContract(
+              contract: theContract, function: fun, parameters: args));
+
+    //print('First res: ' +theResult.toString()); //Debug
     return theResult;
   }
 
