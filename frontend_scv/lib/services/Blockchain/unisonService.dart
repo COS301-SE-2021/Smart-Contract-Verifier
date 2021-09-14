@@ -115,4 +115,9 @@ class UnisonService {
     await _smC.makeWriteCall('payPlatformFee', [id]);
   }
 
+  ///Pay the amount specified in the agreement payment condition
+  Future<void> payAgreementMoney(BigInt id) async {
+    await _smC.makeWriteCall('payIn', [id]);
+  }
+
 }
