@@ -22,8 +22,8 @@ class BlockChainPayment {
 
     //data[0] is the address of the coin
     amount = data[1];
-    payingUser = data[2];
-    payedUser = data[3];
+    payingUser = data[2].toString();
+    payedUser = data[3].toString();
     hasBeenPayed = data[4];
   }
 

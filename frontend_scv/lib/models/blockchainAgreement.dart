@@ -48,9 +48,16 @@ class BlockchainAgreement {
       ind = 10;
     voteEnum = PartyVote.values[res[ind].toInt()];
 
+    try {
+      print ('Eleven: ' + res[11].toString());
+      paymentInfo = BlockChainPayment.fromArray(res[11][0]);
+    } catch (e) {
+      print ('Build issue:' + e.toString());
+    }
+
   }
 
-  //Return whether or not the current user should make an accept request to an existing agreement
+  ///Return whether or not the current user should make an accept request to an existing agreement
   bool shouldAccept() {
 
     if (state == 1) {
@@ -80,6 +87,6 @@ class BlockchainAgreement {
 
   ///Has the required payment been made? This method returns true if it is still outstanding
   bool shouldPay() {
-    return (paymentInfo.infoSet && paymentInfo.hasBeenPayed);
+    return (paymentInfo.infoSet && !paymentInfo.hasBeenPayed);
   }
 }
