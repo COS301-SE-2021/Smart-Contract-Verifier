@@ -90,7 +90,9 @@ class Contract with ChangeNotifier {
       durationID = durationCond['ID'];
       duration = durationCond['Amount'];
       print ('Duration: ' + duration.toString());
-    } catch (_) {} //Duration condition not set
+    } catch (e) {
+      print ('Could not get duration: ' + e.toString());
+    } //Duration condition not set
   }
 
   Map<String, String> toJson() {
