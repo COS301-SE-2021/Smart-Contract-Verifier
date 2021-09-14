@@ -1,8 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/condition_item.dart';
-import '../models/contract.dart';
+import 'package:unison/widgets/agreement/condition_item.dart';
+import '../../models/contract.dart';
 
 class ContractConditionsPanel extends StatelessWidget {
   final Contract _contract;
@@ -13,7 +13,7 @@ class ContractConditionsPanel extends StatelessWidget {
     NegotiationService _negotiationService = NegotiationService();
     return Expanded(
       child: Container(
-        child: _contract.conditions.isEmpty //TODO handle empty conditions
+        child: _contract.conditions.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
@@ -54,6 +54,8 @@ class ContractConditionsPanel extends StatelessWidget {
                       contractCondition: _contract.conditions[i],
                       negotiationService: _negotiationService,
                       reloadParent: _reloadMyParent,
+                      paymentId: _contract.paymentID,
+                      durationId: _contract.durationID,
                     ),
                     Divider(),
                   ],

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/condition_item.dart';
-import 'package:unison/widgets/judge_condition_item.dart';
+import 'package:unison/widgets/agreement/condition_item.dart';
+import 'package:unison/widgets/jury/judge_condition_item.dart';
 
-import '../models/contract.dart';
+import '../../models/contract.dart';
 
 class JudgeConditionsPanel extends StatelessWidget {
   final Contract _contract;
@@ -17,7 +17,7 @@ class JudgeConditionsPanel extends StatelessWidget {
     print(_contract.conditions);
     return Container(
       // padding: EdgeInsets.all(8),
-      child: _contract.conditions.isEmpty //TODO handle empty conditions
+      child: _contract.conditions.isEmpty
           ? Text('No Conditions Set!')
           : ListView.builder(
               itemCount: _contract.conditions.length,
@@ -30,6 +30,8 @@ class JudgeConditionsPanel extends StatelessWidget {
                         _contract.partyA == _contract.conditions[i].proposedBy
                             ? 'A'
                             : 'B',
+                    durationId: _contract.durationID,
+                    paymentId: _contract.paymentID,
                   ),
                   Divider(),
                 ],

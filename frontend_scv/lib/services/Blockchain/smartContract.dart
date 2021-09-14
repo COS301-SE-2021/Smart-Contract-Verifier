@@ -60,12 +60,14 @@ class SmartContract {
     final theContract = await _getContract();
     final fun = theContract.function(funct);
 
+    _wallet.getCredentials();
+    print ('About to call');
     final theResult = await _smC.sendTransaction(
         _wallet.getCredentials(),
         Transaction.callContract(
             contract: theContract, function: fun, parameters: args));
 
-    //print('First res: ' +theResult.toString()); //Debug
+    print('First res: ' +theResult.toString()); //Debug
     return theResult;
   }
 

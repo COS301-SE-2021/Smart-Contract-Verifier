@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart';
 import 'package:retry/retry.dart';
 import 'package:unison/services/Server/apiResponse.dart';
@@ -15,7 +16,7 @@ enum ReqType {
 }
 
 class ApiInteraction {
-  final String baseUrl =
+  final String _baseUrl =
       "http://localhost:8080"; //Url where the backend is deployed
   static final ApiInteraction api =
   ApiInteraction._internal(); //Only instance of the class
@@ -49,7 +50,6 @@ class ApiInteraction {
     return _baseRequest(url, ReqType.DELETE, jsn);
   }
 
-  //An attempt at re-organising the services.
   Future<ApiResponse> _baseRequest(String url, ReqType method, [Map<dynamic, dynamic> jsn]) async {
     jsn ??= {}; //If null, make empty
 
@@ -66,15 +66,14 @@ class ApiInteraction {
       break; }
     }
 
-    print ('Here 1');
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
     };
     var response;
     try {
       response = await RetryOptions(maxAttempts: 5).retry(
-            () => (method == ReqType.GET) ? toCall(Uri.parse(baseUrl + url),
-            headers: headers) :toCall(Uri.parse(baseUrl + url),
+            () => (method == ReqType.GET) ? toCall(Uri.parse(_baseUrl + url),
+            headers: headers) :toCall(Uri.parse(_baseUrl + url),
           headers: headers, body: jsonEncode(jsn),)
             .timeout(Duration(seconds: 2)),
         retryIf: (e) => e is SocketException || e is TimeoutException,
@@ -90,7 +89,44 @@ class ApiInteraction {
           'An error occurred while making the request. The server responded with status code ' +
               response.statusCode.toString()); //Failed http request
 
-    print ('Ended');
     return ApiResponse.fromJSON(jsonDecode(response.body));
+  }
+
+  Future<ApiResponse> filePost(String url, MultipartFile file) async {
+
+    var req = await MultipartRequest('POST', Uri.parse(_baseUrl + url));
+    req.files.add(
+      file
+    );
+
+    String body;
+    try {
+      final res = await req.send();
+      Response r = await Response.fromStream(res);
+      body = r.body;
+    }
+    catch (e) {
+      return ApiResponse.fromError(e);
+    }
+
+    return ApiResponse.fromJSON(jsonDecode(body));
+
+  }
+
+  Future<PlatformFile> fileGet(String url) async {
+
+    var headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
+    var response = await RetryOptions(maxAttempts: 5).retry(
+          () => get(Uri.parse(_baseUrl + url),
+        headers: headers,)
+          .timeout(Duration(seconds: 3)),
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+    );
+
+    return PlatformFile(name: 'Test', bytes: response.bodyBytes, size: response.bodyBytes.lengthInBytes);
+
   }
 }

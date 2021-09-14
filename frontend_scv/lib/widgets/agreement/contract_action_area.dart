@@ -6,7 +6,7 @@ import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/commonService.dart';
 import 'package:unison/services/Server/judgeService.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/waiting_for_blockchain_text.dart';
+import 'package:unison/widgets/miscellaneous/waiting_for_blockchain_text.dart';
 
 class ContractActionArea extends StatefulWidget {
   Contract _agreement;
@@ -78,7 +78,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                 // print('Press Trigger');
                 showLoaderDialog(context);
                 try {
-                  print ('Calling metamask');
+                  print('Calling metamask');
                   await widget._negotiationService
                       .sealAgreement(widget._agreement);
                   AgreementState as;
@@ -88,7 +88,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                     await Future.delayed(Duration(seconds: 2));
                     widget._agreement = await widget._commonService
                         .getAgreement(widget._agreement.contractId);
-                    print ('ID: ' +widget._agreement.blockchainId.toString() );
+                    print('ID: ' + widget._agreement.blockchainId.toString());
                     if (widget._agreement.blockchainId == null ||
                         widget._agreement.blockchainId == BigInt.from(-1)) {
                       print('No Blockchain ID yet...');
@@ -107,7 +107,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                   Navigator.of(context).pop();
                   setState(() {});
                 } catch (error) {
-                  //TODO: make dialog throw handler in parent
                   Navigator.of(context).pop();
                   setState(() {});
                 }
@@ -134,7 +133,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
           print('CONN STATE: BCA Snap: ' +
               bcAgreementSnap.connectionState.toString());
           // setState(() {});
-          return Text('Oops - Something went wrong'); //TODO: Blockchain ID
+          return Text('Oops - Something went wrong');
           // does not persist
         }
         AgreementState currentState = _loadedBCAgreement.getAgreementState();
@@ -153,7 +152,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                   Navigator.of(context).pop();
                   setState(() {});
                 } catch (error) {
-                  //TODO: make dialog throw handler in parent
                   Navigator.of(context).pop();
                   setState(() {});
                 }
@@ -177,7 +175,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                 Navigator.of(context).pop();
                 setState(() {});
               } catch (error) {
-                //TODO: make dialog throw handler in parent
                 Navigator.of(context).pop();
                 setState(() {});
               }
@@ -190,55 +187,59 @@ class _ContractActionAreaState extends State<ContractActionArea> {
           var expiryDate = DateTime.fromMillisecondsSinceEpoch(
               _loadedBCAgreement.resTime.toInt() * 1000);
           if (expiryDate.compareTo(DateTime.now()) < 0) {
-            // if(party has already voted): TODO
-            // return Text('Show Resolution options');
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(
-                  onPressed: () async {
-                    showLoaderDialog(context);
-                    try {
-                      print('Conclude Agreement');
-                      await widget._unisonService.agreementFulfilled(
-                        widget._agreement,
-                        true,
-                      );
-                      Navigator.of(context).pop();
-                      setState(() {});
-                    } catch (error) {
-                      //TODO: make dialog throw handler in parent
-                      Navigator.of(context).pop();
-                      setState(() {});
-                    }
-                  },
-                  child: Text('Conclude Agreement'),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                TextButton(
-                  onPressed: () async {
-                    showLoaderDialog(context);
-                    try {
-                      print('Dispute Agreement');
-                      await widget._unisonService.agreementFulfilled(
-                        widget._agreement,
-                        false,
-                      );
-                      Navigator.of(context).pop();
-                      setState(() {});
-                    } catch (error) {
-                      //TODO: make dialog throw handler in parent
-                      Navigator.of(context).pop();
-                      setState(() {});
-                    }
-                  },
-                  child: Text('Dispute Agreement'),
-                ),
-              ],
-            );
+            if (_loadedBCAgreement.getResolutionVote() == PartyVote.NONE) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      showLoaderDialog(context);
+                      try {
+                        print('Conclude Agreement');
+                        await widget._unisonService.agreementFulfilled(
+                          widget._agreement,
+                          true,
+                        );
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      } catch (error) {
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      }
+                    },
+                    child: Text('Conclude Agreement'),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      showLoaderDialog(context);
+                      try {
+                        print('Dispute Agreement');
+                        await widget._unisonService.agreementFulfilled(
+                          widget._agreement,
+                          false,
+                        );
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      } catch (error) {
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      }
+                    },
+                    child: Text('Dispute Agreement'),
+                  ),
+                ],
+              );
+            }
+            if (_loadedBCAgreement.getResolutionVote() == PartyVote.YES) {
+              return Text('You have voted conclude');
+            }
+            if (_loadedBCAgreement.getResolutionVote() == PartyVote.NO) {
+              return Text('You have voted dispute');
+            }
           } else {
             var difference = expiryDate.difference(DateTime.now());
             Duration duration = Duration(seconds: difference.inSeconds);

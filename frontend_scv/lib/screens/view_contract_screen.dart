@@ -1,11 +1,13 @@
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/models/contract.dart';
+import 'package:unison/models/global.dart';
+import 'package:unison/screens/evidence_screen.dart';
 import 'package:unison/services/Server/commonService.dart';
-import 'package:unison/widgets/contract_condition_actions_panel.dart';
-import 'package:unison/widgets/contract_conditions_panel.dart';
-import 'package:unison/widgets/contract_detail_info_panel.dart';
-import 'package:unison/widgets/funky_text_widget.dart';
+import 'package:unison/widgets/agreement/contract_condition_actions_panel.dart';
+import 'package:unison/widgets/agreement/contract_conditions_panel.dart';
+import 'package:unison/widgets/agreement/contract_detail_info_panel.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 import 'messaging_screen.dart';
 
@@ -30,26 +32,8 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
     CommonService commonService = CommonService();
     await Future.delayed(Duration(milliseconds: 500));
     try {
-// <<<<<<< dev_front_improvements_api
-      //Save to DB:
-//       if (type == ConditionType.Payment) {
-//         await negotiationService.setPayment(
-//           cId,
-//           Global.userAddress, //TODO: change this to Party Input
-//           double.parse(_paymentConditionAmountController.text),
-//         );
-//       } else if (type == ConditionType.Duration) {
-//         await negotiationService.setDuration(
-//           cId,
-//           (60 * 60 * double.parse(_durationConditionAmountController.text)),
-//         ); //Updated to ask for hours, send through in seconds
-//       } else {
-//         await negotiationService.saveCondition(newCondition);
-//       }
-// =======
       Contract loaded = await commonService.getAgreement(agreementId);
       return loaded;
-// >>>>>>> dev_front_improvements
     } catch (error) {
       print(error);
       throw (error);
@@ -84,7 +68,11 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
                       ),
                     ),
                     if (!agreementSnap.data.movedToBlockchain)
-                      ContractConditionActionsPanel(agreementId, _reloadView),
+                      ContractConditionActionsPanel(
+                        agreementId,
+                        _reloadView,
+                        pA == Global.userAddress ? pB : pA,
+                      ),
                     ContractConditionsPanel(agreementSnap.data, _reloadView),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.1,
@@ -100,20 +88,44 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
             },
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.of(context).pushNamed(
-            MessagingScreen.routeName,
-            arguments: {
-              'agreementId': agreementId,
-              'partyA': pA,
-              'partyB': pB,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                EvidenceScreen.routeName,
+                arguments: {
+                  'agreementId': agreementId,
+                  'partyA': pA,
+                  'partyB': pB,
+                },
+              );
             },
-          );
-        },
-        label: Text('Agreement Chat'),
-        icon: Icon(Icons.chat),
-        backgroundColor: Color.fromRGBO(182, 80, 158, 1),
+            label: Text('Evidence'),
+            icon: Icon(Icons.inventory_2),
+            backgroundColor: Color.fromRGBO(50, 183, 196, 1),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                MessagingScreen.routeName,
+                arguments: {
+                  'agreementId': agreementId,
+                  'partyA': pA,
+                  'partyB': pB,
+                },
+              );
+            },
+            label: Text('Agreement Chat'),
+            icon: Icon(Icons.chat),
+            backgroundColor: Color.fromRGBO(182, 80, 158, 1),
+          ),
+        ],
       ),
     );
   }

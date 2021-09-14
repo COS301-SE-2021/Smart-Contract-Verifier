@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/models/message.dart';
-import 'package:unison/widgets/jdenticon_svg.dart';
+import 'package:unison/widgets/miscellaneous/jdenticon_svg.dart';
 
 enum MessageItemType { JurorCurrent, JurorOther, PartyCurrent, PartyOther }
 

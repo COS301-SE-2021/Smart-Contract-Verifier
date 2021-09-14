@@ -13,7 +13,6 @@ class Message with ChangeNotifier {
   String messageID;
   String agreement;
 
-  //TODO: add time to allow for ordering of messages
   Message(String text, String agreementId) {
     //Constructor used when a message is newly created;
     sender = Global.userAddress;

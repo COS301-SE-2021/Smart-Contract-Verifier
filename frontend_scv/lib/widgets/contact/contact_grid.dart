@@ -5,12 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:unison/models/contact.dart';
 import 'package:unison/models/contactList.dart';
 
-import './contract_item.dart';
-import '../models/contracts.dart';
+import '../agreement/contract_item.dart';
+import '../../models/contracts.dart';
 import 'contact_item.dart';
 
 class ContactGrid extends StatelessWidget {
-
   ContactGrid();
   @override
   Widget build(BuildContext context) {

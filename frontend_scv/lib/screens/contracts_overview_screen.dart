@@ -2,12 +2,12 @@ import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/services/Blockchain/tokenService.dart';
-import 'package:unison/widgets/funky_text_widget.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 import '../models/contracts.dart';
 import '../screens/edit_contract_screen.dart';
-import '../widgets/app_drawer.dart';
-import '../widgets/contracts_grid.dart';
+import '../widgets/miscellaneous/app_drawer.dart';
+import '../widgets/agreement/contracts_grid.dart';
 
 enum FilterOptions {
   Favourites,
