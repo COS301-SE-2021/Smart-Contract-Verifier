@@ -16,7 +16,7 @@ class TokenService {
       String id = await Global.getContractId('Verifier');
      var res = await _smC.makeWriteCall(
           'approve', [EthereumAddress.fromHex(id), stake]);
-     print ('Set allowance res: ' + res.toString());
+     print ('Set allowance res: ' + res);
     }
     catch (e) {
       print (e);
@@ -40,14 +40,15 @@ class TokenService {
   }
 
   ///Get the allowance that Verifier has of UnisonToken
-  Future<BigInt> getAllowance() async {
+  Future<double> getAllowance() async {
 
     final res = await _smC.makeReadCall('allowance', [EthereumAddress.fromHex(Global.userAddress), EthereumAddress.fromHex(await Global.getContractId('Verifier'))]);
 
-    if (res[0] == null)
-      return BigInt.from(0);
-    BigInt result = res[0]/pow(10, 18); //Division to return in eth, not gwei
-    print ('All: ' + result.toString());
+      if (res[0] == null) {
+        return 0;
+      }
+
+    double result = (res[0].toInt()/pow(10, 18)); //Division to return in eth, not gwei
     return result;
 
   }
