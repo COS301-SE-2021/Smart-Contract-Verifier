@@ -30,23 +30,15 @@ class Condition with ChangeNotifier {
     description = jsn['ConditionDescription'];
     List<String> descParts;
 
-    try {
       descParts = description.split(" ");
-    } catch (e) {
-      print ('FHHDF: ' + e.toString());
-    }
 
     try {
-      print ('Checking dur');
       if (descParts[0] == 'Duration' && descParts[1] == 'of') { //This is a duration condition formatted in seconds
-        print ('Is a DURATION!');
       int seconds = int.parse(descParts[2]);
       DateTime time = DateTime.fromMillisecondsSinceEpoch(seconds*1000);
       description = 'Expires: ' +DateFormat('yyyy-MM-dd kk:mm').format(time);
       }
-    } catch (e) {
-      print ('Issue: ' + e.toString());
-    }
+    } catch (_) {}
     status = jsn['ConditionStatus'];
     }
 
