@@ -1,7 +1,6 @@
 /*
 * ---------------
-* Evidence - Make Pretty
-* Add Evidence Screen to Assignment Screen
+* Evidence - touch up, make Judges not able to add evidence
 * Remove prints to console
-* TODO: Go through all TODOs
+* Go through all TODO - mainly in Services
 * */
