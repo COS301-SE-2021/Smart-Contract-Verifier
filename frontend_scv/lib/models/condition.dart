@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 import 'global.dart';
@@ -20,13 +22,33 @@ class Condition with ChangeNotifier {
       this.status = 'Pending',
       this.conditionId = ''}); //Constructor
 
-  Condition.fromJson(Map<String, dynamic> jsn)
-      : agreementId = jsn['AgreementID'],
-        conditionId = jsn['ConditionID'],
-        title = jsn['ConditionTitle'],
-        proposedBy = jsn['ProposingUser']['publicWalletID'],
-        description = jsn['ConditionDescription'],
-        status = jsn['ConditionStatus'];
+  Condition.fromJson(Map<String, dynamic> jsn) {
+    agreementId = jsn['AgreementID'];
+    conditionId = jsn['ConditionID'];
+    title = jsn['ConditionTitle'];
+    proposedBy = jsn['ProposingUser']['publicWalletID'];
+    description = jsn['ConditionDescription'];
+    List<String> descParts;
+
+    try {
+      descParts = description.split(" ");
+    } catch (e) {
+      print ('FHHDF: ' + e.toString());
+    }
+
+    try {
+      print ('Checking dur');
+      if (descParts[0] == 'Duration' && descParts[1] == 'of') { //This is a duration condition formatted in seconds
+        print ('Is a DURATION!');
+      int seconds = int.parse(descParts[2]);
+      DateTime time = DateTime.fromMillisecondsSinceEpoch(seconds*1000);
+      description = 'Expires: ' +DateFormat('yyyy-MM-dd kk:mm').format(time);
+      }
+    } catch (e) {
+      print ('Issue: ' + e.toString());
+    }
+    status = jsn['ConditionStatus'];
+    }
 
   Map<String, dynamic> toJson() => {
         //For saving a condition to the server
