@@ -126,7 +126,7 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
                                   ),
                                   onPressed: () async {
                                     await tokServ
-                                        .setAllowance(BigInt.from(10000000000));
+                                        .setAllowance(BigInt.from(2000000000000000000));
                                   },
                                 ),
                                 SizedBox(
