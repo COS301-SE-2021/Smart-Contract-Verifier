@@ -30,11 +30,11 @@ class UnisonAuthorisationFilter(var securityConfig: SecurityConfig): OncePerRequ
             val parts = token.split(" ")
             token = parts[1]
             var claimedUser :String
-            if(uri.contains("/user/")) {
-                claimedUser = uri.substringAfter("/user/")
+            if(uri.contains("/judge/")) {
+                claimedUser = uri.substringAfter("/judge/")
                 claimedUser = claimedUser.subSequence(0, 42) as String
             }else{
-                claimedUser = uri.substringAfter("/judge/")
+                claimedUser = uri.substringAfter("/user/")
                 claimedUser = claimedUser.subSequence(0, 42) as String
             }
 
