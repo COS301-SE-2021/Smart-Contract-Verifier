@@ -5,5 +5,5 @@ $ echo '{
   "NewUserAlias" : "TestAlias"
 }' | http PUT 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/contactList/33e660b7-8522-416b-9b8d-523deea5a778' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTM2Mzd9.wT4RPkbC_gV6q2-5xtMDG43pe3Dcco1BLjdmJi28qEc'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTM3Mjd9.jACj4y43X7ElSZiUbcFaccuo0ThcMoy06D2SP34kWNo'
 ----

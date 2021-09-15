@@ -1,4 +1,9 @@
 [source,options="nowrap"]
 ----
-
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "ConditionID" : "967ee13c-dd5d-4de5-adb5-7dd4907fb2cf"
+  }
+}
 ----

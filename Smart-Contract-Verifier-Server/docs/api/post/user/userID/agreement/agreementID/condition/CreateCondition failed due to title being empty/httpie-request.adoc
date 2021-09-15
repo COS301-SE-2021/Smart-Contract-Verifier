@@ -5,5 +5,5 @@ $ echo '{
   "ConditionDescription" : "This is a postman test"
 }' | http POST 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/condition' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTM1NDR9.iJ_cH40LgRtgT2vf_D6Fbm67n0BvN-aBpXNBY48mW10'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTM3MjB9.Fi7BxojSglv4MYULOsrCqIIdkcw424Ak8EtdARD_U9A'
 ----
