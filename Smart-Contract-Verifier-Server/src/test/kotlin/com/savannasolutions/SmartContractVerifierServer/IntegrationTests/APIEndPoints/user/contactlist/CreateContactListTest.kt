@@ -7,6 +7,8 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.Contac
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.responses.CreateContactListResponse
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -67,6 +69,7 @@ class CreateContactListTest {
         return mockMvc.perform(
             MockMvcRequestBuilders.post("/user/${userID}/contactList/${contactListName}")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "bearer ${generateToken(userID)}")
         ).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -103,7 +106,7 @@ class CreateContactListTest {
         fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
         //End of documentation
 
-        val response = requestSender("other user",
+        val response = requestSender("0x69Ec9a8aBFa094b24054422564e68B08aF311400",
             "test name",
             fieldDescriptorResponse,
             "createContractList failed due to user not existing")
@@ -125,5 +128,14 @@ class CreateContactListTest {
             "createContractList failed due to a contact list already existing with name and user")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+    }
+
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
     }
 }
