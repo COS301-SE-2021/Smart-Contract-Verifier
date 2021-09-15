@@ -1,12 +1,11 @@
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:unison/models/evidence.dart';
 import 'package:unison/models/evidenceData.dart';
 import 'package:unison/models/evidenceItem.dart';
 import 'package:unison/services/Server/evidenceService.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'dart:js' as js;
 
 class EvidenceList extends StatefulWidget {
   final String agreementId;
@@ -112,16 +111,8 @@ class _EvidenceListState extends State<EvidenceList> {
                                     style: new TextStyle(color: Colors.blue),
                                     recognizer: new TapGestureRecognizer()
                                       ..onTap = () async {
-                                        if (await canLaunch(
-                                            evidenceItem.metaData.url)) {
-                                          await launch(
-                                              evidenceItem.metaData.url);
-                                        } else {
-                                          throw 'Could not launch '
-                                              '${evidenceItem.metaData.url}';
-                                        }
-
-                                        launch(evidenceItem.metaData.url);
+                                        js.context.callMethod('open',
+                                            ['${evidenceItem.metaData.url}']);
                                       },
                                   ),
                                 ],

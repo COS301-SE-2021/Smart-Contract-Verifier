@@ -17,7 +17,8 @@ class _UploadEvidencePanelState extends State<UploadEvidencePanel> {
   EvidenceService evServe = EvidenceService();
 
   Future<void> uploadEvidence() async {
-    FilePickerResult picked = await FilePicker.platform.pickFiles(type:FileType.image);
+    FilePickerResult picked =
+        await FilePicker.platform.pickFiles(type: FileType.image);
 
     List<PlatformFile> fileRes = picked.files;
     Evidence evid = Evidence(widget.agreementId);
@@ -25,49 +26,60 @@ class _UploadEvidencePanelState extends State<UploadEvidencePanel> {
         fileRes[0]); //May be expanded in the future to allow multiple files
 
     await evServe.storeEvidence(evid);
-
-    // build(context);
     widget.rebuildScreen();
   }
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   Future<void> linkEvidence() async {
     await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Link evidence'),
-            actions: [
-              TextButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  _urlLinkController.clear();
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Save'),
-                onPressed: () async {
-                  await evServe.linkEvidence(
-                      _urlLinkController.text, widget.agreementId);
-                  _urlLinkController.clear();
-                  Navigator.of(context).pop();
-                  widget.rebuildScreen();
-                },
-              ),
-            ],
-            content: TextFormField(
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Url:';
-                } else {
-                  return null;
-                }
-              },
-              decoration: InputDecoration(labelText: 'Evidence Url'),
-              controller: _urlLinkController,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Link evidence'),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Url:';
+                    } else {
+                      return null;
+                    }
+                  },
+                  decoration: InputDecoration(labelText: 'Evidence Url'),
+                  controller: _urlLinkController,
+                ),
+              ],
             ),
-          );
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                _urlLinkController.clear();
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () async {
+                final isValid = _formKey.currentState.validate();
+                if (!isValid) return;
+                await evServe.linkEvidence(
+                    _urlLinkController.text, widget.agreementId);
+                _urlLinkController.clear();
+                Navigator.of(context).pop();
+                widget.rebuildScreen();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
