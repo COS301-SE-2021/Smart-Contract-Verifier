@@ -75,6 +75,7 @@ class UnisonService {
   ///Checks if a user is a Juror
   Future<bool> isJuror(EthereumAddress add) async {
     final res = await _smC.makeReadCall('isJuror', [add]);
+    //print ('Juror: ' + res.toString());
     return res[0]; //Temporary
   }
 

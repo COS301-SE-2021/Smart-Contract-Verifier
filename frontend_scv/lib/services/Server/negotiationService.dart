@@ -89,29 +89,6 @@ class NegotiationService {
       throw Exception('Duration info could not be saved');
   }
 
-  // Future<void> _handlePayDuration(String con, double val, bool price) async {
-  //   //Handles both price and duration
-  //
-  //   Map<String, dynamic> body = {
-  //     'ProposedUser': Global.userAddress,
-  //     'AgreementID': con,
-  //     (price ? 'Payment' : 'Duration'): val
-  //   };
-  //   Map<String, dynamic> response;
-  //   String path = price ? 'payment' : 'duration';
-  //
-  //   try {
-  //     response = await _api.postData(_reqPath + 'set-$path-condition', body);
-  //
-  //     if (response['Status'] != 'SUCCESSFUL')
-  //       throw Exception(
-  //           '${(price ? 'Payment' : 'Duration')} could not be saved');
-  //   } on Exception catch (e) {
-  //     //Handle exception
-  //     print(e);
-  //     throw e;
-  //   }
-  // }
 
   //The api will be updated with a new 'seal flow'
   Future<void> sealAgreement(Contract con) async {

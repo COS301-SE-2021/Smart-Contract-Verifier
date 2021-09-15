@@ -169,10 +169,11 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
+
     try {
       await Provider.of<Auth>(context, listen: false).metaMaskLogin();
       //await unisonService.getAgreement(BigInt.from(0));
-      //await judgeService.isJudge();
+      await judgeService.isJudge();
       //await judgeService.setContractAllowance();
     } catch (error) {
       const errorMessage = 'Authenticate Failed.\nPlease ensure you '
