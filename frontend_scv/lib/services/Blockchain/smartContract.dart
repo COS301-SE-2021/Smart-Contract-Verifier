@@ -2,6 +2,7 @@
 //The directory will hold similar classes, e.g. for Metamask communication.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -12,7 +13,8 @@ import 'wallet.dart';
 
 class SmartContract {
   static final Web3Client _smC =
-      Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+    //  Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+  Web3Client('https://matic-mumbai.chainstacklabs.com', Client());
   static final WalletInteraction _wallet = WalletInteraction();
 
   String conAbi;
@@ -76,6 +78,10 @@ class SmartContract {
     final con = await _getContract();
     final event = con.event(ev);
     return event;
+  }
+
+  Future<dynamic> signTheThing(Uint8List thing, Credentials cred) async {
+    return await _smC.signTransaction(cred, Transaction(data: thing));
   }
 
 }
