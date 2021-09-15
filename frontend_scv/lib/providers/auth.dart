@@ -32,9 +32,14 @@ class Auth with ChangeNotifier {
     final cred = walletInteraction.getCredentials();
     _isAuth = true;
     _userWalletAddress = cred.address.toString();
-    loginService.tryAddUser();
+    await loginService.tryAddUser();
+    bool loginSuccess = await loginService.login();
 
-    notifyListeners();
+    print ('Sucess: '+ loginSuccess.toString());
+    if (loginSuccess)
+      notifyListeners();
+    else
+      throw Exception('Login Failed');
     // print(walletInteraction.getCredentials().toString());
   }
 
