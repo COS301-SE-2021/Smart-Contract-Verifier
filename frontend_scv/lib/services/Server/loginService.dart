@@ -36,21 +36,20 @@ class LoginService {
   Future<bool> login() async {
     ApiResponse nonceRes = await _api.getData('/user/${Global.userAddress}');
 
-    print ('Gotten none');
+    //print ('Gotten none');
     //Extract and sign nonce
     String nonce = nonceRes.result['UnsignedNonce'];
 
-    print ('About to sign: ' + nonce);
+    //print ('About to sign: ' + nonce);
     final signed = await _wallet.personalSign(nonce);
 
-    print ('Signed: ' +signed.toString());
+    //print ('Signed: ' +signed.toString());
 
     //Send back signed nonce
     var body = {'SignedNonce' : signed};
-    //ApiResponse loginRes = await _api.postData('/user/${Global.userAddress}', body);
-    Global.apiToken = ''; //Extract from result
-    //return loginRes.successful; //Login success
-    return false;
+    ApiResponse loginRes = await _api.postData('/user/${Global.userAddress}', body);
+    Global.apiToken = loginRes.result['JwtToken']; //Extract from result
+    return loginRes.successful; //Login success
   }
 
 

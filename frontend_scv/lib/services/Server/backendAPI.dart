@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart';
 import 'package:retry/retry.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/apiResponse.dart';
 
 //Request Type
@@ -78,7 +79,9 @@ class ApiInteraction {
 
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization' : "bearer " + Global.apiToken,
     };
+
     var response;
     try {
       response = await RetryOptions(maxAttempts: 5).retry(

@@ -20,14 +20,14 @@ class NegotiationService {
 
   Future<void> saveAgreement(Contract agr) async {
     ApiResponse response = await _api.postData(
-        '$_reqPath/${Global.userAddress}/agreement', agr.toJson());
+        '$_reqPath${Global.userAddress}/agreement', agr.toJson());
     if (!response.successful) throw Exception('Agreement could not be saved');
   }
 
   Future<void> saveCondition(Condition cond) async {
     //Save a condition associated with a contract
     ApiResponse response = await _api.postData(
-        '$_reqPath/${Global.userAddress}/agreement/${cond.agreementId}/condition',
+        '$_reqPath${Global.userAddress}/agreement/${cond.agreementId}/condition',
         cond.toJson());
 
     if (!response.successful) throw Exception('Condition could not be saved');
@@ -52,7 +52,7 @@ class NegotiationService {
 
     //The ui needs to change the way it calls the function
     ApiResponse response = await _api.putData(
-        '/user/${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
+        '$_reqPath${Global.userAddress}/agreement/${con.agreementId}/condition/${con.conditionId}/$path');
 
     if (!response.successful)
       throw Exception(
@@ -67,7 +67,7 @@ class NegotiationService {
       'PayingUser': payingUser,
     };
     ApiResponse response = await _api.postData(
-        '/user/${Global.userAddress}/agreement/$con/condition/payment', body);
+        '$_reqPath${Global.userAddress}/agreement/$con/condition/payment', body);
 
     if (!response.successful)
       throw Exception('Payment info could not be saved');
@@ -83,7 +83,7 @@ class NegotiationService {
       'Duration': seconds,
     };
     ApiResponse response = await _api.postData(
-        '/user/${Global.userAddress}/agreement/$con/condition/duration', body);
+        '$_reqPath${Global.userAddress}/agreement/$con/condition/duration', body);
 
     if (!response.successful)
       throw Exception('Duration info could not be saved');
