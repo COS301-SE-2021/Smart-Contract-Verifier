@@ -1,14 +1,28 @@
 [source,http,options="nowrap"]
 ----
-HTTP/1.1 403 Forbidden
+HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
+Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
+Content-Length: 307
 
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "contactListInfo" : [ {
+      "ContactListName" : "help",
+      "ContactListID" : "57d1648d-98a1-4d88-93e9-47afaf88d9a5"
+    }, {
+      "ContactListName" : "help",
+      "ContactListID" : "18dc472f-46b1-4363-9556-82b20f718c0d"
+    } ]
+  }
+}
 ----
