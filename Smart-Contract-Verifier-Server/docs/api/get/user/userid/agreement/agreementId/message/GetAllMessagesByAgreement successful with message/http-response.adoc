@@ -1,14 +1,48 @@
 [source,http,options="nowrap"]
 ----
-HTTP/1.1 403 Forbidden
+HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
+Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
+Content-Length: 1104
 
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "Messages" : [ {
+      "message" : "TestMessageA",
+      "messageStatuses" : [ {
+        "readDate" : "2021-09-15T14:14:23.843+00:00",
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        "read" : true
+      } ],
+      "messageID" : "16e54fea-d3e0-4547-b005-98bd68393504",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "sendingUser" : {
+        "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
+      },
+      "sendingDate" : "2021-09-15T14:14:23.843+00:00"
+    }, {
+      "message" : "TestMessageB",
+      "messageStatuses" : [ {
+        "readDate" : null,
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        "read" : false
+      } ],
+      "messageID" : "92617bf4-02ad-418d-af7a-ba6d46136420",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "sendingUser" : {
+        "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
+      },
+      "sendingDate" : "2021-09-15T14:14:23.843+00:00"
+    } ]
+  }
+}
 ----
