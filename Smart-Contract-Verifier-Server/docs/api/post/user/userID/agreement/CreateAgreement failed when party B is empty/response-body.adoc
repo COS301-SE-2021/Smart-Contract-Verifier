@@ -1,4 +1,7 @@
 [source,options="nowrap"]
 ----
-
+{
+  "Status" : "FAILED",
+  "Message" : "Party B is empty"
+}
 ----
