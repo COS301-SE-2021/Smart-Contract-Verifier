@@ -2,11 +2,17 @@
 //It is also a singleton.
 
 import 'dart:html';
+import 'dart:html';
+import 'dart:js_util';
 import 'dart:typed_data';
 
+import 'package:unison/services/Blockchain/smartContract.dart';
+import 'package:unison/services/External/jsMethods.dart';
 import 'package:web3dart/browser.dart';
 import 'package:web3dart/credentials.dart';
-
+import 'package:web3dart/web3dart.dart';
+//import 'dart:js' as js;
+import 'package:js/js.dart';
 import '../../models/global.dart';
 
 class WalletInteraction {
@@ -27,6 +33,7 @@ class WalletInteraction {
       print('Connection failed');
       throw Exception("Metamask is not available");
     }
+
 
     metaCred = await meta.requestAccount();
     // print ('Before');
@@ -63,8 +70,12 @@ class WalletInteraction {
   }
 
   ///Sign a string using metamask personal signing
-  Future<Uint8List> personalSign(Uint8List data) async {
-    final res = await metaCred.signPersonalMessage(data);
+  Future<Uint8List> personalSign(String data) async {
+
+    //Sign using external Javascript function, since the Dart Metamask signing is unreliable.
+    var res = await promiseToFuture(signWithMetamask(data, Global.userAddress));
     return res;
   }
+
+
 }
