@@ -2,7 +2,7 @@
 ----
 $ curl 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTYxMjN9.nPV1EuLqZCxxs5cC5RV5VoO6peRywXcMw-ZJwuNnr_I' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTY0Mjl9.aTr-q6QheOl3tsmRm7Nci_buyehI4GGqIzCYD76pZZM' \
     -d '{
   "AgreementDescription" : "",
   "AgreementImageURL" : "http.dodgyurl.com",

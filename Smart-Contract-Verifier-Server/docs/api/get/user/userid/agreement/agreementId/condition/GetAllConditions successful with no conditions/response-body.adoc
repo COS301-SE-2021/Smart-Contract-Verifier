@@ -1,4 +1,9 @@
 [source,options="nowrap"]
 ----
-
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "Conditions" : [ ]
+  }
+}
 ----

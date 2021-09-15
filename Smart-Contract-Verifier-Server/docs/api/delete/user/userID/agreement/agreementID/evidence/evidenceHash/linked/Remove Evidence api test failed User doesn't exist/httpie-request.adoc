@@ -1,5 +1,5 @@
 [source,bash]
 ----
 $ http DELETE 'http://localhost:8080/user/invalid%20user/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/7d793c67-10e8-419b-8137-be9758594184/' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnZhbGlkIHVzZXIiLCJleHAiOjE2MzE3MTUzNDl9.uMsZQCdoyTDIsjKk3FQWBwwSXMXYk-ghJuxZYSAbEks'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnZhbGlkIHVzZXIiLCJleHAiOjE2MzE3MTY0MTN9.gyfUAE8T71jGsOnHucyndXdajhabyOP3Wehh3D7-_WU'
 ----
