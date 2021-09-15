@@ -9,6 +9,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -27,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -46,6 +49,7 @@ class GetAgreementDetail {
 
     private lateinit var userA : User
     private lateinit var userB : User
+    var userC = "562fa210-e19e-4390-9e06-48e04a04b333"
     private lateinit var acceptedConditionID: UUID
     private lateinit var rejectedConditionID: UUID
     private lateinit var pendingConditionID: UUID
@@ -120,9 +124,16 @@ class GetAgreementDetail {
                               responseFieldDescriptors: ArrayList<FieldDescriptor>,
                               testName: String) : MockHttpServletResponse
     {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        val jwtToken = Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/agreement")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "bearer $jwtToken")
                 ).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -158,13 +169,12 @@ class GetAgreementDetail {
     {
         //Documentation
         val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
-        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
         //End of documentation
 
-        val response = requestSender("other user",
+        val response = requestSender(userC,
             fieldDescriptorResponse,
             "RetrieveUserAgreementsTests failed due to user not existing")
 
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+        assertEquals(response.status, 403)
     }
 }

@@ -1,4 +1,6 @@
 [source,options="nowrap"]
 ----
-
+{
+  "Status" : "SUCCESSFUL"
+}
 ----

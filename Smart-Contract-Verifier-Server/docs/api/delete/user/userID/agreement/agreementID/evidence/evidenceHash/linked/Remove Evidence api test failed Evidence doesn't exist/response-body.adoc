@@ -1,4 +1,7 @@
 [source,options="nowrap"]
 ----
-
+{
+  "Status" : "FAILED",
+  "Message" : "Evidence does not exist"
+}
 ----
