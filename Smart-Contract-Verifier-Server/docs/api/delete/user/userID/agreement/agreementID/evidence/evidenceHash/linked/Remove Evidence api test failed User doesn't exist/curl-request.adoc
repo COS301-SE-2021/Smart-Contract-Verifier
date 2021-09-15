@@ -1,5 +1,5 @@
 [source,bash]
 ----
 $ curl 'http://localhost:8080/user/invalid%20user/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/7d793c67-10e8-419b-8137-be9758594184/' -i -X DELETE \
-    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnZhbGlkIHVzZXIiLCJleHAiOjE2MzE3MTQxMzF9.YIC8oXRDrxIDONw4ZAVMDAlvUwrb0RF5St-q1vrlKc8'
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnZhbGlkIHVzZXIiLCJleHAiOjE2MzE3MTQzNTF9.tz1ojrm6DGMSiH8TgZOEehjMAlnq53UEv0fGOWt6gVQ'
 ----

@@ -4,5 +4,5 @@ $ echo '{
   "Message" : "Test message"
 }' | http POST 'http://localhost:8080/user/other%20user/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/message' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvdGhlciB1c2VyIiwiZXhwIjoxNjMxNzE0MTY5fQ.hriij7r7dpNzAmare5O8NqtMyG_3XTKXh1OFF3Ajahw'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvdGhlciB1c2VyIiwiZXhwIjoxNjMxNzE0Mzg3fQ.GmqfAzGiGHZbYwfu3I_QdZw9z5EfNt-ymTG2nbFINBc'
 ----

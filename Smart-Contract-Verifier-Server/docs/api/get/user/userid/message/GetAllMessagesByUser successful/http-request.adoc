@@ -2,7 +2,7 @@
 ----
 GET /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/message HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTQxMzZ9.JFpWv4YE8u99BP5ektji0qbi0HqGS3zypXWFS9VGUeo
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTQzNTV9.zPO73Z6v8mcr7BhG7P3vnwWyESw0KVta1BuqdoWbbJc
 Host: localhost:8080
 
 ----
