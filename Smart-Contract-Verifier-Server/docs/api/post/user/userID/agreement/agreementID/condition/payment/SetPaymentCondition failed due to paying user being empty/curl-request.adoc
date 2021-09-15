@@ -2,7 +2,7 @@
 ----
 $ curl 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/condition/payment' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTM4MjN9.x38HkpHQSgMgS8am6EMZ5KKc2loVB5BL_3woIc5KRq0' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTM5MzN9.EVykwtveuqYdERCBgna2XuMlLDuwXN1n8z0fZJJRHKA' \
     -d '{
   "Payment" : 500.0,
   "PayingUser" : ""
