@@ -1,4 +1,57 @@
 [source,options="nowrap"]
 ----
-
+{
+  "Status" : "SUCCESSFUL",
+  "ResponseObject" : {
+    "AgreementResponse" : {
+      "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "AgreementTitle" : "test agreement",
+      "AgreementDescription" : "test description",
+      "DurationCondition" : null,
+      "PaymentCondition" : null,
+      "PartyA" : {
+        "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
+      },
+      "PartyB" : {
+        "publicWalletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+      },
+      "CreatedDate" : "2021-09-15T14:13:29.832+00:00",
+      "SealedDate" : null,
+      "MovedToBlockchain" : false,
+      "Conditions" : [ {
+        "ConditionID" : "967ee13c-dd5d-4de5-adb5-7dd4907fb2cf",
+        "ConditionDescription" : "Test condition description",
+        "ProposingUser" : {
+          "publicWalletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+        },
+        "ProposalDate" : "2021-09-15T14:13:29.832+00:00",
+        "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+        "ConditionStatus" : "PENDING",
+        "ConditionTitle" : "Test conditions pending"
+      }, {
+        "ConditionID" : "d20088ad-6e94-426f-84f8-bf01b9e9bf6e",
+        "ConditionDescription" : "Test condition description",
+        "ProposingUser" : {
+          "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
+        },
+        "ProposalDate" : "2021-09-15T14:13:29.832+00:00",
+        "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+        "ConditionStatus" : "ACCEPTED",
+        "ConditionTitle" : "Test condition accepted"
+      }, {
+        "ConditionID" : "e2526862-6282-4fc9-9ea7-f6dbc6064c48",
+        "ConditionDescription" : "Test condition description",
+        "ProposingUser" : {
+          "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
+        },
+        "ProposalDate" : "2021-09-15T14:13:29.832+00:00",
+        "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+        "ConditionStatus" : "REJECTED",
+        "ConditionTitle" : "Test condition rejected"
+      } ],
+      "AgreementImageURL" : null,
+      "BlockChainID" : null
+    }
+  }
+}
 ----
