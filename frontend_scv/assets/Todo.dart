@@ -4,4 +4,9 @@
 * Remove prints to console
 * Login
 * Go through all TODO - mainly in Services
+*
+* More button looking actions on action area
+* SideBar (later)
+* Agreement Status/Notification (later)
+*
 * */
