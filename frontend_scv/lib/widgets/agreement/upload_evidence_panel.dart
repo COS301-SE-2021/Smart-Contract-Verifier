@@ -17,7 +17,7 @@ class _UploadEvidencePanelState extends State<UploadEvidencePanel> {
   EvidenceService evServe = EvidenceService();
 
   Future<void> uploadEvidence() async {
-    FilePickerResult picked = await FilePicker.platform.pickFiles();
+    FilePickerResult picked = await FilePicker.platform.pickFiles(type:FileType.image);
 
     List<PlatformFile> fileRes = picked.files;
     Evidence evid = Evidence(widget.agreementId);
