@@ -11,12 +11,12 @@ require('chai').use(require('chai-as-promised')).should()
 
 async function createActiveAgreement(verifier, accounts){
     // Create agreement
-    await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "");
-
-    // Add payment condition
     var amount = 100
+    await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [true]);
+
+    // Pay in tokens
     await token.approve(verifier.address, amount);
-    await verifier.addPaymentConditions(0, [token.address], [amount]);
+    await verifier.payIn(0);
 
     // Accept
     await verifier.acceptAgreement(0, {from: accounts[1]})
@@ -44,29 +44,67 @@ contract('Verifier', (accounts) =>{
 
     describe("Verifier unit tests", async () =>{
 
-        var verifier
+        var verifier;
+        var token;
 
         before(async () =>{
             token = await UnisonToken.new()
             r = await RandomSource.new();
             verifier = await Verifier.new(token.address, r.address);
 
-                needCoins = [];
-                for(var i = 1; i<9; i++){
-                    needCoins.push(accounts[i]);
-                }
-                giveJurorsCoins(token, accounts[0], needCoins, 100000);
+            needCoins = [];
+            for(var i = 1; i<9; i++){
+                needCoins.push(accounts[i]);
+            }
+            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+        })
+
+        it("Can't create agreement without payment", async () =>{
+
+            // try{
+            //     verifier.createAgreement(accounts[1], 0, "this agreement shouldn't exist", "", [], [], []);
+            //     assert(false, "Managed to create an agreement with no payments");       
+            // }
+            // catch{}
+            // var agree = await verifier.getAgreement(0);
+
+            // assert(agree.party1 == "0x0000000000000000000000000000000000000000");
         })
 
         it("Can create agreement", async () =>{
 
-            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
+            var amount = 1000;
+            verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "", [token.address], [amount], [true]);
 
             var agree = await verifier.getAgreement(0)
 
             assert.equal(agree.party1, accounts[0])
             assert.equal(agree.party2, accounts[1])
             assert.equal(agree.state, 1)
+
+            var payment = agree.payments[0];
+            assert(payment.token == token.address, "Payment has wrong token");
+            assert(payment.from == accounts[0], "Payment from wrong address");
+            assert(payment.to == accounts[1], "Payment to wrong address");
+            var amountInPayment = BigInt(payment.amount);
+            assert(amountInPayment == BigInt(1000), "Payment has wrong amount");
+            assert(payment.paidIn == false, "Payment marked as paid in");
+
+            await token.approve(verifier.address, amount);
+            await verifier.payIn(0);
+
+        })
+
+        it("pay in", async () =>{
+            var agree = await verifier.getAgreement(0);
+            var payment = agree.payments[0];
+            
+            await token.approve(verifier.address, payment.amount);
+            await verifier.payIn(0);
+
+            var agree = await verifier.getAgreement(0);
+            var payment = agree.payments[0];
+            assert(payment.paidIn == true, "Payment wasn't registered");
 
         })
 
@@ -147,11 +185,11 @@ contract('Verifier', (accounts) =>{
 
         it("Create 2nd agreement ", async()=>{
             // Create new agreement
-            verifier.createAgreement(accounts[1], 0, "For jury test", "");
+            var amount = 100;
+            verifier.createAgreement(accounts[1], 0, "For jury test", "", [token.address], [amount], [true]);
 
-            var amount = 100
             await token.approve(verifier.address, amount);
-            await verifier.addPaymentConditions(1, [token.address], [amount]);
+            await verifier.payIn(1);
 
             verifier.acceptAgreement(1, {from: accounts[1]})
 
@@ -249,81 +287,51 @@ contract('Verifier', (accounts) =>{
             prepareJurors(verifier, token, accounts, 1, 10);
 
             // Create agreement
-            await verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "");
-        })
-
-        it("Add payment condition", async()=>{
-            var agree = await verifier.getAgreement(0);
-            var numPaymentsAlready = agree.payments.length;
-
-            var amount = 100
-            await token.approve(verifier.address, amount);
-            await verifier.addPaymentConditions(0, [token.address], [amount]);
-
-            agree = await verifier.getAgreement(0);
-            assert(agree.payments.length == numPaymentsAlready + 1);
-
-            var payment = agree.payments[numPaymentsAlready];
-            assert(payment.token == token.address, "Invalid token in payment");
-            assert(payment.from == accounts[0], "Invalid from address in payment");
-            assert(payment.to == accounts[1], "Invalid to address in payment");
-            assert(payment.amount == amount, "Invalid amount in payment");
-        })
-
-        it("Add payment condition from party2", async()=>{
-            var agree = await verifier.getAgreement(0);
-            var numPaymentsAlready = agree.payments.length;
-
-            var amount = 100
-            await token.approve(verifier.address, amount, {from : accounts[1]});
-            await verifier.addPaymentConditions(0, [token.address], [amount], {from : accounts[1]});
-
-            agree = await verifier.getAgreement(0);
-            assert(agree.payments.length == numPaymentsAlready + 1);
-
-            var payment = agree.payments[numPaymentsAlready];
-            assert(payment.token == token.address, "Invalid token in payment");
-            assert(payment.from == accounts[1], "Invalid from address in payment");
-            assert(payment.to == accounts[0], "Invalid to address in payment");
-            assert(payment.amount == amount, "Invalid amount in payment");
-        })
-
-        it("Add multiple payment conditions", async()=>{
-            var agree = await verifier.getAgreement(0);
-            var numPaymentsAlready = agree.payments.length;
-
-            var amount = 100
-            await token.approve(verifier.address, amount*2);
-            await verifier.addPaymentConditions(0, [token.address, token.address], [amount, amount]);
-
-            agree = await verifier.getAgreement(0);
-            assert(agree.payments.length == numPaymentsAlready + 2);
-
-            for(var i=numPaymentsAlready; i<numPaymentsAlready + 2; i++){
-                var payment = agree.payments[i];
-                assert(payment.token == token.address, "Invalid token in payment");
-                assert(payment.from == accounts[0], "Invalid from address in payment");
-                assert(payment.to == accounts[1], "Invalid to address in payment");
-                assert(payment.amount == amount, "Invalid amount in payment");
-            }
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "do nothing with this agreement", "", [token.address, token.address],
+                 [amount, amount], [true, false]);
         })
 
         it("Need allowance for payment condition", async()=>{
             var agree = await verifier.getAgreement(0);
             var numPaymentsAlready = agree.payments.length;
 
-            var amount = 100
 
             // This should throw an error
             try{
-            await verifier.addPaymentConditions(0, [token.address], [amount]);
+            await verifier.payIn(0);
             }
             catch{}
 
             agree = await verifier.getAgreement(0);
-            assert(agree.payments.length == numPaymentsAlready);
+
         })        
 
+
+        it("Pay In", async()=>{
+            var amount = 100
+            await token.approve(verifier.address, amount);
+            await verifier.payIn(0);
+
+            agree = await verifier.getAgreement(0);
+
+            var payment = agree.payments[0];
+            assert(payment.paidIn == true, "Payment wasn't registered");
+        })
+
+        it("pay In from party2", async()=>{
+            var agree = await verifier.getAgreement(0);
+            var numPaymentsAlready = agree.payments.length;
+
+            var amount = 100
+            await token.approve(verifier.address, amount, {from : accounts[1]});
+            await verifier.payIn(0, {from : accounts[1]});
+
+            agree = await verifier.getAgreement(0);
+
+            var payment = agree.payments[1];
+            assert(payment.paidIn == true, "Payment wasn't registered");
+        })
     })
 
     describe("Verifier unit tests 3", async () =>{
@@ -419,19 +427,19 @@ contract('Verifier', (accounts) =>{
             prepareJurors(verifier, token, accounts, 1, 10);
 
             // Create agreement
-            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "");
-
-            // Add payment condition
             var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [false]);
+
+            // Pay in
             await token.approve(verifier.address, amount, {from : accounts[1]});
-            await verifier.addPaymentConditions(0, [token.address], [amount], {from : accounts[1]});
+            await verifier.payIn(0, {from : accounts[1]});
 
             // Accept
             await verifier.acceptAgreement(0, {from: accounts[1]})
 
             // Pay platofrm fee
             var agree = await verifier.getAgreement(0);
-            var mustPay = agree.platformFee
+            var mustPay = agree.platformFee;
 
             await token.approve(verifier.address, mustPay);
             await verifier.payPlatformFee(0);  
@@ -555,5 +563,133 @@ contract('Verifier', (accounts) =>{
             assert(evidence.evidenceHash[3] == 11, "file hash wrong in evidence")
         })
         
+    })
+
+    describe("Verifier unit tests 6", async () =>{
+
+        var verifier;
+        var token;
+
+        before(async () =>{
+            token = await UnisonToken.new()
+            r = await RandomSource.new();
+            verifier = await Verifier.new(token.address, r.address);
+
+            needCoins = [];
+            for(var i = 1; i<9; i++){
+                needCoins.push(accounts[i]);
+            }
+            giveJurorsCoins(token, accounts[0], needCoins, 100000);
+        })
+
+        it("Reject an agreement 1", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [false]);
+
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            verifier.rejectAgreement(0);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(0);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been refunded");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been paid out");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
+        it("Reject an agreement 2", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [true]);
+
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            verifier.rejectAgreement(1);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(1);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been paid out");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
+        it("Reject an agreement that's paid in", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", [token.address], [amount], [true]);
+
+            // Pre balance is checked before paid in
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            await token.approve(verifier.address, amount);
+            verifier.payIn(2);
+
+            verifier.rejectAgreement(2);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(2);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been paid out");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
+        it("Reject an agreement that's paid in", async () =>{
+            var amount = 100;
+            await verifier.createAgreement(accounts[1], 0, "Will be used for jury testing", "", 
+                [token.address, token.address], [amount, amount * 5], [true, false]);
+
+            // Pre balance is checked before paid in
+            var balPre = await token.balanceOf(accounts[0]);
+            balPre = BigInt(balPre);
+
+            var bal2Pre = await token.balanceOf(accounts[1]);
+            bal2Pre = BigInt(bal2Pre);
+
+            await token.approve(verifier.address, amount);
+            verifier.payIn(3);
+
+            verifier.rejectAgreement(3);
+
+            var balPost = await token.balanceOf(accounts[0]);
+            balPost = BigInt(balPost);
+
+            var bal2Post = await token.balanceOf(accounts[1]);
+            bal2Post = BigInt(bal2Post);
+
+            agree = await verifier.getAgreement(3);
+
+            assert(balPre == balPost, "Payment condition that was never paid has been paid out");
+            assert(bal2Pre == bal2Post, "Payment condition that was never paid has been refunded");
+            assert(agree.state == 2, "Agreement not in REJECTED state");
+        })
+
     })
 })

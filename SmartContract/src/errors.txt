@@ -16,3 +16,5 @@ E15     Agreement is already paid out
 E16     You must be party2 to accept the agreement
 E17     Payment failed
 E18     It's too late to vote
+E19     A payment has not been paid in
+E20     An agreement must have at least one payment
