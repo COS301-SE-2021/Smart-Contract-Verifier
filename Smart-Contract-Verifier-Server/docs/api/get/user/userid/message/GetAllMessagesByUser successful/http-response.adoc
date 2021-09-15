@@ -18,39 +18,39 @@ Content-Length: 1462
   "ResponseObject" : {
     "Messages" : [ {
       "message" : "TestMessageA",
-      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "sendingDate" : "2021-09-15T13:27:47.116+00:00",
       "sendingUser" : {
         "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
       },
-      "sendingDate" : "2021-09-15T13:19:10.698+00:00",
-      "messageID" : "16e54fea-d3e0-4547-b005-98bd68393504",
       "messageStatuses" : [ {
-        "readDate" : "2021-09-15T13:19:10.698+00:00",
         "read" : true,
-        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
-      } ]
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        "readDate" : "2021-09-15T13:27:47.116+00:00"
+      } ],
+      "messageID" : "16e54fea-d3e0-4547-b005-98bd68393504",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503"
     }, {
       "message" : "TestMessageB",
-      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "sendingDate" : "2021-09-15T13:27:47.116+00:00",
       "sendingUser" : {
         "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
       },
-      "sendingDate" : "2021-09-15T13:19:10.698+00:00",
-      "messageID" : "92617bf4-02ad-418d-af7a-ba6d46136420",
       "messageStatuses" : [ {
-        "readDate" : null,
         "read" : false,
-        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
-      } ]
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        "readDate" : null
+      } ],
+      "messageID" : "92617bf4-02ad-418d-af7a-ba6d46136420",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503"
     }, {
       "message" : "Test 3",
-      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "sendingDate" : "2021-09-15T13:27:47.116+00:00",
       "sendingUser" : {
         "publicWalletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
       },
-      "sendingDate" : "2021-09-15T13:19:10.698+00:00",
+      "messageStatuses" : [ ],
       "messageID" : "62adddbc-12e8-46ca-968e-6c88ee7f0d61",
-      "messageStatuses" : [ ]
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503"
     } ]
   }
 }

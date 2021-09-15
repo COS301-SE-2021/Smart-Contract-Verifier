@@ -2,6 +2,7 @@
 ----
 $ curl 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/contactList/310deb0e-e828-44c9-b9c0-ca35b4142913' -i -X PUT \
     -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTM2Mzh9.jeLI6I4cGpUftDTwtXBNFdoFe5OWEnOEk02LVtfLsMQ' \
     -d '{
   "NewUserID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
   "NewUserAlias" : "TestAlias"

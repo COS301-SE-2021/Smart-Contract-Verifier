@@ -1,4 +1,7 @@
 [source,options="nowrap"]
 ----
-
+{
+  "Status" : "FAILED",
+  "Message" : "User cannot add themselves to a contact list"
+}
 ----
