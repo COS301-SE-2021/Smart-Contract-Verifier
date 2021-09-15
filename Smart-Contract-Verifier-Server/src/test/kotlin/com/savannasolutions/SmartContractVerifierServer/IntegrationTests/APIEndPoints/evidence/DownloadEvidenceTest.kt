@@ -15,6 +15,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -82,8 +84,8 @@ class DownloadEvidenceTest {
         //evidenceConfig.initialise()
         //evidenceService.initialise()
         //given
-        user = User("test user")
-        otherUser = User("other")
+        user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
+        otherUser = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
 
         agreement = Agreements(
             UUID.fromString("377f66e7-5060-48f8-a44b-ae0bea405a5e"),
@@ -141,6 +143,7 @@ class DownloadEvidenceTest {
         return mockMvc.perform(
             MockMvcRequestBuilders
                 .get("/user/${userId}/agreement/${agreementId}/evidence/${evidenceId}/download")
+                .header("Authorization", "bearer ${generateToken(userId)}")
         ).andReturn().response
     }
 
@@ -206,6 +209,7 @@ class DownloadEvidenceTest {
                               file: MultipartFile,): MockHttpServletResponse {
         return mockMvc.perform(
             MockMvcRequestBuilders.multipart("/user/${userID}/agreement/${agreementID}/evidence/upload").file(file as MockMultipartFile)
+                .header("Authorization", "bearer ${generateToken(userID)}")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andReturn().response
     }
@@ -230,4 +234,12 @@ class DownloadEvidenceTest {
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
     }*/
+   fun generateToken(userID: String): String? {
+       val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+       return Jwts.builder()
+           .setSubject(userID)
+           .setExpiration(Date(System.currentTimeMillis() + 1080000))
+           .signWith(signingKey)
+           .compact()
+   }
 }
