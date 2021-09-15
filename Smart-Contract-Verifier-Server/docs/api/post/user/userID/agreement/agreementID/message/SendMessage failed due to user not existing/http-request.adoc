@@ -2,7 +2,7 @@
 ----
 POST /user/other%20user/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/message HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvdGhlciB1c2VyIiwiZXhwIjoxNjMxNzE0NjEzfQ.WizJBK9LVeLiUwA2zKDeORiBTvAVeJfIdyn_kwxrpD0
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvdGhlciB1c2VyIiwiZXhwIjoxNjMxNzE0OTU3fQ.yyBr_qFjhy65aHNe-MpTSTHwfmvUN-fwpBozhhHcnIM
 Content-Length: 34
 Host: localhost:8080
 

@@ -2,6 +2,6 @@
 ----
 $ curl 'http://localhost:8080/user/wrong%20user/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/upload' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
-    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3cm9uZyB1c2VyIiwiZXhwIjoxNjMxNzE0ODM1fQ.Q8uh--OXQda6iwx4OrFuMafF0Ar0-hE1HTltoOKSU10' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3cm9uZyB1c2VyIiwiZXhwIjoxNjMxNzE0OTUzfQ.E3Ar-_cQM2vzBEaNzW9rhgGOGcspR9_oqOHfnB8tRpI' \
     -F 'uploadEvidence=@testFile.txt;type=text/plain'
 ----

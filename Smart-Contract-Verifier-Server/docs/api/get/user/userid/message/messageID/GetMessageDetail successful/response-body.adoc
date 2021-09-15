@@ -5,17 +5,17 @@
   "ResponseObject" : {
     "MessageDetails" : {
       "message" : "Test message",
-      "sendingDate" : "2021-09-15T13:45:31.644+00:00",
+      "messageStatuses" : [ {
+        "readDate" : "2021-09-15T13:51:16.323+00:00",
+        "read" : true,
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+      } ],
+      "messageID" : "e6f884f4-8d9b-4efb-be31-c8ad5532f168",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
       "sendingUser" : {
         "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
       },
-      "messageStatuses" : [ {
-        "read" : true,
-        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-        "readDate" : "2021-09-15T13:45:31.644+00:00"
-      } ],
-      "messageID" : "e6f884f4-8d9b-4efb-be31-c8ad5532f168",
-      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503"
+      "sendingDate" : "2021-09-15T13:51:16.323+00:00"
     }
   }
 }

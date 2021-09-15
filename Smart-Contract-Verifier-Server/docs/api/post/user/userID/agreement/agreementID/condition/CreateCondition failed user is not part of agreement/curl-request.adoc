@@ -2,7 +2,7 @@
 ----
 $ curl 'http://localhost:8080/user/0x69Ec9a8aBFa094b24054422564e68B08aF311400/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/condition' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDY5RWM5YThhQkZhMDk0YjI0MDU0NDIyNTY0ZTY4QjA4YUYzMTE0MDAiLCJleHAiOjE2MzE3MTQ1Nzd9.muoRd69ZCk9NgA2I3-FU54cWKAuyZrlfOl5OzjboPZo' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDY5RWM5YThhQkZhMDk0YjI0MDU0NDIyNTY0ZTY4QjA4YUYzMTE0MDAiLCJleHAiOjE2MzE3MTQ5MjJ9.W9lmoERXNzMQ7LJEb3buUqhKlryvKGP3sg-Y7HrLy5A' \
     -d '{
   "ConditionTitle" : "Test",
   "ConditionDescription" : "This is a postman test"
