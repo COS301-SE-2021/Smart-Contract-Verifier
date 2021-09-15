@@ -10,6 +10,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.Set
 import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.SetPaymentConditionResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -104,6 +106,7 @@ class SetPaymentConditionTest {
         return mockMvc.perform(
             MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/condition/payment")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "bearer ${generateToken(userID)}")
                 .content(rjson)).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -220,5 +223,13 @@ class SetPaymentConditionTest {
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
+    }
 
 }

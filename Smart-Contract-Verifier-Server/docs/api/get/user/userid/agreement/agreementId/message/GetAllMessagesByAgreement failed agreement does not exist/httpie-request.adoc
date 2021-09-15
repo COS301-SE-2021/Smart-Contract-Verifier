@@ -1,5 +1,6 @@
 [source,bash]
 ----
 $ http GET 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/eb558bea-389e-4e7b-afed-4987dbf37f85/message' \
-    'Content-Type:application/json;charset=UTF-8'
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTc0MTZ9.fzxA4Y96is06blytzzw7tJGgBQ6kWLVNG75fX7RGSnA'
 ----
