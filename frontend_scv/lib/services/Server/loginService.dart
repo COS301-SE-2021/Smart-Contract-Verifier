@@ -40,4 +40,9 @@ class LoginService {
 
   }
 
+  ///Log he user in with the server
+  Future<void> login() async {
+    //TODO: Get nonce, sign, send data, get jwt, set Global.
+  }
+
 }
