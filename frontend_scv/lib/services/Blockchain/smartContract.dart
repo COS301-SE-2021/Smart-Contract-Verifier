@@ -80,8 +80,5 @@ class SmartContract {
     return event;
   }
 
-  Future<dynamic> signTheThing(Uint8List thing, Credentials cred) async {
-    return await _smC.signTransaction(cred, Transaction(data: thing));
-  }
 
 }

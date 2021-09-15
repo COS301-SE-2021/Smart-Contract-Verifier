@@ -11,19 +11,13 @@ class LoginService {
   ApiInteraction _api = ApiInteraction();
   WalletInteraction _wallet = WalletInteraction();
 
+  ///Get a new JWT
   Future<void> refreshToken() async { //Starts the login procedure to get a token to use in backend api requests
-
-    Global.apiToken = ''; //Will eventually be used in all following requests to backend.
-
+    await login();
   }
 
-  Future<void> allowToken() async {
 
-    //Sets the contract allowance on first login. This should only be done once, as it costs money.
-    //TODO: Temporary solution.
-    //await _jS.setContractAllowance();
-  }
-
+  ///Attempt to add a user to the server. If the user already exists, no action is taken
   Future<void> tryAddUser([String id]) async { //This attempts to add a new user to the DB. Failure means the user already exists
 
     id ??= Global.userAddress; //Defaults to current user
@@ -38,7 +32,7 @@ class LoginService {
 
   }
 
-  ///Log he user in with the server
+  ///Login using Metamask
   Future<bool> login() async {
     ApiResponse nonceRes = await _api.getData('/user/${Global.userAddress}');
 
@@ -51,23 +45,9 @@ class LoginService {
     //Send back signed nonce
     var body = {'SignedNonce' : signed};
     ApiResponse loginRes = await _api.postData('/user/${Global.userAddress}', body);
-
+    Global.apiToken = ''; //Extract from result
     return loginRes.successful; //Login success
   }
 
-  ///Get the byte data of a bigint
-  Uint8List _bigIntToBytes(BigInt data) {
-
-    ByteData bytes = ByteData((data.bitLength/8).ceil());
-    BigInt bigDat = data;
-
-    for (var i = 1; i <= bytes.lengthInBytes; i++) {
-      bytes.setUint8(bytes.lengthInBytes - i, bigDat.toUnsigned(8).toInt());
-      bigDat = bigDat >> 8;
-    }
-
-    Uint8List res = bytes.buffer.asUint8List();
-    return res;
-  }
 
 }
