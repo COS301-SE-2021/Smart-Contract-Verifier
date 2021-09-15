@@ -1,7 +1,4 @@
 [source,options="nowrap"]
 ----
-{
-  "Status" : "FAILED",
-  "Message" : "Contact List does not exist in database"
-}
+
 ----

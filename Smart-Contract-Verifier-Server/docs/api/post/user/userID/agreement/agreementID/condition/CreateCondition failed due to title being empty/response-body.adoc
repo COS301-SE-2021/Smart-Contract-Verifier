@@ -1,7 +1,4 @@
 [source,options="nowrap"]
 ----
-{
-  "Status" : "FAILED",
-  "Message" : "Title is empty"
-}
+
 ----

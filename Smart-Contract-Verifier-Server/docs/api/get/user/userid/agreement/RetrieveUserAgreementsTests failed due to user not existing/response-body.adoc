@@ -1,7 +1,4 @@
 [source,options="nowrap"]
 ----
-{
-  "Status" : "FAILED",
-  "Message" : "User does not exist in database"
-}
+
 ----

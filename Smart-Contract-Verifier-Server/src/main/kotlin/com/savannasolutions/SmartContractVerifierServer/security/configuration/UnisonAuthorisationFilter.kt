@@ -15,15 +15,12 @@ class UnisonAuthorisationFilter(var securityConfig: SecurityConfig): OncePerRequ
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         val uri = request.requestURI
         if(uri == "/user" && request.method == "POST"){
-            print("Auth not needed")
             chain.doFilter(request, response)
             return
         }else if(uri.matches(Regex("/user/[a-zA-Z0-9]{42}")) && (request.method == "POST" || request.method == "GET")){
-            print("Auth not needed")
             chain.doFilter(request, response)
             return
-        }else if(uri.contains("/download") || uri.contains("/linked")){
-            print("Auth not needed")
+        }else if(uri.contains("/download") || uri.contains("/linked") || uri.contains("/hello")){
             chain.doFilter(request, response)
             return
         }

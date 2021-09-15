@@ -1,7 +1,4 @@
 [source,options="nowrap"]
 ----
-{
-  "Status" : "FAILED",
-  "Message" : "User already has a contact list with passed name"
-}
+
 ----

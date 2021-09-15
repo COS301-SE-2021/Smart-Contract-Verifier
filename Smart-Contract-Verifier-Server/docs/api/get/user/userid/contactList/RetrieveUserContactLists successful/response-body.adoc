@@ -1,15 +1,4 @@
 [source,options="nowrap"]
 ----
-{
-  "Status" : "SUCCESSFUL",
-  "ResponseObject" : {
-    "contactListInfo" : [ {
-      "ContactListName" : "help",
-      "ContactListID" : "57d1648d-98a1-4d88-93e9-47afaf88d9a5"
-    }, {
-      "ContactListName" : "help",
-      "ContactListID" : "18dc472f-46b1-4363-9556-82b20f718c0d"
-    } ]
-  }
-}
+
 ----
