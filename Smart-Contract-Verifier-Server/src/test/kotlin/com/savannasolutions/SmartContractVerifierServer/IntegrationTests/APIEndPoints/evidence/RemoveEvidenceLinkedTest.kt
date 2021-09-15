@@ -170,13 +170,13 @@ class RemoveEvidenceLinkedTest {
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
         //end documentation
-        val response = requestSender("invalid user",
+        val response = requestSender("0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb",
             agreement.ContractID,
             evidence.evidenceId,
             fieldDescriptor,
             "Remove Evidence api test failed User doesn't exist")
 
-        assertEquals(response.status, 403)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test

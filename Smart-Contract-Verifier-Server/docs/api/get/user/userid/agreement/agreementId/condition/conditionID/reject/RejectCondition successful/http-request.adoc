@@ -2,7 +2,7 @@
 ----
 PUT /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/condition/967ee13c-dd5d-4de5-adb5-7dd4907fb2cf/reject HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTY0NDR9.HDy32_qJC615z1YmFJE-5fOJDLC3W8N7B_o3vrScEdc
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTc0Mzl9.5dT2VcSSJz_iIUUb2XKc2F3WP4rY2sDT8h-bykTmv8A
 Host: localhost:8080
 
 ----

@@ -148,9 +148,9 @@ class SendMessageTest {
 
         val rjson = "{\"Message\" : \"Test message\"}"
 
-        val response = requestSender(rjson, "other user", agreementAUUID, fieldDescriptorResponse, "SendMessage failed due to user not existing")
+        val response = requestSender(rjson, "0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb", agreementAUUID, fieldDescriptorResponse, "SendMessage failed due to user not existing")
 
-        assertEquals(response.status, 403)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test

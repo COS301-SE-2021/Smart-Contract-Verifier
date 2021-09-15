@@ -241,13 +241,13 @@ class UploadEvidenceTest {
             "testFile.txt",
             "text/Plain")
 
-        val response = requestSender("wrong user",
+        val response = requestSender("0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb",
             agreement.ContractID,
             file,
             fieldDescriptor,
             "UploadEvidence api test failed user does not exist")
 
-        assertEquals(response.status, 403)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test

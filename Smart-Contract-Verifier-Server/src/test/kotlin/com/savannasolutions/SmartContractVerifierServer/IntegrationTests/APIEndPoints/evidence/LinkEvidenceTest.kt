@@ -167,12 +167,12 @@ class LinkEvidenceTest {
         //end documentation
 
         val json = "{\"EvidenceUrl\" : \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"}"
-        val response = requestSender("invalidUser",
+        val response = requestSender("0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb",
             agreement.ContractID,
             json,
             "Link Evidence API successful test",
             fieldDescriptors)
-        assertEquals(response.status, 403)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test

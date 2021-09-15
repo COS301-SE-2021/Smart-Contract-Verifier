@@ -131,11 +131,11 @@ class SetMessageAsReadTest {
         fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
         //End of documentation
 
-        val response = requestSender("other user", message.messageID,
+        val response = requestSender("0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb", message.messageID,
             fieldDescriptorResponse,
             "SetMessageAsReadTest failed due to user not existing")
 
-        assertEquals(response.status, 403)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test

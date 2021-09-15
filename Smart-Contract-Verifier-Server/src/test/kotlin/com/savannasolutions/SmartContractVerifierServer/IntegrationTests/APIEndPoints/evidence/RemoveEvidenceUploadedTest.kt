@@ -187,13 +187,13 @@ class RemoveEvidenceUploadedTest {
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
         //end documentation
-        val response = requestSender("invalid user",
+        val response = requestSender("0x415e5B70f0Fd2dbe4e7b3066a45d930e633aE8A7",
             agreement.ContractID,
             evidence.evidenceId,
             fieldDescriptor,
             "Remove Evidence api test failed User doesn't exist")
 
-        assertEquals(response.status, 403)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
     @Test
