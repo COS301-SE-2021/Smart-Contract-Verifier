@@ -16,6 +16,7 @@ class _UploadEvidencePanelState extends State<UploadEvidencePanel> {
   TextEditingController _urlLinkController = new TextEditingController();
   EvidenceService evServe = EvidenceService();
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Future<void> uploadEvidence() async {
     FilePickerResult picked =
         await FilePicker.platform.pickFiles(type: FileType.image);
@@ -28,8 +29,6 @@ class _UploadEvidencePanelState extends State<UploadEvidencePanel> {
     await evServe.storeEvidence(evid);
     widget.rebuildScreen();
   }
-
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<void> linkEvidence() async {
     await showDialog(
@@ -45,8 +44,12 @@ class _UploadEvidencePanelState extends State<UploadEvidencePanel> {
                 TextFormField(
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Url:';
+                      return 'Please enter a URL';
                     } else {
+                      bool _validURL = Uri.parse(value).isAbsolute;
+                      if (!_validURL) {
+                        return 'Please enter a value/absolute URL';
+                      }
                       return null;
                     }
                   },

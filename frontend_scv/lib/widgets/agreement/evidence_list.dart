@@ -83,50 +83,56 @@ class _EvidenceListState extends State<EvidenceList> {
                     return AwesomeLoader();
 
                   Evidence ev = snap.data;
-                  Image ret = Image.memory(ev.baseFile.bytes);
                   return SizedBox(
-                    child: ret,
-                    height: 500,
+                    child: Image.memory(ev.baseFile.bytes),
+                    height: MediaQuery.of(context).size.height * 0.3,
                   );
                 },
               )
             : FutureBuilder(
+                future: null,
                 builder: (context, snap) {
-                  Image ret = Image.network(
-                    evidenceItem.metaData.url,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Card(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Could not load preview. Proceed at your own risk!',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            RichText(
-                              text: new TextSpan(
-                                children: [
-                                  new TextSpan(
-                                    text: evidenceItem.metaData.url,
-                                    style: new TextStyle(color: Colors.blue),
-                                    recognizer: new TapGestureRecognizer()
-                                      ..onTap = () async {
-                                        js.context.callMethod('open',
-                                            ['${evidenceItem.metaData.url}']);
-                                      },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
                   return SizedBox(
-                    child: ret,
-                    height: 500,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: Image.network(
+                      evidenceItem.metaData.url,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Card(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'No preview available:',
+                              ),
+                              RichText(
+                                text: new TextSpan(
+                                  children: [
+                                    new TextSpan(
+                                      text: evidenceItem.metaData.url,
+                                      style: new TextStyle(color: Colors.blue),
+                                      recognizer: new TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          js.context.callMethod('open',
+                                              ['${evidenceItem.metaData.url}']);
+                                        },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   );
+
+                  // return SizedBox(
+                  //   child: ret,
+                  //   height: 500,
+                  // );
                 },
               ),
       ),
