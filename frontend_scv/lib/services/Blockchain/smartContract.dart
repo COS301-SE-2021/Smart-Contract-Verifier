@@ -12,7 +12,8 @@ import 'wallet.dart';
 
 class SmartContract {
   static final Web3Client _smC =
-      Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+    //  Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+  Web3Client('https://matic-mumbai.chainstacklabs.com', Client());
   static final WalletInteraction _wallet = WalletInteraction();
 
   String conAbi;

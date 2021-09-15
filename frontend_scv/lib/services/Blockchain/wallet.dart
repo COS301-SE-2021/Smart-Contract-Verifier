@@ -2,6 +2,7 @@
 //It is also a singleton.
 
 import 'dart:html';
+import 'dart:typed_data';
 
 import 'package:web3dart/browser.dart';
 import 'package:web3dart/credentials.dart';
@@ -28,7 +29,6 @@ class WalletInteraction {
     }
 
     metaCred = await meta.requestAccount();
-
     // print ('Before');
     // var r = meta.asRpcService();
     // await r.call('wallet_watchAsset', [{'type':"ERC20",
@@ -60,5 +60,11 @@ class WalletInteraction {
 
     metaCred = null;
     ready = false;
+  }
+
+  ///Sign a string using metamask personal signing
+  Future<Uint8List> personalSign(Uint8List data) async {
+    final res = await metaCred.signPersonalMessage(data);
+    return res;
   }
 }
