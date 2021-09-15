@@ -2,5 +2,5 @@
 ----
 $ http PUT 'http://localhost:8080/user/0x37Ec9a8aBFa094b24054422564e68B08aF3114B4/message/e6f884f4-8d9b-4efb-be31-c8ad5532f168' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDM3RWM5YThhQkZhMDk0YjI0MDU0NDIyNTY0ZTY4QjA4YUYzMTE0QjQiLCJleHAiOjE2MzE3MTM5MDB9.7oznCu8vK0blZ6IfzwClS1lVZtdNdaQGlIOLSNLNB6c'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDM3RWM5YThhQkZhMDk0YjI0MDU0NDIyNTY0ZTY4QjA4YUYzMTE0QjQiLCJleHAiOjE2MzE3MTQxMzd9.xO0DoTvk40zk5Vgl3s0y0xi3gcDkeln8j1FI6Hbt1QA'
 ----

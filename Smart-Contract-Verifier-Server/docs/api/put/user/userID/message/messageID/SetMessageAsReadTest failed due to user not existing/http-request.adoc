@@ -2,7 +2,7 @@
 ----
 PUT /user/other%20user/message/e6f884f4-8d9b-4efb-be31-c8ad5532f168 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvdGhlciB1c2VyIiwiZXhwIjoxNjMxNzEzOTAwfQ.jUQCnKZIsGiwx8Va4H3scuKj_1QXzxPD0hntGpyDwNg
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvdGhlciB1c2VyIiwiZXhwIjoxNjMxNzE0MTM3fQ.jt-XzFBfkEcyeKJK9KHEN_KN2TpaSgwp94EmaW8yNRQ
 Host: localhost:8080
 
 ----

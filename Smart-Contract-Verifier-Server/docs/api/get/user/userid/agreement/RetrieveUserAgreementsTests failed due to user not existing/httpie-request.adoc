@@ -2,5 +2,5 @@
 ----
 $ http GET 'http://localhost:8080/user/562fa210-e19e-4390-9e06-48e04a04b333/agreement' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NjJmYTIxMC1lMTllLTQzOTAtOWUwNi00OGUwNGEwNGIzMzMiLCJleHAiOjE2MzE3MTM4OTB9.HsP03jwrjsegB5-CzqJ9SqDGE-dzPnkxE1z-KbyD-Ng'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NjJmYTIxMC1lMTllLTQzOTAtOWUwNi00OGUwNGEwNGIzMzMiLCJleHAiOjE2MzE3MTQxMjh9.-Ry7tK4lv0_yiDjv58XMDrGq54NwMR6RQnC3dlU8rnM'
 ----
