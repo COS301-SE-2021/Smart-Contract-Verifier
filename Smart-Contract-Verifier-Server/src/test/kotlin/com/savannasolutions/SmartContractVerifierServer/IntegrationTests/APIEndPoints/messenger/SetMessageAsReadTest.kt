@@ -9,6 +9,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -27,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -94,6 +97,7 @@ class SetMessageAsReadTest {
         return mockMvc.perform(
             MockMvcRequestBuilders.put("/user/${userID}/message/${messageID}")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "bearer ${generateToken(userID)}")
                 ).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -131,7 +135,7 @@ class SetMessageAsReadTest {
             fieldDescriptorResponse,
             "SetMessageAsReadTest failed due to user not existing")
 
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+        assertEquals(response.status, 403)
     }
 
     @Test
@@ -149,5 +153,12 @@ class SetMessageAsReadTest {
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
-
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
+    }
 }
