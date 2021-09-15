@@ -49,7 +49,7 @@ class GetAgreementDetail {
 
     private lateinit var userA : User
     private lateinit var userB : User
-    var userC = "562fa210-e19e-4390-9e06-48e04a04b333"
+    var userC = "0x7Ea7EA8D709B02444128e8b4d8C38d00842e77C3"
     private lateinit var acceptedConditionID: UUID
     private lateinit var rejectedConditionID: UUID
     private lateinit var pendingConditionID: UUID
@@ -169,12 +169,13 @@ class GetAgreementDetail {
     {
         //Documentation
         val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
         //End of documentation
 
         val response = requestSender(userC,
             fieldDescriptorResponse,
             "RetrieveUserAgreementsTests failed due to user not existing")
 
-        assertEquals(response.status, 403)
+        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 }

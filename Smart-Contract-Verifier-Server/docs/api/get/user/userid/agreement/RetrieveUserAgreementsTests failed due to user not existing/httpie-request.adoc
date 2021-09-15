@@ -1,6 +1,6 @@
 [source,bash]
 ----
-$ http GET 'http://localhost:8080/user/562fa210-e19e-4390-9e06-48e04a04b333/agreement' \
+$ http GET 'http://localhost:8080/user/0x7Ea7EA8D709B02444128e8b4d8C38d00842e77C3/agreement' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NjJmYTIxMC1lMTllLTQzOTAtOWUwNi00OGUwNGEwNGIzMzMiLCJleHAiOjE2MzE3MTY0MTB9.FYrzOqoT3jK8zJ2cbv0Ia4ZWfC7rwiY5M-O1MpzT43M'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDdFYTdFQThENzA5QjAyNDQ0MTI4ZThiNGQ4QzM4ZDAwODQyZTc3QzMiLCJleHAiOjE2MzE3MTcxNjR9.gEx3B6lTKnTnFfSHDEJEin0fphCu6rMeBoUNQCf2GCQ'
 ----
