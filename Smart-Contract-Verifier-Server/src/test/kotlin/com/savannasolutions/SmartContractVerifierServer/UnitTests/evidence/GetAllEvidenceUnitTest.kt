@@ -151,12 +151,13 @@ internal class GetAllEvidenceUnitTest {
                                                     "https://dodgy.url")
 
         //then
-        assertEquals(response.status, ResponseStatus.SUCCESSFUL)
         assertNotNull(response.responseObject)
-        assertNotNull(response.responseObject!!.evidenceHashes)
-        assertFalse(response.responseObject!!.evidenceHashes.isEmpty())
-        assertContains(response.responseObject!!.evidenceHashes, "LINKED:${linkedEvidence!!.evidenceId},HASH:${linkedEvidence!!.evidenceHash}")
-        assertContains(response.responseObject!!.evidenceHashes, "UPLOADED:${uploadedEvidence!!.evidenceId},HASH:${uploadedEvidence!!.evidenceHash}")
+        assertNotNull(response.responseObject!!.linkedEvidenceDetails)
+        assertFalse(response.responseObject!!.linkedEvidenceDetails!!.isEmpty())
+        assertNotNull(response.responseObject!!.uploadedEvidenceDetails)
+        assertFalse(response.responseObject!!.uploadedEvidenceDetails!!.isEmpty())
+        assertEquals(response.responseObject!!.linkedEvidenceDetails!![0].evidenceID, linkedEvidence!!.evidenceId)
+        assertEquals(response.responseObject!!.uploadedEvidenceDetails!![0].evidenceID, uploadedEvidence!!.evidenceId)
     }
 
     @Test

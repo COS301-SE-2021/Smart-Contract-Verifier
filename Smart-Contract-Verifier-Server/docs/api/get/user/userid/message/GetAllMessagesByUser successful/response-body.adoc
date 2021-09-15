@@ -5,39 +5,39 @@
   "ResponseObject" : {
     "Messages" : [ {
       "message" : "TestMessageA",
+      "messageStatuses" : [ {
+        "readDate" : "2021-09-15T14:51:40.875+00:00",
+        "read" : true,
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+      } ],
+      "messageID" : "16e54fea-d3e0-4547-b005-98bd68393504",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "sendingDate" : "2021-09-15T14:51:40.875+00:00",
       "sendingUser" : {
         "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
-      },
-      "sendingDate" : "2021-09-12T02:00:27.979+00:00",
-      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
-      "messageID" : "16e54fea-d3e0-4547-b005-98bd68393504",
-      "messageStatuses" : [ {
-        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-        "readDate" : "2021-09-12T02:00:27.979+00:00",
-        "read" : true
-      } ]
+      }
     }, {
       "message" : "TestMessageB",
+      "messageStatuses" : [ {
+        "readDate" : null,
+        "read" : false,
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+      } ],
+      "messageID" : "92617bf4-02ad-418d-af7a-ba6d46136420",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "sendingDate" : "2021-09-15T14:51:40.875+00:00",
       "sendingUser" : {
         "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
-      },
-      "sendingDate" : "2021-09-12T02:00:27.979+00:00",
-      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
-      "messageID" : "92617bf4-02ad-418d-af7a-ba6d46136420",
-      "messageStatuses" : [ {
-        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
-        "readDate" : null,
-        "read" : false
-      } ]
+      }
     }, {
       "message" : "Test 3",
+      "messageStatuses" : [ ],
+      "messageID" : "62adddbc-12e8-46ca-968e-6c88ee7f0d61",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
+      "sendingDate" : "2021-09-15T14:51:40.875+00:00",
       "sendingUser" : {
         "publicWalletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
-      },
-      "sendingDate" : "2021-09-12T02:00:27.979+00:00",
-      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
-      "messageID" : "62adddbc-12e8-46ca-968e-6c88ee7f0d61",
-      "messageStatuses" : [ ]
+      }
     } ]
   }
 }

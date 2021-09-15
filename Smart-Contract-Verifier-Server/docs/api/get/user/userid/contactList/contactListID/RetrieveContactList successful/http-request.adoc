@@ -2,6 +2,7 @@
 ----
 GET /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/contactList/e111bc8f-ef5a-46fb-89ab-bff8b4aa4f33 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTg2MDd9.wmXafXAx5y6GNlHYH1KDCi9_Jobe35_11bAPhCt7FoA
 Host: localhost:8080
 
 ----

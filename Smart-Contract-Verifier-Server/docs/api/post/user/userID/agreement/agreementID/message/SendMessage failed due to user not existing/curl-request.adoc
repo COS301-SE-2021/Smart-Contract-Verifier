@@ -1,7 +1,8 @@
 [source,bash]
 ----
-$ curl 'http://localhost:8080/user/other%20user/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/message' -i -X POST \
+$ curl 'http://localhost:8080/user/0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/message' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDRCQmI1MGNkM2Q1RkY0MTUxMmY1ZTQ1NEU5ODBFRUVhZWViNGUwYmIiLCJleHAiOjE2MzE3MTg2MTR9.qfGFndFGYlf5uwJpeI-d-7AZLBD3YHoCRda_Jsi9ek8' \
     -d '{
   "Message" : "Test message"
 }'

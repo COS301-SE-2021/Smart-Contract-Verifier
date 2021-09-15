@@ -1,7 +1,8 @@
 [source,bash]
 ----
-$ curl 'http://localhost:8080/user/TestUser1/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/link' -i -X POST \
+$ curl 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/link' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTg2MDV9.RcJEO0SNBnXnXhV2FoUn_C7tKt28a8riNi-jU4MVIK0' \
     -d '{
   "EvidenceUrl" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 }'

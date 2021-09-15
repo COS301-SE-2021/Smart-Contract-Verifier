@@ -12,6 +12,7 @@ import java.util.*
 import javax.servlet.http.HttpServletResponse
 
 @RestController
+@CrossOrigin
 class EvidenceController constructor(private val evidenceService: EvidenceService,) {
 
     @PostMapping("/user/{userId}/agreement/{agreementId}/evidence/upload",
