@@ -1,5 +1,6 @@
 //This class is for the initial login, and the flow that will come with it.
 
+import 'package:unison/services/Server/apiResponse.dart';
 import 'package:unison/services/Server/judgeService.dart';
 
 import '../../models/global.dart';
@@ -41,8 +42,10 @@ class LoginService {
   }
 
   ///Log he user in with the server
-  Future<void> login() async {
+  Future<bool> login() async {
     //TODO: Get nonce, sign, send data, get jwt, set Global.
+    //ApiResponse nonceRes = await _api.postData(url, jsn);
+    return true; //Login success
   }
 
 }
