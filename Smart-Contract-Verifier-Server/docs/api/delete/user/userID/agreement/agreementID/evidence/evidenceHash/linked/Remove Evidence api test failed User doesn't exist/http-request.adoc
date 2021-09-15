@@ -1,7 +1,7 @@
 [source,http,options="nowrap"]
 ----
 DELETE /user/invalid%20user/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/7d793c67-10e8-419b-8137-be9758594184/ HTTP/1.1
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnZhbGlkIHVzZXIiLCJleHAiOjE2MzE3MTQ5MjB9.umUwFm2I1SQoXVaY0RFCosV2aHLKMOXHqvpkWZosZJw
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnZhbGlkIHVzZXIiLCJleHAiOjE2MzE3MTUzNDl9.uMsZQCdoyTDIsjKk3FQWBwwSXMXYk-ghJuxZYSAbEks
 Host: localhost:8080
 
 ----
