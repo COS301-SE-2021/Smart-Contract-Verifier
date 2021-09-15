@@ -14,13 +14,6 @@
 	<packaging>jar</packaging>
 	<name>Smart-Contract-Verifier-Server</name>
 	<description>Server running backend to support Unison smart contract management</description>
-	<repositories>
-		<repository>
-			<id>mulesoft</id>
-			<name>mulesoft</name>
-			<url>https://repository.mulesoft.org/nexus/content/repositories/public/</url>
-		</repository>
-	</repositories>
 	<properties>
 		<java.version>11</java.version>
 		<kotlin.version>1.5.10</kotlin.version>
@@ -38,13 +31,6 @@
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
 			<version>4.9.1</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.github.komputing/Khash -->
-		<dependency>
-			<groupId>com.github.komputing</groupId>
-			<artifactId>Khash</artifactId>
-			<version>1.0.0-RC5</version>
 		</dependency>
 
 
@@ -147,13 +133,6 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring-security.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.google.jimfs</groupId>
 			<artifactId>jimfs</artifactId>

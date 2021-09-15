@@ -8,8 +8,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -117,7 +115,6 @@ class AcceptConditionTest {
         return mockMvc.perform(
             MockMvcRequestBuilders.put("/user/${userID}/agreement/${agreementID}/condition/${conditionID}/accept")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "bearer ${generateToken(userID)}")
         ).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -215,12 +212,5 @@ class AcceptConditionTest {
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
-    fun generateToken(userID: String): String? {
-        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
-        return Jwts.builder()
-            .setSubject(userID)
-            .setExpiration(Date(System.currentTimeMillis() + 1080000))
-            .signWith(signingKey)
-            .compact()
-    }
+
 }

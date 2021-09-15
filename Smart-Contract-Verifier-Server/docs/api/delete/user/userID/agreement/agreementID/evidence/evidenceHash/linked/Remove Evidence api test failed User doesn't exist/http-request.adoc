@@ -1,7 +1,6 @@
 [source,http,options="nowrap"]
 ----
-DELETE /user/0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/7d793c67-10e8-419b-8137-be9758594184/ HTTP/1.1
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDRCQmI1MGNkM2Q1RkY0MTUxMmY1ZTQ1NEU5ODBFRUVhZWViNGUwYmIiLCJleHAiOjE2MzE3MTc0MDZ9.YT7fOxcwT5G-VeC4Apjchplv66aYSbsxrDCY0-ZFFcg
+DELETE /user/invalid%20user/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/7d793c67-10e8-419b-8137-be9758594184/ HTTP/1.1
 Host: localhost:8080
 
 ----

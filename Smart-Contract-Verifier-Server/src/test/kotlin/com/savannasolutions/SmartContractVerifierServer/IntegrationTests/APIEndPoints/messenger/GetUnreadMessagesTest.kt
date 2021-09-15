@@ -10,8 +10,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -61,9 +59,9 @@ class GetUnreadMessagesTest {
     fun beforeEach()
     {
 
-        val userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
+        val userA = User("userA")
         userAWalletID = userA.publicWalletID
-        val userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
+        val userB = User("userB")
         userBWalletID = userB.publicWalletID
 
         val agreementA = Agreements(
@@ -124,7 +122,6 @@ class GetUnreadMessagesTest {
     {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userBWalletID}/message/unread")
-                .header("Authorization", "bearer ${generateToken(userBWalletID)}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(
             MockMvcRestDocumentation.document(
@@ -155,12 +152,5 @@ class GetUnreadMessagesTest {
         assertContains(response.contentAsString, agreementAUUID.toString())
         assertContains(response.contentAsString, messageAID.toString())
     }
-    fun generateToken(userID: String): String? {
-        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
-        return Jwts.builder()
-            .setSubject(userID)
-            .setExpiration(Date(System.currentTimeMillis() + 1080000))
-            .signWith(signingKey)
-            .compact()
-    }
+
 }

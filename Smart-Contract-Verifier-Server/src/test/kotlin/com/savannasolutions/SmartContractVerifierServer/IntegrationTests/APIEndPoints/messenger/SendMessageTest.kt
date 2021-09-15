@@ -11,8 +11,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -32,7 +30,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -109,7 +106,6 @@ class SendMessageTest {
         return mockMvc.perform(
             MockMvcRequestBuilders.post("/user/${userID}/agreement/${agreementID}/message")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "bearer ${generateToken(userID)}")
                 .content(rjson)).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -148,7 +144,7 @@ class SendMessageTest {
 
         val rjson = "{\"Message\" : \"Test message\"}"
 
-        val response = requestSender(rjson, "0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb", agreementAUUID, fieldDescriptorResponse, "SendMessage failed due to user not existing")
+        val response = requestSender(rjson, "other user", agreementAUUID, fieldDescriptorResponse, "SendMessage failed due to user not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -186,12 +182,4 @@ class SendMessageTest {
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
-    fun generateToken(userID: String): String? {
-        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
-        return Jwts.builder()
-            .setSubject(userID)
-            .setExpiration(Date(System.currentTimeMillis() + 1080000))
-            .signWith(signingKey)
-            .compact()
-    }
 }

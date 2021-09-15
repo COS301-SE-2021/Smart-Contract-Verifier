@@ -14,8 +14,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -35,7 +33,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,8 +61,8 @@ class RemoveEvidenceLinkedTest {
 
     private val evidenceConfig = EvidenceConfig("TEST")
 
-    private lateinit var userA: User
-    private lateinit var userB : User
+    private lateinit var user: User
+    private lateinit var otherUser : User
     private lateinit var thirdParty: User
     private lateinit var agreement: Agreements
     private lateinit var evidence: Evidence
@@ -75,16 +72,16 @@ class RemoveEvidenceLinkedTest {
         evidenceConfig.initialise()
         //evidenceService.initialise()
         //given
-        userA = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
-        userB = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
-        thirdParty = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B5")
+        user = User("test user")
+        otherUser = User("other")
+        thirdParty = User("Third Party")
 
         agreement = Agreements(
             UUID.fromString("377f66e7-5060-48f8-a44b-ae0bea405a5e"),
             CreatedDate = Date()
         )
-        agreement.users.add(userA)
-        agreement.users.add(userB)
+        agreement.users.add(user)
+        agreement.users.add(otherUser)
         val linkedEvidence = LinkedEvidence(
             UUID.fromString("1981c189-afb4-431a-9fc5-d8e2e48b7110"),
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ",)
@@ -92,7 +89,7 @@ class RemoveEvidenceLinkedTest {
             UUID.fromString("7d793c67-10e8-419b-8137-be9758594184"),
             "aUseFulHash",
             EvidenceType.UPLOADED)
-        evidence.user = userA
+        evidence.user = user
         evidence.contract = agreement
         evidence.evidenceUrl = linkedEvidence
         linkedEvidence.evidence = evidence
@@ -100,10 +97,10 @@ class RemoveEvidenceLinkedTest {
         //when
         whenever(agreementsRepository.existsById(agreement.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(agreement.ContractID)).thenReturn(agreement)
-        whenever(userRepository.getById(userA.publicWalletID)).thenReturn(userA)
-        whenever(userRepository.getById(userB.publicWalletID)).thenReturn(userB)
-        whenever(userRepository.existsById(userA.publicWalletID)).thenReturn(true)
-        whenever(userRepository.existsById(userB.publicWalletID)).thenReturn(true)
+        whenever(userRepository.getById(user.publicWalletID)).thenReturn(user)
+        whenever(userRepository.getById(otherUser.publicWalletID)).thenReturn(otherUser)
+        whenever(userRepository.existsById(user.publicWalletID)).thenReturn(true)
+        whenever(userRepository.existsById(otherUser.publicWalletID)).thenReturn(true)
         whenever(evidenceRepository.save(any<Evidence>())).thenReturn(evidence)
         whenever(evidenceRepository.existsById(evidence.evidenceId)).thenReturn(true)
         whenever(evidenceRepository.getById(evidence.evidenceId)).thenReturn(evidence)
@@ -115,16 +112,9 @@ class RemoveEvidenceLinkedTest {
                       evidenceID:UUID,
                       fieldDescriptors: ArrayList<FieldDescriptor>,
                       testName: String,): MockHttpServletResponse {
-        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
-        val jwtToken = Jwts.builder()
-            .setSubject(userId)
-            .setExpiration(Date(System.currentTimeMillis() + 1080000))
-            .signWith(signingKey)
-            .compact()
         return mockMvc.perform(
             MockMvcRequestBuilders
-                .delete("/user/${userId}/agreement/${agreementId}/evidence/${evidenceID}/")
-                .header("Authorization", "bearer $jwtToken")
+            .delete("/user/${userId}/agreement/${agreementId}/evidence/${evidenceID}/")
         ).andDo(
             MockMvcRestDocumentation.document(testName,
             Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
@@ -140,7 +130,7 @@ class RemoveEvidenceLinkedTest {
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiEmptyResponse())
         //end documentation
-        val response = requestSender(userA.publicWalletID,
+        val response = requestSender(user.publicWalletID,
             agreement.ContractID,
             evidence.evidenceId,
             fieldDescriptor,
@@ -155,7 +145,7 @@ class RemoveEvidenceLinkedTest {
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
         //end documentation
-        val response = requestSender(userA.publicWalletID,
+        val response = requestSender(user.publicWalletID,
             UUID.fromString("ad02a8a0-0e91-41ab-9d71-9e6d67c0accc"),
             evidence.evidenceId,
             fieldDescriptor,
@@ -170,7 +160,7 @@ class RemoveEvidenceLinkedTest {
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
         //end documentation
-        val response = requestSender("0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb",
+        val response = requestSender("invalid user",
             agreement.ContractID,
             evidence.evidenceId,
             fieldDescriptor,
@@ -185,7 +175,7 @@ class RemoveEvidenceLinkedTest {
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
         //end documentation
-        val response = requestSender(userA.publicWalletID,
+        val response = requestSender(user.publicWalletID,
             agreement.ContractID,
             UUID.fromString("f8d318fa-aa89-44e1-8023-a1a9ca823110"),
             fieldDescriptor,
@@ -215,7 +205,7 @@ class RemoveEvidenceLinkedTest {
         val fieldDescriptor = ArrayList<FieldDescriptor>()
         fieldDescriptor.addAll(ApiResponse.apiFailedResponse())
         //end documentation
-        val response = requestSender(userB.publicWalletID,
+        val response = requestSender(otherUser.publicWalletID,
             agreement.ContractID,
             evidence.evidenceId,
             fieldDescriptor,

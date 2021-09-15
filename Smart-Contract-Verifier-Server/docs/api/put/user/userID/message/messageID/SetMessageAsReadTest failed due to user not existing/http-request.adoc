@@ -1,8 +1,7 @@
 [source,http,options="nowrap"]
 ----
-PUT /user/0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb/message/e6f884f4-8d9b-4efb-be31-c8ad5532f168 HTTP/1.1
+PUT /user/other%20user/message/e6f884f4-8d9b-4efb-be31-c8ad5532f168 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDRCQmI1MGNkM2Q1RkY0MTUxMmY1ZTQ1NEU5ODBFRUVhZWViNGUwYmIiLCJleHAiOjE2MzE3MTc0MTJ9.QIPHc6mYV8qHVQMOHJCcRPp0Lj9WzEVD-FMHtf6gh_M
 Host: localhost:8080
 
 ----

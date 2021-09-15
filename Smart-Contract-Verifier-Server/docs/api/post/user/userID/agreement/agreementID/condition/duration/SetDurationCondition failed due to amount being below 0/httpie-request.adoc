@@ -3,6 +3,5 @@
 $ echo '{
   "Duration" : -500.0
 }' | http POST 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/3c5657d6-e302-48d3-b9df-dcfccec97503/condition/duration' \
-    'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTc0NDJ9.yEkG8nD2Vz7Wlr7Ti-KSvqPHDHO265xJH6VUc11FWhU'
+    'Content-Type:application/json;charset=UTF-8'
 ----

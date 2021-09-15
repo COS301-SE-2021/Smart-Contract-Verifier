@@ -1,4 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
 drop table if exists public.user cascade ;
 create table public.user (public_walletid varchar(255) not null, alias varchar(255), nonce int8 not null, primary key (public_walletid));
 drop table if exists agreements cascade ;

@@ -28,7 +28,7 @@ import kotlin.test.assertContains
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "docs/api/post/user")
-class AddUserTest {
+class AddUserToContactListTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 

@@ -1,6 +1,5 @@
 [source,bash]
 ----
 $ http GET 'http://localhost:8080/user/0x37Ec9a8aBFa094b24054422564e68B08aF3114B4/contactList' \
-    'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDM3RWM5YThhQkZhMDk0YjI0MDU0NDIyNTY0ZTY4QjA4YUYzMTE0QjQiLCJleHAiOjE2MzE3MTc0Mjl9.znjcgOvWkxtyOOWuQ3tYA5-fuhuv0Y49xDUJEaIZppM'
+    'Content-Type:application/json;charset=UTF-8'
 ----

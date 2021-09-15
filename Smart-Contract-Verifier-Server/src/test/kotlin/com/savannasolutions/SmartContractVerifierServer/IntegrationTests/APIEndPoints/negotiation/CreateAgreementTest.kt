@@ -8,8 +8,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.Cre
 import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.CreateAgreementResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -76,7 +74,6 @@ class CreateAgreementTest {
     {
         return mockMvc.perform(MockMvcRequestBuilders.post("/user/${userID}/agreement")
             .contentType(MediaType.APPLICATION_JSON)
-            .header("Authorization", "bearer ${generateToken(userID)}")
             .content(rjson)).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -188,7 +185,7 @@ class CreateAgreementTest {
         fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
         //End of documentation
 
-        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyB\":\"0x69Ec9a8aBFa094b24054422564e68B08aF311400\",\"AgreementTitle\":\"test agreement\"}"
+        val rjson = "{\"AgreementDescription\":\"test description\",\"AgreementImageURL\":\"http.dodgyurl.com\",\"PartyB\":\"does not exist\",\"AgreementTitle\":\"test agreement\"}"
 
         val response = requestSender(rjson,
             userA.publicWalletID,
@@ -196,14 +193,5 @@ class CreateAgreementTest {
             "CreateAgreement userB does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    fun generateToken(userID: String): String? {
-        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
-        return Jwts.builder()
-            .setSubject(userID)
-            .setExpiration(Date(System.currentTimeMillis() + 1080000))
-            .signWith(signingKey)
-            .compact()
     }
 }

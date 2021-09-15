@@ -3,8 +3,7 @@
 {
   "Status" : "SUCCESSFUL",
   "ResponseObject" : {
-    "UploadedEvidenceDetails" : [ ],
-    "LinkedEvidenceDetails" : [ ]
+    "evidenceHashes" : [ ]
   }
 }
 ----

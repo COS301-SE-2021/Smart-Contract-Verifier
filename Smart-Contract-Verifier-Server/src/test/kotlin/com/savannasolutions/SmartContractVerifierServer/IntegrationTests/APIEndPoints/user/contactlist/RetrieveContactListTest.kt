@@ -8,8 +8,6 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.Contac
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveContactListResponse
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -87,7 +85,6 @@ class RetrieveContactListTest {
                               testName: String): MockHttpServletResponse {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/contactList/${contactListID}")
-                .header("Authorization", "bearer ${generateToken(userID)}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(
             MockMvcRestDocumentation.document(
@@ -131,13 +128,6 @@ class RetrieveContactListTest {
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
-    fun generateToken(userID: String): String? {
-        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
-        return Jwts.builder()
-            .setSubject(userID)
-            .setExpiration(Date(System.currentTimeMillis() + 1080000))
-            .signWith(signingKey)
-            .compact()
-    }
+
 
 }
