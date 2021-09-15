@@ -1,4 +1,5 @@
 [source,bash]
 ----
-$ curl 'http://localhost:8080/user/test%20user/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/' -i -X GET
+$ curl 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/' -i -X GET \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTYyMjB9.D2u9sMY6tAedGtCKcaww91cm5-HOgwChRrKk8B8OKlI'
 ----
