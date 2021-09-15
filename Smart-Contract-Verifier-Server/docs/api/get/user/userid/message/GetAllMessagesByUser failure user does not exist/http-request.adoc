@@ -1,7 +1,8 @@
 [source,http,options="nowrap"]
 ----
-GET /user/other%20user/message HTTP/1.1
+GET /user/0xF9276468FA51422cD528BEAcAb7aB548Ba71Cf17/message HTTP/1.1
 Content-Type: application/json;charset=UTF-8
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweEY5Mjc2NDY4RkE1MTQyMmNENTI4QkVBY0FiN2FCNTQ4QmE3MUNmMTciLCJleHAiOjE2MzE3MTMwMzB9.qH70YtHJu7EP4bCgWQC4IsG0h2mo9ciFqk9Fx34tTUw
 Host: localhost:8080
 
 ----

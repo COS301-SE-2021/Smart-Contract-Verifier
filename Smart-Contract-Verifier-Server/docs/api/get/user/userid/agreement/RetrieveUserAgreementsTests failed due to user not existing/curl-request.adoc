@@ -2,5 +2,5 @@
 ----
 $ curl 'http://localhost:8080/user/562fa210-e19e-4390-9e06-48e04a04b333/agreement' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NjJmYTIxMC1lMTllLTQzOTAtOWUwNi00OGUwNGEwNGIzMzMiLCJleHAiOjE2MzE3MTIxNzh9.qPM1YvV07AFoPTHJJ51scnVAPzMtEWT2J2SMEJV0B90'
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NjJmYTIxMC1lMTllLTQzOTAtOWUwNi00OGUwNGEwNGIzMzMiLCJleHAiOjE2MzE3MTMwMjJ9.u3IBnPctvRT0ioRuCd_JnTA8CTqR1_2i_A6BZJCPnU0'
 ----
