@@ -1,6 +1,7 @@
 [source,bash]
 ----
-$ curl 'http://localhost:8080/user/test%20user/agreement/4232ff01-9844-4a38-9290-f84c55c211d1/evidence/upload' -i -X POST \
+$ curl 'http://localhost:8080/user/0x7Ea7EA8D709B02444128e8b4d8C38d00842e77C3/agreement/4232ff01-9844-4a38-9290-f84c55c211d1/evidence/upload' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDdFYTdFQThENzA5QjAyNDQ0MTI4ZThiNGQ4QzM4ZDAwODQyZTc3QzMiLCJleHAiOjE2MzE3MTQ4MzV9.XOuxmoNKR6fAZspi-Zzcx0jlad0cHHCgx2tgW1diWgM' \
     -F 'uploadEvidence=@testFile.txt'
 ----

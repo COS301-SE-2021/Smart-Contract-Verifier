@@ -1,5 +1,6 @@
 [source,bash]
 ----
-$ http --form POST 'http://localhost:8080/user/test%20user/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/upload' \
-    'uploadEvidence'@'testFile.txt'
+$ http --form POST 'http://localhost:8080/user/0x7Ea7EA8D709B02444128e8b4d8C38d00842e77C3/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/upload' \
+    'uploadEvidence'@'testFile.txt' \
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDdFYTdFQThENzA5QjAyNDQ0MTI4ZThiNGQ4QzM4ZDAwODQyZTc3QzMiLCJleHAiOjE2MzE3MTQ4MzV9.XOuxmoNKR6fAZspi-Zzcx0jlad0cHHCgx2tgW1diWgM'
 ----
