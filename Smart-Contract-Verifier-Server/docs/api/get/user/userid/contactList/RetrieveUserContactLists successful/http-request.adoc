@@ -2,7 +2,7 @@
 ----
 GET /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/contactList HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTc0Mjl9.xSzRshe75c1PMhTb605GVD-T--s3kVv8_IwQCGFXvOY
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTg1OTl9.yM2dbHGS7yrX171XknoRM63mt2ugidT5N2X2gL5Yppc
 Host: localhost:8080
 
 ----

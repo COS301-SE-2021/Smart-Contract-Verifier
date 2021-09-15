@@ -31,15 +31,15 @@ class SecurityService(val userRepository: UserRepository,
                       val securityConfig: SecurityConfig
 ) {
 
-    fun getNonce(userId: String): GetNonceResponse {
+    fun getNonce(userId: String): ApiResponse<GetNonceResponse> {
         if (userRepository.existsById(userId)) {
             val user = userRepository.getById(userId)
             val nonce = ThreadLocalRandom.current().nextLong(1000000000, 9999999999)
             user.nonce = nonce
             userRepository.save(user)
-            return GetNonceResponse(nonce, ResponseStatus.SUCCESSFUL)
+            return ApiResponse(ResponseStatus.SUCCESSFUL, responseObject = GetNonceResponse(nonce))
         }
-        return GetNonceResponse(0, ResponseStatus.FAILED)
+        return ApiResponse(ResponseStatus.FAILED, responseObject = GetNonceResponse(0), message = "User doesnt exist in the db")
     }
 
     fun addUser(addUserRequest: AddUserRequest): ApiResponse<Objects> {
@@ -55,7 +55,7 @@ class SecurityService(val userRepository: UserRepository,
         return  ApiResponse(status = ResponseStatus.SUCCESSFUL)
     }
 
-    fun login(userId: String, loginRequest: LoginRequest): LoginResponse {
+    fun login(userId: String, loginRequest: LoginRequest): ApiResponse<LoginResponse> {
         var match = false
         val prefix = "\u0019Ethereum Signed Message:\n10"
         if(userRepository.existsById(userId)){
@@ -98,9 +98,9 @@ class SecurityService(val userRepository: UserRepository,
                 val user = userRepository.getById(userId)
                 user.nonce = newNonce
                 userRepository.save(user)
-                return LoginResponse(ResponseStatus.SUCCESSFUL, jwtToken)
+                return ApiResponse(ResponseStatus.SUCCESSFUL, LoginResponse(jwtToken))
             }
         }
-        return LoginResponse(ResponseStatus.FAILED, "")
+        return ApiResponse(ResponseStatus.FAILED, LoginResponse(""), message = "Login verification failure")
     }
 }

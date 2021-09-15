@@ -10,10 +10,10 @@ import javax.persistence.*
 
 @Entity
 data class Messages(@Id @GeneratedValue val messageID: UUID,
-                    @ColumnTransformer(
+                   /* @ColumnTransformer(
                         read = "PGP_SYM_DECRYPT(cast(message as bytea), 'A VERY SECURE KEY')",
                         write = "PGP_SYM_ENCRYPT (?, 'A VERY SECURE KEY')"
-                    )
+                    )*/
                     val message: String,
                     val sendDate: Date,)
 {

@@ -1,5 +1,5 @@
 [source,bash]
 ----
 $ http GET 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTc0MjJ9.kAcWsFPyDL8xwrnD5qYlfLj8PlFPhGrr3RHSEJFm_6s'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTg1OTJ9.O0RC4YNItLu0NpWEEtP7qOdJ8YFzFZMjMtzIUMgpaZY'
 ----
