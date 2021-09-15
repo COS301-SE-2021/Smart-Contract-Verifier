@@ -11,8 +11,6 @@ import com.savannasolutions.SmartContractVerifierServer.security.responses.Login
 import com.savannasolutions.SmartContractVerifierServer.security.responses.UserExistsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
-import org.komputing.khash.keccak.Keccak
 import org.komputing.khash.keccak.Keccak.digest
 import org.komputing.khash.keccak.KeccakParameter
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -58,7 +56,7 @@ class SecurityService(val userRepository: UserRepository,
 
     fun login(userId: String, loginRequest: LoginRequest): ApiResponse<LoginResponse> {
         var match = false
-        val prefix = "\u0019Ethereum Signed Message:\n10Sign this nonce to continue to sign in: "
+        val prefix = "\u0019Ethereum Signed Message:\n50Sign this nonce to continue to sign in: "
         if(userRepository.existsById(userId)){
             val nonce = userRepository.getById(userId).nonce.toString()
             val message = digest((prefix + nonce).toByteArray(), KeccakParameter.KECCAK_256)
@@ -71,7 +69,7 @@ class SecurityService(val userRepository: UserRepository,
                 signatureBytes.copyOfRange(0, 32),
                 signatureBytes.copyOfRange(32, 64),)
             //----------------------------------------------------------------------------------------------------------
-            var recoveredAddress = ""
+            var recoveredAddress: String
             for(i in 0..3){
                 val publicKey = Sign.recoverFromSignature(
                     i,
