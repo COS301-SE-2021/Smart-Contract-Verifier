@@ -37,9 +37,10 @@ class SecurityService(val userRepository: UserRepository,
             val nonce = ThreadLocalRandom.current().nextLong(1000000000, 9999999999)
             user.nonce = nonce
             userRepository.save(user)
-            return ApiResponse(ResponseStatus.SUCCESSFUL, responseObject = GetNonceResponse(nonce))
+            val nonceString = "Sign this nonce to continue to sign in: $nonce"
+            return ApiResponse(ResponseStatus.SUCCESSFUL, responseObject = GetNonceResponse(nonceString))
         }
-        return ApiResponse(ResponseStatus.FAILED, responseObject = GetNonceResponse(0), message = "User doesnt exist in the db")
+        return ApiResponse(ResponseStatus.FAILED, responseObject = GetNonceResponse(""), message = "User doesnt exist in the db")
     }
 
     fun addUser(addUserRequest: AddUserRequest): ApiResponse<Objects> {
@@ -57,7 +58,7 @@ class SecurityService(val userRepository: UserRepository,
 
     fun login(userId: String, loginRequest: LoginRequest): ApiResponse<LoginResponse> {
         var match = false
-        val prefix = "\u0019Ethereum Signed Message:\n10"
+        val prefix = "\u0019Ethereum Signed Message:\n10Sign this nonce to continue to sign in: "
         if(userRepository.existsById(userId)){
             val nonce = userRepository.getById(userId).nonce.toString()
             val message = digest((prefix + nonce).toByteArray(), KeccakParameter.KECCAK_256)
