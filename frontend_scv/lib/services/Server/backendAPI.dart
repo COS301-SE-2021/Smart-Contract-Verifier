@@ -111,6 +111,7 @@ class ApiInteraction {
   Future<ApiResponse> filePost(String url, MultipartFile file) async {
     var req = await MultipartRequest('POST', Uri.parse(_baseUrl + url));
     req.files.add(file);
+    req.headers.addAll({'Authorization' : "bearer " + Global.apiToken});
 
     String body;
     try {
@@ -127,6 +128,7 @@ class ApiInteraction {
   Future<PlatformFile> fileGet(String url) async {
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization' : "bearer " + Global.apiToken,
     };
 
     var response = await RetryOptions(maxAttempts: 5).retry(
