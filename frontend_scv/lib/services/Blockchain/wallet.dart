@@ -70,7 +70,7 @@ class WalletInteraction {
   }
 
   ///Sign a string using metamask personal signing
-  Future<Uint8List> personalSign(String data) async {
+  Future<String> personalSign(String data) async {
 
     //Sign using external Javascript function, since the Dart Metamask signing is unreliable.
     var res = await promiseToFuture(signWithMetamask(data, Global.userAddress));

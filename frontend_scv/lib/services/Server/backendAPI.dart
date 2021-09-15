@@ -101,7 +101,7 @@ class ApiInteraction {
           'An error occurred while making the request. The server responded with status code ' +
               response.statusCode.toString()); //Failed http request
 
-    // print('Returned:' + response.body);
+     print('Returned:' + response.body);
     return ApiResponse.fromJSON(jsonDecode(response.body));
   }
 
