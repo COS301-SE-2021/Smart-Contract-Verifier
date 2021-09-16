@@ -14,6 +14,9 @@ class ContactService {
   Future<void> createNewList(String name) async {
 
     ApiResponse res = await _api.postData('/user/${Global.userAddress}/contactList/$name', {});
+    if (!res.successful)
+      throw 'Could not create a new Contact list. Details"\n' + res.errorMessage;
+
   }
 
   ///Get all contact lists for a user
