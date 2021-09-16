@@ -34,7 +34,7 @@ class TokenService {
     }
     catch (e) {
       print (e);
-      return;
+      throw 'Could not update allowance.';
     }
 
   }
