@@ -4,6 +4,7 @@
 * Remove prints to console
 * Login
 * Go through all TODO - mainly in Services
+* User Feedback
 *
 * More button looking actions on action area
 * SideBar (later)
