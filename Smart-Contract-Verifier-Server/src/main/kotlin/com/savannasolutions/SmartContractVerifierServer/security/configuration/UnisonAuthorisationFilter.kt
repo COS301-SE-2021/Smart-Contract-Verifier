@@ -23,6 +23,12 @@ class UnisonAuthorisationFilter(var securityConfig: SecurityConfig): OncePerRequ
         }else if(uri.contains("/download") || uri.contains("/linked") || uri.contains("/hello")){
             chain.doFilter(request, response)
             return
+        }else if(uri.contains("/actuator/")) {
+            chain.doFilter(request, response)
+            return
+        }else if(uri.equals("/")) {
+            chain.doFilter(request, response)
+            return
         }
 
         var token = request.getHeader("Authorization")
