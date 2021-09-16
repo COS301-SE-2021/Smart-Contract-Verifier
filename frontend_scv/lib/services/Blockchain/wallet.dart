@@ -54,7 +54,7 @@ class WalletInteraction {
 
   CredentialsWithKnownAddress getCredentials() {
     //Haven't tested this syntax;
-    return ready ? metaCred : throw Exception('Metamask credentials not ready');
+    return ready ? metaCred : throw ('Metamask credentials not ready');
   }
 
   bool metamaskAvailable() {
