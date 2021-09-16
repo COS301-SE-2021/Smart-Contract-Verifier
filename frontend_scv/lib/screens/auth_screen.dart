@@ -176,9 +176,9 @@ class _AuthCardState extends State<AuthCard> {
       await judgeService.isJudge();
       //await judgeService.setContractAllowance();
     } catch (error) {
-      const errorMessage = 'Authenticate Failed.\nPlease ensure you '
-          'have the metamask extension installed.';
-      _showErrorDialog(errorMessage + '\nAdditional information:\n' + error.toString());
+      const errorMessage = 'Login Failed.\n';//Please ensure you '
+          //'have the metamask extension installed.';
+      _showErrorDialog('Login Failed. ' + error.toString());
       setState(() {
         _isLoading = false;
       });

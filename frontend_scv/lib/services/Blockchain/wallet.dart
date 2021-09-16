@@ -30,8 +30,8 @@ class WalletInteraction {
     //For this to work, a chrome session must be started out of debug mode. Copy the url to a normal tab
     final meta = window.ethereum;
     if (!metamaskAvailable()) {
-      print('Connection failed');
-      throw Exception("Metamask is not available");
+      //print('Connection failed');
+      throw "Metamask is not available";
     }
 
 
@@ -49,7 +49,7 @@ class WalletInteraction {
         metaCred.address.toString(); //Save the user address to globals
     ready = true;
 
-    print('Connection successful: ' + Global.userAddress);
+    //print('Connection successful: ' + Global.userAddress);
   }
 
   CredentialsWithKnownAddress getCredentials() {
