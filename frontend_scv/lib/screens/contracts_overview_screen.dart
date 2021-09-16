@@ -1,8 +1,7 @@
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unison/services/Blockchain/faucetService.dart';
-import 'package:unison/services/Blockchain/tokenService.dart';
+import 'package:unison/widgets/miscellaneous/dashboard_actions.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 import '../models/contracts.dart';
@@ -49,109 +48,11 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    TokenService tokServ = TokenService();
-    FaucetService _faucetService = FaucetService();
-
     return Scaffold(
       appBar: AppBar(
         title: FunkyText('Agreements Dashboard'),
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SizedBox(),
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all(
-                    Color.fromRGBO(50, 183, 196, 0.8),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.refresh),
-                    Text('Refresh Dashboard'),
-                  ],
-                ),
-                onPressed: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  await Navigator.of(context).pushNamed('/');
-                },
-              ),
-              FutureBuilder(
-                  future: tokServ.getAllowance(),
-                  builder: (context, snap) {
-                    if (snap.connectionState == ConnectionState.done) {
-                      return Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(children: [
-                              FutureBuilder(
-                                  future: tokServ.getBalance(),
-                                  builder: (context, snapshot) {
-                                    return Text('UNT Balance: ' +
-                                        snapshot.data.toString());
-                                  }),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  await _faucetService.getToken();
-                                },
-                                child: Text('Get UNT from Faucet'),
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Token allowance: ' + snap.data.toString(),
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              TextButton(
-                                style: ButtonStyle(
-                                  foregroundColor: MaterialStateProperty.all(
-                                    Color.fromRGBO(182, 80, 158, 0.8),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Top Up',
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        // color: Colors.purple,
-                                        // fontSize: 20,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Icon(
-                                      Icons.price_change_outlined,
-                                    ),
-                                  ],
-                                ),
-                                onPressed: () async {
-                                  await tokServ.setAllowance(
-                                      BigInt.from(2000000000000000000));
-                                },
-                              ),
-                              SizedBox(
-                                width: 50,
-                              ),
-                            ]),
-                          ],
-                        ),
-                      );
-                    }
-                    return CircularProgressIndicator();
-                  }),
-            ],
-          )
+          DashBoardActions(),
         ],
       ),
       drawer: AppDrawer(),
@@ -162,7 +63,6 @@ class _ContractsOverviewScreenState extends State<ContractsOverviewScreen> {
                 color: Color.fromRGBO(50, 183, 196, 0.5),
               ),
             )
-          // : ContractsGrid(_showOnlyFavorites),
           : ContractsGrid(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
