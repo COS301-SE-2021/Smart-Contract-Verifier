@@ -56,6 +56,7 @@ class LoginService {
     }
 
     Global.apiToken = loginRes.result['JwtToken']; //Extract from result
+    print ('Token: ' + Global.apiToken);
   }
 
 
