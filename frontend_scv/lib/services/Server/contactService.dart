@@ -19,21 +19,15 @@ class ContactService {
   ///Get all contact lists for a user
   Future<List<ContactList>> getContactLists() async {
 
-    print ('Before call');
     ApiResponse res = await _api.getData('/user/${Global.userAddress}/contactList/');
-    print ('After call');
+    if (!res.successful)
+      throw 'Could not retrieve contact list. Details:\n' + res.errorMessage;
+
     List<ContactList> ret = [];
-    print (res.result['contactListInfo']);
     for (var i in res.result['contactListInfo']) {
-      try {
         ret.add(ContactList.fromJSON(i));
-        print ('Added');
-      } catch (e) {
-        print ('Error: ' + e);
-      }
     }
 
-    print ('Returning: ' + ret.toString());
     return ret;
 
   }
@@ -42,6 +36,9 @@ class ContactService {
   ///Should be used in conjunction with ContactList.setContacts()
   Future<List<Contact>> getContacts(String id) async {
     ApiResponse res = await _api.getData('/user/${Global.userAddress}/contactList/$id');
+    if (!res.successful)
+      throw 'Could not retrieve contacts. Details:\n' + res.errorMessage;
+
     List<Contact> ret = [];
     var list = res.result['walletAndAlias'];
     for (var i in list) {
@@ -57,6 +54,8 @@ class ContactService {
       String path = '/user/${Global.userAddress}/contactList/$id';
       var body = {'NewUserID' : ad, 'NewUserAlias' : name};
       ApiResponse res = await _api.putData(path, body);
+      if (!res.successful)
+        throw 'Could not add user to contact list. Details:\n' + res.errorMessage;
   }
 
   ///Remove a user from a contact list
@@ -64,6 +63,8 @@ class ContactService {
 
       String path = '/user/${Global.userAddress}/contactList/$id/$ad';
       ApiResponse res = await _api.deleteData(path);
+      if (!res.successful)
+        throw 'Could not remove user from contact list. Details:\n' + res.errorMessage;
   }
 
 }

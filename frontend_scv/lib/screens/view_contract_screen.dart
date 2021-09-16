@@ -30,12 +30,12 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
 
   Future<Contract> fetchAgreement(agreementId) async {
     CommonService commonService = CommonService();
-    await Future.delayed(Duration(milliseconds: 500));
+    //await Future.delayed(Duration(milliseconds: 500));
     try {
       Contract loaded = await commonService.getAgreement(agreementId);
       return loaded;
     } catch (error) {
-      print(error);
+      //print(error);
       throw (error);
     }
   }
