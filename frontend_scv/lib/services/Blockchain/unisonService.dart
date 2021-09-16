@@ -123,4 +123,11 @@ class UnisonService {
     await _smC.makeWriteCall('payIn', [id]);
   }
 
+  ///Get the current platform fee of Unison
+  Future<BigInt> getPlatformFee() async {
+    final res = await _smC.makeReadCall('getPlatformFee', []);
+    print ('Platform fee: ' + res.toString());
+    return BigInt.parse(res.toString());
+  }
+
 }
