@@ -18,9 +18,6 @@ class JurorService {
   Future<void> addUserAsJuror() async { //Add the user to the jury
 
     await _tokServ.setStake(BigInt.from(10000)); //User stakes 10 000 gwei
-
-    final res = await _tokServ.getAllowance();
-    print ('Allowance: ' + res.toString()); //The allowance after setting
     await _uniServ.addJuror();
   }
 
