@@ -22,12 +22,11 @@ class LoginService {
 
     id ??= Global.userAddress; //Defaults to current user
     try {
-      final res =await _api.postData('/user', {'WalletID': id, 'Alias' : 'Nothing'});
-      print ('Res: ' + res.toString());
+      final res = await _api.postData('/user', {'WalletID': id, 'Alias' : 'Nothing'});
+      //print ('Res: ' + res.toString());
 
     } on Exception catch (e) {
       print(e);
-      throw(e);
     }
 
   }
@@ -36,6 +35,9 @@ class LoginService {
   Future<void> login() async {
     ApiResponse nonceRes = await _api.getData('/user/${Global.userAddress}');
 
+    if (!nonceRes.successful) {
+      throw 'Could not get challenge to sign. Details:\n' + nonceRes.errorMessage;
+    }
     //Extract and sign nonce
     String nonce = nonceRes.result['UnsignedNonce'];
 
