@@ -23,7 +23,7 @@ class JudgeService {
         await _api.getData('/judge/${Global.userAddress}/agreement');
 
     if (!response.successful)
-      throw Exception('Agreements for judge could not be retrieved');
+      throw 'Agreements for judge could not be retrieved. Details:\n' + response.errorMessage;
 
     List<dynamic> jsonList = ((response.result['AgreementList']));
     List<Contract> ret = [];
