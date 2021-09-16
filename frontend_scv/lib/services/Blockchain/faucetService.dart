@@ -6,6 +6,7 @@ import 'package:unison/services/Blockchain/smartContract.dart';
 class FaucetService {
   SmartContract _smC = SmartContract('JSON/_src_Faucet.abi', 'Faucet');
 
+  ///Get 1 UNT from the faucet
   Future<void> getToken() async {
     await _smC.makeWriteCall('getToken', []);
   }
