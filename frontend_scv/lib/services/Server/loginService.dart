@@ -33,23 +33,27 @@ class LoginService {
   }
 
   ///Login using Metamask
-  Future<bool> login() async {
+  Future<void> login() async {
     ApiResponse nonceRes = await _api.getData('/user/${Global.userAddress}');
 
-    //print ('Gotten none');
     //Extract and sign nonce
     String nonce = nonceRes.result['UnsignedNonce'];
 
-    //print ('About to sign: ' + nonce);
-    final signed = await _wallet.personalSign(nonce);
-
-    //print ('Signed: ' +signed.toString());
+    var signed;
+    try {
+      signed = await _wallet.personalSign(nonce);
+    } catch (e) {
+      throw 'Could not sign challenge. Details:\n' + e.toString();
+    }
 
     //Send back signed nonce
     var body = {'SignedNonce' : signed};
     ApiResponse loginRes = await _api.postData('/user/${Global.userAddress}', body);
+    if (!loginRes.successful) {
+      throw 'Challenge was not signed correctly. Details:\n' + loginRes.errorMessage;
+    }
+
     Global.apiToken = loginRes.result['JwtToken']; //Extract from result
-    return loginRes.successful; //Login success
   }
 
 
