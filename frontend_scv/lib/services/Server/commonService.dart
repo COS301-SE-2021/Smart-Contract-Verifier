@@ -17,16 +17,13 @@ class CommonService {
     ApiResponse response = await _api.getData('/user/$addr/agreement');
 
     if (!response.successful)
-      throw Exception('Retrieval of agreements failed');
+      throw 'Retrieval of agreements failed. Details:\n' + response.errorMessage;
 
-    print ('I am here....');
     List<dynamic> jsonList = ((response.result['agreements']));
     List<Contract> ret = [];
-    print ('About to read from list');
     for (int i = 0; i < jsonList.length; i++) {
       ret.add(Contract.fromJson(jsonList[i]));
     }
-    print ('Done with list');
 
     return ret;
   }
@@ -36,7 +33,7 @@ class CommonService {
     ApiResponse response = await _api.getData('/user/${Global.userAddress}/agreement/$id');
 
     if (!response.successful)
-      throw Exception('Retrieval of agreement failed');
+      throw 'Retrieval of agreement failed. Details:\n' + response.errorMessage;
 
     return Contract.fromJson(response.result['AgreementResponse']);
 

@@ -23,7 +23,7 @@ class JudgeService {
         await _api.getData('/judge/${Global.userAddress}/agreement');
 
     if (!response.successful)
-      throw Exception('Agreements for judge could not be retrieved');
+      throw 'Agreements for judge could not be retrieved. Details:\n' + response.errorMessage;
 
     List<dynamic> jsonList = ((response.result['AgreementList']));
     List<Contract> ret = [];
@@ -71,7 +71,7 @@ class JudgeService {
   //Get the jury for an agreement from the blockchain
   Future<Jury> getJury(BigInt id) async {
     final res = await _uniServ.getJury(id);
-    print('Jury res: ' + res[0].toString());
+    //print('Jury res: ' + res[0].toString());
     return Jury.fromChain(res);
   }
 }

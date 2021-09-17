@@ -1,4 +1,3 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -203,7 +202,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
                                         title: value,
                                         description:
                                             _editedContract.description,
-                                        paymentAmount: _editedContract.paymentAmount,
+                                        paymentAmount:
+                                            _editedContract.paymentAmount,
                                         imageUrl: _editedContract.imageUrl,
                                         partyB: _editedContract.partyB,
                                         partyA: _editedContract.partyA,
@@ -244,7 +244,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
                                           title: _editedContract.title,
                                           description:
                                               _editedContract.description,
-                                          paymentAmount: _editedContract.paymentAmount,
+                                          paymentAmount:
+                                              _editedContract.paymentAmount,
                                           imageUrl: _editedContract.imageUrl,
                                           partyB: value.toLowerCase(),
                                           partyA: _editedContract.partyA,
@@ -276,7 +277,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
                                               _editedContract.contractId,
                                           title: _editedContract.title,
                                           description: value,
-                                          paymentAmount: _editedContract.paymentAmount,
+                                          paymentAmount:
+                                              _editedContract.paymentAmount,
                                           imageUrl: _editedContract.imageUrl,
                                           partyB: _editedContract.partyB,
                                           partyA: _editedContract.partyA,

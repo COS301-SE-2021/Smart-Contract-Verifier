@@ -1,6 +1,7 @@
 //This class models an agreement already put on the blockchain.
 //Not all of the features of the agreement are present here.
 
+import 'package:unison/models/blockchainPayment.dart';
 import 'package:unison/models/global.dart';
 
 enum AgreementState {
@@ -22,6 +23,7 @@ enum PartyVote {
 
 
 class BlockchainAgreement {
+
   String serverID;
   String partyA;
   String partyB;
@@ -29,6 +31,7 @@ class BlockchainAgreement {
   int state;
   AgreementState stateEnum;
   PartyVote voteEnum; //What the current user voted
+  BlockChainPayment paymentInfo;
 
   BlockchainAgreement.fromCHAIN(dynamic res) {
     //Generate from smartContract response
@@ -45,9 +48,16 @@ class BlockchainAgreement {
       ind = 10;
     voteEnum = PartyVote.values[res[ind].toInt()];
 
+    try {
+      print ('Eleven: ' + res[11].toString());
+      paymentInfo = BlockChainPayment.fromArray(res[11][0]);
+    } catch (e) {
+      print ('Build issue:' + e.toString());
+    }
+
   }
 
-  //Return whether or not the current user should make an accept request to an existing agreement
+  ///Return whether or not the current user should make an accept request to an existing agreement
   bool shouldAccept() {
 
     if (state == 1) {
@@ -70,4 +80,13 @@ class BlockchainAgreement {
     return voteEnum;
   }
 
+  ///Is the current user the one who should pay? This does not account for the payment already being made. Use shouldPay to check if payment has been made
+  bool amIPaying() {
+    return (paymentInfo.infoSet && paymentInfo.payingUser == Global.userAddress);
+  }
+
+  ///Has the required payment been made? This method returns true if it is still outstanding
+  bool shouldPay() {
+    return (paymentInfo.infoSet && !paymentInfo.hasBeenPayed);
+  }
 }

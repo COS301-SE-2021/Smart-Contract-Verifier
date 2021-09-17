@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 import 'global.dart';
@@ -22,13 +22,25 @@ class Condition with ChangeNotifier {
       this.status = 'Pending',
       this.conditionId = ''}); //Constructor
 
-  Condition.fromJson(Map<String, dynamic> jsn)
-      : agreementId = jsn['AgreementID'],
-        conditionId = jsn['ConditionID'],
-        title = jsn['ConditionTitle'],
-        proposedBy = jsn['ProposingUser']['publicWalletID'],
-        description = jsn['ConditionDescription'],
-        status = jsn['ConditionStatus'];
+  Condition.fromJson(Map<String, dynamic> jsn) {
+    agreementId = jsn['AgreementID'];
+    conditionId = jsn['ConditionID'];
+    title = jsn['ConditionTitle'];
+    proposedBy = jsn['ProposingUser']['publicWalletID'];
+    description = jsn['ConditionDescription'];
+    List<String> descParts;
+
+      descParts = description.split(" ");
+
+    try {
+      if (descParts[0] == 'Duration' && descParts[1] == 'of') { //This is a duration condition formatted in seconds
+      int seconds = int.parse(descParts[2]);
+      DateTime time = DateTime.fromMillisecondsSinceEpoch(seconds*1000);
+      description = 'Expires: ' +DateFormat('yyyy-MM-dd kk:mm').format(time);
+      }
+    } catch (_) {}
+    status = jsn['ConditionStatus'];
+    }
 
   Map<String, dynamic> toJson() => {
         //For saving a condition to the server

@@ -1,10 +1,13 @@
 /*
-* TODO:
 * ---------------
-* Faucet button
-* Evidence - Current Goal
-* Add payment condition to blockchain (Based on backend payment condition)
-* Fix Duration Condition Item (display it as a formatted date, SSE)
-* Touch Juror screen's Action Area
-* TODO: Go through all TODO's
+* Evidence - touch up, make Judges not able to add evidence
+* Remove prints to console
+* Login
+* Go through all TODO - mainly in Services
+* User Feedback
+*
+* More button looking actions on action area
+* SideBar (later)
+* Agreement Status/Notification (later)
+*
 * */

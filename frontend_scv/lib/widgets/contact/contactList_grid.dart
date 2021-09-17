@@ -34,7 +34,11 @@ class _ContactListGridState extends State<ContactListGrid> {
               TextButton(
                 child: Text('Save'),
                 onPressed: () async {
-                  await contactServ.createNewList(_listNameController.text);
+                  try {
+                    await contactServ.createNewList(_listNameController.text);
+                  } catch (e) {
+                    _showError(e.toString());
+                  }
 
                   _listNameController.clear();
                   Navigator.of(context).pop();
@@ -57,6 +61,25 @@ class _ContactListGridState extends State<ContactListGrid> {
             ),
           );
         });
+  }
+
+  //TODO: Sorry Kevin, I'm copying and pasting
+  void _showError(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An Error Occurred!'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override

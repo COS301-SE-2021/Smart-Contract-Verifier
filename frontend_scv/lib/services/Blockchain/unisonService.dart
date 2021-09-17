@@ -1,6 +1,8 @@
 //This class will be used to interact with the Unison smart Contract to save and get contracts from the blockchain
 //The jury is also handled by Verifier, so those functions are here as well.
 
+import 'dart:math';
+
 import 'package:web3dart/credentials.dart';
 import '../../models/blockchainAgreement.dart';
 import '../../models/contract.dart';
@@ -31,8 +33,8 @@ class UnisonService {
         con.duration,
         data,
         con.contractId,
-        [Global.getContractId('UnisonToken')],
-        [con.paymentAmount],
+        [EthereumAddress.fromHex(await Global.getContractId('UnisonToken'))],
+        [BigInt.from(con.paymentAmount*pow(10, 18))], //Convert to gwei
         [direction]
       ]);
       print (res);
@@ -73,6 +75,7 @@ class UnisonService {
   ///Checks if a user is a Juror
   Future<bool> isJuror(EthereumAddress add) async {
     final res = await _smC.makeReadCall('isJuror', [add]);
+    //print ('Juror: ' + res.toString());
     return res[0]; //Temporary
   }
 
@@ -113,6 +116,18 @@ class UnisonService {
   ///Pay the platform fee for an agreement
   Future<void> payPlatformFee(BigInt id) async {
     await _smC.makeWriteCall('payPlatformFee', [id]);
+  }
+
+  ///Pay the amount specified in the agreement payment condition
+  Future<void> payAgreementMoney(BigInt id) async {
+    await _smC.makeWriteCall('payIn', [id]);
+  }
+
+  ///Get the current platform fee of Unison
+  Future<BigInt> getPlatformFee() async {
+    final res = await _smC.makeReadCall('getPlatformFee', []);
+    print ('Platform fee: ' + res.toString());
+    return BigInt.parse(res.toString());
   }
 
 }

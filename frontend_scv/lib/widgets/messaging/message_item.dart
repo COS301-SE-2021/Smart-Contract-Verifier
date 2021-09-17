@@ -33,7 +33,6 @@ class MessageItem extends StatelessWidget {
         return _buildReceiver(MessageItemType.PartyOther, context);
       }
     }
-    return Text('Oops');
   }
 
   Widget _buildReceiver(MessageItemType messType, BuildContext context) {
@@ -163,10 +162,6 @@ class MessageItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                // JdenticonSVG(
-                //   message.sender,
-                //   messType == MessageItemType.PartyCurrent ? [340] : [150],
-                // ),
                 SizedBox(
                   width: 15,
                 ),
