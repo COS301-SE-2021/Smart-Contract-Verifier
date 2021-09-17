@@ -26,7 +26,7 @@ class _MessagingScreenState extends State<EvidenceScreen> {
     final partyA = args['partyA'];
     final partyB = args['partyB'];
     bool _isJudge = false;
-    if (Global.userAddress != partyA || Global.userAddress != partyB) {
+    if (Global.userAddress != partyA && Global.userAddress != partyB) {
       _isJudge = true;
     }
 
@@ -39,7 +39,8 @@ class _MessagingScreenState extends State<EvidenceScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButton: UploadEvidencePanel(agreementId, reload),
+      floatingActionButton:
+      _isJudge ? Container() : UploadEvidencePanel(agreementId, reload),
     );
   }
 }
