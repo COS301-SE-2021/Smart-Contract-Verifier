@@ -12,5 +12,6 @@ class commonResponseErrorMessages {
         const val descriptionEmpty = "Description is empty"
         const val contactListDoesNotExist = "Contact List does not exist in database"
         const val evidenceDoesNotExist = "Evidence does not exist"
+        const val agreementSealed = "Agreement negotiation has concluded"
     }
 }
