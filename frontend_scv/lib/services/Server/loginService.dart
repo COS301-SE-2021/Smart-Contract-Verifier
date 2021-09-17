@@ -45,7 +45,7 @@ class LoginService {
     try {
       signed = await _wallet.personalSign(nonce);
     } catch (e) {
-      throw 'Could not sign challenge. Details:\n' + e.toString();
+      throw 'Could not sign challenge.';
     }
 
     //Send back signed nonce
