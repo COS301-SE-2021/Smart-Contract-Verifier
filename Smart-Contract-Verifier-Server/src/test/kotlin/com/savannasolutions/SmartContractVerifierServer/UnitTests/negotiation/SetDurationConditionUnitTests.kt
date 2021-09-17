@@ -34,12 +34,13 @@ internal class SetDurationConditionUnitTests {
 
     private fun parameterizedSetDurationCondition(userID: String,
                                                  dur: Duration,
-                                                 agreementExists: Boolean) : ApiResponse<SetDurationConditionResponse>
+                                                 agreementExists: Boolean,
+                                                 movedToBlockchain : Boolean = false) : ApiResponse<SetDurationConditionResponse>
     {
         //given
         var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
             CreatedDate = Date(),
-            MovedToBlockChain = false)
+            MovedToBlockChain = movedToBlockchain)
 
         val userList = ArrayList<User>()
         userList.add(userA)
@@ -134,6 +135,20 @@ internal class SetDurationConditionUnitTests {
         //when
         val response = parameterizedSetDurationCondition(otherUser.publicWalletID,
             Duration.ofSeconds(500),
+            true)
+
+        //then
+        Assertions.assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `setDurationCondition agreement has been moved to blockchain`(){
+        //given
+
+        //when
+        val response = parameterizedSetDurationCondition(userA.publicWalletID,
+            Duration.ofSeconds(500),
+            agreementExists = true,
             true)
 
         //then
