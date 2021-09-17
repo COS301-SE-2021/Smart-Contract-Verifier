@@ -28,13 +28,14 @@ internal class AcceptConditionUnitTests {
                                              agreementExists: Boolean,
                                              conditionID: UUID,
                                              agreementID: UUID,
-                                             status: ConditionStatus ): ApiResponse<Objects>
+                                             status: ConditionStatus,
+                                             moveToBlockchain: Boolean = false ): ApiResponse<Objects>
     {
         //Given
         var mockAgreementA = Agreements(
             agreementID,
             CreatedDate = Date(),
-            MovedToBlockChain = false,)
+            MovedToBlockChain = moveToBlockchain,)
 
         val userA = User("UserA","uA")
         val userB = User("UserB", "uB")
@@ -141,6 +142,23 @@ internal class AcceptConditionUnitTests {
             UUID.fromString("57d34390-2ec2-4596-8627-c72fc0646712"),
             UUID.fromString("71ffe65f-f823-4afd-85f2-cd7010d105ca"),
             ConditionStatus.PENDING)
+
+        //Then
+        Assertions.assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `acceptCondition agreement has moved to blockchain`()
+    {
+        //Given
+
+        //When
+        val response = parameterizedAcceptCondition(conditionExists = true,
+            true,
+            UUID.fromString("57d34390-2ec2-4596-8627-c72fc0646712"),
+            UUID.fromString("71ffe65f-f823-4afd-85f2-cd7010d105ca"),
+            ConditionStatus.PENDING,
+            true)
 
         //Then
         Assertions.assertEquals(response.status, ResponseStatus.FAILED)
