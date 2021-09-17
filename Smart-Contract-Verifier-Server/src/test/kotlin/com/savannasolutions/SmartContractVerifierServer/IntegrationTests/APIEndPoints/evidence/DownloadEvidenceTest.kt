@@ -1,24 +1,18 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.evidence
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
-import com.savannasolutions.SmartContractVerifierServer.evidence.configuration.EvidenceConfig
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.EvidenceType
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.UploadedEvidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
-import com.savannasolutions.SmartContractVerifierServer.evidence.responses.DownloadEvidenceResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import org.json.JSONArray
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -31,22 +25,13 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
-import org.springframework.restdocs.operation.preprocess.Preprocessors
-import org.springframework.restdocs.payload.FieldDescriptor
-import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.util.*
-import javax.swing.JOptionPane
 import kotlin.io.path.Path
-import kotlin.test.assertContains
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureMockMvc

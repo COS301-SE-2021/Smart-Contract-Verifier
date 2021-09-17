@@ -5,7 +5,6 @@ import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.J
 import com.savannasolutions.SmartContractVerifierServer.evidence.configuration.EvidenceConfig
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.EvidenceType
-import com.savannasolutions.SmartContractVerifierServer.evidence.models.LinkedEvidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.models.UploadedEvidence
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
@@ -36,10 +35,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc

@@ -18,9 +18,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
@@ -39,10 +37,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc

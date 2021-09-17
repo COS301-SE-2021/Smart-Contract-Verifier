@@ -105,6 +105,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return ApiResponse(status = ResponseStatus.FAILED,
                 message = commonResponseErrorMessages.agreementDoesNotExist)
 
+        if(agreementsRepository.getById(agreementID).MovedToBlockChain)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementSealed)
+
         if(createConditionRequest.ConditionDescription.isEmpty())
             return ApiResponse(status = ResponseStatus.FAILED,
                 message = commonResponseErrorMessages.descriptionEmpty)
@@ -324,6 +328,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
             return ApiResponse(status = ResponseStatus.FAILED,
             message = commonResponseErrorMessages.agreementDoesNotExist)
 
+        if(agreementsRepository.getById(agreementID).MovedToBlockChain)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementSealed)
+
         if(setPaymentConditionRequest.Payment < 0)
             return ApiResponse(status = ResponseStatus.FAILED,
             message = "Amount is less than 0")
@@ -373,6 +381,10 @@ class NegotiationService constructor(val agreementsRepository: AgreementsReposit
         if(!agreementsRepository.existsById(agreementID))
             return ApiResponse(status = ResponseStatus.FAILED,
             message = commonResponseErrorMessages.agreementDoesNotExist)
+
+        if(agreementsRepository.getById(agreementID).MovedToBlockChain)
+            return ApiResponse(status = ResponseStatus.FAILED,
+                message = commonResponseErrorMessages.agreementSealed)
 
         if(setDurationConditionRequest.Duration.isNegative || setDurationConditionRequest.Duration.isZero)
             return ApiResponse(status = ResponseStatus.FAILED,

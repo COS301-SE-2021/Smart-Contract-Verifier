@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.web.multipart.MultipartFile
-import java.util.*
-import kotlin.collections.ArrayList
 
 data class UploadEvidenceRequest(@JsonProperty("UploadFile") val fileToUpload: MultipartFile,)
 {
