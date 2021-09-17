@@ -158,7 +158,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                         setState(() {});
                       }
                     },
-                    child: Text('Fulfill Payment'),
+                    child: Text('Fulfill Payment (Make sure that the funds are already in you wallet!)'),
                   )
                 : Text('The other party needs to make their promised payment');
           }
