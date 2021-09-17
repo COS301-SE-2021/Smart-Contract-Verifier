@@ -1,5 +1,7 @@
-# Savanna Solutions
+# ![SavannaSolutionsWideLIGHTPURPLECROPPED](https://user-images.githubusercontent.com/41339070/133722804-e1c1fb0a-709a-4320-9d81-a458a47bd3dc.png)
+
 <!-- ## Unison - Smart-Contract-Verifier -->
+
 <p align="center">
   
   <img src="https://user-images.githubusercontent.com/41339070/131267171-58f71bde-e99f-4b60-8435-1b958d74a660.gif" alt="Unison Logo" />
@@ -18,6 +20,7 @@
 
 ### Project Description
 This project is to create a system that uses DeFi technology to enforce contracts.
+
 Users will be able to set up contracts between each other, this includes an escrow service for payments.
 If users disagree over whether a contract was fulfilled, a jury appointed by the system will make the final decision.
 
