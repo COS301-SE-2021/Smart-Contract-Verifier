@@ -25,7 +25,6 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.test.*
 

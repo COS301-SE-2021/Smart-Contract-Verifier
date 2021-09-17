@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.PayloadDocumentation
 import java.util.*
-import kotlin.collections.ArrayList
 
 data class LinkEvidenceResponse(@JsonProperty("EvidenceId") val evidenceId: UUID,) {
     companion object{

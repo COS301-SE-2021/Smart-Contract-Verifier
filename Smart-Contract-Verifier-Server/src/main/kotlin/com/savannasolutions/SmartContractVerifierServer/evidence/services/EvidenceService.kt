@@ -12,7 +12,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.models.Uploaded
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
-import com.savannasolutions.SmartContractVerifierServer.evidence.requests.*
+import com.savannasolutions.SmartContractVerifierServer.evidence.requests.LinkEvidenceRequest
 import com.savannasolutions.SmartContractVerifierServer.evidence.responses.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -20,7 +20,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*

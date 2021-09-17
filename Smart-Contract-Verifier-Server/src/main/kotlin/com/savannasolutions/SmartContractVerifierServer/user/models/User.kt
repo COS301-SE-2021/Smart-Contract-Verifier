@@ -1,8 +1,8 @@
 package com.savannasolutions.SmartContractVerifierServer.user.models
 import com.savannasolutions.SmartContractVerifierServer.contracts.models.Judges
+import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
-import com.savannasolutions.SmartContractVerifierServer.evidence.models.Evidence
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import javax.persistence.*

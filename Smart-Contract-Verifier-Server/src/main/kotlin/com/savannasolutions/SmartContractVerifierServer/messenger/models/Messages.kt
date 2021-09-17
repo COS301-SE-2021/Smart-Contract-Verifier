@@ -1,10 +1,7 @@
 package com.savannasolutions.SmartContractVerifierServer.messenger.models
 
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
-import com.savannasolutions.SmartContractVerifierServer.security.configuration.SecurityConfig
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
-import org.hibernate.annotations.ColumnTransformer
-import org.springframework.context.annotation.Import
 import java.util.*
 import javax.persistence.*
 

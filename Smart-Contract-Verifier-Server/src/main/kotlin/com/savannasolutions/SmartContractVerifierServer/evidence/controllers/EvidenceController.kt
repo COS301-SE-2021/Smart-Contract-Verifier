@@ -1,13 +1,12 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.controllers
 
-import com.savannasolutions.SmartContractVerifierServer.evidence.requests.*
+import com.savannasolutions.SmartContractVerifierServer.evidence.requests.LinkEvidenceRequest
 import com.savannasolutions.SmartContractVerifierServer.evidence.services.EvidenceService
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedOutputStream
 import java.io.FileInputStream
-import java.lang.RuntimeException
 import java.util.*
 import javax.servlet.http.HttpServletResponse
 

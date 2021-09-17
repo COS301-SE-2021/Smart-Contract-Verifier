@@ -2,8 +2,6 @@ package com.savannasolutions.SmartContractVerifierServer.security.configuration
 
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
