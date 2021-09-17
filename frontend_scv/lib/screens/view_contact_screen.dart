@@ -1,8 +1,11 @@
 //Not to be confused with view contract screen
 //
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/services/Server/contactService.dart';
-import 'package:unison/widgets/contact_item.dart';
+import 'package:unison/widgets/contact/contact_item.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 class ViewContactScreen extends StatefulWidget {
   static const routeName = '/view-contact';
@@ -12,8 +15,7 @@ class ViewContactScreen extends StatefulWidget {
 }
 
 class _ViewContactScreenState extends State<ViewContactScreen> {
-
-  final TextEditingController _conAddrController = TextEditingController();
+  final TextEditingController _conAddressController = TextEditingController();
   final TextEditingController _conNameController = TextEditingController();
   final ContactService cs = ContactService();
   String id;
@@ -24,54 +26,68 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
     super.initState();
   }
 
-
+  void reset() {
+    setState(() {});
+  }
 
   Future<void> _createDial() async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          _conNameController.clear();
+          _conAddressController.clear();
+          return AlertDialog(
+            content: Container(
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Name:';
+                    } else {
+                      return null;
+                    }
+                  },
+                  decoration: InputDecoration(labelText: 'Enter Contact Name:'),
+                  controller: _conNameController,
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter an address';
+                    } else {
+                      return null;
+                    }
+                  },
+                  decoration:
+                      InputDecoration(labelText: 'Enter Wallet Address:'),
+                  controller: _conAddressController,
+                ),
+              ]),
+            ),
+            title: Text('Add Contact'),
+            actions: [
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Save'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
 
-    await showDialog(context: context, builder: (context) {
-
-      _conNameController.clear();
-      _conAddrController.clear();
-      return AlertDialog(content: Container(child: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Name:';
-          } else {
-            return null;
-          }
-        },
-        decoration: InputDecoration(labelText: 'Enter Contact Name:'),
-        controller: _conNameController,
-      ),
-        TextFormField(
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Address:';
-            } else {
-              return null;
-            }
-          },
-          decoration: InputDecoration(labelText: 'Enter Wallet Address:'),
-          controller: _conAddrController,
-        ),
-      ] ),
-      ), title: Text('Add Contact'), actions: [TextButton(
-        child: Text('Cancel'),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
-        TextButton(
-          child: Text('Save'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],);
-    });
-
-    await cs.addUser(_conAddrController.text, _conNameController.text, id); //Get from above
+    await cs.addUser(
+      _conAddressController.text.toLowerCase(),
+      _conNameController.text,
+      id,
+    ); //Get from
+    // above
   }
 
   Widget build(BuildContext context) {
@@ -81,44 +97,86 @@ class _ViewContactScreenState extends State<ViewContactScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(name),
+        title: FunkyText(name + ' List'),
       ),
       body: Column(
-          children: [
-            TextButton(
-              style: TextButton.styleFrom(
-                  primary: Color.fromRGBO(182, 20, 180, 1.0)),
-              child: Text(
-                'Add a contact to "$name"',
-                style: TextStyle(fontSize: 20),
-              ),
-              onPressed: () async {
-                await _createDial();
-                setState(() {
-                  //TODO: Surely this can be more efficient.... Good luck Kevin
-                  build(context);
-                });
-              },
-            ),
-            FutureBuilder(future: cs.getContacts(id),builder: (context, AsyncSnapshot snap) {
-            if (snap.connectionState != ConnectionState.done) {
-              return CircularProgressIndicator();
-            }
-            if (snap.data == null)
-              return Text('Big problem');
+        children: [
+          FutureBuilder(
+            future: cs.getContacts(id),
+            builder: (context, AsyncSnapshot snap) {
+              if (snap.connectionState != ConnectionState.done) {
+                return AwesomeLoader(
+                  loaderType: AwesomeLoader.AwesomeLoader4,
+                );
+              }
+              if (snap.data == null)
+                return Text('Could not retrieve '
+                    'contacts for this list, please refresh.');
 
-            List<Widget> ch = [];
-            print (snap.data);
-            for (var i in snap.data) {
-              //  ch.add(Column(children: [Text(i.name), Text(i.id)]));
-              ch.add(SizedBox(height: 10));
-              ch.add(ContactItem(i, id));
-            }
-            return ListView(children: ch, shrinkWrap: true,);
-          }),
+              List<Widget> ch = [];
+              for (var i in snap.data) {
+                ch.add(ContactItem(i, id, reset));
+              }
+              if (snap.data.length == 0) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    child: DefaultTextStyle(
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.pinkAccent,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 7.0,
+                            color: Colors.pinkAccent,
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: AnimatedTextKit(
+                        repeatForever: true,
+                        animatedTexts: [
+                          FlickerAnimatedText(
+                            'No Contacts in this list.',
+                            textAlign: TextAlign.center,
+                          ),
+                          FlickerAnimatedText(
+                            'You can add contacts with the button below.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return ListView(
+                children: ch,
+                shrinkWrap: true,
+              );
+            },
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton.extended(
+                onPressed: () async {
+                  await _createDial();
+                  setState(() {
+                    build(context);
+                  });
+                },
+                label: Text('Add a contact to "$name"'),
+                icon: Icon(Icons.add),
+                backgroundColor: Color.fromRGBO(182, 80, 158, 0.8),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.1,
+          )
         ],
-      )
+      ),
     );
   }
 }
-

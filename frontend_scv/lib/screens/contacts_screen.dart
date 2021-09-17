@@ -1,10 +1,9 @@
 //This file will eventually be more professional
 
 import 'package:flutter/material.dart';
-import 'package:unison/widgets/contactList_grid.dart';
-import 'package:unison/widgets/contact_grid.dart';
-import '../widgets/app_drawer.dart';
-import '../widgets/contracts_grid.dart';
+import 'package:unison/widgets/contact/contactList_grid.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
+import '../widgets/miscellaneous/app_drawer.dart';
 
 class ContactScreen extends StatelessWidget {
   static const routeName = '/my-contacts';
@@ -12,13 +11,10 @@ class ContactScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contacts'),
+        title: FunkyText('Contact Lists'),
       ),
       drawer: AppDrawer(),
-      body: Center(
-        child: ContactListGrid(),
-      ),
+      body: ContactListGrid(),
     );
   }
-
 }

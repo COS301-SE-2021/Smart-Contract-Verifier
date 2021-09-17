@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:unison/models/condition.dart';
 import 'package:unison/models/contract.dart';
-import 'package:unison/models/global.dart';
 import 'package:unison/screens/messaging_screen.dart';
 import 'package:unison/services/Server/negotiationService.dart';
-import 'package:unison/widgets/JudgeDetailInfoPanel.dart';
-import 'package:unison/widgets/judge_conditions_panel.dart';
+import 'package:unison/widgets/jury/judge_detail_info_panel.dart';
+import 'package:unison/widgets/jury/judge_conditions_panel.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
-import '../models/contracts.dart';
-import '../widgets/contract_conditions_panel.dart';
-import '../widgets/contract_detail_info_panel.dart';
+import 'evidence_screen.dart';
 
 class ViewAssignmentScreen extends StatefulWidget {
   static const routeName = '/view-assignment';
@@ -22,31 +18,19 @@ class ViewAssignmentScreen extends StatefulWidget {
 enum ConditionType { Normal, Payment, Duration }
 
 class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
-  // final _conditionTitleController = TextEditingController();
-  // final _conditionDescriptionController = TextEditingController();
-  // final _paymentConditionAmountController = TextEditingController();
-  // final _durationConditionAmountController = TextEditingController();
   var _isLoading = false;
-  // var _isInit = true;
-
   NegotiationService negotiationService = NegotiationService();
-
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
-     //print('InitState()');
     super.initState();
   }
 
   Widget build(BuildContext context) {
-    //final contractId = ModalRoute.of(context).settings.arguments as String;
-    final testCon = ModalRoute.of(context).settings.arguments as Contract;
-    final loadedContract = testCon;
-
+    final loadedContract =
+        ModalRoute.of(context).settings.arguments as Contract;
     return Scaffold(
       appBar: AppBar(
-        title: Text(loadedContract.title),
+        title: FunkyText('Current Assignment'),
       ),
       body: Column(
         children: [
@@ -66,41 +50,6 @@ class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
                     fontSize: 16,
                   ),
                 ),
-                // TextButton(
-                //   onPressed: () async {
-                //     await _newConditionDialog(contractId);
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.add),
-                //       Text('Add New Condition'),
-                //     ],
-                //   ),
-                // ),
-                // TextButton(
-                //   onPressed: () async {
-                //     await _newSpecialConditionDialog(
-                //         contractId, ConditionType.Payment);
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.add),
-                //       Text('Add New Payment Condition'),
-                //     ],
-                //   ),
-                // ),
-                // TextButton(
-                //   onPressed: () async {
-                //     await _newSpecialConditionDialog(
-                //         contractId, ConditionType.Duration);
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.add),
-                //       Text('Add New Duration Condition'),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -114,22 +63,49 @@ class _ViewAssignmentScreenState extends State<ViewAssignmentScreen> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
-                // TODO: More Information or actions here?
-                ),
+            child: Container(),
           )
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.of(context).pushNamed(
-            MessagingScreen.routeName,
-            arguments: loadedContract.contractId,
-          );
-        },
-        label: Text('Agreement Chat'),
-        icon: Icon(Icons.chat),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                EvidenceScreen.routeName,
+                arguments: {
+                  'agreementId': loadedContract.contractId,
+                  'partyA': loadedContract.partyA,
+                  'partyB': loadedContract.partyB,
+                },
+              );
+            },
+            label: Text('Evidence'),
+            icon: Icon(Icons.inventory_2),
+            backgroundColor: Color.fromRGBO(50, 183, 196, 1),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                MessagingScreen.routeName,
+                arguments: {
+                  'agreementId': loadedContract.contractId,
+                  'partyA': loadedContract.partyA,
+                  'partyB': loadedContract.partyB,
+                },
+              );
+            },
+            label: Text('Agreement Chat'),
+            icon: Icon(Icons.chat),
+            backgroundColor: Color.fromRGBO(182, 80, 158, 1),
+          ),
+        ],
       ),
     );
   }

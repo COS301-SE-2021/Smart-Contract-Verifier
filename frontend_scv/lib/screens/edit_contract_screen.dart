@@ -1,9 +1,8 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/models/global.dart';
-import 'package:unison/widgets/funky_text_widget.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 import '../models/contract.dart';
 import '../models/contracts.dart';
@@ -24,7 +23,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
     contractId: null,
     title: '',
     description: '',
-    price: 0,
+    paymentAmount: 0,
     imageUrl: '',
     partyB: '',
     partyA: Global.userAddress,
@@ -58,7 +57,7 @@ class _EditContractScreenState extends State<EditContractScreen> {
         _initValues = {
           'title': _editedContract.title,
           'description': _editedContract.description,
-          'price': _editedContract.price.toString(),
+          'price': _editedContract.paymentAmount.toString(),
           'partyBId': _editedContract.partyB,
         };
       }
@@ -203,7 +202,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
                                         title: value,
                                         description:
                                             _editedContract.description,
-                                        price: _editedContract.price,
+                                        paymentAmount:
+                                            _editedContract.paymentAmount,
                                         imageUrl: _editedContract.imageUrl,
                                         partyB: _editedContract.partyB,
                                         partyA: _editedContract.partyA,
@@ -244,7 +244,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
                                           title: _editedContract.title,
                                           description:
                                               _editedContract.description,
-                                          price: _editedContract.price,
+                                          paymentAmount:
+                                              _editedContract.paymentAmount,
                                           imageUrl: _editedContract.imageUrl,
                                           partyB: value.toLowerCase(),
                                           partyA: _editedContract.partyA,
@@ -276,7 +277,8 @@ class _EditContractScreenState extends State<EditContractScreen> {
                                               _editedContract.contractId,
                                           title: _editedContract.title,
                                           description: value,
-                                          price: _editedContract.price,
+                                          paymentAmount:
+                                              _editedContract.paymentAmount,
                                           imageUrl: _editedContract.imageUrl,
                                           partyB: _editedContract.partyB,
                                           partyA: _editedContract.partyA,

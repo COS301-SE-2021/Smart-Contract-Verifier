@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:unison/services/Blockchain/wallet.dart';
 import 'package:unison/services/Server/judgeService.dart';
-import 'package:unison/services/Server/loginService.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:awesome_loader/awesome_loader.dart';
+import 'package:unison/services/Server/loginService.dart';
 
 import '../providers/auth.dart';
 
@@ -147,12 +148,19 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   Future<void> _submit2() async {
-    JudgeService judgeService = JudgeService();
-    UnisonService unisonService = UnisonService();
-    await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
-    await unisonService.getAgreement(BigInt.from(0));
-    await judgeService.isJudge();
-    //await judgeService.setContractAllowance();
+    // JudgeService judgeService = JudgeService();
+    // UnisonService unisonService = UnisonService();
+     //await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+    // await unisonService.getAgreement(BigInt.from(0));
+    // await judgeService.isJudge();
+    // //await judgeService.setContractAllowance();
+
+    WalletInteraction wI = WalletInteraction();
+    await wI.metamaskConnect();
+    LoginService lS = LoginService();
+
+    await lS.login();
+
   }
 
   Future<void> _submit() async {
@@ -161,15 +169,14 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
+
     try {
-      await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
-      await unisonService.getAgreement(BigInt.from(0));
+      await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+      //await unisonService.getAgreement(BigInt.from(0));
       await judgeService.isJudge();
       //await judgeService.setContractAllowance();
     } catch (error) {
-      const errorMessage = 'Authenticate Failed.\nPlease ensure you '
-          'have the metamask extension installed.';
-      _showErrorDialog(errorMessage + '\nAdditional information:\n' + error);
+      _showErrorDialog(error.toString());
       setState(() {
         _isLoading = false;
       });

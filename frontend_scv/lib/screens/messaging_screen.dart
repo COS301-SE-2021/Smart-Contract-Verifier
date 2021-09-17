@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/global.dart';
-import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';
-import 'package:unison/widgets/funky_text_widget.dart';
-import 'package:unison/widgets/message_input_panel.dart';
-import 'package:unison/widgets/messages_panel.dart';
+import 'package:unison/widgets/messaging/message_input_panel.dart';
+import 'package:unison/widgets/messaging/messages_panel.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 class MessagingScreen extends StatefulWidget {
   @override
@@ -20,10 +19,14 @@ class _MessagingScreenState extends State<MessagingScreen> {
   MessageService messageService = MessageService();
   @override
   Widget build(BuildContext context) {
+    print('Message Screen Build: Curr: ${Global.userAddress}');
+
     final args = ModalRoute.of(context).settings.arguments as Map;
     final agreementId = args['agreementId'];
     final partyA = args['partyA'];
     final partyB = args['partyB'];
+
+    print('PA: $partyA\nPB: $partyB');
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +94,6 @@ class _MessagingScreenState extends State<MessagingScreen> {
           ),
           Expanded(
             flex: 6,
-            // child: MessagesPanel(agreementId, _isInit),
             child: Padding(
               padding: EdgeInsets.symmetric(
                       vertical: 0,

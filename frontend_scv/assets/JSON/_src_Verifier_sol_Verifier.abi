@@ -1,4 +1,4 @@
-[
+ [
     {
       "inputs": [
         {
@@ -151,6 +151,21 @@
           "internalType": "string",
           "name": "uuid",
           "type": "string"
+        },
+        {
+          "internalType": "contract IERC20[]",
+          "name": "tokens",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "amount",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "bool[]",
+          "name": "direction",
+          "type": "bool[]"
         }
       ],
       "name": "createAgreement",
@@ -177,19 +192,22 @@
           "internalType": "uint256",
           "name": "agreeID",
           "type": "uint256"
-        },
-        {
-          "internalType": "contract IERC20[]",
-          "name": "tokens",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "amount",
-          "type": "uint256[]"
         }
       ],
-      "name": "addPaymentConditions",
+      "name": "rejectAgreement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "payIn",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -295,6 +313,11 @@
                   "internalType": "address",
                   "name": "to",
                   "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "paidIn",
+                  "type": "bool"
                 }
               ],
               "internalType": "struct PaymentInfoLib.PaymentInfo[]",
@@ -359,6 +382,61 @@
           "internalType": "uint256",
           "name": "agreeID",
           "type": "uint256"
+        }
+      ],
+      "name": "getEvidence",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string[]",
+              "name": "url",
+              "type": "string[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "evidenceHash",
+              "type": "uint256[]"
+            }
+          ],
+          "internalType": "struct AgreementLib.ReturnEvidence",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "evidenceHash",
+          "type": "uint256"
+        }
+      ],
+      "name": "addEvidence",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
         },
         {
           "internalType": "enum AgreementLib.Vote",
@@ -408,6 +486,26 @@
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "a",
+          "type": "address"
+        }
+      ],
+      "name": "getStrikes",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
           "internalType": "uint256",
           "name": "agreeID",
           "type": "uint256"
@@ -422,5 +520,46 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agreeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "triggerPayout",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPlatformFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "getStakingAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
     }
-  ]
+   ]

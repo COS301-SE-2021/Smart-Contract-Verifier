@@ -13,17 +13,17 @@ import '../../models/contract.dart';
 
 class JudgeService {
   ApiInteraction _api = ApiInteraction();
-  //JurorService _jurServ = JurorService();
   UnisonService _uniServ = UnisonService();
   TokenService _tokServ = TokenService();
 
   Future<List<Contract>> getInvolvedAgreements() async {
     //Get all agreements where a user is the judge
 
-    ApiResponse response = await _api.getData('/judge/${Global.userAddress}/agreement');
+    ApiResponse response =
+        await _api.getData('/judge/${Global.userAddress}/agreement');
 
     if (!response.successful)
-      throw Exception('Agreements for judge could not be retrieved');
+      throw 'Agreements for judge could not be retrieved. Details:\n' + response.errorMessage;
 
     List<dynamic> jsonList = ((response.result['AgreementList']));
     List<Contract> ret = [];
@@ -36,10 +36,6 @@ class JudgeService {
   }
 
   Future<List<dynamic>> getNotifications(String party) async {
-    //Get all notifications for a judge
-    //TODO list:
-    //Handle this later
-
     return [];
   }
 
@@ -72,13 +68,10 @@ class JudgeService {
     return res;
   }
 
-
   //Get the jury for an agreement from the blockchain
   Future<Jury> getJury(BigInt id) async {
-
     final res = await _uniServ.getJury(id);
-    print('Jury res: ' + res[0].toString());
+    //print('Jury res: ' + res[0].toString());
     return Jury.fromChain(res);
-
   }
 }
