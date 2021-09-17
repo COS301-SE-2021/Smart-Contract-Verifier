@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:unison/effects/glow_on_hover.dart';
 import 'package:unison/screens/view_assignment_screen.dart';
-import 'package:unison/screens/view_contract_screen.dart';
 import 'package:unison/widgets/miscellaneous/jdenticon_svg.dart';
 
-// import '../providers/auth.dart';
 import '../../models/contract.dart';
 
 class JudgeActiveContractItem extends StatelessWidget {

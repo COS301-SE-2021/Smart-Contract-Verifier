@@ -59,6 +59,8 @@ class _ContractActionAreaState extends State<ContractActionArea> {
   @override
   Widget build(BuildContext context) {
     //if seal agreement button must be shown or not:
+    const double _borderWidth = 1;
+
     if (_isLoading) {
       return AwesomeLoader(
         loaderType: AwesomeLoader.AwesomeLoader4,
@@ -66,10 +68,19 @@ class _ContractActionAreaState extends State<ContractActionArea> {
       );
     }
 
-    if (widget._agreement.movedToBlockchain == false ||
+    if (widget._agreement.movedToBlockchain ==
+            false || //TODO: Ronan thinks Kevin should change this (Maybe to a null check?)
         widget._agreement.blockchainId == BigInt.from(-1)) {
+      //TODO: The second condition will always fail, an exception will be thrown since Bigints are always positive
       //Show SEAL button:
       return TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.all(5),
+          side: BorderSide(
+            color: Colors.pink,
+            width: _borderWidth,
+          ),
+        ),
         onPressed: _disabled
             ? () {
                 // print('Already Pressed');
@@ -111,7 +122,12 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                   setState(() {});
                 }
               },
-        child: Text('Seal Agreement'),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Text(
+            'Seal Agreement',
+          ),
+        ),
       );
     }
 
@@ -139,9 +155,43 @@ class _ContractActionAreaState extends State<ContractActionArea> {
         AgreementState currentState = _loadedBCAgreement.getAgreementState();
 
         if (currentState == AgreementState.PROPOSED) {
+          //Check if payment needs to be made first
+          print('SHOULD PAY: ' + _loadedBCAgreement.shouldPay().toString());
+          if (_loadedBCAgreement.shouldPay()) {
+            return _loadedBCAgreement.amIPaying()
+                ? TextButton(
+                    style: TextButton.styleFrom(
+                      side: BorderSide(color: Colors.pink, width: _borderWidth),
+                    ),
+                    onPressed: () async {
+                      showLoaderDialog(context);
+                      try {
+                        await widget._unisonService
+                            .payAgreementMoney(widget._agreement.blockchainId);
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      } catch (error) {
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child:
+                          Text('Fulfill Payment\n(Make sure that the funds are '
+                              'already in you wallet!)'),
+                    ),
+                  )
+                : Text('The other party needs to make their promised payment');
+          }
+
           //Check if the current user needs to Accept move to Blockchain:
           if (_loadedBCAgreement.shouldAccept()) {
             return TextButton(
+              style: TextButton.styleFrom(
+                side: BorderSide(color: Colors.pink, width: _borderWidth),
+                padding: EdgeInsets.all(5),
+              ),
               onPressed: () async {
                 showLoaderDialog(context);
                 try {
@@ -156,7 +206,10 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                   setState(() {});
                 }
               },
-              child: Text('Accept Blockchain Agreement'),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text('Accept Blockchain Agreement'),
+              ),
             );
           }
           return Text('Awaiting acceptance from other party');
@@ -165,6 +218,9 @@ class _ContractActionAreaState extends State<ContractActionArea> {
         if (currentState == AgreementState.ACCEPTED) {
           //Pay Platform Fee?
           return TextButton(
+            style: TextButton.styleFrom(
+              side: BorderSide(color: Colors.pink, width: _borderWidth),
+            ),
             onPressed: () async {
               showLoaderDialog(context);
               try {
@@ -179,7 +235,10 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                 setState(() {});
               }
             },
-            child: Text('Pay Platform Fee'),
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Text('Pay Platform Fee'),
+            ),
           );
         }
         if (currentState == AgreementState.ACTIVE) {
@@ -193,6 +252,9 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextButton(
+                    style: TextButton.styleFrom(
+                      side: BorderSide(color: Colors.pink, width: _borderWidth),
+                    ),
                     onPressed: () async {
                       showLoaderDialog(context);
                       try {
@@ -208,12 +270,18 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                         setState(() {});
                       }
                     },
-                    child: Text('Conclude Agreement'),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text('Conclude Agreement'),
+                    ),
                   ),
                   SizedBox(
                     width: 20,
                   ),
                   TextButton(
+                    style: TextButton.styleFrom(
+                      side: BorderSide(color: Colors.pink, width: _borderWidth),
+                    ),
                     onPressed: () async {
                       showLoaderDialog(context);
                       try {
@@ -229,7 +297,10 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                         setState(() {});
                       }
                     },
-                    child: Text('Dispute Agreement'),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text('Dispute Agreement'),
+                    ),
                   ),
                 ],
               );
@@ -244,7 +315,10 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             var difference = expiryDate.difference(DateTime.now());
             Duration duration = Duration(seconds: difference.inSeconds);
             String sDuration =
-                "Hours: ${duration.inHours} Minutes: ${duration.inMinutes.remainder(60)}"; //:${(duration.inSeconds.remainder(60))}
+                "Agreement Deadline is in ${duration.inHours} Hours "
+                "and "
+                "${duration.inMinutes.remainder(60)} Minutes"; //:${(duration.inSeconds
+            // .remainder(60))}
             // for later
             return Text('Concludes in ' + sDuration);
           }
@@ -266,7 +340,7 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             builder: (context, jurySnapshot) {
               if (jurySnapshot.connectionState == ConnectionState.done) {
                 var juryConclusion = DateTime.fromMillisecondsSinceEpoch(
-                    jurySnapshot.data.resTime.toInt() * 1000);
+                    jurySnapshot.data.deadline.toInt() * 1000);
                 var timeDifference = juryConclusion.difference(DateTime.now());
                 Duration duration = Duration(seconds: timeDifference.inSeconds);
                 String sJuryConclusion =

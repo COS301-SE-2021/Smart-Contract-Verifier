@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:unison/models/condition.dart';
 
 import 'global.dart';
-import 'http_exception.dart';
 
 class Contract with ChangeNotifier {
   String contractId; //agreementID
@@ -22,7 +19,7 @@ class Contract with ChangeNotifier {
 
   String description;
   String payingUser;
-  double paymentAmount;
+  double paymentAmount; //In UNT
   String paymentID; //Used to cross-reference with all conditions
   String imageUrl;
   //String partyBId;
@@ -88,7 +85,7 @@ class Contract with ChangeNotifier {
     var durationCond = jsn['DurationCondition'];
     try {
       durationID = durationCond['ID'];
-      duration = durationCond['Amount'];
+      duration = BigInt.from(durationCond['Amount']);
     } catch (_) {} //Duration condition not set
   }
 
@@ -128,11 +125,6 @@ class Contract with ChangeNotifier {
 
   void setDuration(BigInt d) {
     duration = d;
-  }
-
-  void _setFavValue(bool newValue) {
-    // isFavorite = newValue;
-    notifyListeners();
   }
 
   ///Generate a string of conditions to send to the blockchain upon agreement creation.

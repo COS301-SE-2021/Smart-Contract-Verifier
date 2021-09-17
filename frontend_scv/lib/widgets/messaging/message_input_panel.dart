@@ -1,4 +1,3 @@
-import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/models/message.dart';
 import 'package:unison/services/Server/messageService.dart';

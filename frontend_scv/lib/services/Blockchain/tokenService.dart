@@ -34,7 +34,7 @@ class TokenService {
     }
     catch (e) {
       print (e);
-      return;
+      throw 'Could not update allowance.';
     }
 
   }
@@ -52,5 +52,13 @@ class TokenService {
     return result;
 
   }
+
+  ///Get the UNT balance of the current user
+  Future<double> getBalance() async {
+    final res =  await _smC.makeReadCall('balanceOf', [EthereumAddress.fromHex(Global.userAddress)]);
+    double balance =  res[0].toDouble()/pow(10, 18);
+    return balance;
+  }
+
 
 }

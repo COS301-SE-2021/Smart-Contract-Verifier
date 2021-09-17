@@ -1,11 +1,7 @@
 //This class is used to model evidence data from the backend.
 //This includes the backend id, and hash
 
-import 'package:unison/models/evidence.dart';
-
-enum EvidenceType {
-  UPLOADED, LINKED
-}
+enum EvidenceType { UPLOADED, LINKED }
 
 class EvidenceData {
   String hash;
@@ -24,22 +20,20 @@ class EvidenceData {
 
   ///Generate and instance from data provided by the server
   EvidenceData.fromJSON(Map<String, dynamic> jsn) {
-      hash = jsn['EvidenceHash'];
-      id = jsn['EvidenceID'];
-      String ow = (jsn['EvidenceOwner']['publicWalletID']);
-      owner = ow.toLowerCase();
-      var specific = jsn['EvidenceSpecificDetail'];
+    hash = jsn['EvidenceHash'];
+    id = jsn['EvidenceID'];
+    String ow = (jsn['EvidenceOwner']['publicWalletID']);
+    owner = ow.toLowerCase();
+    var specific = jsn['EvidenceSpecificDetail'];
 
-      if (jsn['EvidenceType'] == 'UPLOADED') {
-        type = EvidenceType.UPLOADED;
-        fileName = specific['OriginalFileName'];
-        mimeType = specific['FileMimeType'];
-      }
-      else {
-        type = EvidenceType.LINKED;
-        url = specific['EvidenceURL'];
-      }
-
+    if (jsn['EvidenceType'] == 'UPLOADED') {
+      type = EvidenceType.UPLOADED;
+      fileName = specific['OriginalFileName'];
+      mimeType = specific['FileMimeType'];
+    } else {
+      type = EvidenceType.LINKED;
+      url = specific['EvidenceURL'];
+    }
   }
 
   EvidenceData();
@@ -50,16 +44,13 @@ class EvidenceData {
     String aType = data.substring(0, col);
     if (aType == 'UPLOADED') {
       type = EvidenceType.UPLOADED;
-    }
-    else {
+    } else {
       type = EvidenceType.LINKED;
     }
 
-    String next = data.substring(col +1);
+    String next = data.substring(col + 1);
     col = next.indexOf(',');
     id = next.substring(0, col);
     hash = next.substring(next.indexOf(':'));
-
   }
-
 }

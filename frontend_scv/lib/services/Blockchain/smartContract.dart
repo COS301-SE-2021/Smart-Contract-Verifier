@@ -2,6 +2,7 @@
 //The directory will hold similar classes, e.g. for Metamask communication.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -12,7 +13,8 @@ import 'wallet.dart';
 
 class SmartContract {
   static final Web3Client _smC =
-      Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+    //  Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+  Web3Client('https://matic-mumbai.chainstacklabs.com', Client());
   static final WalletInteraction _wallet = WalletInteraction();
 
   String conAbi;
@@ -49,8 +51,8 @@ class SmartContract {
     //Read from contract
     final theContract = await _getContract();
     final fun = theContract.function(function);
-    List<dynamic> theResult =
-        await _smC.call(contract: theContract, function: fun, params: args);
+    List<dynamic> theResult = await _smC.call(contract: theContract, function: fun, params: args);
+
     return theResult;
   }
 
@@ -61,13 +63,13 @@ class SmartContract {
     final fun = theContract.function(funct);
 
     _wallet.getCredentials();
-    print ('About to call');
-    final theResult = await _smC.sendTransaction(
-        _wallet.getCredentials(),
-        Transaction.callContract(
-            contract: theContract, function: fun, parameters: args));
 
-    print('First res: ' +theResult.toString()); //Debug
+    var theResult = await _smC.sendTransaction(
+          _wallet.getCredentials(),
+          Transaction.callContract(
+              contract: theContract, function: fun, parameters: args));
+
+    //print('First res: ' +theResult.toString()); //Debug
     return theResult;
   }
 
@@ -77,5 +79,6 @@ class SmartContract {
     final event = con.event(ev);
     return event;
   }
+
 
 }
