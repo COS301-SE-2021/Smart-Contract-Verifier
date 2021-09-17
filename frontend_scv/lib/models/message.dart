@@ -13,7 +13,6 @@ class Message with ChangeNotifier {
   String messageID;
   String agreement;
 
-  //TODO: add time to allow for ordering of messages
   Message(String text, String agreementId) {
     //Constructor used when a message is newly created;
     sender = Global.userAddress;
@@ -24,7 +23,6 @@ class Message with ChangeNotifier {
   Message.fromJSON(Map<String, dynamic> jsn) {
     //Generate from backend api response
     this.sender = jsn['sendingUser']['publicWalletID'];
-    print(this.sender);
     this.messageText = jsn['message'];
     this.dateSent = DateTime.tryParse(jsn['sendingDate']);
     this.messageID = jsn['messageID'];
@@ -34,8 +32,6 @@ class Message with ChangeNotifier {
     //ToJSON when sending a message
 
     return {
-      'SendingUser': sender,
-      'AgreementID': agreement,
       'Message': messageText,
     };
   }

@@ -46,6 +46,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "juror",
+        "type": "address"
+      }
+    ],
+    "name": "AddJuror",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "agreeID",
         "type": "uint256"
@@ -74,6 +87,12 @@
         "internalType": "uint256",
         "name": "agreeID",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "uuid",
+        "type": "string"
       }
     ],
     "name": "CreateAgreement",
@@ -99,6 +118,19 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "juror",
+        "type": "address"
+      }
+    ],
+    "name": "RemoveJuror",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -114,6 +146,26 @@
         "internalType": "string",
         "name": "text",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "uuid",
+        "type": "string"
+      },
+      {
+        "internalType": "contract IERC20[]",
+        "name": "tokens",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "amount",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bool[]",
+        "name": "direction",
+        "type": "bool[]"
       }
     ],
     "name": "createAgreement",
@@ -140,19 +192,22 @@
         "internalType": "uint256",
         "name": "agreeID",
         "type": "uint256"
-      },
-      {
-        "internalType": "contract IERC20[]",
-        "name": "tokens",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "amount",
-        "type": "uint256[]"
       }
     ],
-    "name": "addPaymentConditions",
+    "name": "rejectAgreement",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "agreeID",
+        "type": "uint256"
+      }
+    ],
+    "name": "payIn",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -182,6 +237,11 @@
     "outputs": [
       {
         "components": [
+          {
+            "internalType": "string",
+            "name": "uuid",
+            "type": "string"
+          },
           {
             "internalType": "address",
             "name": "party1",
@@ -253,6 +313,11 @@
                 "internalType": "address",
                 "name": "to",
                 "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "paidIn",
+                "type": "bool"
               }
             ],
             "internalType": "struct PaymentInfoLib.PaymentInfo[]",
@@ -266,7 +331,8 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -307,6 +373,62 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "agreeID",
+        "type": "uint256"
+      }
+    ],
+    "name": "getEvidence",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string[]",
+            "name": "url",
+            "type": "string[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "evidenceHash",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct AgreementLib.ReturnEvidence",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "agreeID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "url",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "evidenceHash",
+        "type": "uint256"
+      }
+    ],
+    "name": "addEvidence",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -342,17 +464,44 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getString",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        "internalType": "address",
+        "name": "a",
+        "type": "address"
       }
     ],
-    "stateMutability": "pure",
-    "type": "function"
+    "name": "isJuror",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "a",
+        "type": "address"
+      }
+    ],
+    "name": "getStrikes",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -371,5 +520,46 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "agreeID",
+        "type": "uint256"
+      }
+    ],
+    "name": "triggerPayout",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPlatformFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "getStakingAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   }
 ]

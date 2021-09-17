@@ -1,9 +1,27 @@
 package com.savannasolutions.SmartContractVerifierServer.user.responses
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.savannasolutions.SmartContractVerifierServer.common.AgreementResponse
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
-import java.util.*
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.AgreementResponse
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 
-data class RetrieveUserAgreementsResponse(@JsonProperty("Agreements") val Agreements: List<AgreementResponse>? = null,
-                                          @JsonProperty("Status") val status: ResponseStatus,)
+data class RetrieveUserAgreementsResponse(@JsonProperty("Agreements") val Agreements: List<AgreementResponse>? = null,)
+{
+    companion object{
+        fun response(): ArrayList<FieldDescriptor>
+        {
+            val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+            fieldDescriptorResponse.add(PayloadDocumentation.subsectionWithPath("ResponseObject.agreements[]").description("This is the list of agreements the user currently has"))
+            fieldDescriptorResponse.addAll(AgreementResponse.response("ResponseObject.agreements[]"))
+            return fieldDescriptorResponse
+        }
+
+        fun responseDurationPaymentEmpty(): ArrayList<FieldDescriptor>
+        {
+            val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+            fieldDescriptorResponse.add(PayloadDocumentation.subsectionWithPath("ResponseObject.agreements[]").description("This is the list of agreements the user currently has"))
+            fieldDescriptorResponse.addAll(AgreementResponse.responseDurationPaymentEmpty("ResponseObject.agreements[]"))
+            return fieldDescriptorResponse
+        }
+    }
+}

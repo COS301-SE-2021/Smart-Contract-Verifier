@@ -2,6 +2,7 @@
 //The directory will hold similar classes, e.g. for Metamask communication.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -12,7 +13,8 @@ import 'wallet.dart';
 
 class SmartContract {
   static final Web3Client _smC =
-      Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+    //  Web3Client('http://localhost:8545', Client()); //smC = Smart Contract
+  Web3Client('https://matic-mumbai.chainstacklabs.com', Client());
   static final WalletInteraction _wallet = WalletInteraction();
 
   String conAbi;
@@ -49,8 +51,8 @@ class SmartContract {
     //Read from contract
     final theContract = await _getContract();
     final fun = theContract.function(function);
-    List<dynamic> theResult =
-        await _smC.call(contract: theContract, function: fun, params: args);
+    List<dynamic> theResult = await _smC.call(contract: theContract, function: fun, params: args);
+
     return theResult;
   }
 
@@ -60,10 +62,12 @@ class SmartContract {
     final theContract = await _getContract();
     final fun = theContract.function(funct);
 
-    final theResult = await _smC.sendTransaction(
-        _wallet.getCredentials(),
-        Transaction.callContract(
-            contract: theContract, function: fun, parameters: args));
+    _wallet.getCredentials();
+
+    var theResult = await _smC.sendTransaction(
+          _wallet.getCredentials(),
+          Transaction.callContract(
+              contract: theContract, function: fun, parameters: args));
 
     //print('First res: ' +theResult.toString()); //Debug
     return theResult;
@@ -76,26 +80,5 @@ class SmartContract {
     return event;
   }
 
-  //This is used to detect the event emitted by creating a contract. This can be made more general, more thought is needed.
-  Future<StreamSubscription> getCreationSubscription() async {
-    final con = await _getContract();
-    final ev = con.event('CreateAgreement'); //Revise
 
-    //Function thing = Function(void Function);
-
-    final res = _smC
-        .events(FilterOptions.events(contract: con, event: ev))
-        .take(1)
-        .listen((event) {
-      final decoded = ev.decodeResults(event.topics, event.data);
-
-      final partyA = decoded[0] as EthereumAddress;
-      final partyB = decoded[1] as EthereumAddress;
-      final id = decoded[2] as BigInt;
-
-      print('Contract $id between $partyA and $partyB');
-    });
-
-    return res;
-  }
 }

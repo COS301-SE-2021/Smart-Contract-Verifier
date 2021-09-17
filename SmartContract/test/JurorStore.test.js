@@ -55,4 +55,101 @@ contract('JurorStore', (accounts) =>{
 
     })
 
+
+    describe("assignJury detailed testing", async () =>{
+        let jurorStore
+
+        // In these unit tests, accounts[0] is the owner of JurorStore
+        before(async () =>{
+            r = await RandomSource.new(); 
+
+            jurorStore = await JurorStore.new(accounts[0], r.address, {from: accounts[0]});
+        })
+
+
+        it("too few available jurors", async() =>{
+            // Add one juror too few
+
+            for(var i=2; i<5; i++){
+                await jurorStore.addJuror(accounts[i], {from: accounts[0]});
+
+            }
+  
+            try{
+                await jurorStore.assignJury(5, BigInt(12351),[], {from:accounts[0]});
+                assert(false, "Jury was assigned when it shouldn't have been possible");
+            }
+            catch{}
+        })
+
+        it("Enough jurors, but some are in noUse list", async()=>{
+            await jurorStore.addJuror(accounts[1], {from: accounts[0]});
+
+            try{
+                await jurorStore.assignJury(5, BigInt(12351),[accounts[1]], {from:accounts[0]});
+                assert(false, "Jury was assigned when it shouldn't have been possible");
+            }
+            catch{}
+        })
+
+    })
+
+
+    describe("juror strikes", async () =>{
+        let jurorStore
+
+        // In these unit tests, accounts[0] is the owner of JurorStore
+        before(async () =>{
+            r = await RandomSource.new(); 
+
+            jurorStore = await JurorStore.new(accounts[0], r.address, {from: accounts[0]});
+        })
+
+
+        it("Juror removed after 3 strikes", async() =>{
+            await jurorStore.addJuror(accounts[0], {from: accounts[0]});
+
+            for(var i=0; i<3; i++)
+                jurorStore.addStrike(accounts[0]);
+
+            isJuror = await jurorStore.isJuror(accounts[0]);
+            assert(isJuror == false, "Juror wasn't removed after strikes");
+
+            numStrikes = await jurorStore.getStrikes(accounts[0]);
+            assert(numStrikes == 3, "Incorrect number of strikes returned");
+        })
+
+        it("Can't add Juror after ban", async() =>{
+            try{
+                await jurorStore.addJuror(accounts[0]);
+            }
+            catch{}
+
+            isJuror = await jurorStore.isJuror(accounts[0]);
+            assert(isJuror == false, "Banned user could become juror");
+
+         })
+
+        it("Juror still active after less than 3 strikes", async() =>{
+            await jurorStore.addJuror(accounts[1], {from: accounts[0]});
+
+            for(var i=0; i<2; i++){
+                jurorStore.addStrike(accounts[1]);
+
+                isJuror = await jurorStore.isJuror(accounts[1]);
+                assert(isJuror == true, "Juror was removed too early");
+            }
+        })
+
+        it("Can't strike accounts that aren't jurors", async() =>{
+            try{
+                jurorStore.addStrike(accounts[2]);
+                assert(false, "Stuck an account that isn't a juror");
+            }
+            catch{}
+
+         })
+
+    })
+
 })

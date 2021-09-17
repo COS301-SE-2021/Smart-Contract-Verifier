@@ -1,7 +1,10 @@
-# Savanna Solutions
+# ![SavannaSolutionsWideLIGHTPURPLECROPPED](https://user-images.githubusercontent.com/41339070/133722804-e1c1fb0a-709a-4320-9d81-a458a47bd3dc.png)
+
 <!-- ## Unison - Smart-Contract-Verifier -->
+
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/41339070/130430042-f3f7bc7a-eb38-40e5-a882-6f6647cc938b.png" alt="Unison Logo" />
+  
+  <img src="https://user-images.githubusercontent.com/41339070/131267171-58f71bde-e99f-4b60-8435-1b958d74a660.gif" alt="Unison Logo" />
   <h2 align="center">Smart Contract Verifier</h2>
 </p>
 
@@ -17,6 +20,7 @@
 
 ### Project Description
 This project is to create a system that uses DeFi technology to enforce contracts.
+
 Users will be able to set up contracts between each other, this includes an escrow service for payments.
 If users disagree over whether a contract was fulfilled, a jury appointed by the system will make the final decision.
 
@@ -71,3 +75,6 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 [Coding Standards Demo 2](https://drive.google.com/file/d/1vXQQEzrYQDgvD4gYRcH8-GO8Aw1AdcBz/view?usp=sharing "Coding Standards Document")
 
 
+### Kumospace Virtual Room
+_Click on the image below to join our Virtual Room:_
+[![Savanna Solutions Virtual Room](https://user-images.githubusercontent.com/41339070/132300480-843c3647-cde0-49f8-b804-ce8ef294ecd5.png "Savanna Solutions Kumospace Virtual Room")](https://www.kumospace.com/cos301-se-2021?roomId=Bx52g8joslYH5bImswYa)

@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "NewUserID" : "not correct user",
+  "NewUserAlias" : "TestAlias"
+}
+----

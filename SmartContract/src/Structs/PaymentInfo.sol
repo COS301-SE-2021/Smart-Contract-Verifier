@@ -10,6 +10,7 @@ library PaymentInfoLib{
         uint256 amount;
         address from;
         address to;
+        bool paidIn; //All values default to 0 (false)
     }
 
     // Adding constructors like this makes changes to the struct easier

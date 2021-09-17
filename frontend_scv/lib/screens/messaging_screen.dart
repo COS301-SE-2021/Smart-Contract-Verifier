@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:unison/models/message.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/messageService.dart';
-import 'package:unison/widgets/messages_panel.dart';
+import 'package:unison/widgets/messaging/message_input_panel.dart';
+import 'package:unison/widgets/messaging/messages_panel.dart';
+import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
 class MessagingScreen extends StatefulWidget {
   @override
@@ -10,142 +12,106 @@ class MessagingScreen extends StatefulWidget {
 }
 
 class _MessagingScreenState extends State<MessagingScreen> {
-  var _isLoading = false;
-  MessageService messageService = MessageService();
-  var _isInit = false;
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _messageTextController = TextEditingController();
   void initState() {
-    _isInit = true;
-    // print('InitState()');
     super.initState();
   }
 
-  Future<void> _saveForm(String agreementId) async {
-    final isValid = _formKey.currentState.validate();
-
-    Message newMessage = Message(
-      _messageTextController.text,
-      agreementId,
-    );
-
-    if (!isValid) return;
-    _formKey.currentState.save();
-    //^^^^saves the form -> executes the 'onSaved' of each input
-    setState(() {
-      _isLoading = true;
-      _isInit = false;
-    });
-
-    try {
-      //Save to DB:
-      await messageService.sendMessage(newMessage);
-      print('new message sent');
-    } catch (error) {
-      await showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('An error occurred!'),
-          content: Text('Something went wrong.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Okay'),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-            )
-          ],
-        ),
-      );
-    }
-    setState(() {
-      _isLoading = false;
-      // Provider.of<Contracts>(context, listen: false).fetchAndSetContracts();
-      //TODO: assuming this rebuilds
-      super.setState(() {});
-    });
-  }
-
+  MessageService messageService = MessageService();
   @override
   Widget build(BuildContext context) {
-    final agreementId = ModalRoute.of(context).settings.arguments as String;
+    print('Message Screen Build: Curr: ${Global.userAddress}');
 
-    print('Agreement ID [Messaging Screen]: ' + agreementId);
+    final args = ModalRoute.of(context).settings.arguments as Map;
+    final agreementId = args['agreementId'];
+    final partyA = args['partyA'];
+    final partyB = args['partyB'];
+
+    print('PA: $partyA\nPB: $partyB');
 
     return Scaffold(
       appBar: AppBar(
-        // title: Text(Global.userAddress),
-        title: Text('Chat for agreement: ' + agreementId),
+        title: FunkyText('Agreement Chat: ' + agreementId),
       ),
       // drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Column(
+      body: Column(
+        children: [
+          Card(
+            color: Color.fromRGBO(43, 45, 60, 0.8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
-                  flex: 6,
-                  child: MessagesPanel(agreementId, _isInit),
+                Text('Participants:'),
+                Text(
+                  'You: ' +
+                      Global.userAddress.substring(0, 6) +
+                      '...' +
+                      Global.userAddress.substring(
+                          Global.userAddress.length - 4,
+                          Global.userAddress.length),
+                  style: TextStyle(
+                    color: Global.userAddress == partyA ||
+                            Global.userAddress == partyB
+                        ? Colors.pink[400]
+                        : Colors.teal[400],
+                    // fontSize: 10,
+                  ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    // color: Colors.white,
-                    height: 100,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 14),
-                            height: 60,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.deepOrange,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Form(
-                                    key: _formKey,
-                                    child: TextFormField(
-                                      maxLines: 1,
-                                      keyboardType: TextInputType.text,
-                                      controller: _messageTextController,
-                                      validator: (value) {
-                                        if (value.isEmpty)
-                                          return 'Please enter a message.';
-                                        return null;
-                                      },
-                                      onFieldSubmitted: (value) {
-                                        _saveForm(agreementId);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () => _saveForm(agreementId),
-                                  icon: Icon(Icons.send_outlined),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
+                if (Global.userAddress != partyA &&
+                    Global.userAddress == partyB)
+                  Text(
+                    'Other Party: ' +
+                        partyA.substring(0, 6) +
+                        '...' +
+                        partyA.substring(partyA.length - 4, partyA.length),
+                    style: TextStyle(
+                      color: Colors.cyan[400],
+                      // fontSize: 10,
                     ),
+                  ),
+                if (Global.userAddress == partyA &&
+                    Global.userAddress != partyB)
+                  Text(
+                    'Other Party: ' +
+                        partyB.substring(0, 6) +
+                        '...' +
+                        partyB.substring(partyB.length - 4, partyB.length),
+                    style: TextStyle(
+                      color: Colors.cyan[400],
+                      // fontSize: 10,
+                    ),
+                  ),
+                Text(
+                  'Jurors (when agreement is in dispute): ' +
+                      '0x12345'
+                          '...6789',
+                  style: TextStyle(
+                    color: Colors.teal[400],
+                    // fontSize: 10,
                   ),
                 ),
               ],
             ),
+          ),
+          Expanded(
+            flex: 6,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                      vertical: 0,
+                      horizontal: MediaQuery.of(context).size.width) *
+                  0.1,
+              child: MessagesPanel(
+                agreementId: agreementId,
+                partyA: partyA,
+                partyB: partyB,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: MessageInputPanel(agreementId),
+          ),
+        ],
+      ),
     );
   }
 }

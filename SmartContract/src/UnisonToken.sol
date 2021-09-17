@@ -40,6 +40,9 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
     string private _name;
     string private _symbol;
 
+    address private mintAddr;
+    uint256 private deployedTime;
+
     /**
      * @dev Sets the values for {name} and {symbol}.
      *
@@ -52,8 +55,46 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
     constructor() {
         _name = "UnisonToken";
         _symbol = "UNT";
+        deployedTime = block.timestamp;
+        mintAddr = _msgSender();
 
-        _mint(_msgSender(), 1000000 * 10**decimals()); //1 coin
+        receiveMinted();
+        // _mint(mintAddr, 1000000 * 10**decimals());
+    }
+
+
+    modifier onlyMinter(){
+        require(msg.sender == mintAddr);
+        _;
+    }
+
+
+    // Tokens will be minted to the deploying address at a linearly decreasing
+    // rate, which reaches 0 after 500 days. At the end, 2 million tokens
+    // will have been minted.
+    // TIME STARTS ONE DAY IN, so ~8000 tokens are immediately minted
+    function receiveMinted() public onlyMinter(){
+        //Calculate how much must be minted by now
+        uint256 mustExist;
+
+        uint256 activeTime = block.timestamp - deployedTime + 86400; //start 1 day in
+        if(activeTime > 86400 * 500)
+            activeTime = 86400 * 500; //Can't go beyond 500 days
+
+        //y = mx + c {activeTime is x, y is how much to mint in that second & its integral is mustExist}
+        uint256 c = 92592592592592592; // wei/second equivalent to 8000 unt/day
+        uint256 m = 1071673525; //deceleration term, such that minting completes after 500 days
+
+        mustExist = c * activeTime - m * (activeTime * activeTime);
+
+        //Take difference between it and _totalSupply
+        uint256 mintNow = mustExist - totalSupply();
+
+        if(mintNow == 0)
+            return;
+
+        //mint new tokens
+        _mint(mintAddr, mintNow);
     }
 
     /**
@@ -90,6 +131,7 @@ contract UnisonToken is Context, IERC20, IERC20Metadata {
 
     /**
      * @dev See {IERC20-totalSupply}.
+     * Supply will stop at 2 000 000.000 703 999 974 4 tokens 
      */
     function totalSupply() public view virtual override returns (uint256) {
         return _totalSupply;

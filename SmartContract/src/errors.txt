@@ -1,0 +1,20 @@
+E1      Specified agreement has no jury
+E2      You are not on this jury
+E3      Mismatch between tokens and amounts
+E4      Agreement state invalid
+E5      Insufficient allowance on a specified payment
+E6      Agreement must be contested
+E7      It's too soon to vote
+E8      Agreement not in valid state for voting
+E9      You can only vote if you're part of the agreement
+E10     You can't vote twice
+E11     There is no jury for this agreement
+E12     You are not on this jury
+E13     Deadline for voting has passed
+E14     Jurors still have time to vote
+E15     Agreement is already paid out
+E16     You must be party2 to accept the agreement
+E17     Payment failed
+E18     It's too late to vote
+E19     A payment has not been paid in
+E20     An agreement must have at least one payment
