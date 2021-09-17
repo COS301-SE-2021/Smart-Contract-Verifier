@@ -34,12 +34,13 @@ internal class CreateConditionUnitTest {
     private fun parameterizedCreateCondition(description: String,
                                             pUser: String,
                                             agreementExist: Boolean,
-                                            title: String): ApiResponse<CreateConditionResponse>
+                                            title: String,
+                                            movedToBlockchain: Boolean = false): ApiResponse<CreateConditionResponse>
     {
         //given
         var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
             CreatedDate = Date(),
-            MovedToBlockChain = false)
+            MovedToBlockChain = movedToBlockchain)
 
         mockAgreement = mockAgreement.apply { users.add(userA) }
         mockAgreement = mockAgreement.apply { users.add(userB) }
@@ -155,6 +156,21 @@ internal class CreateConditionUnitTest {
             userA.publicWalletID,
             true,
             "")
+
+        //then
+        Assertions.assertEquals(response.status, ResponseStatus.FAILED)
+    }
+
+    @Test
+    fun `createCondition agreement has been moved to blockchain`(){
+        //given
+
+        //when
+        val response = parameterizedCreateCondition("desc",
+            userA.publicWalletID,
+            true,
+            "a failed agreement",
+            true)
 
         //then
         Assertions.assertEquals(response.status, ResponseStatus.FAILED)
