@@ -16,10 +16,8 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-HOW TO DOCKER
-
-To build the docker image, run the following command:  docker build . -t frontend_scv
-
-To run the docker image, run the following command: docker run -i -p 8080:4040 -td frontend_scv
-    In the above command, 4040 is the port within the docker image, while 8080 is the exposed port
-    so if you want to host on a different port, replace the 808
+HOW TO RUN:
+Build with the following line:
+    sh build.sh
+Then you can run the image with:
+    docker run -p 8080:80 frontend_scv
