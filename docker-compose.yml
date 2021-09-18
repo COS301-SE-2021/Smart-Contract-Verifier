@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./docker:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_PASSWORD=smartcontractserverdev
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=verifierserver
+    networks:
+      - unison_network_internal
+    healthcheck:
+      test: "pg_isready --username=postgres && psql --username=postgres --list"
+      timeout: 10s
+      retries: 20
+  unison-server:
+    image: savannasolutions.registry.jetbrains.space/p/scv/unison-images/unison-server:latest
+    environment:
+      - SecretKey=nZr4u7x!A%D*G-KaPdSgVkXp2s5v8y/B
+      - EnabledFS=LOCAL
+      - NodeAddress=https://matic-mumbai.chainstacklabs.com/
+      - ContractAddress=0xE0A57C63ADda6bAe9b3Ecaba6c5c655CA310de3d
+      - dbUrl=postgres:5432/verifierserver
+    networks:
+      - unison_network_internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+  prometheus:
+    image: prom/prometheus:main
+    volumes:
+      - ./docker/:/etc/prometheus/
+    networks:
+      - unison_network_internal
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3001:3000
+    networks:
+      - unison_network_internal
+  unison-frontend:
+    image: savannasolutions.registry.jetbrains.space/p/scv/unison-images/unison-frontend:latest
+    ports:
+      - 80:80
+networks:
+  unison_network_internal:
+
