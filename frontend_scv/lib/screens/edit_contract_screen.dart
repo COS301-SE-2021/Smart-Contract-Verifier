@@ -149,171 +149,163 @@ class _EditContractScreenState extends State<EditContractScreen> {
                       padding: EdgeInsets.symmetric(
                           horizontal: deviceSize.width * 0.1,
                           vertical: deviceSize.width * 0.05),
-                      child: Flexible(
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: SizedBox(
-                                child: DefaultTextStyle(
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.pinkAccent,
-                                    shadows: [
-                                      Shadow(
-                                        blurRadius: 7.0,
-                                        color: Colors.pinkAccent,
-                                        offset: Offset(0, 0),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Text('New Agreement Details',
-                                      style: TextStyle(fontSize: 18)),
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: SizedBox(
+                              child: DefaultTextStyle(
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.pinkAccent,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 7.0,
+                                      color: Colors.pinkAccent,
+                                      offset: Offset(0, 0),
+                                    ),
+                                  ],
                                 ),
-                                height: 20,
+                                child: Text('New Agreement Details',
+                                    style: TextStyle(fontSize: 18)),
                               ),
+                              height: 20,
                             ),
-                            Form(
-                              key: _form, //Global key
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextFormField(
-                                    initialValue: _initValues['title'],
-                                    decoration: InputDecoration(
-                                      labelText: 'Title',
-                                      // fillColor: Colors.white,
+                          ),
+                          Form(
+                            key: _form, //Global key
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextFormField(
+                                  initialValue: _initValues['title'],
+                                  decoration: InputDecoration(
+                                    labelText: 'Title',
+                                    // fillColor: Colors.white,
 
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color:
-                                              Color.fromRGBO(182, 80, 158, 1),
-                                        ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color.fromRGBO(182, 80, 158, 1),
                                       ),
                                     ),
-                                    textInputAction: TextInputAction.next,
-                                    onFieldSubmitted: (_) {
-                                      FocusScope.of(context)
-                                          .requestFocus(_partyBIdFocusNode);
-                                    },
-                                    onSaved: (value) {
-                                      _editedContract = Contract(
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  onFieldSubmitted: (_) {
+                                    FocusScope.of(context)
+                                        .requestFocus(_partyBIdFocusNode);
+                                  },
+                                  onSaved: (value) {
+                                    _editedContract = Contract(
+                                      contractId: _editedContract.contractId,
+                                      title: value,
+                                      description: _editedContract.description,
+                                      paymentAmount:
+                                          _editedContract.paymentAmount,
+                                      imageUrl: _editedContract.imageUrl,
+                                      partyB: _editedContract.partyB,
+                                      partyA: _editedContract.partyA,
+                                      conditions: [],
+                                    );
+                                  },
+                                  validator: (value) {
+                                    if (value.isEmpty)
+                                      return 'Please provide a value.';
+                                    return null;
+                                  },
+                                ),
+                                TextFormField(
+                                  initialValue: _initValues['partyBId'],
+                                  decoration: InputDecoration(
+                                    labelText: 'Party B Address',
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color.fromRGBO(182, 80, 158, 1),
+                                      ),
+                                    ),
+                                    hintStyle: TextStyle(
+                                      color: Color.fromRGBO(182, 80, 158, 1),
+                                    ),
+                                  ),
+                                  focusNode: _partyBIdFocusNode,
+                                  textInputAction: TextInputAction
+                                      .next, //bottom right button in soft keyboard
+                                  onFieldSubmitted: (_) {
+                                    FocusScope.of(context)
+                                        .requestFocus(_priceFocusNode);
+                                  },
+                                  onSaved: (value) {
+                                    _editedContract = Contract(
                                         contractId: _editedContract.contractId,
-                                        title: value,
+                                        title: _editedContract.title,
                                         description:
                                             _editedContract.description,
                                         paymentAmount:
                                             _editedContract.paymentAmount,
                                         imageUrl: _editedContract.imageUrl,
-                                        partyB: _editedContract.partyB,
+                                        partyB: value.toLowerCase(),
                                         partyA: _editedContract.partyA,
-                                        conditions: [],
-                                      );
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty)
-                                        return 'Please provide a value.';
-                                      return null;
-                                    },
-                                  ),
-                                  TextFormField(
-                                    initialValue: _initValues['partyBId'],
-                                    decoration: InputDecoration(
-                                      labelText: 'Party B Address',
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color:
-                                              Color.fromRGBO(182, 80, 158, 1),
-                                        ),
-                                      ),
-                                      hintStyle: TextStyle(
+                                        conditions: []);
+                                  },
+                                  validator: (value) {
+                                    if (value.isEmpty)
+                                      return 'Please provide a value.';
+                                    return null;
+                                  },
+                                ),
+                                TextFormField(
+                                  initialValue: _initValues['description'],
+                                  decoration: InputDecoration(
+                                    labelText: 'Description',
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
                                         color: Color.fromRGBO(182, 80, 158, 1),
                                       ),
                                     ),
-                                    focusNode: _partyBIdFocusNode,
-                                    textInputAction: TextInputAction
-                                        .next, //bottom right button in soft keyboard
-                                    onFieldSubmitted: (_) {
-                                      FocusScope.of(context)
-                                          .requestFocus(_priceFocusNode);
-                                    },
-                                    onSaved: (value) {
-                                      _editedContract = Contract(
-                                          contractId:
-                                              _editedContract.contractId,
-                                          title: _editedContract.title,
-                                          description:
-                                              _editedContract.description,
-                                          paymentAmount:
-                                              _editedContract.paymentAmount,
-                                          imageUrl: _editedContract.imageUrl,
-                                          partyB: value.toLowerCase(),
-                                          partyA: _editedContract.partyA,
-                                          conditions: []);
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty)
-                                        return 'Please provide a value.';
-                                      return null;
-                                    },
                                   ),
-                                  TextFormField(
-                                    initialValue: _initValues['description'],
-                                    decoration: InputDecoration(
-                                      labelText: 'Description',
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color:
-                                              Color.fromRGBO(182, 80, 158, 1),
-                                        ),
-                                      ),
-                                    ),
-                                    maxLines: 3,
-                                    keyboardType: TextInputType.multiline,
-                                    focusNode: _descriptionFocusNode,
-                                    onSaved: (value) {
-                                      _editedContract = Contract(
-                                          contractId:
-                                              _editedContract.contractId,
-                                          title: _editedContract.title,
-                                          description: value,
-                                          paymentAmount:
-                                              _editedContract.paymentAmount,
-                                          imageUrl: _editedContract.imageUrl,
-                                          partyB: _editedContract.partyB,
-                                          partyA: _editedContract.partyA,
-                                          conditions: []);
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty)
-                                        return 'Please enter a description.';
-                                      if (value.length < 10)
-                                        return 'Please enter at least 10 '
-                                            'characters for the description';
-                                      return null;
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              ),
+                                  maxLines: 3,
+                                  keyboardType: TextInputType.multiline,
+                                  focusNode: _descriptionFocusNode,
+                                  onSaved: (value) {
+                                    _editedContract = Contract(
+                                        contractId: _editedContract.contractId,
+                                        title: _editedContract.title,
+                                        description: value,
+                                        paymentAmount:
+                                            _editedContract.paymentAmount,
+                                        imageUrl: _editedContract.imageUrl,
+                                        partyB: _editedContract.partyB,
+                                        partyA: _editedContract.partyA,
+                                        conditions: []);
+                                  },
+                                  validator: (value) {
+                                    if (value.isEmpty)
+                                      return 'Please enter a description.';
+                                    if (value.length < 10)
+                                      return 'Please enter at least 10 '
+                                          'characters for the description';
+                                    return null;
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              height: 10,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: FloatingActionButton.extended(
+                              onPressed: _saveForm,
+                              label: Text('Save Agreement'),
+                              icon: Icon(Icons.save),
+                              backgroundColor:
+                                  Color.fromRGBO(182, 80, 158, 0.8),
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: FloatingActionButton.extended(
-                                onPressed: _saveForm,
-                                label: Text('Save Agreement'),
-                                icon: Icon(Icons.save),
-                                backgroundColor:
-                                    Color.fromRGBO(182, 80, 158, 0.8),
-                              ),
-                            )
-                          ],
-                        ),
+                          )
+                        ],
                       ),
                     ),
                   ),
