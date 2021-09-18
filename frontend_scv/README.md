@@ -16,9 +16,8 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-HOW TO DOCKER:
-Build by executing sh build.sh
-Then you can run the image with docker run -p 8080:80 frontend_scv
-
-To get the image from space instead of building it yourself, use:
-    docker pull savannasolutions.registry.jetbrains.space/p/scv/unison-images/unison-frontend:latest
+HOW TO RUN:
+Build with the following line:
+     sh build.sh
+Then you can run the image with:
+    docker run -p 8080:80 frontend_scv
