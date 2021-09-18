@@ -7,6 +7,10 @@ import javax.persistence.*
 
 @Entity
 data class Messages(@Id @GeneratedValue val messageID: UUID,
+                   /* @ColumnTransformer(
+                        read = "PGP_SYM_DECRYPT(cast(message as bytea), 'A VERY SECURE KEY')",
+                        write = "PGP_SYM_ENCRYPT (?, 'A VERY SECURE KEY')"
+                    )*/
                     val message: String,
                     val sendDate: Date,)
 {
@@ -18,4 +22,8 @@ data class Messages(@Id @GeneratedValue val messageID: UUID,
 
                     @OneToMany(fetch = FetchType.LAZY, mappedBy = "message", orphanRemoval = true, cascade = [CascadeType.ALL])
                     var messageStatuses: List<MessageStatus>? = emptyList()
-                    }
+
+    companion object{
+        fun getSecurityKey() = System.getProperty("com.unison.SecretKey")
+    }
+}

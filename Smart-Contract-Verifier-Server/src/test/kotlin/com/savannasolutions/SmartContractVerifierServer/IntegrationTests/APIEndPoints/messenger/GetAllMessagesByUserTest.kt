@@ -10,6 +10,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -144,6 +146,7 @@ class GetAllMessagesByUserTest {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/message")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "bearer ${generateToken(userID)}")
                 ).andDo(document(testName,
             Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
             Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
@@ -160,6 +163,7 @@ class GetAllMessagesByUserTest {
         fieldDescriptorResponse.addAll(GetAllMessagesByUserResponse.response())
         //End of documentation
 
+        0
         val response = requestSender(userA.publicWalletID, fieldDescriptorResponse, "GetAllMessagesByUser successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
@@ -179,9 +183,17 @@ class GetAllMessagesByUserTest {
         fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
         //End of documentation
 
-        val response = requestSender("other user", fieldDescriptorResponse, "GetAllMessagesByUser failure user does not exist")
+        val response = requestSender("0xF9276468FA51422cD528BEAcAb7aB548Ba71Cf17", fieldDescriptorResponse, "GetAllMessagesByUser failure user does not exist")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
 
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
+    }
 }

@@ -5,7 +5,13 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 763
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 837
 
 {
   "Status" : "SUCCESSFUL",
@@ -14,17 +20,17 @@ Content-Length: 763
       "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
       "messages" : [ {
         "message" : "Test message",
-        "sendingUser" : {
-          "publicWalletID" : "userA"
-        },
-        "sendingDate" : "2021-09-12T02:00:57.525+00:00",
-        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
-        "messageID" : "0291184c-036a-457c-a37f-1684c69bd9bb",
         "messageStatuses" : [ {
-          "recipientID" : "userB",
-          "readDate" : "2021-09-12T02:00:57.533+00:00",
-          "read" : true
-        } ]
+          "readDate" : "2021-09-16T21:01:00.653+00:00",
+          "read" : true,
+          "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+        } ],
+        "messageID" : "0291184c-036a-457c-a37f-1684c69bd9bb",
+        "agreementID" : "1060e965-ce97-45c9-bece-88ec22b88f86",
+        "sendingDate" : "2021-09-16T21:01:00.643+00:00",
+        "sendingUser" : {
+          "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
+        }
       } ]
     }, {
       "agreementID" : "432cb7d7-a9c5-468c-8c7a-6cc0634b041a",

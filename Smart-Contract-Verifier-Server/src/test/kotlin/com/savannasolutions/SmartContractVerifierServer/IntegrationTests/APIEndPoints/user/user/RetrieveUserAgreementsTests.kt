@@ -9,6 +9,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserAgreementsResponse
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -46,6 +48,7 @@ class GetAgreementDetail {
 
     private lateinit var userA : User
     private lateinit var userB : User
+    var userC = "0x7Ea7EA8D709B02444128e8b4d8C38d00842e77C3"
     private lateinit var acceptedConditionID: UUID
     private lateinit var rejectedConditionID: UUID
     private lateinit var pendingConditionID: UUID
@@ -120,9 +123,16 @@ class GetAgreementDetail {
                               responseFieldDescriptors: ArrayList<FieldDescriptor>,
                               testName: String) : MockHttpServletResponse
     {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        val jwtToken = Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/agreement")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "bearer $jwtToken")
                 ).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -161,7 +171,7 @@ class GetAgreementDetail {
         fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
         //End of documentation
 
-        val response = requestSender("other user",
+        val response = requestSender(userC,
             fieldDescriptorResponse,
             "RetrieveUserAgreementsTests failed due to user not existing")
 

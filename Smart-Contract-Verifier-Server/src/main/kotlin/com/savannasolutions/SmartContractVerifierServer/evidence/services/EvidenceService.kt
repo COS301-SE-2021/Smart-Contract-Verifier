@@ -1,7 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.evidence.services
 
-import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
-import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.*
 import com.savannasolutions.SmartContractVerifierServer.common.responseErrorMessages.commonResponseErrorMessages
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.configuration.EvidenceConfig
@@ -13,7 +12,7 @@ import com.savannasolutions.SmartContractVerifierServer.evidence.models.Uploaded
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.EvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.LinkedEvidenceRepository
 import com.savannasolutions.SmartContractVerifierServer.evidence.repositories.UploadedEvidenceRepository
-import com.savannasolutions.SmartContractVerifierServer.evidence.requests.*
+import com.savannasolutions.SmartContractVerifierServer.evidence.requests.LinkEvidenceRequest
 import com.savannasolutions.SmartContractVerifierServer.evidence.responses.*
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
@@ -21,7 +20,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
@@ -65,7 +63,7 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         val filename = agreement.ContractID.toString() + user.publicWalletID + uploadEvidence.originalFilename
 
         //TODO: Check filetype for risk (part of security)
-        val nUploadedEvidence = if(uploadEvidence.contentType != null)
+        var nUploadedEvidence = if(uploadEvidence.contentType != null)
             UploadedEvidence(UUID.fromString("6612469d-ffd8-4126-8c5b-9e5873aaf8f3"),
                 filename, uploadEvidence.contentType!!, uploadEvidence.originalFilename!!)
         else
@@ -74,7 +72,9 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         nEvidence.user = user
         nEvidence.contract = agreement
         nEvidence.uploadedEvidence = nUploadedEvidence
+        nEvidence = evidenceRepository.save(nEvidence)
         nUploadedEvidence.evidence = nEvidence
+        uploadedEvidenceRepository.save(nUploadedEvidence)
         nEvidence = evidenceRepository.save(nEvidence)
 
         fileSystem.saveFile(uploadEvidence, filename)
@@ -220,21 +220,44 @@ class EvidenceService constructor(val agreementsRepository: AgreementsRepository
         }
 
         //build list of evidenceHashes
-        val evidenceList: MutableList<String> = mutableListOf()
-        evidenceRepository.getAllByContract(agreement).forEach {
-            evidenceInstance ->
-            var evidence = ""
-            if (evidenceInstance.removed)
-                evidence = "REMOVED_"
-            evidence += if (evidenceInstance.evidenceType == EvidenceType.LINKED) {
-                "LINKED:${evidenceInstance.evidenceId},HASH:${evidenceInstance.evidenceHash}"
+        val evidenceList = evidenceRepository.getAllByContract(agreement)
+        val uploadedEvidence = ArrayList<EvidenceDetailsResponse<UploadedEvidenceDetailsResponse?>>()
+        val linkedEvidence = ArrayList<EvidenceDetailsResponse<LinkedEvidenceDetailsResponse?>>()
+
+        for(evidence in evidenceList)
+        {
+            if(evidence.evidenceType == EvidenceType.UPLOADED)
+            {
+                var uploadedEvidenceDetails : UploadedEvidenceDetailsResponse? = null
+                if(evidence.uploadedEvidence!= null) {
+                    uploadedEvidenceDetails =
+                        UploadedEvidenceDetailsResponse(evidence.uploadedEvidence!!.originalFilename,
+                                                        evidence.uploadedEvidence!!.fileMimeType)
+                }
+                uploadedEvidence.add(EvidenceDetailsResponse(evidence.evidenceHash,
+                    evidence.evidenceId,
+                    EvidenceType.UPLOADED,
+                    uploadedEvidenceDetails,
+                    UserResponse( evidence.user.publicWalletID),
+                    evidence.removed)
+                )
+
             } else {
-                "UPLOADED:${evidenceInstance.evidenceId},HASH:${evidenceInstance.evidenceHash}"
+                var linkedEvidenceDetails : LinkedEvidenceDetailsResponse? = null
+                if(evidence.evidenceUrl != null)
+                {
+                    linkedEvidenceDetails = LinkedEvidenceDetailsResponse(evidence.evidenceUrl!!.evidenceUrl)
+                }
+                linkedEvidence.add(EvidenceDetailsResponse(evidence.evidenceHash,
+                                    evidence.evidenceId,
+                                    EvidenceType.LINKED,
+                                    linkedEvidenceDetails,
+                                    UserResponse(evidence.user.publicWalletID),
+                                    evidence.removed))
             }
-            evidenceList.add(evidence)
         }
 
-        return ApiResponse(status = ResponseStatus.SUCCESSFUL, responseObject = GetAllEvidenceResponse(evidenceList.toList()))
+        return ApiResponse(status = ResponseStatus.SUCCESSFUL, responseObject = GetAllEvidenceResponse(uploadedEvidence, linkedEvidence))
     }
 
     fun removeEvidence(userId: String, agreementId: UUID, evidenceId: String): ApiResponse<Objects> {

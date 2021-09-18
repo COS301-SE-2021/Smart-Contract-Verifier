@@ -1,6 +1,7 @@
 [source,http,options="nowrap"]
 ----
-GET /user/test%20user/agreement/650de8cd-2711-4018-a888-97d4c6ec7e5a/evidence/ HTTP/1.1
+GET /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/650de8cd-2711-4018-a888-97d4c6ec7e5a/evidence/ HTTP/1.1
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE4MjcxMTl9.FX21rDK0W7KL5RFW3f8AcgozwaGi9qfId5WLOHB7-JA
 Host: localhost:8080
 
 ----

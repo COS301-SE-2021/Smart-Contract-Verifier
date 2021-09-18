@@ -37,7 +37,9 @@ contract FeeContract{
         // The 1000 * is to cancel out the fact that the divider is a fraction out of 1000
         platformFee *= 1000 * numActive;
         platformFee /= divider;
-
+ 
+        if(platformFee <= 10000)
+            platformFee = 10000;
 
     }
 
