@@ -1,13 +1,11 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.messenger
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.MessageStatus
 import com.savannasolutions.SmartContractVerifierServer.messenger.models.Messages
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessageStatusRepository
 import com.savannasolutions.SmartContractVerifierServer.messenger.repositories.MessagesRepository
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetAllMessagesByAgreementRequest
-import com.savannasolutions.SmartContractVerifierServer.messenger.requests.GetAllMessagesByUserRequest
 import com.savannasolutions.SmartContractVerifierServer.messenger.services.MessengerService
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -115,14 +113,13 @@ class GetAllMessagesByUserDatabaseTest {
     @Test
     fun `GetAllMessagesByUser successful`()
     {
-        val request = GetAllMessagesByUserRequest(userA.publicWalletID)
-
-        val response = messagesService.getAllMessagesByUser(request)
+        val response = messagesService.getAllMessagesByUser(userA.publicWalletID)
 
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.messages)
-        val msg1 = response.messages!![0]
-        val msg2 = response.messages!![1]
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.messages)
+        val msg1 = response.responseObject!!.messages!![0]
+        val msg2 = response.responseObject!!.messages!![1]
 
         assertEquals(msg1.AgreementID, messageA.agreements.ContractID)
         assertEquals(msg1.Message, messageA.message)

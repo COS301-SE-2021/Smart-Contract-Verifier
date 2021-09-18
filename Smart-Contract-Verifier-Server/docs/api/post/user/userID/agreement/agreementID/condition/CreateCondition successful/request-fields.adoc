@@ -1,0 +1,12 @@
+|===
+|Path|Type|Description
+
+|`+ConditionTitle+`
+|`+String+`
+|This is the title of the condition
+
+|`+ConditionDescription+`
+|`+String+`
+|This is the description of the condition
+
+|===

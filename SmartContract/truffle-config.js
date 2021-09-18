@@ -18,14 +18,15 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
-// const infuraKey = "fj4jll3k.....";
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const fs = require('fs');
+const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
   
+  plugins: [
+    'truffle-contract-size'
+  ],
   contracts_directory: './src/',
   contracts_build_directory: './abis/',
   
@@ -50,6 +51,16 @@ module.exports = {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
+     gas : 7721975,
+    },
+
+    mumbai: {
+      provider: () => new HDWalletProvider(mnemonic, `https://matic-mumbai.chainstacklabs.com`),
+      network_id: 80001,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true.valueOf,
+      gas : 7721975,
     },
     // Another network with more advanced options...
     // advanced: {
@@ -90,7 +101,7 @@ module.exports = {
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
-      //    enabled: false,
+      //    enabled: true,
       //    runs: 200
       //  },
       //  evmVersion: "byzantium"

@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "Status" : "FAILED",
+  "Message" : "Condition is not pending"
+}
+----

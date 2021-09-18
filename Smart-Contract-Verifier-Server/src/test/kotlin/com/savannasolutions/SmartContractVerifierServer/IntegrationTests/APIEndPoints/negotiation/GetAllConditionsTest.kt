@@ -1,21 +1,30 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.negotiation
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.ConditionStatus
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Conditions
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.ConditionsRepository
+import com.savannasolutions.SmartContractVerifierServer.negotiation.responses.GetAllConditionsResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
@@ -24,6 +33,7 @@ import kotlin.test.assertFalse
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/get/user/userID/agreement/agreementID/condition")
 class GetAllConditionsTest {
     @Autowired
     lateinit var mockMvc : MockMvc
@@ -116,22 +126,42 @@ class GetAllConditionsTest {
         whenever(agreementsRepository.existsById(agreementEmpty.ContractID)).thenReturn(true)
         whenever(agreementsRepository.getById(agreementEmpty.ContractID)).thenReturn(agreementEmpty)
         whenever(conditionsRepository.getAllByContract(agreementEmpty)).thenReturn(null)
+        whenever(userRepository.getUsersByAgreementsContaining(agreement)).thenReturn(userList)
+        whenever(userRepository.getUsersByAgreementsContaining(agreementEmpty)).thenReturn(userList)
     }
 
-    private fun requestSender(rjson: String) : MockHttpServletResponse
+    private fun requestSender(userID: String,
+                              agreementID: UUID, responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String) : MockHttpServletResponse
     {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/negotiation/get-all-conditions")
+            MockMvcRequestBuilders.get("/user/${userID}/agreement/${agreementID}/condition")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)).andReturn().response
+                .header("Authorization", "bearer ${generateToken(userID)}")
+                ).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors)
+            )
+        ).andReturn().response
     }
 
     @Test
     fun `GetAllConditions successful`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementUUID}\"}"
+        //documentation
+        val fieldDescriptorResponses = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponses.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponses.addAll(GetAllConditionsResponse.response())
+        //End of documentation
 
-        val response = requestSender(rjson)
+
+        val response = requestSender(userA.publicWalletID,
+            agreementUUID,
+            fieldDescriptorResponses,
+            "GetAllConditions successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, acceptedConditionID.toString())
@@ -142,9 +172,16 @@ class GetAllConditionsTest {
     @Test
     fun `GetAllConditions successful with no conditions`()
     {
-        val rjson = "{\"AgreementID\" : \"${agreementEmptyUUID}\"}"
+        //documentation
+        val fieldDescriptorResponses = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponses.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponses.addAll(GetAllConditionsResponse.responseEmpty())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID,
+            agreementEmptyUUID,
+            fieldDescriptorResponses,
+            "GetAllConditions successful with no conditions")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, "{\"Conditions\":[]")
@@ -153,14 +190,27 @@ class GetAllConditionsTest {
     @Test
     fun `GetAllConditions failed due to agreement not existing`()
     {
-        val rjson = "{\"AgreementID\" : \"4867a1f9-7fc8-48a3-9490-0b9689e41828\"}"
+        //documentation
+        val fieldDescriptorResponses = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponses.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID,
+            UUID.fromString("eb558bea-389e-4e7b-afed-4987dbf37f85"),
+            fieldDescriptorResponses,
+            "GetAllConditions failed due to agreement not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
         assertFalse(response.contentAsString.contains(acceptedConditionID.toString()))
         assertFalse(response.contentAsString.contains(rejectedConditionID.toString()))
         assertFalse(response.contentAsString.contains(pendingConditionID.toString()))
     }
-
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
+    }
 }

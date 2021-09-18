@@ -24,15 +24,13 @@ class Auth with ChangeNotifier {
 
   Future<void> metaMaskLogin() async {
     LoginService loginService = LoginService();
-    try {
-      await walletInteraction.metamaskConnect();
-    } catch (error) {
-      throw (error);
-    }
+    await walletInteraction.metamaskConnect();
+
     final cred = walletInteraction.getCredentials();
     _isAuth = true;
     _userWalletAddress = cred.address.toString();
-    loginService.tryAddUser();
+    await loginService.tryAddUser();
+    await loginService.login();
 
     notifyListeners();
     // print(walletInteraction.getCredentials().toString());

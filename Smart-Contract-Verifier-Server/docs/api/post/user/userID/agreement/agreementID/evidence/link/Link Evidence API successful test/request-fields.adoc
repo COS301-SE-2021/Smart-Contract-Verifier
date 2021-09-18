@@ -1,0 +1,8 @@
+|===
+|Path|Type|Description
+
+|`+EvidenceUrl+`
+|`+String+`
+|This is the url to the evidence that will be submitted
+
+|===

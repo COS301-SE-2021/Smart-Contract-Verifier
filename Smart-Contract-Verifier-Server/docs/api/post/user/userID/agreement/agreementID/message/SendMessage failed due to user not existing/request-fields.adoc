@@ -1,0 +1,8 @@
+|===
+|Path|Type|Description
+
+|`+Message+`
+|`+String+`
+|Message sent
+
+|===

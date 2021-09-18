@@ -7,8 +7,6 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SealAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.web3j.abi.EventEncoder
@@ -21,12 +19,9 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.EthFilter
 import org.web3j.protocol.http.HttpService
-import java.lang.Exception
-import java.lang.RuntimeException
 import java.math.BigInteger
 import java.util.*
 import javax.annotation.PostConstruct
-import kotlin.collections.ArrayList
 
 @Service
 @EnableConfigurationProperties(ContractConfig::class)

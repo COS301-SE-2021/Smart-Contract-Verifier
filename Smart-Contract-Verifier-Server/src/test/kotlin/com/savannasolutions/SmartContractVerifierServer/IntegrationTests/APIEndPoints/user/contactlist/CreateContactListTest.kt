@@ -1,20 +1,29 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.APIEndPoints.user.contactlist
 
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ApiResponse
 import com.savannasolutions.SmartContractVerifierServer.user.models.ContactList
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListProfileRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import com.savannasolutions.SmartContractVerifierServer.user.responses.CreateContactListResponse
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
@@ -22,6 +31,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "docs/api/user/userID/contactList/contactListName")
 class CreateContactListTest {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -52,51 +62,54 @@ class CreateContactListTest {
         whenever(contactListRepository.save(any<ContactList>())).thenReturn(contactList)
     }
 
-    private fun requestSender(rjson: String): MockHttpServletResponse {
+    private fun requestSender(userID: String,
+                              contactListName: String,
+                              responseFieldDescriptors: ArrayList<FieldDescriptor>,
+                              testName: String): MockHttpServletResponse {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/contactlist/create-contact-list")
+            MockMvcRequestBuilders.post("/user/${userID}/contactList/${contactListName}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(rjson)
+                .header("Authorization", "bearer ${generateToken(userID)}")
+        ).andDo(
+            MockMvcRestDocumentation.document(
+                testName,
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(responseFieldDescriptors)
+            )
         ).andReturn().response
     }
 
     @Test
     fun `createContractList successful`()
     {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\",\"ContactListName\" : \"TestName\"}"
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiResponse())
+        fieldDescriptorResponse.addAll(CreateContactListResponse.response())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID,
+            "contact list",
+            fieldDescriptorResponse,
+            "createContractList successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, contactList.contactListID!!.toString())
     }
 
     @Test
-    fun `createContractList failed due to contact list name being empty`()
-    {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\",\"ContactListName\" : \"\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
-    fun `createContractList failed due to user being empty`()
-    {
-        val rjson = "{\"UserID\" : \"\",\"ContactListName\" : \"TestName\"}"
-
-        val response = requestSender(rjson)
-
-        assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
-    }
-
-    @Test
     fun `createContractList failed due to user not existing`()
     {
-        val rjson = "{\"UserID\" : \"random user\",\"ContactListName\" : \"TestName\"}"
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender("0x69Ec9a8aBFa094b24054422564e68B08aF311400",
+            "test name",
+            fieldDescriptorResponse,
+            "createContractList failed due to user not existing")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
@@ -104,10 +117,25 @@ class CreateContactListTest {
     @Test
     fun `createContractList failed due to a contact list already existing with name and user`()
     {
-        val rjson = "{\"UserID\" : \"${userA.publicWalletID}\",\"ContactListName\" : \"broken\"}"
+        //Documentation
+        val fieldDescriptorResponse = ArrayList<FieldDescriptor>()
+        fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
+        //End of documentation
 
-        val response = requestSender(rjson)
+        val response = requestSender(userA.publicWalletID,
+            "broken",
+            fieldDescriptorResponse,
+            "createContractList failed due to a contact list already existing with name and user")
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+    }
+
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
     }
 }

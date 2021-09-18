@@ -9,5 +9,10 @@
       "name": "com.unison.timeout",
       "type": "java.lang.Long",
       "description": "Description for com.unison.timeout."
+    },
+    {
+      "name": "com.unison.evidence.enabledFilesystem",
+      "type": "java.lang.String",
+      "description": "Description for com.unison.evidence.enabledFilesystem."
     }
   ] }

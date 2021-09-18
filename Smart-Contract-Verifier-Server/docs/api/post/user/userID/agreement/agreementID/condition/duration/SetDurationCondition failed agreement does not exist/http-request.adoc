@@ -1,0 +1,12 @@
+[source,http,options="nowrap"]
+----
+POST /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/eb558bea-389e-4e7b-afed-4987dbf37f85/condition/duration HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE4MjcxNTl9.JFlLsgSoeUDYi8CicOLHPhh_spQiAZCOdNY_jH9-gYo
+Content-Length: 26
+Host: localhost:8080
+
+{
+  "Duration" : 500.0
+}
+----

@@ -1,0 +1,13 @@
+[source,http,options="nowrap"]
+----
+PUT /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/contactList/33e660b7-8522-416b-9b8d-523deea5a778 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE4MjcxNjN9.oxrxMQiSy9K9BYaKyi6v7WvErpaEvRhIhR4nIs2iPOo
+Content-Length: 99
+Host: localhost:8080
+
+{
+  "NewUserID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+  "NewUserAlias" : "TestAlias"
+}
+----

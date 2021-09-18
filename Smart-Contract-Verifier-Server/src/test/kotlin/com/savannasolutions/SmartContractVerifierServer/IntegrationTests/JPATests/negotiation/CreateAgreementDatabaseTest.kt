@@ -1,6 +1,6 @@
 package com.savannasolutions.SmartContractVerifierServer.IntegrationTests.JPATests.negotiation
 
-import com.savannasolutions.SmartContractVerifierServer.common.ResponseStatus
+import com.savannasolutions.SmartContractVerifierServer.common.commonDataObjects.ResponseStatus
 import com.savannasolutions.SmartContractVerifierServer.contracts.repositories.JudgesRepository
 import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agreements
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
@@ -64,16 +64,16 @@ class CreateAgreementDatabaseTest {
     @Test
     fun `CreateAgreement successful`()
     {
-        val request = CreateAgreementRequest(userA.publicWalletID,
-                                                userB.publicWalletID,
+        val request = CreateAgreementRequest(userB.publicWalletID,
                                                 "Integration test title",
                                                 "This tests the agreement save functionality",
                                                 "www.dodgy_url.com")
 
-        val response = negotiationService.createAgreement(request)
+        val response = negotiationService.createAgreement(userA.publicWalletID, request)
         assertEquals(response.status, ResponseStatus.SUCCESSFUL)
-        assertNotNull(response.agreementID)
-        agreement = agreementsRepository.getById(response.agreementID!!)
+        assertNotNull(response.responseObject)
+        assertNotNull(response.responseObject!!.agreementID)
+        agreement = agreementsRepository.getById(response.responseObject!!.agreementID!!)
         assertEquals(agreement.AgreementTitle, request.Title)
         assertEquals(agreement.AgreementDescription, request.Description)
         assertEquals(agreement.AgreementImageURL, request.ImageURL)

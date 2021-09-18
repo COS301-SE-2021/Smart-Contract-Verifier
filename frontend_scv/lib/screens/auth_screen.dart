@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
+import 'package:unison/services/Blockchain/wallet.dart';
 import 'package:unison/services/Server/judgeService.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:awesome_loader/awesome_loader.dart';
 import 'package:unison/services/Server/loginService.dart';
 
 import '../providers/auth.dart';
@@ -19,8 +22,8 @@ class AuthScreen extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color.fromRGBO(20, 20, 20, 1).withOpacity(0.5),
-                  Color.fromRGBO(37, 37, 37, 1).withOpacity(0.9),
+                  Color.fromRGBO(32, 32, 46, 1).withOpacity(1),
+                  Color.fromRGBO(60, 60, 130, 1).withOpacity(1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -33,40 +36,78 @@ class AuthScreen extends StatelessWidget {
               height: deviceSize.height,
               width: deviceSize.width,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Flexible(
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.deepOrange,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 8,
-                            color: Colors.black26,
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                      ),
-                      child: Text(
-                        'Unison',
-                        style: TextStyle(
-                          // color: Theme.of(context).accentTextTheme.title.color,
-                          fontSize: 50,
-                          fontFamily: 'Anton',
-                          fontWeight: FontWeight.normal,
-                        ),
+                  SizedBox(
+                    height: deviceSize.height * 0.2,
+                  ),
+                  ShaderMask(
+                    shaderCallback: (bounds) => LinearGradient(colors: [
+                      Color.fromRGBO(50, 183, 196, 1),
+                      Color.fromRGBO(167, 89, 160, 1)
+                    ]).createShader(
+                      Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                    ),
+                    child: Text(
+                      'UNISON',
+                      style: TextStyle(
+                        // The color must be set to white for this to work
+                        color: Colors.white,
+                        fontSize: 50,
                       ),
                     ),
                   ),
-                  Flexible(
-                    flex: deviceSize.width > 600 ? 2 : 1,
-                    child: AuthCard(),
+                  SizedBox(
+                    height: deviceSize.height * 0.003,
                   ),
+                  Flexible(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        // SizedBox(
+                        //   // width: deviceSize.width * 0.4,
+                        //   child: TyperAnimatedTextKit(
+                        //     speed: Duration(seconds: 1),
+                        //     isRepeatingAnimation: false,
+                        //     textAlign: TextAlign.center,
+                        //     text: [
+                        //       "Contracts the smart way.",
+                        //     ],
+                        //     textStyle: TextStyle(
+                        //       fontSize: 16.0,
+                        //       color: Colors.white54,
+                        //       fontFamily: "Agne",
+                        //     ),
+                        //   ),
+                        // ),
+                        SizedBox(
+                          // width: 250.0,
+                          child: DefaultTextStyle(
+                            // textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white54,
+                              fontFamily: "Agne",
+                            ),
+                            child: AnimatedTextKit(
+                              animatedTexts: [
+                                TyperAnimatedText('Contracts the smart way.',
+                                    speed: Duration(milliseconds: 180),
+                                    textAlign: TextAlign.center,
+                                    curve: Curves.easeInOut),
+                              ],
+                              isRepeatingAnimation: false,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: deviceSize.height * 0.05,
+                  ),
+                  AuthCard(),
                 ],
               ),
             ),
@@ -87,7 +128,6 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
   var _isLoading = false;
   void _showErrorDialog(String message) {
     showDialog(
@@ -107,37 +147,36 @@ class _AuthCardState extends State<AuthCard> {
     );
   }
 
-  Future<void> _submit() async {
-    //imposter
-    JudgeService judgeService = JudgeService();
-    UnisonService unisonService = UnisonService();
-    await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
-    await unisonService.getAgreement(BigInt.from(0));
-    await judgeService.isJudge();
+  Future<void> _submit2() async {
+    // JudgeService judgeService = JudgeService();
+    // UnisonService unisonService = UnisonService();
+     //await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+    // await unisonService.getAgreement(BigInt.from(0));
+    // await judgeService.isJudge();
+    // //await judgeService.setContractAllowance();
 
-    await judgeService.setContractAllowance();
+    WalletInteraction wI = WalletInteraction();
+    await wI.metamaskConnect();
+    LoginService lS = LoginService();
+
+    await lS.login();
+
   }
 
-  Future<void> _submit2() async {
-    _formKey.currentState.save();
+  Future<void> _submit() async {
+    JudgeService judgeService = JudgeService();
+    UnisonService unisonService = UnisonService();
     setState(() {
       _isLoading = true;
     });
+
     try {
-      //First check if user exists:
-      JudgeService judicious = JudgeService();
-      await await Provider.of<Auth>(context, listen: false).metaMaskLogin();
-      // await judicious.setContractAllowance();
-      await judicious.isJudge();
-      // await loginService.tryAddUser();
-      //Success -> go to home screen - because the MaterialApp is a consumer
-      // of the Auth Provider, we do not need to push/navigate to the
-      // dashboard, it will simply re-render/rebuild the materialApp and set
-      // home to Dashboard
+      await Provider.of<Auth>(context, listen: false).metaMaskLogin();
+      //await unisonService.getAgreement(BigInt.from(0));
+      await judgeService.isJudge();
+      //await judgeService.setContractAllowance();
     } catch (error) {
-      const errorMessage = 'Authenticate Failed.\nPlease ensure you '
-          'have the metamask extension installed.';
-      _showErrorDialog(errorMessage + '\nAdditional information:\n' + error);
+      _showErrorDialog(error.toString());
       setState(() {
         _isLoading = false;
       });
@@ -146,62 +185,43 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      elevation: 8.0,
-      child: Container(
-        height: 260,
-        constraints: BoxConstraints(minHeight: 260),
-        width: deviceSize.width * 0.75,
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
+    return Container(
+      child: _isLoading
+          ? AwesomeLoader(
+              loaderType: AwesomeLoader.AwesomeLoader4,
+              color: Color.fromRGBO(50, 183, 196, 0.5),
+            )
+          : Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+              child: ElevatedButton(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(
+                      'images/metamask-logo-png-transparent.png',
+                      height: 24,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('MetaMask Login'),
+                  ],
                 ),
-                if (_isLoading)
-                  CircularProgressIndicator()
-                else
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 10.0),
-                    child: ElevatedButton(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Image.asset(
-                            'images/metamask-logo-png-transparent.png',
-                            height: 24,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text('MetaMask Login'),
-                        ],
-                      ),
-                      onPressed: _submit,
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                      ),
+                onPressed: _submit,
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-              ],
+                  backgroundColor: MaterialStateProperty.all(
+                    Color.fromRGBO(50, 183, 196, 0.5),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

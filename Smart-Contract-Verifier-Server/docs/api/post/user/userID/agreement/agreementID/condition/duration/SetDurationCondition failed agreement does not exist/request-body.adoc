@@ -1,0 +1,6 @@
+[source,options="nowrap"]
+----
+{
+  "Duration" : 500.0
+}
+----

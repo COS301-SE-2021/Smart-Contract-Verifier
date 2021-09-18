@@ -10,5 +10,5 @@ import java.util.*
 interface ContactListRepository: JpaRepository<ContactList, UUID>{
     fun existsByOwnerAndContactListName(owner: User, contactListName:String):Boolean
 
-    fun getAllByOwner(owner: User): List<ContactList>
+    fun getAllByOwner(owner: User): List<ContactList>?=null
 }
