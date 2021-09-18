@@ -18,6 +18,8 @@ samples, guidance on mobile development, and a full API reference.
 
 HOW TO RUN:
 Build with the following line:
-     sh build.sh
+
+     sh build.sh     
 Then you can run the image with:
+
     docker run -p 8080:80 frontend_scv
