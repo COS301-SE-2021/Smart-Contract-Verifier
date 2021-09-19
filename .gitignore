@@ -6,6 +6,6 @@
 /bin/src/contracts/
 /node_modules/
 /.dart_tool/
-
+/certs/
 /build/
 /.idea/
