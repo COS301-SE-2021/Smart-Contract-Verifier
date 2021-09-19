@@ -11,7 +11,6 @@
 ![](https://img.shields.io/github/issues/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/forks/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/stars/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
-![](https://img.shields.io/github/workflow/status/COS301-SE-2021/Smart-Contract-Verifier/CI%20tests?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/issues-pr/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/issues-pr-closed/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/last-commit/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
