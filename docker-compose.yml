@@ -17,10 +17,11 @@ services:
   unison-server:
     image: savannasolutions.registry.jetbrains.space/p/scv/unison-images/unison-server:latest
     environment:
-      - SecretKey=nZr4u7x!A%D*G-KaPdSgVkXp2s5v8y/B
+      - SecretKey=KbPeSgVkYp3s6v9y5B&E)H@McQfTjWmZ
+      - SSLKeystorePassword=SaVanna1234a
       - EnabledFS=LOCAL
       - NodeAddress=https://matic-mumbai.chainstacklabs.com/
-      - ContractAddress=0xE0A57C63ADda6bAe9b3Ecaba6c5c655CA310de3d
+      - ContractAddress=0x63D1bAfd83d79Decc70a64c9dF18ed12d7AD749e
       - dbUrl=postgres:5432/verifierserver
     networks:
       - unison_network_internal
@@ -28,7 +29,9 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - 8080:8080
+      - 8443:8443
+    volumes:
+      - /root/Unison/.ssh/:/certs:ro
   prometheus:
     image: prom/prometheus:main
     volumes:
@@ -45,6 +48,8 @@ services:
     image: savannasolutions.registry.jetbrains.space/p/scv/unison-images/unison-frontend:latest
     ports:
       - 80:80
+      - 443:443
+    volumes:
+      - ./certs/:/usr/local/apache2/conf/certs/:ro
 networks:
   unison_network_internal:
-
