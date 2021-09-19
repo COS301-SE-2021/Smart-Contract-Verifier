@@ -71,6 +71,10 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 [Unison Technical Installation Guide](https://drive.google.com/file/d/1FZTGVNUSmbhKs3D8sNz2AjNKBPJIuBz7/view?usp=sharing "Technical Installation Guide Document")
 
 
+### Testing Policy
+[Testing Policy](https://drive.google.com/file/d/1JFRMePWuch4JXCdratRtmVVqixmk6FQz/view?usp=sharing "Testing Policy Document")
+
+
 ### Coding Standards
 [Coding Standards Latest](https://drive.google.com/file/d/1ZY9B8_qNpj48cPnye7gBYitTgVsB55hW/view?usp=sharing "Coding Standards Document")
 
