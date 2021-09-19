@@ -16,7 +16,7 @@ enum ReqType { GET, POST, PUT, DELETE }
 
 class ApiInteraction {
   final String _baseUrl =
-      "http://localhost:8080"; //Url where the backend is deployed
+      "https://unison.truckin-it.com:8443"; //Url where the backend is deployed
   static final ApiInteraction api =
       ApiInteraction._internal(); //Only instance of the class
 
@@ -79,7 +79,7 @@ class ApiInteraction {
 
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization' : "bearer " + Global.apiToken,
+      'Authorization': "bearer " + Global.apiToken,
     };
 
     var response;
@@ -104,14 +104,14 @@ class ApiInteraction {
           'An error occurred while making the request. The server responded with status code ' +
               response.statusCode.toString()); //Failed http request
 
-     //print('Returned:' + response.body);
+    //print('Returned:' + response.body);
     return ApiResponse.fromJSON(jsonDecode(response.body));
   }
 
   Future<ApiResponse> filePost(String url, MultipartFile file) async {
     var req = await MultipartRequest('POST', Uri.parse(_baseUrl + url));
     req.files.add(file);
-    req.headers.addAll({'Authorization' : "bearer " + Global.apiToken});
+    req.headers.addAll({'Authorization': "bearer " + Global.apiToken});
 
     String body;
     try {
@@ -128,7 +128,7 @@ class ApiInteraction {
   Future<PlatformFile> fileGet(String url) async {
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization' : "bearer " + Global.apiToken,
+      'Authorization': "bearer " + Global.apiToken,
     };
 
     var response = await RetryOptions(maxAttempts: 5).retry(
