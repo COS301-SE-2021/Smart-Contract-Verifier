@@ -11,4 +11,8 @@ import java.util.*
 interface AgreementsRepository : JpaRepository<Agreements, UUID>{
     fun getAllByUsersContaining(user: User): MutableSet<Agreements>?
     fun getAgreementsByBlockchainID(index: BigInteger): Agreements?
+    fun countAgreements(): Int
+    fun countAgreementsByBlockchainIDNotNull(): Int
+    fun countAgreementsByBlockchainIDNull(): Int
+    fun getAllBySealedDateNotNull(): List<Agreements>?= emptyList()
 }
