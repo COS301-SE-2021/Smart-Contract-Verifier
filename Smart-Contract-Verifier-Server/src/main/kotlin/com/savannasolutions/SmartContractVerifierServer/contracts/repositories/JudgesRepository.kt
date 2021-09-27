@@ -11,4 +11,5 @@ import java.util.*
 interface JudgesRepository: JpaRepository<Judges, UUID> {
     fun getAllByAgreement(agreements: Agreements) : List<Judges> ?= emptyList()
     fun getAllByJudge(judge: User) : List<Judges> ?= emptyList()
+    fun countAll(): Int
 }
