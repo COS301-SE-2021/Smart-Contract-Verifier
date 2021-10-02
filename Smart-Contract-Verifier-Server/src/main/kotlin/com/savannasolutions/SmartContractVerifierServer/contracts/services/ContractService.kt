@@ -84,10 +84,17 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
         if(agreement != null){
             jurors.forEach { address ->
                 if(userRepository.existsByPublicWalletIDAllIgnoreCase(address.value)) {
-                    val juror = Judges()
-                    juror.agreement = agreement
-                    juror.judge = userRepository.getUserByPublicWalletIDAllIgnoreCase(address.value)!!
-                    judgesRepository.save(juror)
+                    val userAgreements = judgesRepository.getAllByJudge(userRepository.getUserByPublicWalletIDAllIgnoreCase(address.value)!!)
+                    var found = false
+
+                    userAgreements?.forEach { judges -> if(judges.agreement.ContractID == agreement.ContractID) found = true }
+
+                    if(!found){
+                        val juror = Judges()
+                        juror.agreement = agreement
+                        juror.judge = userRepository.getUserByPublicWalletIDAllIgnoreCase(address.value)!!
+                        judgesRepository.save(juror)
+                    }
                 }
             }
         }
