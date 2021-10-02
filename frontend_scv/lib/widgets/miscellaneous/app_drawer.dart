@@ -6,6 +6,7 @@ import 'package:unison/screens/judge_duty_screen.dart';
 
 import 'package:flutter/services.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/auth.dart';
 
@@ -87,6 +88,12 @@ class AppDrawer extends StatelessWidget {
               Provider.of<Auth>(context, listen: false).logout();
             },
           ),
+          Divider(),
+          Divider(),
+          // Text()
+          TextButton(onPressed: () async {await launch('https://forms.gle/KaZP94e2iF2zodPF7');}, child: Text('Feedback')),
+          SizedBox(height: 5),
+          TextButton(onPressed: () async {await launch('https://drive.google.com/file/d/1mfi73z7QxIC34tXWid9Nj7GetGbABWW6/view');}, child: Text('User manual')),
         ],
       ),
     );
