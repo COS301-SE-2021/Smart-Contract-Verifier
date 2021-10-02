@@ -15,7 +15,6 @@ class Global {
   static bool isJudge = false;
 
   static Future<String> getContractId(String id) async {
-    print ('Getting id');
     String jsn = await rootBundle.loadString('JSON/address.json');
     try {
       _contractId = jsonDecode(jsn)[id];
@@ -24,7 +23,6 @@ class Global {
       print(e);
       return '';
     }
-    print ('Got id');
     return _contractId;
   }
 
