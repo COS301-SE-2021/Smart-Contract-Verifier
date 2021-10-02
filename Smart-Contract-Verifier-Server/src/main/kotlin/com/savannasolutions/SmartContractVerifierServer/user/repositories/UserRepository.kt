@@ -10,4 +10,5 @@ interface UserRepository: JpaRepository<User, String>{
     fun getUsersByAgreementsContaining(agreements: Agreements): List<User>
     fun getUserByPublicWalletIDAllIgnoreCase(id: String): User?
     fun existsByPublicWalletIDAllIgnoreCase(id: String): Boolean
+    fun countAll(): Int
 }
