@@ -166,6 +166,7 @@ class _AuthCardState extends State<AuthCard> {
 
   Future<void> _submit() async {
     await addNetwork('Mumbai', 'https://matic-mumbai.chainstacklabs.com', '0x' + 80001.toRadixString(16), 'Matic', 'MATIC');
+    //Switch to network Unison is running on, if the user isn't already
 
     JudgeService judgeService = JudgeService();
     UnisonService unisonService = UnisonService();
