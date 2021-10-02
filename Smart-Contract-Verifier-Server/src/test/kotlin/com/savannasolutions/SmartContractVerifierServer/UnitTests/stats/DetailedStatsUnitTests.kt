@@ -67,7 +67,6 @@ class DetailedStatsUnitTests {
         whenever(agreementsRepository.getAllBySealedDateNotNull()).thenReturn(list)
         whenever(judgesRepository.getAllByAgreement(mockAgreementNBC)).thenReturn(judgeList)
         whenever(userRepository.countAll()).thenReturn(3)
-        whenever(judgesRepository.countAll()).thenReturn(1)
         whenever(agreementsRepository.countAgreementsByCreatedDateBefore(endDate)).thenReturn(2)
         whenever(agreementsRepository.countAgreementsBySealedDateBefore(endDate)).thenReturn(1)
         whenever(agreementsRepository.countAgreementsByCreatedDateBefore(startDate)).thenReturn(0)
