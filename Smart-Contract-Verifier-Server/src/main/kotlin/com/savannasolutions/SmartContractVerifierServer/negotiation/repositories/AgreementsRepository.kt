@@ -15,4 +15,8 @@ interface AgreementsRepository : JpaRepository<Agreements, UUID>{
     fun countAgreementsByBlockchainIDNotNull(): Int
     fun countAgreementsByBlockchainIDNull(): Int
     fun getAllBySealedDateNotNull(): List<Agreements>?= emptyList()
+    fun countAgreementsByCreatedDateBetween(beginDate: Date, endDate:Date): Int
+    fun countAgreementsBySealedDateBetween(beginDate: Date, endDate: Date): Int
+    fun countAgreementsByCreatedDateBefore(date: Date): Int
+    fun countAgreementsBySealedDateBefore(date: Date): Int
 }
