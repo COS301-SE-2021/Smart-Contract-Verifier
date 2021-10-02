@@ -21,7 +21,7 @@ class GeneralStatsUnitTests {
     var userRepository : UserRepository = mock()
     var judgesRepository: JudgesRepository = mock()
 
-    val statsService = StatsService(agreementsRepository = agreementsRepository,
+    private val statsService = StatsService(agreementsRepository = agreementsRepository,
                                     userRepository = userRepository,
                                     judgesRepository = judgesRepository)
 
@@ -58,12 +58,12 @@ class GeneralStatsUnitTests {
         judgeList.add(judge)
 
         //when
-        whenever(agreementsRepository.countAgreements()).thenReturn(2)
+        whenever(agreementsRepository.selectAll()).thenReturn(list)
         whenever(agreementsRepository.countAgreementsByBlockchainIDNotNull()).thenReturn(1)
         whenever(agreementsRepository.countAgreementsByBlockchainIDNull()).thenReturn(1)
-        whenever(agreementsRepository.getAllBySealedDateNotNull()).thenReturn(list)
+        whenever(agreementsRepository.selectAll()).thenReturn(list)
         whenever(judgesRepository.getAllByAgreement(mockAgreementNBC)).thenReturn(judgeList)
-        whenever(userRepository.countAll()).thenReturn(3)
+        whenever(userRepository.selectAll()).thenReturn(userList)
 
         val response = statsService.generalStats()
 
@@ -72,7 +72,7 @@ class GeneralStatsUnitTests {
         assertNotNull(response.responseObject)
         assertEquals(response.responseObject!!.concludedAgreements, 0)
         assertEquals(response.responseObject!!.disputedAgreements, 1)
-        assertEquals(response.responseObject!!.totalAgreements, 2)
+        assertEquals(response.responseObject!!.totalAgreements, 1)
         assertEquals(response.responseObject!!.sealedAgreements, 1)
     }
 }
