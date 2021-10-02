@@ -12,7 +12,7 @@ class StatsController constructor(private val statsService: StatsService) {
     @GetMapping("/stats")
     fun generalStats() = statsService.generalStats()
 
-    @GetMapping("/stats/detailed")
+    /*@GetMapping("/stats/detailed")
     fun detailedStats(@RequestBody detailedRequest: DetailedRequest)
-    = statsService.detailedStats(detailedRequest.startDate, detailedRequest.endDate)
+    = statsService.detailedStats(detailedRequest.startDate, detailedRequest.endDate)*/
 }
