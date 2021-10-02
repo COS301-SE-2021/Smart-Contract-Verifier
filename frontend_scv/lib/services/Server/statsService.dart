@@ -7,7 +7,7 @@ import 'package:unison/services/Server/backendAPI.dart';
 class StatsService {
   ApiInteraction _api = ApiInteraction();
 
-  //Get general statistics on Unison
+  ///Get general statistics on Unison
   Future<GeneralStats> getGeneralStats() async {
     ApiResponse res = await _api.getData('/stats');
 

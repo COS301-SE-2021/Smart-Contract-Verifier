@@ -5,6 +5,7 @@ import 'package:unison/screens/contacts_screen.dart';
 import 'package:unison/screens/judge_duty_screen.dart';
 
 import 'package:flutter/services.dart';
+import 'package:unison/screens/statsScreen.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -81,6 +82,14 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(StatsScreen.routeName);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Some Statistics'),
             onTap: () {
               Navigator.of(context).pop(); //Close the drawer (use if an
               // error occurs)
