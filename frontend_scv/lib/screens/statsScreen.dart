@@ -3,6 +3,8 @@
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unison/models/generalStats.dart';
+import 'package:unison/services/Server/statsService.dart';
 import 'package:unison/widgets/miscellaneous/dashboard_actions.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 
@@ -11,73 +13,38 @@ import '../screens/edit_contract_screen.dart';
 import '../widgets/miscellaneous/app_drawer.dart';
 import '../widgets/agreement/contracts_grid.dart';
 
-enum FilterOptions {
-  Favourites,
-  All,
-}
-
-class StatsScreen extends StatefulWidget {
+class StatsScreen extends StatelessWidget {
   static const routeName = '/view-stats';
-  @override
-  _StatsScreenState createState() =>
-      _StatsScreenState();
-}
+  StatsService _statServ = StatsService();
 
-class _StatsScreenState extends State<StatsScreen> {
-  var _isInit = true;
-  var _isLoading = false;
+  //This returns an appropriate widget after getting some statistics
+  Future<Widget> getStats() async {
+    GeneralStats gS;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      //running for first time
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Contracts>(context).fetchAndSetContracts().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-      _isInit = false;
+    try {
+      gS = await _statServ.getGeneralStats();
     }
-    super.didChangeDependencies();
+    catch (e) {
+      return Text(e);
+    }
+
+    return Text('Total Number of Users: ' + gS.totalUsers.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: FunkyText('Agreements Dashboard'),
-        actions: [
-          DashBoardActions(),
-        ],
-      ),
-      drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
-        child: AwesomeLoader(
-          loaderType: AwesomeLoader.AwesomeLoader4,
-          color: Color.fromRGBO(50, 183, 196, 0.5),
+        appBar: AppBar(
+          title: FunkyText('Unison Statistics'),
+          actions: [
+            DashBoardActions(),
+          ],
         ),
-      )
-          : ContractsGrid(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 50),
-        child: FloatingActionButton.extended(
-          label: Text('Create New Agreement'),
-          icon: Icon(Icons.add),
-          onPressed: () =>
-              Navigator.of(context).pushNamed(EditContractScreen.routeName),
-          backgroundColor: Color.fromRGBO(182, 80, 158, 1),
-        ),
-      ),
-    );
+        drawer: AppDrawer(),
+        body: FutureBuilder(future: getStats(), builder: (context, snap) {
+          return snap.connectionState == ConnectionState.done
+              ? snap.data
+              : AwesomeLoader();
+        },));
   }
 }
