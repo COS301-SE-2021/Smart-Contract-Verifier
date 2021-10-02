@@ -97,7 +97,7 @@ class DownloadEvidenceTest {
         whenever(evidenceRepository.existsById(evidence.evidenceId)).thenReturn(true)
         whenever(evidenceRepository.getById(evidence.evidenceId)).thenReturn(evidence)
 
-        val response = upload(user.publicWalletID,
+        upload(user.publicWalletID,
             agreement.ContractID,
             file)
 
