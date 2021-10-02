@@ -41,7 +41,6 @@ class StatsService constructor(val agreementsRepository: AgreementsRepository,
             responseObject = GeneralStatsResponse(
                     totalAgreements = agreementsRepository.countAgreements(),
                     totalUser = userRepository.countAll(),
-                    numberOfJudges = judgesRepository.countAll(),
                     sealedAgreements = agreementsRepository.countAgreementsByBlockchainIDNotNull(),
                     unsealedAgreements = agreementsRepository.countAgreementsByBlockchainIDNull(),
                     averageNegotiationPeriod = avg,

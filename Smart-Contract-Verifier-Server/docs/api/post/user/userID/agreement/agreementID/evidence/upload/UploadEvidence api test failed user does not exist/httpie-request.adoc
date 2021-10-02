@@ -2,5 +2,5 @@
 ----
 $ http --form POST 'http://localhost:8080/user/0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/upload' \
     'uploadEvidence'@'testFile.txt' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDRCQmI1MGNkM2Q1RkY0MTUxMmY1ZTQ1NEU5ODBFRUVhZWViNGUwYmIiLCJleHAiOjE2MzE4MjcxMzF9.9B2IPSkBgnyNgZbr9ElUVQnW-2B8E_wZTGrYSwp_fuY'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDRCQmI1MGNkM2Q1RkY0MTUxMmY1ZTQ1NEU5ODBFRUVhZWViNGUwYmIiLCJleHAiOjE2MzMyMDI3MDR9.MtYWq8QQaPV5b7ufgn2Ljyz7DjSY5qoN9Uk5flbs5ig'
 ----

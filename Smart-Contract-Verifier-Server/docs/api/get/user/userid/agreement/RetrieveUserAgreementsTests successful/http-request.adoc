@@ -2,7 +2,7 @@
 ----
 GET /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzE3MTg1NzJ9.1sbwBY1mkVeHjvpGILKKTPWNLX6RuSdoYfbEEqOKguE
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzMyMDQ3ODZ9.1J3i2aPSqDtpkisx3AI5OTxl8FM4lW2OZHryzBwU_bk
 Host: localhost:8080
 
 ----
