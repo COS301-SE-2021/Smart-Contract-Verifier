@@ -80,8 +80,8 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
+            leading: Icon(Icons.auto_graph_sharp),
+            title: Text('Some Statistics'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(StatsScreen.routeName);
             },
@@ -89,7 +89,7 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.logout),
-            title: Text('Some Statistics'),
+            title: Text('Logout'),
             onTap: () {
               Navigator.of(context).pop(); //Close the drawer (use if an
               // error occurs)

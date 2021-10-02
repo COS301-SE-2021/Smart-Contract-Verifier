@@ -9,13 +9,16 @@ class StatsService {
 
   ///Get general statistics on Unison
   Future<GeneralStats> getGeneralStats() async {
-    ApiResponse res = await _api.getData('/stats');
+    // ApiResponse res = await _api.getData('/stats');
+    //
+    // if (!res.successful) {
+    //   throw "Could not retrieve statistics data";
+    // }
+    //
+    // return GeneralStats.fromJSON(res.result);
 
-    if (!res.successful) {
-      throw "Could not retrieve statistics data";
-    }
 
-    return GeneralStats.fromJSON(res.result);
+    return GeneralStats();
 
   }
 }

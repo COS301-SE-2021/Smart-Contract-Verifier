@@ -14,6 +14,7 @@ class GeneralStatsWidget extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
+      height: 100,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(24.0),
         color: const Color(0xff2c2c2c),),
       child: Row(
