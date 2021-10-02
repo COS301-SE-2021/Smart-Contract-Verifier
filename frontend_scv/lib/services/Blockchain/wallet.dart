@@ -30,26 +30,14 @@ class WalletInteraction {
     //For this to work, a chrome session must be started out of debug mode. Copy the url to a normal tab
     final meta = window.ethereum;
     if (!metamaskAvailable()) {
-      //print('Connection failed');
       throw "Metamask is not available";
     }
 
 
     metaCred = await meta.requestAccount();
-    // print ('Before');
-    // var r = meta.asRpcService();
-    // await r.call('wallet_watchAsset', [{'type':"ERC20",
-    //   "options" : { "address": "0x020184394bD9332609AC9992CB1208EB5e1B189e",
-    //   "symbol": "UNT",
-    //   "decimals": 18,
-    //   "image" : 'http://placekitten.com/200/300'}}]);
-
-
     Global.userAddress =
         metaCred.address.toString(); //Save the user address to globals
     ready = true;
-
-    //print('Connection successful: ' + Global.userAddress);
   }
 
   CredentialsWithKnownAddress getCredentials() {

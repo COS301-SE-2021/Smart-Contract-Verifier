@@ -16,7 +16,6 @@ class TokenService {
       String id = await Global.getContractId('Verifier');
      var res = await _smC.makeWriteCall(
           'approve', [EthereumAddress.fromHex(id), stake]);
-     print ('Set allowance res: ' + res);
     }
     catch (e) {
       print (e);
