@@ -11,7 +11,6 @@
 ![](https://img.shields.io/github/issues/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/forks/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/stars/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
-![](https://img.shields.io/github/workflow/status/COS301-SE-2021/Smart-Contract-Verifier/CI%20tests?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/issues-pr/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/issues-pr-closed/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/last-commit/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
@@ -58,15 +57,23 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 
 [Demo 3](https://drive.google.com/file/d/1vS_SaMyM0epwD7M5oAB1QdPp8GzLKYTC/view?usp=sharing "Demo 3 Pre-Recorded")
 
+[Demo 4](https://drive.google.com/file/d/1acLT4B9GEwvFcqKZf9p3V9PTg7i8YIya/view?usp=sharing "Demo 4 Pre-Recorded")
+
 
 ### User Manual
-[Unison User Manual Latest](https://drive.google.com/file/d/1sNw70yxIga1BZSfhdbnCgj2IBF_MbHdE/view?usp=sharing "User Manual Document Demo 3")
+[Unison User Manual Latest](https://drive.google.com/file/d/1mfi73z7QxIC34tXWid9Nj7GetGbABWW6/view?usp=sharing "User Manual Document Demo 4")
 
-[User Manual Demo 2](https://drive.google.com/file/d/1shscD5YW5OfNZLZ7aP523m4GYGqFGw9g/view?usp=sharing "User Manual Document Demo 2")
+[Unison User Manual Demo 3](https://drive.google.com/file/d/1sNw70yxIga1BZSfhdbnCgj2IBF_MbHdE/view?usp=sharing "User Manual Document Demo 3")
+
+[Unison User Manual Demo 2](https://drive.google.com/file/d/1shscD5YW5OfNZLZ7aP523m4GYGqFGw9g/view?usp=sharing "User Manual Document Demo 2")
 
 
 ### Technical Installation Guide
 [Unison Technical Installation Guide](https://drive.google.com/file/d/1FZTGVNUSmbhKs3D8sNz2AjNKBPJIuBz7/view?usp=sharing "Technical Installation Guide Document")
+
+
+### Testing Policy
+[Testing Policy](https://drive.google.com/file/d/1JFRMePWuch4JXCdratRtmVVqixmk6FQz/view?usp=sharing "Testing Policy Document")
 
 
 ### Coding Standards
