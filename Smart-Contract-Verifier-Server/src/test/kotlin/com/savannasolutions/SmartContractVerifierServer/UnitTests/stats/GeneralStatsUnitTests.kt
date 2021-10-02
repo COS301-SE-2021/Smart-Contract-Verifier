@@ -64,7 +64,6 @@ class GeneralStatsUnitTests {
         whenever(agreementsRepository.getAllBySealedDateNotNull()).thenReturn(list)
         whenever(judgesRepository.getAllByAgreement(mockAgreementNBC)).thenReturn(judgeList)
         whenever(userRepository.countAll()).thenReturn(3)
-        whenever(judgesRepository.countAll()).thenReturn(1)
 
         val response = statsService.generalStats()
 
@@ -73,7 +72,6 @@ class GeneralStatsUnitTests {
         assertNotNull(response.responseObject)
         assertEquals(response.responseObject!!.concludedAgreements, 0)
         assertEquals(response.responseObject!!.disputedAgreements, 1)
-        assertEquals(response.responseObject!!.numberOfJudges, 1)
         assertEquals(response.responseObject!!.totalAgreements, 2)
         assertEquals(response.responseObject!!.sealedAgreements, 1)
     }
