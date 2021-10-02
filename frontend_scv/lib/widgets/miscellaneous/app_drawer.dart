@@ -98,10 +98,41 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           Divider(),
+          Flexible(
+            child: Container(),
+          ),
           Divider(),
-          TextButton(onPressed: () async {await launch('https://forms.gle/KaZP94e2iF2zodPF7');}, child: Text('Feedback')),
+          TextButton(
+              onPressed: () async {
+                await launch('https://forms.gle/KaZP94e2iF2zodPF7');
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Feedback'),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(Icons.rate_review_outlined),
+                ],
+              )),
           SizedBox(height: 5),
-          TextButton(onPressed: () async {await launch('https://drive.google.com/file/d/1mfi73z7QxIC34tXWid9Nj7GetGbABWW6/view');}, child: Text('User manual')),
+          TextButton(
+              onPressed: () async {
+                await launch(
+                    'https://drive.google.com/file/d/1mfi73z7QxIC34tXWid9Nj7GetGbABWW6/view');
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('User manual'),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(Icons.support_outlined),
+                ],
+              )),
+          SizedBox(height: 15),
         ],
       ),
     );
