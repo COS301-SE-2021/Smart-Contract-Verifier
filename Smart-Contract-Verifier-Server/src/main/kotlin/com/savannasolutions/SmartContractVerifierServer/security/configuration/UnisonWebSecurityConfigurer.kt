@@ -21,7 +21,7 @@ class UnisonWebSecurityConfigurer: WebSecurityConfigurerAdapter() {
     lateinit var securityConfig: SecurityConfig
 
     override fun configure(http: HttpSecurity?) {
-        http?.cors()?.configurationSource(corsConfigurationSource())?.configurationSource { CorsConfiguration().applyPermitDefaultValues() }?.and()?.csrf()?.disable()?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http?.cors()?.configurationSource(corsConfigurationSource())?.and()?.csrf()?.disable()?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             ?.and()?.addFilterAfter(UnisonAuthorisationFilter(securityConfig), BasicAuthenticationFilter::class.java)
     }
 
