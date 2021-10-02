@@ -47,16 +47,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                 val creationEvent = Event("CreateAgreement", contractConfig.creationList)
                 createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
                 web3j.ethLogFlowable(createFilter).subscribe { event ->
-                    val creationData = FunctionReturnDecoder.decode(
-                        event.data,
-                        contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?
-                    )
-                    negotiationService.sealAgreement(
-                        SealAgreementRequest(
-                            UUID.fromString(creationData[3].toString()),
-                            creationData[2].value as BigInteger
-                        )
-                    )
+                    sealAgreementFromEvent(event)
                 }
 
                 val juryFilter = EthFilter(
@@ -66,17 +57,36 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                 )
                 val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
                 juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
+
                 web3j.ethLogFlowable(juryFilter).subscribe { event ->
-                    val juryData = FunctionReturnDecoder.decode(
-                        event.data,
-                        contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?
-                    )
-                    assignJury(juryData[0].value as BigInteger, juryData[1].value as ArrayList<Address>)
+                    assignJuryFromEvent(event)
                 }
+
             } catch (e: Exception) {
                 throw RuntimeException(e)
             }
         }
+    }
+
+    fun sealAgreementFromEvent(event: org.web3j.protocol.core.methods.response.Log){
+        val creationData = FunctionReturnDecoder.decode(
+            event.data,
+            contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?
+        )
+        negotiationService.sealAgreement(
+            SealAgreementRequest(
+                UUID.fromString(creationData[3].toString()),
+                creationData[2].value as BigInteger
+            )
+        )
+    }
+
+    fun assignJuryFromEvent(event: org.web3j.protocol.core.methods.response.Log) {
+        val juryData = FunctionReturnDecoder.decode(
+            event.data,
+            contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?
+        )
+        assignJury(juryData[0].value as BigInteger, juryData[1].value as ArrayList<Address>)
     }
 
     fun assignJury(agreementIndex: BigInteger, jurors: ArrayList<Address>){
