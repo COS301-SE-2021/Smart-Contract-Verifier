@@ -7,6 +7,7 @@ import 'package:unison/models/generalStats.dart';
 import 'package:unison/services/Server/statsService.dart';
 import 'package:unison/widgets/miscellaneous/dashboard_actions.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
+import 'package:unison/widgets/statistics/generalStatsWidget.dart';
 
 import '../models/contracts.dart';
 import '../screens/edit_contract_screen.dart';
@@ -15,7 +16,7 @@ import '../widgets/agreement/contracts_grid.dart';
 
 class StatsScreen extends StatelessWidget {
   static const routeName = '/view-stats';
-  StatsService _statServ = StatsService();
+  final StatsService _statServ = StatsService();
 
   //This returns an appropriate widget after getting some statistics
   Future<Widget> getStats() async {
@@ -28,7 +29,7 @@ class StatsScreen extends StatelessWidget {
       return Text(e);
     }
 
-    return Text('Total Number of Users: ' + gS.totalUsers.toString());
+    return GeneralStatsWidget(gS);
   }
 
   @override
