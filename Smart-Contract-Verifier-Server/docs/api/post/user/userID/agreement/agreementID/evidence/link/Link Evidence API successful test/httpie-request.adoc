@@ -4,5 +4,5 @@ $ echo '{
   "EvidenceUrl" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 }' | http POST 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/377f66e7-5060-48f8-a44b-ae0bea405a5e/evidence/link' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzMyMDI2OTZ9.HDqejkW24r6Cpdo_myfIrxbwIN-OZwNAPma1mIvbzpI'
+    'Authorization:bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzMyMTAyOTZ9.dxVEwCrLu60WfFxNk1t_SU7uMnYggseok9NqK3lsz2k'
 ----
