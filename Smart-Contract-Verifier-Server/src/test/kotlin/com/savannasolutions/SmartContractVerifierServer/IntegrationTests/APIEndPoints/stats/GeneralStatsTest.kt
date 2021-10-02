@@ -94,12 +94,12 @@ class GeneralStatsTest {
         judgeList.add(judge)
 
         //when
-        whenever(agreementsRepository.countAgreements()).thenReturn(2)
+        whenever(agreementsRepository.selectAll()).thenReturn(list)
         whenever(agreementsRepository.countAgreementsByBlockchainIDNotNull()).thenReturn(1)
         whenever(agreementsRepository.countAgreementsByBlockchainIDNull()).thenReturn(1)
-        whenever(agreementsRepository.getAllBySealedDateNotNull()).thenReturn(list)
+        whenever(agreementsRepository.selectAll()).thenReturn(list)
         whenever(judgesRepository.getAllByAgreement(mockAgreementNBC)).thenReturn(judgeList)
-        whenever(userRepository.countAll()).thenReturn(3)
+        whenever(userRepository.selectAll()).thenReturn(userList)
     }
 
     @Test
@@ -112,7 +112,7 @@ class GeneralStatsTest {
 
         val response = requestSender(fieldDescriptorResponse)
 
-        assertContains(response.contentAsString, "SUCCESS")
+        assertContains(response.contentAsString, "SUCCESSFUL")
     }
 
 }
