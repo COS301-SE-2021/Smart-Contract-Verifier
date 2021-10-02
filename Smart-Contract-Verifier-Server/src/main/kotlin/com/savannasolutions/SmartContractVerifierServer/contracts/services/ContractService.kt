@@ -7,6 +7,7 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SealAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.reactivex.subscribers.DisposableSubscriber
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.web3j.abi.EventEncoder
@@ -46,9 +47,14 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                 )
                 val creationEvent = Event("CreateAgreement", contractConfig.creationList)
                 createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
-                web3j.ethLogFlowable(createFilter).subscribe { event ->
-                    sealAgreementFromEvent(event)
-                }
+                web3j.ethLogFlowable(createFilter).subscribe(
+                    { event ->
+                        sealAgreementFromEvent(event)
+                    },
+                    { err->
+                        print("Blockchain unreachable: ${err.message}")
+                    }
+                )
 
                 val juryFilter = EthFilter(
                     DefaultBlockParameterName.EARLIEST,
@@ -58,9 +64,14 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                 val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
                 juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
 
-                web3j.ethLogFlowable(juryFilter).subscribe { event ->
-                    assignJuryFromEvent(event)
-                }
+                web3j.ethLogFlowable(juryFilter).subscribe(
+                    {event->
+                        assignJuryFromEvent(event)
+                    },
+                    {err->
+                        print("Blockchain unreachable: ${err.message}")
+                    }
+                )
 
             } catch (e: Exception) {
                 throw RuntimeException(e)
