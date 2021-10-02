@@ -15,7 +15,7 @@ class GeneralStats {
   GeneralStats() {
     totalUsers = 10;
     numAgreements = 20;
-    numJudges = 15;
+   // numJudges = 15;
     numSealed = 5;
     numUnsealed = 0;
     averageNegPeriod = 30.5;
@@ -26,7 +26,7 @@ class GeneralStats {
   GeneralStats.fromJSON(Map<String, dynamic> jsn) {
       totalUsers = jsn['TotalUsers'];
       numAgreements = jsn['TotalAgreements'];
-      numJudges = jsn['NumberOfJudges'];
+      //numJudges = jsn['NumberOfJudges'];
       numSealed = jsn['SealedAgreements'];
       numUnsealed = jsn['UnSealedAgreements'];
       averageNegPeriod = jsn['AverageNegotiationPeriod'];

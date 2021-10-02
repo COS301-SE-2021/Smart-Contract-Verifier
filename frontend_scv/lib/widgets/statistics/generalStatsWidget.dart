@@ -23,7 +23,7 @@ class GeneralStatsWidget extends StatelessWidget {
           Column(
             children: [
               Text('Total number of users: ' + _stats.totalUsers.toString()),
-              Text('Judges: ' + _stats.numJudges.toString()),
+              //Text('Judges: ' + _stats.numJudges.toString()),
               Text('Agreements: ' + _stats.numAgreements.toString())
             ],
           ),
