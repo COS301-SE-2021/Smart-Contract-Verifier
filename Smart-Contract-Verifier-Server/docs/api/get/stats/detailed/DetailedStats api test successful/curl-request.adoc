@@ -1,0 +1,9 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/stats/detailed' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "StartDate" : "2021-10-02",
+  "EndDate" : "2021-10-01"
+}'
+----
