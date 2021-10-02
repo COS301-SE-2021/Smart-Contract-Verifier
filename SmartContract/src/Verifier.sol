@@ -93,7 +93,11 @@ contract Verifier{
     }
 
     function rejectAgreement(uint agreeID) public inAgreement(agreeID){
-        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED, "E4");
+        require(agreements[agreeID].state == AgreementLib.AgreementState.PROPOSED ||
+            agreements[agreeID].state == AgreementLib.AgreementState.ACCEPTED, "E4");
+
+        // If accepted but not active, it means the platform fee hasn't been paid yet
+        // Therefore there is not state where a rejected agreement has a paid platform fee
 
         for(uint i=0; i<agreements[agreeID].numPayments; i++){
             // Doesn't use _rejectAgreement, since that function assumes paidIn == true
