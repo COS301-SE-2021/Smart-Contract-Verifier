@@ -24,8 +24,6 @@ async function addNetwork(name, url, id, cName, cSymbol) {
 
 	var netw = await window.ethereum.networkVersion;
 
-	console.log('CurrNet: ' + netw);
-	console.log('NewNet: ' + id);
 	if (netw != id)
 	await window.ethereum.request({ method: 'wallet_addEthereumChain', params: pars });
 
