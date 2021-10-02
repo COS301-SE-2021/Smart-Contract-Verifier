@@ -7,6 +7,7 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SealAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.reactivex.subscribers.DisposableSubscriber
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import org.web3j.abi.EventEncoder
@@ -32,6 +33,8 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                                   private val contractConfig: ContractConfig,){
 
     private lateinit var web3j: Web3j
+    lateinit var juryFilter: EthFilter
+    lateinit var createFilter: EthFilter
 
     @PostConstruct
     fun initEventListener() {
@@ -39,44 +42,75 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
             try {
                 web3j = Web3j.build(HttpService(contractConfig.nodeAddress))
 
-                val createFilter = EthFilter(
+                createFilter = EthFilter(
                     DefaultBlockParameterName.EARLIEST,
                     DefaultBlockParameterName.LATEST,
                     contractConfig.contractId
                 )
                 val creationEvent = Event("CreateAgreement", contractConfig.creationList)
                 createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
-                web3j.ethLogFlowable(createFilter).subscribe { event ->
-                    val creationData = FunctionReturnDecoder.decode(
-                        event.data,
-                        contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?
-                    )
-                    negotiationService.sealAgreement(
-                        SealAgreementRequest(
-                            UUID.fromString(creationData[3].toString()),
-                            creationData[2].value as BigInteger
-                        )
-                    )
-                }
 
-                val juryFilter = EthFilter(
+                juryFilter = EthFilter(
                     DefaultBlockParameterName.EARLIEST,
                     DefaultBlockParameterName.LATEST,
                     contractConfig.contractId
                 )
                 val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
                 juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
-                web3j.ethLogFlowable(juryFilter).subscribe { event ->
-                    val juryData = FunctionReturnDecoder.decode(
-                        event.data,
-                        contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?
-                    )
-                    assignJury(juryData[0].value as BigInteger, juryData[1].value as ArrayList<Address>)
-                }
+
+                registerSubscriber('J')
+                registerSubscriber('C')
+
             } catch (e: Exception) {
                 throw RuntimeException(e)
             }
         }
+    }
+
+    fun registerSubscriber(type: Char){
+        when(type){
+            'J' -> web3j.ethLogFlowable(juryFilter).subscribe(
+                {event->
+                    assignJuryFromEvent(event)
+                },
+                {err->
+                    println("Blockchain unreachable: ${err.message}")
+                    Thread.sleep(10000)
+                    registerSubscriber('C')
+                }
+            )
+            'C' -> web3j.ethLogFlowable(createFilter).subscribe(
+                { event ->
+                    sealAgreementFromEvent(event)
+                },
+                { err->
+                    println("Blockchain unreachable: ${err.message}")
+                    Thread.sleep(10000)
+                    registerSubscriber('C')
+                }
+            )
+        }
+    }
+
+    fun sealAgreementFromEvent(event: org.web3j.protocol.core.methods.response.Log){
+        val creationData = FunctionReturnDecoder.decode(
+            event.data,
+            contractConfig.creationList as MutableList<TypeReference<Type<Any>>>?
+        )
+        negotiationService.sealAgreement(
+            SealAgreementRequest(
+                UUID.fromString(creationData[3].toString()),
+                creationData[2].value as BigInteger
+            )
+        )
+    }
+
+    fun assignJuryFromEvent(event: org.web3j.protocol.core.methods.response.Log) {
+        val juryData = FunctionReturnDecoder.decode(
+            event.data,
+            contractConfig.juryList as MutableList<TypeReference<Type<Any>>>?
+        )
+        assignJury(juryData[0].value as BigInteger, juryData[1].value as ArrayList<Address>)
     }
 
     fun assignJury(agreementIndex: BigInteger, jurors: ArrayList<Address>){
@@ -84,10 +118,17 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
         if(agreement != null){
             jurors.forEach { address ->
                 if(userRepository.existsByPublicWalletIDAllIgnoreCase(address.value)) {
-                    val juror = Judges()
-                    juror.agreement = agreement
-                    juror.judge = userRepository.getUserByPublicWalletIDAllIgnoreCase(address.value)!!
-                    judgesRepository.save(juror)
+                    val userAgreements = judgesRepository.getAllByJudge(userRepository.getUserByPublicWalletIDAllIgnoreCase(address.value)!!)
+                    var found = false
+
+                    userAgreements?.forEach { judges -> if(judges.agreement.ContractID == agreement.ContractID) found = true }
+
+                    if(!found){
+                        val juror = Judges()
+                        juror.agreement = agreement
+                        juror.judge = userRepository.getUserByPublicWalletIDAllIgnoreCase(address.value)!!
+                        judgesRepository.save(juror)
+                    }
                 }
             }
         }

@@ -94,7 +94,7 @@ internal class GetAllEvidenceUnitTest {
         val linkedEvidenceObj = LinkedEvidence(UUID.fromString("523ce05d-aea1-42b4-a405-2ed345e8ecb6"),
                                             fileURL)
         linkedEvidenceObj.evidence = linkedEvidence!!
-        linkedEvidence!!.evidenceUrl = linkedEvidenceObj!!
+        linkedEvidence!!.evidenceUrl = linkedEvidenceObj
 
         val evidenceList = ArrayList<Evidence>()
         evidenceList.add(linkedEvidence!!)

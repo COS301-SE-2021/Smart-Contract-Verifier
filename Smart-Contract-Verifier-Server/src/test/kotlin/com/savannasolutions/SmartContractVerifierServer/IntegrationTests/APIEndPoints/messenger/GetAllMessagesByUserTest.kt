@@ -163,7 +163,6 @@ class GetAllMessagesByUserTest {
         fieldDescriptorResponse.addAll(GetAllMessagesByUserResponse.response())
         //End of documentation
 
-        0
         val response = requestSender(userA.publicWalletID, fieldDescriptorResponse, "GetAllMessagesByUser successful")
 
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
