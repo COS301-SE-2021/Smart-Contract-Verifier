@@ -37,9 +37,6 @@ class StatsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: FunkyText('Unison Statistics'),
-          actions: [
-            DashBoardActions(),
-          ],
         ),
         drawer: AppDrawer(),
         body: FutureBuilder(future: getStats(), builder: (context, snap) {
