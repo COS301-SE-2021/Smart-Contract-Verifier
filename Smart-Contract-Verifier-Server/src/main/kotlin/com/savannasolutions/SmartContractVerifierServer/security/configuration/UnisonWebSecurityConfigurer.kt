@@ -29,8 +29,8 @@ class UnisonWebSecurityConfigurer: WebSecurityConfigurerAdapter() {
         @Bean
         fun corsConfigurationSource(): org.springframework.web.cors.CorsConfigurationSource {
             val config = CorsConfiguration()
-            config.allowedOrigins = listOf("http://localhost:8080")
-            config.allowedMethods = listOf("GET", "POST")
+            config.allowedOriginPatterns = listOf("*")
+            config.allowedMethods = listOf("GET", "POST", "DELETE", "PUT")
             val src = UrlBasedCorsConfigurationSource()
             src.registerCorsConfiguration("/**", config)
             return src
