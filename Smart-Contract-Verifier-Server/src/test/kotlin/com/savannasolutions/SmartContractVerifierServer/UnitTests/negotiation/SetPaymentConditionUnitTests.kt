@@ -34,12 +34,13 @@ internal class SetPaymentConditionUnitTests {
     private fun parameterizedSetPaymentCondition(userID: String,
                                                     paymentAmount: Double,
                                                     agreementExists: Boolean,
-                                                    propUser: String): ApiResponse<SetPaymentConditionResponse>
+                                                    propUser: String,
+                                                    movedToBlockchain: Boolean = false): ApiResponse<SetPaymentConditionResponse>
     {
         //given
         var mockAgreement = Agreements(ContractID = UUID.fromString("7fa870d3-2119-4b41-8062-46e2d5136937"),
             CreatedDate = Date(),
-            MovedToBlockChain = false)
+            MovedToBlockChain = movedToBlockchain)
 
         val userList = ArrayList<User>()
         userList.add(userA)
@@ -171,7 +172,8 @@ internal class SetPaymentConditionUnitTests {
         val response = parameterizedSetPaymentCondition(userA.publicWalletID,
             500.0,
             true,
-            otherUser.publicWalletID)
+            userB.publicWalletID,
+            true)
 
         //then
         Assertions.assertEquals(response.status, ResponseStatus.FAILED)

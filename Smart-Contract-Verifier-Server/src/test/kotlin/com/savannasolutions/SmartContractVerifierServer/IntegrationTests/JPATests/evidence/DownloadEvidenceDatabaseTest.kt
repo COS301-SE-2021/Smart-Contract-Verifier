@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.util.*
 import kotlin.io.path.Path
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 

@@ -28,13 +28,14 @@ internal class AcceptConditionUnitTests {
                                              agreementExists: Boolean,
                                              conditionID: UUID,
                                              agreementID: UUID,
-                                             status: ConditionStatus ): ApiResponse<Objects>
+                                             status: ConditionStatus,
+                                             moveToBlockchain: Boolean = false ): ApiResponse<Objects>
     {
         //Given
         var mockAgreementA = Agreements(
             agreementID,
             CreatedDate = Date(),
-            MovedToBlockChain = false,)
+            MovedToBlockChain = moveToBlockchain,)
 
         val userA = User("UserA","uA")
         val userB = User("UserB", "uB")

@@ -21,10 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
-import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureDataJpa
@@ -145,8 +144,12 @@ class GetAllEvidenceDatabaseTest {
 
         //then
         assertNotNull(response.responseObject)
-        assertTrue(response.responseObject!!.evidenceHashes.contains("LINKED:${lEvidence.evidenceId},HASH:${lEvidence.evidenceHash}") )
-        assertTrue(response.responseObject!!.evidenceHashes.contains("UPLOADED:${uEvidence.evidenceId},HASH:${uEvidence.evidenceHash}") )
+        assertNotNull(response.responseObject!!.linkedEvidenceDetails)
+        assertFalse(response.responseObject!!.linkedEvidenceDetails!!.isEmpty())
+        assertNotNull(response.responseObject!!.uploadedEvidenceDetails)
+        assertFalse(response.responseObject!!.uploadedEvidenceDetails!!.isEmpty())
+        assertEquals(response.responseObject!!.linkedEvidenceDetails!![0].evidenceID, lEvidence.evidenceId)
+        assertEquals(response.responseObject!!.uploadedEvidenceDetails!![0].evidenceID, uEvidence.evidenceId)
 
     }
 }

@@ -10,6 +10,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -90,6 +92,7 @@ class GetMessageDetailTest {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/message/${messageID}")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "bearer ${generateToken(userID)}")
                 ).andDo(
             MockMvcRestDocumentation.document(
                 testName,
@@ -131,5 +134,12 @@ class GetMessageDetailTest {
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
-
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
+    }
 }

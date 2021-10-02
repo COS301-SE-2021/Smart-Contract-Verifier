@@ -14,11 +14,11 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
@@ -37,10 +37,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -78,8 +76,8 @@ class UploadEvidenceTest {
         evidenceConfig.initialise()
         //evidenceService.initialise()
         //given
-        user = User("test user")
-        otherUser = User("other")
+        user = User("0x7Ea7EA8D709B02444128e8b4d8C38d00842e77C3")
+        otherUser = User("0xF9276468FA51422cD528BEAcAb7aB548Ba71Cf17")
         agreement = Agreements(
             UUID.fromString("377f66e7-5060-48f8-a44b-ae0bea405a5e"),
             CreatedDate = Date()
@@ -129,6 +127,7 @@ class UploadEvidenceTest {
     {
         return mockMvc.perform(
             MockMvcRequestBuilders.multipart("/user/${userID}/agreement/${agreementID}/evidence/upload").file(file as MockMultipartFile)
+                .header("Authorization", "bearer ${generateToken(userID)}")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andDo(
             MockMvcRestDocumentation.document(
@@ -238,7 +237,7 @@ class UploadEvidenceTest {
             "testFile.txt",
             "text/Plain")
 
-        val response = requestSender("wrong user",
+        val response = requestSender("0x4BBb50cd3d5FF41512f5e454E980EEEaeeb4e0bb",
             agreement.ContractID,
             file,
             fieldDescriptor,
@@ -288,5 +287,12 @@ class UploadEvidenceTest {
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
     }
-
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
+    }
 }

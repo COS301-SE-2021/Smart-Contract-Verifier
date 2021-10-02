@@ -13,6 +13,8 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.models.Agree
 import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories.AgreementsRepository
 import com.savannasolutions.SmartContractVerifierServer.user.models.User
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -30,7 +32,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.test.assertContains
 
 @SpringBootTest
@@ -70,8 +71,8 @@ class GetAllEvidenceTest {
         evidenceConfig.initialise()
         //evidenceService.initialise()
         //given
-        user = User("test user")
-        otherUser = User("other")
+        user = User("0x743Fb032c0bE976e1178d8157f911a9e825d9E23")
+        otherUser = User("0x37Ec9a8aBFa094b24054422564e68B08aF3114B4")
         agreement = Agreements(
             UUID.fromString("377f66e7-5060-48f8-a44b-ae0bea405a5e"),
             CreatedDate = Date()
@@ -108,6 +109,7 @@ class GetAllEvidenceTest {
         return mockMvc.perform(
             MockMvcRequestBuilders
             .get("/user/${userId}/agreement/${agreementId}/evidence/")
+                .header("Authorization", "bearer ${generateToken(userId)}")
         ).andDo(
             MockMvcRestDocumentation.document(testName,
             Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
@@ -154,7 +156,7 @@ class GetAllEvidenceTest {
         fieldDescriptors.addAll(ApiResponse.apiFailedResponse())
         //end documentation
 
-        val response = requestSender("Invalid user",
+        val response = requestSender("0x69Ec9a8aBFa094b24054422564e68B08aF311400",
             agreement.ContractID,
             "Get All Evidence api test failed User doesn't exist",
             fieldDescriptors)
@@ -175,5 +177,14 @@ class GetAllEvidenceTest {
             fieldDescriptors)
 
         assertContains(response.contentAsString, "\"Status\":\"FAILED\"")
+    }
+
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
     }
 }

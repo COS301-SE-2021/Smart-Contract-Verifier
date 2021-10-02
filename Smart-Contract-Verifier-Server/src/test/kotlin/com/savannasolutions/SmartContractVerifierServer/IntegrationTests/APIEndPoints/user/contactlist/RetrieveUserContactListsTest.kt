@@ -7,6 +7,8 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.Contac
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.ContactListRepository
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
 import com.savannasolutions.SmartContractVerifierServer.user.responses.RetrieveUserContactListResponse
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -74,6 +76,7 @@ class RetrieveUserContactListsTest {
                               testName: String): MockHttpServletResponse {
         return mockMvc.perform(
             MockMvcRequestBuilders.get("/user/${userID}/contactList")
+                .header("Authorization", "bearer ${generateToken(userID)}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(
             MockMvcRestDocumentation.document(
@@ -111,7 +114,7 @@ class RetrieveUserContactListsTest {
         fieldDescriptorResponse.addAll(ApiResponse.apiFailedResponse())
         //End of Documentation
 
-        val response = requestSender("other user",
+        val response = requestSender("0x69Ec9a8aBFa094b24054422564e68B08aF311400",
             fieldDescriptorResponse,
             "RetrieveUserContactLists failed user does not exist")
 
@@ -134,5 +137,12 @@ class RetrieveUserContactListsTest {
         assertContains(response.contentAsString, "\"Status\":\"SUCCESSFUL\"")
         assertContains(response.contentAsString, "ListInfo\":[]")
     }
-
+    fun generateToken(userID: String): String? {
+        val signingKey = Keys.hmacShaKeyFor("ThisIsATestKeySpecificallyForTests".toByteArray())
+        return Jwts.builder()
+            .setSubject(userID)
+            .setExpiration(Date(System.currentTimeMillis() + 1080000))
+            .signWith(signingKey)
+            .compact()
+    }
 }
