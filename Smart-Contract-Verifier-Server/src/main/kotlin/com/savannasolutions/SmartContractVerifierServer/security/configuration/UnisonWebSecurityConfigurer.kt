@@ -9,6 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.cors.reactive.CorsConfigurationSource
+import org.springframework.web.server.ServerWebExchange
+import java.util.*
 
 @Configuration
 @Import(SecurityConfig::class)
@@ -22,4 +26,13 @@ class UnisonWebSecurityConfigurer: WebSecurityConfigurerAdapter() {
     }
 
 
+        @Bean
+        fun corsConfigurationSource(): org.springframework.web.cors.CorsConfigurationSource {
+            val config = CorsConfiguration()
+            config.allowedOrigins = listOf("**")
+            config.allowedMethods = listOf("GET", "POST")
+            val src = UrlBasedCorsConfigurationSource()
+            src.registerCorsConfiguration("/**", config)
+            return src
+        }
 }
