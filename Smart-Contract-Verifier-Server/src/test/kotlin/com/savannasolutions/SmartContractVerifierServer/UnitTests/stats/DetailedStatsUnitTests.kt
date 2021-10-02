@@ -21,7 +21,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class DetailedStatsUnitTests {
-    var agreementsRepository : AgreementsRepository = mock()
+/*    var agreementsRepository : AgreementsRepository = mock()
     var userRepository : UserRepository = mock()
     var judgesRepository: JudgesRepository = mock()
 
@@ -111,6 +111,6 @@ class DetailedStatsUnitTests {
         val response = parameterizedDetailedStats(startDate, endDate, createdDate, sealedDate)
         assertEquals(response.status, ResponseStatus.FAILED)
     }
-
+*/
 
 }
