@@ -31,7 +31,7 @@ import kotlin.test.assertContains
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs
+@AutoConfigureRestDocs(outputDir = "docs/api/get/stats")
 class GeneralStatsTest {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -48,7 +48,7 @@ class GeneralStatsTest {
     private fun requestSender(responseFieldDescriptors: ArrayList<FieldDescriptor>)
             : MockHttpServletResponse {
         return mockMvc.perform(
-            MockMvcRequestBuilders.post("/stats")
+            MockMvcRequestBuilders.get("/stats")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(
             MockMvcRestDocumentation.document(
@@ -114,7 +114,6 @@ class GeneralStatsTest {
         val response = requestSender(fieldDescriptorResponse)
 
         assertContains(response.contentAsString, "SUCCESS")
-        //TODO: UPDATE THE SECURITY FILTERS
     }
 
 }
