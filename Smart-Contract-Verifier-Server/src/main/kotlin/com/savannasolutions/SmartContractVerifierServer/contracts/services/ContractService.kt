@@ -33,6 +33,8 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                                   private val contractConfig: ContractConfig,){
 
     private lateinit var web3j: Web3j
+    lateinit var juryFilter: EthFilter
+    lateinit var createFilter: EthFilter
 
     @PostConstruct
     fun initEventListener() {
@@ -40,23 +42,15 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
             try {
                 web3j = Web3j.build(HttpService(contractConfig.nodeAddress))
 
-                val createFilter = EthFilter(
+                createFilter = EthFilter(
                     DefaultBlockParameterName.EARLIEST,
                     DefaultBlockParameterName.LATEST,
                     contractConfig.contractId
                 )
                 val creationEvent = Event("CreateAgreement", contractConfig.creationList)
                 createFilter.addSingleTopic(EventEncoder.encode(creationEvent))
-                web3j.ethLogFlowable(createFilter).subscribe(
-                    { event ->
-                        sealAgreementFromEvent(event)
-                    },
-                    { err->
-                        print("Blockchain unreachable: ${err.message}")
-                    }
-                )
 
-                val juryFilter = EthFilter(
+                juryFilter = EthFilter(
                     DefaultBlockParameterName.EARLIEST,
                     DefaultBlockParameterName.LATEST,
                     contractConfig.contractId
@@ -64,18 +58,37 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                 val juryAssignedEvent = Event("JuryAssigned", contractConfig.juryList)
                 juryFilter.addSingleTopic(EventEncoder.encode(juryAssignedEvent))
 
-                web3j.ethLogFlowable(juryFilter).subscribe(
-                    {event->
-                        assignJuryFromEvent(event)
-                    },
-                    {err->
-                        print("Blockchain unreachable: ${err.message}")
-                    }
-                )
+                registerSubscriber('J')
+                registerSubscriber('C')
 
             } catch (e: Exception) {
                 throw RuntimeException(e)
             }
+        }
+    }
+
+    fun registerSubscriber(type: Char){
+        when(type){
+            'J' -> web3j.ethLogFlowable(juryFilter).subscribe(
+                {event->
+                    assignJuryFromEvent(event)
+                },
+                {err->
+                    println("Blockchain unreachable: ${err.message}")
+                    Thread.sleep(10000)
+                    registerSubscriber('C')
+                }
+            )
+            'C' -> web3j.ethLogFlowable(createFilter).subscribe(
+                { event ->
+                    sealAgreementFromEvent(event)
+                },
+                { err->
+                    println("Blockchain unreachable: ${err.message}")
+                    Thread.sleep(10000)
+                    registerSubscriber('C')
+                }
+            )
         }
     }
 
