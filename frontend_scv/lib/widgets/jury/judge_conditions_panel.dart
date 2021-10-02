@@ -10,7 +10,6 @@ class JudgeConditionsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(_contract.conditions);
     return Container(
       // padding: EdgeInsets.all(8),
       child: _contract.conditions.isEmpty
