@@ -9,6 +9,8 @@ class StatsService {
 
   ///Get general statistics on Unison
   Future<GeneralStats> getGeneralStats() async {
+    //Temporarily commented out
+
     // ApiResponse res = await _api.getData('/stats');
     //
     // if (!res.successful) {

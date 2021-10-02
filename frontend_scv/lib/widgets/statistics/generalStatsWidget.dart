@@ -18,6 +18,7 @@ class GeneralStatsWidget extends StatelessWidget {
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(24.0),
         color: const Color(0xff2c2c2c),),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             children: [

@@ -29,7 +29,7 @@ class StatsScreen extends StatelessWidget {
       return Text(e);
     }
 
-    return GeneralStatsWidget(gS);
+    return Column(children: [SizedBox(height: 20),  GeneralStatsWidget(gS)],);
   }
 
   @override
