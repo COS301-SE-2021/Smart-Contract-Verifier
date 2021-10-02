@@ -3,40 +3,58 @@
 
 //All data can be formatted here
 //TODO: Have fun Kevin
-
-import 'package:flutter/cupertino.dart';
 import 'package:unison/models/generalStats.dart';
+import 'package:flutter/material.dart';
 
 class GeneralStatsWidget extends StatelessWidget {
-
   final GeneralStats _stats;
   GeneralStatsWidget(this._stats);
 
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(24.0),
-        color: const Color(0xff2c2c2c),),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              Text('Total number of users: ' + _stats.totalUsers.toString()),
-              //Text('Judges: ' + _stats.numJudges.toString()),
-              Text('Agreements: ' + _stats.numAgreements.toString())
-            ],
-          ),
-          Column(
-            children: [
-              Text('Agreements sealed: ' + _stats.numSealed.toString()),
-              Text('Agreements concluded: ' + _stats.concluded.toString()),
-              Text('Agreements disputed: ' + _stats.disputed.toString()),
-              Text('Average negotiation period: ' + _stats.averageNegPeriod.toString()),
-            ],
-          )
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+            leading: Icon(
+              Icons.people,
+              color: Colors.pinkAccent,
+            ),
+            title: Text('Total number of '
+                    'users: ' +
+                _stats.totalUsers.toString())),
+        ListTile(
+            leading: Icon(
+              Icons.request_page_outlined,
+              color: Colors.pinkAccent,
+            ),
+            title: Text('Agreements: ' + _stats.numAgreements.toString())),
+        ListTile(
+            leading: Icon(
+              Icons.verified_outlined,
+              color: Colors.pinkAccent,
+            ),
+            title: Text('Agreements sealed: ' + _stats.numSealed.toString())),
+        ListTile(
+            leading: Icon(
+              Icons.military_tech_outlined,
+              color: Colors.pinkAccent,
+            ),
+            title:
+                Text('Agreements concluded: ' + _stats.concluded.toString())),
+        ListTile(
+            leading: Icon(
+              Icons.gavel_outlined,
+              color: Colors.pinkAccent,
+            ),
+            title: Text('Agreements disputed: ' + _stats.disputed.toString())),
+        ListTile(
+            leading: Icon(
+              Icons.rule_outlined,
+              color: Colors.pinkAccent,
+            ),
+            title: Text('Average negotiation period: ' +
+                _stats.averageNegPeriod.toString())),
+      ],
     );
   }
 }
