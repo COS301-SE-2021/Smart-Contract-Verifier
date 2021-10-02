@@ -24,12 +24,18 @@ class StatsScreen extends StatelessWidget {
 
     try {
       gS = await _statServ.getGeneralStats();
-    }
-    catch (e) {
+    } catch (e) {
       return Text(e);
     }
 
-    return Column(children: [SizedBox(height: 20),  GeneralStatsWidget(gS)],);
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Container(
+          child: Card(
+              elevation: 15,
+              color: Color.fromRGBO(56, 61, 81, 1),
+              child: GeneralStatsWidget(gS))),
+    );
   }
 
   @override
@@ -39,10 +45,13 @@ class StatsScreen extends StatelessWidget {
           title: FunkyText('Unison Statistics'),
         ),
         drawer: AppDrawer(),
-        body: FutureBuilder(future: getStats(), builder: (context, snap) {
-          return snap.connectionState == ConnectionState.done
-              ? snap.data
-              : AwesomeLoader();
-        },));
+        body: FutureBuilder(
+          future: getStats(),
+          builder: (context, snap) {
+            return snap.connectionState == ConnectionState.done
+                ? snap.data
+                : AwesomeLoader();
+          },
+        ));
   }
 }
