@@ -80,8 +80,8 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.auto_graph_sharp),
-            title: Text('Some Statistics'),
+            leading: Icon(Icons.analytics_outlined),
+            title: Text('Analytics'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(StatsScreen.routeName);
             },
