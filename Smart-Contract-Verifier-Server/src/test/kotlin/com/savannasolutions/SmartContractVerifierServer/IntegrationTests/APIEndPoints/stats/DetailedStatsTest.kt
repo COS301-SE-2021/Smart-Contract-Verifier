@@ -113,7 +113,6 @@ class DetailedStatsTest {
         whenever(agreementsRepository.getAllBySealedDateNotNull()).thenReturn(list)
         whenever(judgesRepository.getAllByAgreement(mockAgreementNBC)).thenReturn(judgeList)
         whenever(userRepository.countAll()).thenReturn(3)
-        whenever(judgesRepository.countAll()).thenReturn(1)
 
         endDateCorrect = Date()
         startDateIncorrect = Date()
