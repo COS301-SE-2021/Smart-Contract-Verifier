@@ -3,9 +3,29 @@
 
 async function signWithMetamask(data, address) {
 
-	console.log('Signing ' + data);
 	var web3 = window.ethereum;
 	var res = await web3.request({ method: 'personal_sign' , params: [(data.toString() +' ').trim(), address]});
-	console.log('Signed: ' + res);
 	return res;
 }
+
+async function addNetwork(name, url, id, cName, cSymbol) {
+
+	const pars = [{
+		chainId: id,
+		chainName: name,
+		nativeCurrency: {
+			name: cName,
+			symbol: cSymbol,
+			decimals: 18
+		},
+		rpcUrls: [url],
+//		blockExplorerUrls: ['https://explorer.rsk.co']
+	}]
+
+	var netw = await window.ethereum.networkVersion;
+
+	if (netw != id)
+	await window.ethereum.request({ method: 'wallet_addEthereumChain', params: pars });
+
+}
+

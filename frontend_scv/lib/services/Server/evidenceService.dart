@@ -26,16 +26,11 @@ class EvidenceService {
   ///Get the evidence IDs and hashes for an agreement
   Future<List<EvidenceData>> getEvidenceData(String id) async {
 
-    print ('One');
     ApiResponse res = await _api.getData('/user/${Global.userAddress}/agreement/$id/evidence/');
-    print ('Two');
     List<dynamic> evs = res.result['UploadedEvidenceDetails'];
     evs.addAll(res.result['LinkedEvidenceDetails']);
-    print ('Three');
     List<EvidenceData> ret = [];
-    print ('About to start');
     for (var i in evs) {
-      //ret.add(EvidenceData.fromString(i));
       ret.add(EvidenceData.fromJSON(i));
     }
 
@@ -45,7 +40,6 @@ class EvidenceService {
   ///Get the Evidence file for a given evidenceData (Uploaded type)
   Future<Evidence> getEvidenceU(EvidenceData evd, String id) async {
     PlatformFile res = await _api.fileGet('/user/${Global.userAddress}/agreement/$id/evidence/${evd.id}/download');
-    //print ('File :' + res.name);
     Evidence ev = Evidence(id);
     ev.baseFile = res;
     return ev;

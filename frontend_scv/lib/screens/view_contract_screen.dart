@@ -42,7 +42,6 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
         bcA = await _unisonService.getAgreement(loaded.blockchainId);
       return bcA;
     } catch (error) {
-      //print(error);
       throw (error);
     }
   }
@@ -57,7 +56,7 @@ class _ViewContractScreenState extends State<ViewContractScreen> {
         bcA = await _unisonService.getAgreement(loaded.blockchainId);
       return loaded;
     } catch (error) {
-      //print(error);
+
       throw (error);
     }
   }

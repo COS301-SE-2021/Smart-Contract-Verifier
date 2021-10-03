@@ -13,7 +13,6 @@ class ContactListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget contactListItem = GestureDetector(
       onTap: () {
-        print('A tap');
         Navigator.of(context).pushNamed(
           ViewContactScreen.routeName,
           arguments: [list.id, list.name],
