@@ -11,7 +11,6 @@
 ![](https://img.shields.io/github/issues/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/forks/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/stars/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
-![](https://img.shields.io/github/workflow/status/COS301-SE-2021/Smart-Contract-Verifier/CI%20tests?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/issues-pr/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/issues-pr-closed/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
 ![](https://img.shields.io/github/last-commit/COS301-SE-2021/Smart-Contract-Verifier?style=for-the-badge&cacheSeconds=3600)
@@ -57,6 +56,8 @@ If users disagree over whether a contract was fulfilled, a jury appointed by the
 [Demo 2](https://drive.google.com/file/d/1cDZbwf62NDgF4b06BWYo1-K27CnWazlp/view "Demo 2 Pre-Recorded")
 
 [Demo 3](https://drive.google.com/file/d/1vS_SaMyM0epwD7M5oAB1QdPp8GzLKYTC/view?usp=sharing "Demo 3 Pre-Recorded")
+
+[Demo 4](https://drive.google.com/file/d/1acLT4B9GEwvFcqKZf9p3V9PTg7i8YIya/view?usp=sharing "Demo 4 Pre-Recorded")
 
 
 ### User Manual
