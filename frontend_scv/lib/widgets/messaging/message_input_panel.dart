@@ -37,7 +37,6 @@ class _MessageInputPanelState extends State<MessageInputPanel> {
     try {
       //Save to DB:
       await messageService.sendMessage(newMessage);
-      print('new message sent');
     } catch (error) {
       await showDialog(
         context: context,

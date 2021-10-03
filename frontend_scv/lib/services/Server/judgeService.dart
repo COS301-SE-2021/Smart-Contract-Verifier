@@ -71,7 +71,6 @@ class JudgeService {
   //Get the jury for an agreement from the blockchain
   Future<Jury> getJury(BigInt id) async {
     final res = await _uniServ.getJury(id);
-    //print('Jury res: ' + res[0].toString());
     return Jury.fromChain(res);
   }
 }

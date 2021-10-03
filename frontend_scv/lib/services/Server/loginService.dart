@@ -23,7 +23,6 @@ class LoginService {
     id ??= Global.userAddress; //Defaults to current user
     try {
       final res = await _api.postData('/user', {'WalletID': id, 'Alias' : 'Nothing'});
-      //print ('Res: ' + res.toString());
 
     } on Exception catch (e) {
       print(e);
@@ -56,7 +55,6 @@ class LoginService {
     }
 
     Global.apiToken = loginRes.result['JwtToken']; //Extract from result
-    print ('Token: ' + Global.apiToken);
   }
 
 

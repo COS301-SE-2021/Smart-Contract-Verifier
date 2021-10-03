@@ -27,7 +27,6 @@ class _EvidenceUploadPanelState extends State<EvidenceUploadPanel> {
         reader.onLoadEnd.listen((e) {
           setState(() {
             uploadFile = reader.result;
-            print('Set');
           });
         });
 
@@ -45,7 +44,6 @@ class _EvidenceUploadPanelState extends State<EvidenceUploadPanel> {
   Widget build(BuildContext context) {
     if (uploadFile != null) {
       _uploadMime = lookupMimeType('', headerBytes: uploadFile);
-      print(_uploadMime);
     }
 
     return Column(

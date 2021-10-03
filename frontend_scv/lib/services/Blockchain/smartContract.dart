@@ -69,15 +69,7 @@ class SmartContract {
           Transaction.callContract(
               contract: theContract, function: fun, parameters: args));
 
-    //print('First res: ' +theResult.toString()); //Debug
     return theResult;
-  }
-
-  Future<ContractEvent> getEvent(String ev) async {
-    //Get an event from the contract
-    final con = await _getContract();
-    final event = con.event(ev);
-    return event;
   }
 
 

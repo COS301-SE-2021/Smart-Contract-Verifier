@@ -110,7 +110,6 @@ class _ContractConditionActionsPanelState
                   onDateSelected: (DateTime value) {
                     selectedDate = value;
 
-                    print(value);
                   },
                 ),
               ],

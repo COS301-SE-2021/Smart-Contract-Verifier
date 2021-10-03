@@ -35,8 +35,6 @@ class MessageService {
     String path = '$_reqPath/' + (byAgreement? 'agreement/$id/message': 'message');
     ApiResponse response = await _api.getData(path);
 
-    print ('Res length: '+response.result.length.toString());
-
     if (!response.successful)
       throw Exception('Messages could not be retrieved');
 
@@ -76,13 +74,8 @@ class MessageService {
 
     while (true) {
       await Future.delayed(interval);
-      //final response =
-        //  await _api.postData(_reqPath + 'get-all-messages-by-agreement', body);
 
-
-      print ('Before');
       List<Message> yeildSend = List.from(await _getMessageHandler(id, true));
-      print ('Done');
       yield yeildSend;
     }
   }

@@ -19,14 +19,11 @@ class _MessagingScreenState extends State<MessagingScreen> {
   MessageService messageService = MessageService();
   @override
   Widget build(BuildContext context) {
-    print('Message Screen Build: Curr: ${Global.userAddress}');
 
     final args = ModalRoute.of(context).settings.arguments as Map;
     final agreementId = args['agreementId'];
     final partyA = args['partyA'];
     final partyB = args['partyB'];
-
-    print('PA: $partyA\nPB: $partyB');
 
     return Scaffold(
       appBar: AppBar(
