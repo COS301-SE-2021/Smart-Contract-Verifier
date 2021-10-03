@@ -56,7 +56,6 @@ class Contracts with ChangeNotifier {
       // _items.insert(0, newContract); // at the start of the list
       fetchAndSetContracts();
     } catch (error) {
-      print(error);
       throw error;
     }
   }
@@ -79,8 +78,6 @@ class Contracts with ChangeNotifier {
           }));
       _items[contIndex] = newContract;
       notifyListeners();
-    } else {
-      print('...');
     }
   }
 

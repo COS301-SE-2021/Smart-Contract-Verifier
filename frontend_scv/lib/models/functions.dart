@@ -150,9 +150,7 @@ Future<List<dynamic>> getConditions(String agreement) async {
 
   //Demo JSON
   //String result = '{  "conditions": [  "1c6fff1d-6575-4fd2-a336-f0758a7cc482",  "5e90c471-0ce1-4b55-a43e-3408dc7803d5",  "8cfc9ed2-f32b-492b-b93a-07544d5406ff",  "cfb9f179-54f9-4710-8841-c3ae89c414bf",  "ab7af3d6-1c43-45d5-98ba-b558f5c62502"  ],  "status": "SUCCESSFUL"  }';
-  print("Here");
   Map<String, dynamic> agrMap = jsonDecode(result.body);
-  print("There");
   String status = agrMap['status'];
   List<dynamic> conds = agrMap['conditions'];
   return conds;

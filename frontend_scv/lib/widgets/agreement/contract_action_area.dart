@@ -81,31 +81,20 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             width: _borderWidth,
           ),
         ),
-        onPressed: _disabled
-            ? () {
-                // print('Already Pressed');
-              }
-            : () async {
-                // print('Press Trigger');
+        onPressed: () async {
                 showLoaderDialog(context);
                 try {
-                  print('Calling metamask');
                   await widget._negotiationService
                       .sealAgreement(widget._agreement);
                   AgreementState as;
                   bool valid = false;
                   while (!valid) {
-                    // print('in while');
                     await Future.delayed(Duration(seconds: 2));
                     widget._agreement = await widget._commonService
                         .getAgreement(widget._agreement.contractId);
-                    print('ID: ' + widget._agreement.blockchainId.toString());
                     if (widget._agreement.blockchainId == null ||
                         widget._agreement.blockchainId == BigInt.from(-1)) {
-                      print('No Blockchain ID yet...');
                     } else {
-                      print('Valid Blockchain ID detected...');
-
                       as = (await widget._unisonService
                               .getAgreement(widget._agreement.blockchainId))
                           .getAgreementState();
@@ -145,9 +134,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
         BlockchainAgreement _loadedBCAgreement = bcAgreementSnap.data;
 
         if (_loadedBCAgreement == null) {
-          print(widget._agreement.blockchainId.toString());
-          print('CONN STATE: BCA Snap: ' +
-              bcAgreementSnap.connectionState.toString());
           // setState(() {});
           return Text('Oops - Something went wrong');
           // does not persist
@@ -156,7 +142,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
 
         if (currentState == AgreementState.PROPOSED) {
           //Check if payment needs to be made first
-          print('SHOULD PAY: ' + _loadedBCAgreement.shouldPay().toString());
           if (_loadedBCAgreement.shouldPay()) {
             return _loadedBCAgreement.amIPaying()
                 ? TextButton(
@@ -195,7 +180,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
               onPressed: () async {
                 showLoaderDialog(context);
                 try {
-                  print('Accept Blockchain Agreement');
                   await widget._unisonService.acceptAgreement(
                     widget._agreement,
                   );
@@ -224,7 +208,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             onPressed: () async {
               showLoaderDialog(context);
               try {
-                print('Pay Platform Fee');
                 await widget._unisonService.payPlatformFee(
                   widget._agreement.blockchainId,
                 );
@@ -258,7 +241,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                     onPressed: () async {
                       showLoaderDialog(context);
                       try {
-                        print('Conclude Agreement');
                         await widget._unisonService.agreementFulfilled(
                           widget._agreement,
                           true,
@@ -285,7 +267,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
                     onPressed: () async {
                       showLoaderDialog(context);
                       try {
-                        print('Dispute Agreement');
                         await widget._unisonService.agreementFulfilled(
                           widget._agreement,
                           false,
@@ -331,7 +312,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
         if (currentState == AgreementState.CLOSED) {
           return Text('Agreement Concluded');
         }
-        print(currentState.toString());
 
         if (currentState == AgreementState.CONTESTED) {
           _judgeService = JudgeService();

@@ -25,9 +25,7 @@ class UnisonService {
     EthereumAddress partyBA = EthereumAddress.fromHex(partyB);
     bool direction = con.payingUser == Global.userAddress;;
 
-    print ('ID: ' + con.contractId);
     try {
-      print ('About to seal');
       final res = await _smC.makeWriteCall("createAgreement", [
         partyBA,
         con.duration,
@@ -37,7 +35,6 @@ class UnisonService {
         [BigInt.from(con.paymentAmount*pow(10, 18))], //Convert to gwei
         [direction]
       ]);
-      print (res);
     } catch (e) {
       print ('ERROR: ' +e);
     }
@@ -75,7 +72,6 @@ class UnisonService {
   ///Checks if a user is a Juror
   Future<bool> isJuror(EthereumAddress add) async {
     final res = await _smC.makeReadCall('isJuror', [add]);
-    //print ('Juror: ' + res.toString());
     return res[0]; //Temporary
   }
 
@@ -95,8 +91,6 @@ class UnisonService {
   ///Get the jury assigned to an agreement
   Future<dynamic> getJury(BigInt id) async {
     final res = await _smC.makeReadCall('getJury', [id]);
-
-    print(res);
     return res[0];
   }
 
@@ -126,7 +120,6 @@ class UnisonService {
   ///Get the current platform fee of Unison
   Future<BigInt> getPlatformFee() async {
     final res = await _smC.makeReadCall('getPlatformFee', []);
-    print ('Platform fee: ' + res.toString());
     return BigInt.parse(res.toString());
   }
 

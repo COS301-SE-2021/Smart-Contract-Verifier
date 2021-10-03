@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Blockchain/wallet.dart';
+import 'package:unison/services/External/jsMethods.dart';
 import 'package:unison/services/Server/judgeService.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:awesome_loader/awesome_loader.dart';
@@ -164,6 +165,9 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   Future<void> _submit() async {
+    await addNetwork('Mumbai', 'https://matic-mumbai.chainstacklabs.com', '0x' + 80001.toRadixString(16), 'Matic', 'MATIC');
+    //Switch to network Unison is running on, if the user isn't already
+
     JudgeService judgeService = JudgeService();
     UnisonService unisonService = UnisonService();
     setState(() {

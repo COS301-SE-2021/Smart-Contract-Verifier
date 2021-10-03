@@ -36,9 +36,6 @@ class WaitingForBlockChainText extends StatelessWidget {
           ),
         ],
         isRepeatingAnimation: true,
-        // onTap: () {
-        //   print("Tap Event");
-        // },
       ),
     );
   }

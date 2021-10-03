@@ -100,7 +100,6 @@ class _ContactListGridState extends State<ContactListGrid> {
                   'contact lists, please refresh.');
 
             List<Widget> ch = [];
-            print(snap.data);
             for (var i in snap.data) {
               ch.add(
                 ContactListItem(i),
