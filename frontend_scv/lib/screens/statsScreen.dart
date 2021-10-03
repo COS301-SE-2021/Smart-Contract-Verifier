@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:unison/models/generalStats.dart';
 import 'package:unison/services/Server/statsService.dart';
 import 'package:unison/widgets/miscellaneous/dashboard_actions.dart';
+import 'package:unison/widgets/miscellaneous/errorWidget.dart';
 import 'package:unison/widgets/miscellaneous/funky_text_widget.dart';
 import 'package:unison/widgets/statistics/generalStatsWidget.dart';
 
@@ -21,11 +22,13 @@ class StatsScreen extends StatelessWidget {
   //This returns an appropriate widget after getting some statistics
   Future<Widget> getStats() async {
     GeneralStats gS;
+    Widget child;
 
     try {
       gS = await _statServ.getGeneralStats();
+      child = GeneralStatsWidget(gS);
     } catch (e) {
-      return Text(e);
+      child = errorWidget(e + ' - Please try again later');
     }
 
     return Padding(
@@ -34,7 +37,7 @@ class StatsScreen extends StatelessWidget {
           child: Card(
               elevation: 15,
               color: Color.fromRGBO(56, 61, 81, 1),
-              child: GeneralStatsWidget(gS))),
+              child: child)),
     );
   }
 

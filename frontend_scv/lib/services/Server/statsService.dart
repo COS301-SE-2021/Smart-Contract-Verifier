@@ -11,16 +11,13 @@ class StatsService {
   Future<GeneralStats> getGeneralStats() async {
     //Temporarily commented out
 
-    // ApiResponse res = await _api.getData('/stats');
-    //
-    // if (!res.successful) {
-    //   throw "Could not retrieve statistics data";
-    // }
-    //
-    // return GeneralStats.fromJSON(res.result);
+    ApiResponse res = await _api.getData('/stats');
 
+    if (!res.successful) {
+      throw "Could not retrieve statistics data";
+    }
 
-    return GeneralStats();
+    return GeneralStats.fromJSON(res.result);
 
   }
 }
