@@ -18,7 +18,7 @@ class UnisonAuthorisationFilter(var securityConfig: SecurityConfig): OncePerRequ
         }else if((uri.matches(Regex("/user/[a-zA-Z0-9]{42}"))) && (request.method == "POST" || request.method == "GET")){
             chain.doFilter(request, response)
             return
-        }else if(uri.contains("/download") || uri.contains("/linked") || uri.contains("/hello")){
+        }else if(uri.contains("/download") || uri.contains("/linked") || uri.contains("/hello")|| uri.contains("/stats")){
             chain.doFilter(request, response)
             return
         }else if(uri.contains("/actuator/")) {
