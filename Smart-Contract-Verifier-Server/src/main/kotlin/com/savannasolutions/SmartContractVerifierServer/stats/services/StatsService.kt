@@ -31,13 +31,13 @@ class StatsService constructor(val agreementsRepository: AgreementsRepository,
         var avg = 0.0
         var concluded = 0
         var disputed = 0
-        if(agreementList != null && agreementList.isNotEmpty())
+        if(agreementList.isNotEmpty())
         {
             var totalDiv : Long = 0
             for (agreement in agreementList)
             {
                 totalDiv += agreement.SealedDate!!.time - agreement.CreatedDate.time
-                if(judgesRepository.getAllByAgreement(agreement) == null)
+                if(judgesRepository.getAllByAgreement(agreement)!!.isEmpty())
                     concluded++
                 else
                     disputed++
