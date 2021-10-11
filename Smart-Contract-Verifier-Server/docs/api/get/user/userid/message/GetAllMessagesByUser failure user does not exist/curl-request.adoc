@@ -2,5 +2,5 @@
 ----
 $ curl 'http://localhost:8080/user/0xF9276468FA51422cD528BEAcAb7aB548Ba71Cf17/message' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweEY5Mjc2NDY4RkE1MTQyMmNENTI4QkVBY0FiN2FCNTQ4QmE3MUNmMTciLCJleHAiOjE2MzMyMTAyNTd9.tbYO8DOvJWGvBx0drZsFtl5erLE3TXcrIj8ZG2_MPd0'
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweEY5Mjc2NDY4RkE1MTQyMmNENTI4QkVBY0FiN2FCNTQ4QmE3MUNmMTciLCJleHAiOjE2MzM5NDgzOTh9.viIhxfy6tfbCM4fsXIulYtA7WcTNMpbAeHRwmw5iC2Q'
 ----

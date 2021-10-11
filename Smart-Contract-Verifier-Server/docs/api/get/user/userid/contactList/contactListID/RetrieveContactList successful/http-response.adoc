@@ -17,11 +17,11 @@ Content-Length: 292
   "Status" : "SUCCESSFUL",
   "ResponseObject" : {
     "walletAndAlias" : [ {
-      "alias" : "AliasA",
-      "walletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
+      "walletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+      "alias" : "AliasA"
     }, {
-      "alias" : "AliasB",
-      "walletID" : "0x37Ec9a77BFa094b24054422564e68B08aF3114B4"
+      "walletID" : "0x37Ec9a77BFa094b24054422564e68B08aF3114B4",
+      "alias" : "AliasB"
     } ]
   }
 }
