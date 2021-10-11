@@ -65,10 +65,6 @@ class StatsService constructor(val agreementsRepository: AgreementsRepository,
         val dailyStats = ArrayList<DailyStatsResponse>()
         var ld = startDate
         var d : Date
-        var stDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-        var edDate = Date.from(endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
-
-        val agreementList = agreementsRepository.selectAllBetweenDates(stDate, edDate)
 
         while(ld <= endDate)
         {
