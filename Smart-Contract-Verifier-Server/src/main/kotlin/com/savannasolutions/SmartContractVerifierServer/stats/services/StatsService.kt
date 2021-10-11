@@ -31,13 +31,13 @@ class StatsService constructor(val agreementsRepository: AgreementsRepository,
         var avg = 0.0
         var concluded = 0
         var disputed = 0
-        if(agreementList != null && agreementList.isNotEmpty())
+        if(agreementList.isNotEmpty())
         {
             var totalDiv : Long = 0
             for (agreement in agreementList)
             {
                 totalDiv += agreement.SealedDate!!.time - agreement.CreatedDate.time
-                if(judgesRepository.getAllByAgreement(agreement) == null)
+                if(judgesRepository.getAllByAgreement(agreement)!!.isEmpty())
                     concluded++
                 else
                     disputed++
@@ -58,7 +58,7 @@ class StatsService constructor(val agreementsRepository: AgreementsRepository,
             )
     }
 
-    /*fun detailedStats(startDate: LocalDate, endDate: LocalDate) : ApiResponse<DetailedStatsResponse>{
+    fun detailedStats(startDate: LocalDate, endDate: LocalDate) : ApiResponse<DetailedStatsResponse>{
         if(startDate > endDate)
             return ApiResponse(status = ResponseStatus.FAILED, message = "Start date is greater then end date")
 
@@ -73,25 +73,25 @@ class StatsService constructor(val agreementsRepository: AgreementsRepository,
             dailyStats.add(
                 DailyStatsResponse(
                 date = d,
-                agreementsCreatedOnDay = agreementsRepository.getAgreementsByCreatedDateBetween(d, eD)!!.size,
-                agreementsCreatedUpTillDay = agreementsRepository.getAgreementsByCreatedDateBefore(d)!!.size + agreementsRepository.getAgreementsByCreatedDateBetween(d, eD)!!.size,
-                successfulAgreementsOnDay = agreementsRepository.getAgreementsBySealedDateBetween(d, eD)!!.size,
-                successfulAgreementsUpTillDay = agreementsRepository.countAgreementsBySealedDateBefore(d) + agreementsRepository.getAgreementsBySealedDateBetween(d, eD)!!.size
+                agreementsCreatedOnDay = agreementsRepository.selectCreatedDateBetween(d, eD)!!.size,
+                agreementsCreatedUpTillDay = agreementsRepository.selectCreatedDateBefore(d)!!.size + agreementsRepository.selectAllBetweenDates(d, eD)!!.size,
+                successfulAgreementsOnDay = agreementsRepository.selectSealedDateBetween(d, eD)!!.size,
+                successfulAgreementsUpTillDay = agreementsRepository.selectSealedDateBefore(d)!!.size + agreementsRepository.selectSealedDateBetween(d, eD)!!.size
                 )
             )
             ld = ld.plusDays(1)
         }
 
         val detailedStats = DetailedStatsResponse(dailyStats,
-                                                    agreementsRepository.getAgreementsByCreatedDateBetween(
+                                                    agreementsRepository.selectCreatedDateBetween(
                                                         Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
                                                         Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))!!.size,
-                                                    agreementsRepository.getAgreementsBySealedDateBetween(
+                                                    agreementsRepository.selectSealedDateBetween(
                                                         Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
                                                         Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))!!.size)
 
         return ApiResponse(status = ResponseStatus.SUCCESSFUL,
                             responseObject = detailedStats)
-    }*/
+    }
 
 }

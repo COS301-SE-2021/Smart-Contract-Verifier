@@ -2,7 +2,7 @@
 ----
 POST /user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzMyMTAyNzh9.0VpCkPo6KQdqo6JeG-EvmP4BANDTzPkZku2Cx4WNShU
+Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzM5NDg0MTd9.bsSU8I-uf7-82A5BytmplPy_eJTv1mPE_9PUqYKcv5k
 Content-Length: 197
 Host: localhost:8080
 
