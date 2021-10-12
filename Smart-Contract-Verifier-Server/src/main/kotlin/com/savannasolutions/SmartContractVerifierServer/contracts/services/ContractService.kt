@@ -7,8 +7,10 @@ import com.savannasolutions.SmartContractVerifierServer.negotiation.repositories
 import com.savannasolutions.SmartContractVerifierServer.negotiation.requests.SealAgreementRequest
 import com.savannasolutions.SmartContractVerifierServer.negotiation.services.NegotiationService
 import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRepository
+import io.reactivex.disposables.Disposable
 import io.reactivex.subscribers.DisposableSubscriber
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.web3j.abi.EventEncoder
 import org.web3j.abi.FunctionReturnDecoder
@@ -17,6 +19,7 @@ import org.web3j.abi.datatypes.Address
 import org.web3j.abi.datatypes.Event
 import org.web3j.abi.datatypes.Type
 import org.web3j.protocol.Web3j
+import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.EthFilter
 import org.web3j.protocol.http.HttpService
@@ -35,8 +38,11 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
     private lateinit var web3j: Web3j
     lateinit var juryFilter: EthFilter
     lateinit var createFilter: EthFilter
+    var jurySubscriber: Disposable? = null
+    var createSubscriber: Disposable? = null
 
     @PostConstruct
+    @Scheduled(fixedDelay = 60000)
     fun initEventListener() {
         if(contractConfig.useblockchain == "true") {
             try {
@@ -62,14 +68,19 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                 registerSubscriber('C')
 
             } catch (e: Exception) {
-                throw RuntimeException(e)
+                e.printStackTrace()
             }
         }
     }
 
     fun registerSubscriber(type: Char){
         when(type){
-            'J' -> web3j.ethLogFlowable(juryFilter).subscribe(
+            'J' -> jurySubscriber?.dispose()
+            'C' -> createSubscriber?.dispose()
+        }
+
+        when(type){
+            'J' -> jurySubscriber = web3j.ethLogFlowable(juryFilter).subscribe(
                 {event->
                     assignJuryFromEvent(event)
                 },
@@ -77,9 +88,10 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                     println("Blockchain unreachable: ${err.message}")
                     Thread.sleep(10000)
                     registerSubscriber('C')
-                }
+                },
             )
-            'C' -> web3j.ethLogFlowable(createFilter).subscribe(
+            'C' ->
+                createSubscriber = web3j.ethLogFlowable(createFilter).subscribe(
                 { event ->
                     sealAgreementFromEvent(event)
                 },
@@ -90,6 +102,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                 }
             )
         }
+
     }
 
     fun sealAgreementFromEvent(event: org.web3j.protocol.core.methods.response.Log){
