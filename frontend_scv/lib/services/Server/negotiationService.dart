@@ -92,6 +92,7 @@ class NegotiationService {
 
   //The api will be updated with a new 'seal flow'
   Future<void> sealAgreement(Contract con) async {
+
     await _uniServ.saveAgreement(con);
     //TODO: Add payment conditions here? After the initial save, it should wait until completion.
     //RFC: Maybe "payment condition added" should be a check on agreement load.
