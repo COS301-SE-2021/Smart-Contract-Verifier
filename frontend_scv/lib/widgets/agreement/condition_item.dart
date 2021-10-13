@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unison/models/condition.dart';
+import 'package:unison/models/contract.dart';
 import 'package:unison/models/global.dart';
 import 'package:unison/services/Server/negotiationService.dart';
 
@@ -9,6 +10,7 @@ class ConditionItem extends StatefulWidget {
   final Function reloadParent;
   final String durationId;
   final String paymentId;
+  final Contract con;
 
   ConditionItem({
     @required this.contractCondition,
@@ -16,6 +18,7 @@ class ConditionItem extends StatefulWidget {
     @required this.reloadParent,
     this.durationId,
     this.paymentId,
+    this.con,
   });
 
   @override
@@ -47,6 +50,14 @@ class _ConditionItemState extends State<ConditionItem> {
               ));
     }
 
+    bool payCond = widget.contractCondition.conditionId == widget.paymentId;
+    String desc = widget.contractCondition.description;
+    if (payCond)
+      {
+        String payer = widget.con.payingUser == Global.userAddress? 'You are ':'The other party is ';
+        desc = payer + ' paying ' + widget.con.paymentAmount.toString() + ' UNT';
+      }
+
     return Global.userAddress == widget.contractCondition.proposedBy
         ? ListTile(
             //Current user created the condition
@@ -56,7 +67,7 @@ class _ConditionItemState extends State<ConditionItem> {
                   : widget.contractCondition.title,
             ),
             leading: Icon(
-              widget.contractCondition.conditionId == widget.paymentId
+              payCond
                   ? Icons.paid
                   : widget.contractCondition.conditionId == widget.durationId
                       ? Icons.today
@@ -64,7 +75,7 @@ class _ConditionItemState extends State<ConditionItem> {
               color: Colors.white70,
             ),
 
-            subtitle: Text('${widget.contractCondition.description}'),
+            subtitle: Text(desc),
             onTap: () => _showConditionDialog(widget.contractCondition),
             trailing: Row(
               //The currently logged in user created the condition
@@ -103,7 +114,7 @@ class _ConditionItemState extends State<ConditionItem> {
                       : Icons.perm_identity,
               color: Colors.cyan,
             ),
-            subtitle: Text(widget.contractCondition.description),
+            subtitle: Text(desc),
             onTap: () => _showConditionDialog(widget.contractCondition),
             trailing: Row(
               //The currently logged in user did not create the condition
