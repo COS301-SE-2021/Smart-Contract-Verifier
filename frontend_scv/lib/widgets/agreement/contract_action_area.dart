@@ -2,6 +2,7 @@ import 'package:awesome_loader/awesome_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:unison/models/blockchainAgreement.dart';
 import 'package:unison/models/contract.dart';
+import 'package:unison/models/global.dart';
 import 'package:unison/services/Blockchain/unisonService.dart';
 import 'package:unison/services/Server/commonService.dart';
 import 'package:unison/services/Server/judgeService.dart';
@@ -72,8 +73,13 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             false || //TODO: Ronan thinks Kevin should change this (Maybe to a null check?)
         widget._agreement.blockchainId == BigInt.from(-1)) {
       //TODO: The second condition will always fail, an exception will be thrown since Bigints are always positive
-      //Show SEAL button:
-      return TextButton(
+      //Show SEAL button (or not):
+
+      //Only one party can seal. Subject to change
+      bool shouldSeal = Global.userAddress == widget._agreement.partyA;
+
+      return shouldSeal?
+      TextButton(
         style: TextButton.styleFrom(
           padding: EdgeInsets.all(5),
           side: BorderSide(
@@ -117,7 +123,9 @@ class _ContractActionAreaState extends State<ContractActionArea> {
             'Seal Agreement',
           ),
         ),
-      );
+      ) :
+      Text('Waiting on the other party to seal');
+
     }
 
     return FutureBuilder(
