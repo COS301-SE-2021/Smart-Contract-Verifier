@@ -78,8 +78,6 @@ class _ContractActionAreaState extends State<ContractActionArea> {
       //Only one party can seal. Subject to change
       bool shouldSeal = Global.userAddress == widget._agreement.partyA;
 
-      print ('User: ' + Global.userAddress.toString());
-      print ('A: ' + widget._agreement.partyA.toString());
       return shouldSeal?
       TextButton(
         style: TextButton.styleFrom(
