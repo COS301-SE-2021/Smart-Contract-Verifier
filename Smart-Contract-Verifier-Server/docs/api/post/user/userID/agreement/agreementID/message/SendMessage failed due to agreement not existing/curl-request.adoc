@@ -2,7 +2,7 @@
 ----
 $ curl 'http://localhost:8080/user/0x743Fb032c0bE976e1178d8157f911a9e825d9E23/agreement/eb558bea-389e-4e7b-afed-4987dbf37f85/message' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzMyMTAzMDh9.GXa-ePGXEqe6YveN73DSeAXBOrFLa1V1HUtcD1lzMwI' \
+    -H 'Authorization: bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIweDc0M0ZiMDMyYzBiRTk3NmUxMTc4ZDgxNTdmOTExYTllODI1ZDlFMjMiLCJleHAiOjE2MzM5NDg0NDV9.TtXlPUnUBfobjIu2rhgTiOd8e6jUHbQy9zL38ClCHI8' \
     -d '{
   "Message" : "Test message"
 }'

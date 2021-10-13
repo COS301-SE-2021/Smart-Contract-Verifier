@@ -28,7 +28,7 @@ Content-Length: 2165
       "PartyB" : {
         "publicWalletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
       },
-      "CreatedDate" : "2021-10-02T21:12:42.032+00:00",
+      "CreatedDate" : "2021-10-11T10:15:02.915+00:00",
       "SealedDate" : null,
       "MovedToBlockchain" : false,
       "Conditions" : [ {
@@ -37,7 +37,7 @@ Content-Length: 2165
         "ProposingUser" : {
           "publicWalletID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
         },
-        "ProposalDate" : "2021-10-02T21:12:42.032+00:00",
+        "ProposalDate" : "2021-10-11T10:15:02.915+00:00",
         "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
         "ConditionStatus" : "PENDING",
         "ConditionTitle" : "Test conditions pending"
@@ -47,7 +47,7 @@ Content-Length: 2165
         "ProposingUser" : {
           "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
         },
-        "ProposalDate" : "2021-10-02T21:12:42.032+00:00",
+        "ProposalDate" : "2021-10-11T10:15:02.915+00:00",
         "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
         "ConditionStatus" : "ACCEPTED",
         "ConditionTitle" : "Test condition accepted"
@@ -57,7 +57,7 @@ Content-Length: 2165
         "ProposingUser" : {
           "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
         },
-        "ProposalDate" : "2021-10-02T21:12:42.032+00:00",
+        "ProposalDate" : "2021-10-11T10:15:02.915+00:00",
         "AgreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
         "ConditionStatus" : "REJECTED",
         "ConditionTitle" : "Test condition rejected"

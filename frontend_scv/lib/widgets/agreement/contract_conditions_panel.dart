@@ -56,6 +56,7 @@ class ContractConditionsPanel extends StatelessWidget {
                       reloadParent: _reloadMyParent,
                       paymentId: _contract.paymentID,
                       durationId: _contract.durationID,
+                      con: _contract
                     ),
                     Divider(),
                   ],

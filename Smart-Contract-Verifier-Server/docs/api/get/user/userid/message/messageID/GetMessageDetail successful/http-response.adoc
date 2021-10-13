@@ -18,17 +18,17 @@ Content-Length: 608
   "ResponseObject" : {
     "MessageDetails" : {
       "message" : "Test message",
-      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503",
-      "messageStatuses" : [ {
-        "readDate" : "2021-10-02T21:13:46.484+00:00",
-        "read" : true,
-        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4"
-      } ],
-      "messageID" : "e6f884f4-8d9b-4efb-be31-c8ad5532f168",
-      "sendingDate" : "2021-10-02T21:13:46.484+00:00",
+      "sendingDate" : "2021-10-11T10:16:03.839+00:00",
       "sendingUser" : {
         "publicWalletID" : "0x743Fb032c0bE976e1178d8157f911a9e825d9E23"
-      }
+      },
+      "messageStatuses" : [ {
+        "read" : true,
+        "recipientID" : "0x37Ec9a8aBFa094b24054422564e68B08aF3114B4",
+        "readDate" : "2021-10-11T10:16:03.839+00:00"
+      } ],
+      "messageID" : "e6f884f4-8d9b-4efb-be31-c8ad5532f168",
+      "agreementID" : "3c5657d6-e302-48d3-b9df-dcfccec97503"
     }
   }
 }
