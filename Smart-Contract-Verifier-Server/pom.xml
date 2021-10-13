@@ -48,37 +48,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.metrics/spring-metrics -->
-		<dependency>
-			<groupId>org.springframework.metrics</groupId>
-			<artifactId>spring-metrics</artifactId>
-			<version>0.5.1.RELEASE</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient_pushgateway</artifactId>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/io.prometheus/simpleclient -->
-		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient</artifactId>
-			<version>0.12.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-registry-prometheus</artifactId>
-			<version>1.6.3</version>
-		</dependency>
-
-
-		<dependency>
 			<groupId>org.web3j</groupId>
 			<artifactId>core</artifactId>
 			<version>5.0.0</version>
