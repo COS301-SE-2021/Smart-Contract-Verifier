@@ -21,18 +21,8 @@ class UnisonWebSecurityConfigurer: WebSecurityConfigurerAdapter() {
     lateinit var securityConfig: SecurityConfig
 
     override fun configure(http: HttpSecurity?) {
-        http?.cors()?.configurationSource(corsConfigurationSource())?.and()?.csrf()?.disable()?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http?.cors()?.and()?.csrf()?.disable()?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             ?.and()?.addFilterAfter(UnisonAuthorisationFilter(securityConfig), BasicAuthenticationFilter::class.java)
     }
 
-
-        @Bean
-        fun corsConfigurationSource(): org.springframework.web.cors.CorsConfigurationSource {
-            val config = CorsConfiguration()
-            config.allowedOriginPatterns = listOf("*")
-            config.allowedMethods = listOf("GET", "POST", "DELETE", "PUT")
-            val src = UrlBasedCorsConfigurationSource()
-            src.registerCorsConfiguration("/**", config)
-            return src
-        }
 }

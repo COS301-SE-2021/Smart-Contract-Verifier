@@ -10,6 +10,7 @@ import com.savannasolutions.SmartContractVerifierServer.user.repositories.UserRe
 import io.reactivex.disposables.Disposable
 import io.reactivex.subscribers.DisposableSubscriber
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.web3j.abi.EventEncoder
@@ -28,6 +29,7 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 @Service
+@EnableScheduling
 @EnableConfigurationProperties(ContractConfig::class)
 class ContractService constructor(val judgesRepository: JudgesRepository,
                                   val agreementsRepository: AgreementsRepository,
@@ -42,7 +44,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
     var createSubscriber: Disposable? = null
 
     @PostConstruct
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedRate = 60000)
     fun initEventListener() {
         if(contractConfig.useblockchain == "true") {
             try {
@@ -137,6 +139,7 @@ class ContractService constructor(val judgesRepository: JudgesRepository,
                     userAgreements?.forEach { judges -> if(judges.agreement.ContractID == agreement.ContractID) found = true }
 
                     if(!found){
+                        println("Jury Assigned: ${agreement.ContractID}, ${address.value}")
                         val juror = Judges()
                         juror.agreement = agreement
                         juror.judge = userRepository.getUserByPublicWalletIDAllIgnoreCase(address.value)!!
